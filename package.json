@@ -10,9 +10,15 @@
   "scripts": {
     "dev": "vitepress dev docs --host 0.0.0.0",
     "build": "vitepress build docs",
-    "preview": "vitepress preview docs --host 0.0.0.0"
+    "preview": "vitepress preview docs --host 0.0.0.0",
+    "docs:import-nova": "node scripts/import-nova-docs.mjs"
   },
   "devDependencies": {
     "vitepress": "1.6.4"
+  },
+  "dependencies": {
+    "@endge/nova": "0.13.3",
+    "mermaid": "11.14.0",
+    "vue": "^3.5.40"
   }
 }

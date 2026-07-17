@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+import { configureNovaMarkdown } from './nova-markdown'
+import { novaSidebar } from './nova-sidebar.generated'
 
 export default defineConfig({
   lang: 'ru-RU',
@@ -6,13 +8,19 @@ export default defineConfig({
   description: 'Документация платформы Endge и конфигуратора',
   cleanUrls: true,
   lastUpdated: true,
+  markdown: {
+    config: configureNovaMarkdown,
+  },
 
   themeConfig: {
     nav: [
-      { text: 'Документация', link: '/' },
+      { text: 'Endge', link: '/' },
+      { text: 'Nova', link: '/nova/core/intro' },
     ],
 
-    sidebar: [
+    sidebar: {
+      '/nova/': novaSidebar,
+      '/': [
       {
         text: 'Начало',
         items: [
@@ -109,7 +117,8 @@ export default defineConfig({
           { text: 'Roadmap', link: '/project/roadmap' },
         ],
       },
-    ],
+      ],
+    },
 
     search: {
       provider: 'local',
