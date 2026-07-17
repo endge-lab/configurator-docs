@@ -81,6 +81,31 @@ resources: {
 
 В `data` доступны `store(identity)` и `vocab(identity)`. В `resources` текущий контракт поддерживает `style(identity)`.
 
+`store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри project tree, и самостоятельно в preview.
+
+```ts
+data: {
+  shared: store('schedule'),
+  draft: store('schedule').isolated(),
+  session: store('user-session').injected(),
+  primaryForm: store('flight-form').slot('primary'),
+}
+```
+
+- `.isolated()` всегда создаёт локальный Store instance;
+- `.injected()` требует explicit или ancestor provider и не создаёт fallback;
+- `.slot(name)` различает несколько providers одной Store identity;
+- alias (`shared`) локален для `fromData`, provider matching выполняется по Store identity и slot;
+- sibling compositions не заимствуют fallback друг у друга.
+
+Вложенной Composition можно явно передать Store, переименовав alias или выбрав конкретный instance:
+
+```ts
+composition('flight-board').withData({
+  schedule: data('shared'),
+})
+```
+
 ## Runtime-ноды
 
 | Конструктор | Назначение | Поддерживаемые modifiers |
@@ -88,7 +113,7 @@ resources: {
 | `filter(identity)` | Filter runtime | `activateOn`, `persist` |
 | `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
 | `component(identity)` | Component SFC runtime | `activateOn`, `withProps` |
-| `composition(identity)` | Вложенная Composition | `activateOn`, `storeTo` |
+| `composition(identity)` | Вложенная Composition | `activateOn`, `withData`, `storeTo` |
 | `filterView(identity)` | Представление Filter | `activateOn`, `fields`, `controls`, `component`, `withProps` |
 
 `composition(...).withProps(...)` не поддерживается: у Composition v1 нет публичного input-контракта.
