@@ -2,27 +2,149 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   lang: 'ru-RU',
-  title: 'Endge Configurator Docs',
-  description: 'Документация Endge Configurator',
+  title: 'Endge',
+  description: 'Документация платформы Endge и конфигуратора',
   cleanUrls: true,
   lastUpdated: true,
+
   themeConfig: {
     nav: [
       { text: 'Документация', link: '/' },
     ],
+
     sidebar: [
       {
-        text: 'Содержание',
+        text: 'Начало',
         items: [
-          { text: 'Тестовая страница', link: '/' },
+          { text: 'Что такое Endge', link: '/' },
+          { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
+          { text: 'Быстрый старт', link: '/getting-started/quick-start' },
+        ],
+      },
+      {
+        text: 'Конфигуратор',
+        items: [
+          { text: 'Модули конфигуратора', link: '/configurator/modules' },
+          { text: 'Основной рабочий процесс', link: '/configurator/workflow' },
+        ],
+      },
+      {
+        text: 'Домен Endge',
+        items: [
+          { text: 'Сущности Endge', link: '/domain/entities' },
+          { text: 'Связи сущностей', link: '/domain/relations' },
+          { text: 'Жизненный цикл документа', link: '/domain/lifecycle' },
+        ],
+      },
+      {
+        text: 'Практические руководства',
+        collapsed: false,
+        items: [
+          { text: 'Работа с данными', link: '/guides/data' },
+          { text: 'Преобразование данных', link: '/guides/transformations' },
+          { text: 'Вычисления', link: '/guides/computations' },
+          { text: 'Создание интерфейса', link: '/guides/components' },
+          { text: 'Стилизация', link: '/guides/styling' },
+        ],
+      },
+      {
+        text: 'Синтаксис и контракты',
+        collapsed: false,
+        items: [
+          { text: 'Query', link: '/reference/query' },
+          { text: 'DataView', link: '/reference/data-view' },
+          { text: 'Computation', link: '/reference/computation' },
+          { text: 'Component SFC', link: '/reference/component-sfc' },
+          { text: 'Converter', link: '/reference/converter' },
+          {
+            text: 'EndgeCSS',
+            collapsed: true,
+            items: [
+              { text: 'Обзор', link: '/reference/endgecss/overview' },
+              { text: 'Синтаксис и значения', link: '/reference/endgecss/syntax' },
+              { text: 'Селекторы и каскад', link: '/reference/endgecss/selectors' },
+              { text: 'Темы и директивы', link: '/reference/endgecss/directives' },
+              { text: 'Стили ComponentSFC', link: '/reference/endgecss/sfc' },
+              { text: 'Граница DOM и Canvas', link: '/reference/endgecss/dom-and-canvas' },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Модули Endge',
+        collapsed: false,
+        items: [
+          { text: 'Обзор модулей', link: '/core/modules' },
+          { text: 'События и обновления', link: '/core/events-and-updates' },
+          { text: 'Диагностика и отладка', link: '/core/diagnostics-and-debugging' },
+        ],
+      },
+      {
+        text: 'Инструменты разработчика',
+        collapsed: true,
+        items: [
+          { text: 'Codegen', link: '/tools/codegen' },
+          { text: 'Расширение Chrome', link: '/tools/chrome-extension' },
+          { text: 'Утилита Codegen', link: '/tools/codegen-utility' },
+          { text: 'Консоль', link: '/tools/console' },
+          { text: 'DSL Playground (legacy)', link: '/tools/dsl-playground' },
+        ],
+      },
+      {
+        text: 'Архитектура',
+        collapsed: true,
+        items: [
+          { text: 'Общая архитектура', link: '/architecture/overview' },
+          { text: 'Source → Compiler → Program → Runtime', link: '/architecture/source-compiler-program-runtime' },
+          { text: 'Доменные и runtime-сущности', link: '/architecture/domain-runtime-entities' },
+          { text: 'Headless Runtime', link: '/architecture/headless-runtime' },
+          { text: 'Федерации и модули', link: '/architecture/federation-and-modules' },
+          { text: 'Bootstrap приложения', link: '/architecture/app-bootstrap' },
+        ],
+      },
+      {
+        text: 'Развитие платформы',
+        collapsed: true,
+        items: [
+          { text: 'Roadmap', link: '/project/roadmap' },
         ],
       },
     ],
+
     search: {
       provider: 'local',
+      options: {
+        translations: {
+          button: {
+            buttonText: 'Поиск',
+            buttonAriaLabel: 'Поиск по документации',
+          },
+          modal: {
+            noResultsText: 'Ничего не найдено',
+            resetButtonTitle: 'Очистить запрос',
+            footer: {
+              selectText: 'выбрать',
+              navigateText: 'перейти',
+              closeText: 'закрыть',
+            },
+          },
+        },
+      },
     },
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/endge-lab/configurator-docs' },
-    ],
+
+    outline: {
+      label: 'На этой странице',
+      level: [2, 3],
+    },
+    docFooter: {
+      prev: 'Предыдущая страница',
+      next: 'Следующая страница',
+    },
+    lastUpdated: {
+      text: 'Обновлено',
+    },
+    returnToTopLabel: 'Наверх',
+    sidebarMenuLabel: 'Меню',
+    darkModeSwitchLabel: 'Тема',
   },
 })

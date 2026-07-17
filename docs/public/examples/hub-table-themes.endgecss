@@ -1,0 +1,189 @@
+/*
+ * Темы таблиц Hub, извлеченные из legacy-проекта hub-ui.
+ *
+ * Файл использует публичный контракт Table, а не классы RevoGrid. Поэтому
+ * источник остается renderer-neutral, а другой адаптер сможет публиковать те
+ * же parts. Правила применяются ко всем Endge Table. Для одной таблицы добавьте
+ * id или class, например #groundhandling-control::part(header).
+ */
+
+/* Стандартная светлая палитра Hub. */
+@theme light {
+  --hub-table-surface: #ffffff;
+  --hub-table-text: #333333;
+  --hub-table-header: rgb(183, 198, 213);
+  --hub-table-header-text: #253142;
+  --hub-table-grid-line: #888888;
+  --hub-table-row-odd: rgb(250, 250, 250);
+  --hub-table-row-even: rgb(236, 237, 237);
+  --hub-table-group: linear-gradient(90deg, #d8dde4 0%, #e7ebf0 100%);
+  --hub-table-group-text: #364152;
+  --hub-table-selected-row: rgb(190, 214, 236);
+  --hub-table-multi-selected-row: palevioletred;
+  --hub-table-search-row: rgba(190, 214, 236, 0.5);
+  --hub-table-search-cell: rgba(137, 189, 232, 0.6);
+  --hub-table-selected-cell: rgb(137, 189, 232);
+  --hub-table-selected-cell-outline: blue;
+}
+
+/*
+ * Темная палитра Hub. Legacy-стили RevoGrid не задавали отдельную заливку
+ * шапки. Цвет #2D3248 взят из старой таблицы Hub в этой же теме.
+ */
+@theme dark {
+  --hub-table-surface: #202434;
+  --hub-table-text: #ffffff;
+  --hub-table-header: #2d3248;
+  --hub-table-header-text: #ffffff;
+  --hub-table-grid-line: #555d76;
+  --hub-table-row-odd: transparent;
+  --hub-table-row-even: rgba(236, 237, 237, 0.1);
+  --hub-table-group: linear-gradient(90deg, #343a52 0%, #414861 100%);
+  --hub-table-group-text: #f1f3f8;
+  --hub-table-selected-row: rgb(36, 129, 213);
+  --hub-table-multi-selected-row: palevioletred;
+  --hub-table-search-row: rgba(36, 129, 213, 0.35);
+  --hub-table-search-cell: rgba(36, 129, 213, 0.55);
+  --hub-table-selected-cell: rgb(137, 189, 232);
+  --hub-table-selected-cell-outline: blue;
+}
+
+/* Спокойная синяя шапка и серые полосы строк из hub-ui. */
+@theme light_calm {
+  --hub-table-surface: #e0e0e0;
+  --hub-table-text: #333333;
+  --hub-table-header: #3388bb;
+  --hub-table-header-text: #ffffff;
+  --hub-table-grid-line: #888888;
+  --hub-table-row-odd: #e0e0e0;
+  --hub-table-row-even: #cccccc;
+  --hub-table-group: linear-gradient(90deg, #d8dde4 0%, #e7ebf0 100%);
+  --hub-table-group-text: #364152;
+  --hub-table-selected-row: greenyellow;
+  --hub-table-multi-selected-row: palevioletred;
+  --hub-table-search-row: rgba(173, 255, 47, 0.5);
+  --hub-table-search-cell: rgba(173, 255, 47, 0.75);
+  --hub-table-selected-cell: greenyellow;
+  --hub-table-selected-cell-outline: limegreen;
+}
+
+/* Connex-вариант: выделение и результат поиска окрашены янтарным. */
+@theme light_calm_connex {
+  --hub-table-surface: #e0e0e0;
+  --hub-table-text: #333333;
+  --hub-table-header: #3388bb;
+  --hub-table-header-text: #ffffff;
+  --hub-table-grid-line: #888888;
+  --hub-table-row-odd: #e0e0e0;
+  --hub-table-row-even: #cccccc;
+  --hub-table-group: linear-gradient(90deg, #d8dde4 0%, #e7ebf0 100%);
+  --hub-table-group-text: #364152;
+  --hub-table-selected-row: #ffd25b;
+  --hub-table-multi-selected-row: palevioletred;
+  --hub-table-search-row: rgba(255, 210, 91, 0.5);
+  --hub-table-search-cell: rgba(255, 210, 91, 0.75);
+  --hub-table-selected-cell: #ffd25b;
+  --hub-table-selected-cell-outline: #654f22;
+}
+
+/* Яркая контрастная тема. Полосы строк наследуют базовую светлую палитру Hub. */
+@theme light_new {
+  --hub-table-surface: #ffffff;
+  --hub-table-text: #333333;
+  --hub-table-header: #005cf1;
+  --hub-table-header-text: #ffffff;
+  --hub-table-grid-line: #888888;
+  --hub-table-row-odd: rgb(250, 250, 250);
+  --hub-table-row-even: rgb(236, 237, 237);
+  --hub-table-group: linear-gradient(90deg, #d8dde4 0%, #e7ebf0 100%);
+  --hub-table-group-text: #364152;
+  --hub-table-selected-row: greenyellow;
+  --hub-table-multi-selected-row: palevioletred;
+  --hub-table-search-row: rgba(173, 255, 47, 0.5);
+  --hub-table-search-cell: rgba(173, 255, 47, 0.75);
+  --hub-table-selected-cell: greenyellow;
+  --hub-table-selected-cell-outline: limegreen;
+}
+
+/* Весь grid и его прокручиваемая область данных. */
+Table::part(grid),
+Table::part(body) {
+  background-color: var(--hub-table-surface);
+  color: var(--hub-table-text);
+}
+
+/* Вся полоса шапки. */
+Table::part(header) {
+  background-color: var(--hub-table-header) !important;
+  color: var(--hub-table-header-text);
+}
+
+/* Каждая физическая ячейка шапки — именно она рисует видимый фон. */
+Table::part(header-cell) {
+  background-color: var(--hub-table-header) !important;
+  color: var(--hub-table-header-text);
+  border-right: 1px solid var(--hub-table-grid-line);
+  border-bottom: 1px solid var(--hub-table-grid-line);
+  font-size: 0.7rem;
+}
+
+/* Заголовок, индикатор сортировки и будущие action-иконки. */
+Table::part(header-content) {
+  color: var(--hub-table-header-text);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Zebra-строки считаются по логическому порядку Endge, без wrapper-узлов RevoGrid. */
+Table:nth-child(odd)::part(row) {
+  background-color: var(--hub-table-row-odd);
+}
+
+Table:nth-child(even)::part(row) {
+  background-color: var(--hub-table-row-even);
+}
+
+/* Cell отвечает за grid lines, а cell-content — за текст и выравнивание. */
+Table::part(cell) {
+  border-right: 1px solid var(--hub-table-grid-line);
+  border-bottom: 1px solid var(--hub-table-grid-line);
+}
+
+Table::part(cell-content) {
+  color: var(--hub-table-text);
+  font-size: 0.8rem;
+}
+
+/* Group row уже является public surface, хотя SFC grouping будет следующим этапом. */
+Table::part(group-row) {
+  background: var(--hub-table-group) !important;
+  color: var(--hub-table-group-text);
+  font-weight: 700;
+}
+
+/*
+ * Интерактивная палитра из hub-ui.
+ * Эти правила активируются, когда Table начнет публиковать соответствующие
+ * semantic states строк и ячеек. Structural parts выше работают уже сейчас;
+ * wiring состояний — отдельный runtime-этап без зависимости от классов RevoGrid.
+ */
+Table:state(selected)::part(row) {
+  background-color: var(--hub-table-selected-row) !important;
+}
+
+Table:state(multi-selected)::part(row) {
+  background-color: var(--hub-table-multi-selected-row) !important;
+}
+
+Table:state(search-match)::part(row) {
+  background-color: var(--hub-table-search-row) !important;
+}
+
+Table:state(search-match)::part(cell) {
+  background-color: var(--hub-table-search-cell) !important;
+}
+
+Table:state(selected)::part(cell) {
+  background-color: var(--hub-table-selected-cell) !important;
+  outline: 1px solid var(--hub-table-selected-cell-outline);
+}
