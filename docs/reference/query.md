@@ -13,7 +13,7 @@ defineQuery({
   props: defineProps({
     filterPayload: field('Object')
       .optional()
-      .from(filter('schedule').output('request')),
+      .from(filter('items-filter').output('request')),
     limit: field('Number').default(100),
   }),
 
@@ -142,7 +142,7 @@ rows: output().from(
 ```ts
 rows: output()
   .from('raw')
-  .dataView(dataView('flight-rows'))
+  .dataView(dataView('item-rows'))
 ```
 
 Локальный DataView:
@@ -156,7 +156,7 @@ rows: output()
       from('').as('row'),
       map({
         ...spread('row'),
-        departureTime: path('row.departureTime')
+        formattedDate: path('row.createdAt')
           .convert(converter('time-string-to-date')),
       }),
     ],
@@ -174,7 +174,7 @@ Preview компилирует Query, создаёт временный `QueryRu
 ## Связывание в Composition
 
 ```ts
-request: query('schedule').withProps({
+request: query('items-query').withProps({
   filterPayload: fromOutput('filter', 'request'),
 })
 ```

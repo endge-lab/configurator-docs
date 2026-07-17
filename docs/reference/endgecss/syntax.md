@@ -3,7 +3,7 @@
 Синтаксис EndgeCSS близок к CSS/SCSS: поддерживаются обычные rules, вложенность, `&`, комментарии, custom properties и `var()`.
 
 ```css
-.flight-card {
+.item-card {
   --accent: #2563eb;
   color: var(--accent);
 

@@ -42,7 +42,7 @@ from('response.items').as('row')
 
 ```ts
 from('items')
-  .dataView(dataView('normalize-flight'))
+  .dataView(dataView('normalize-item'))
   .as('row')
 ```
 
@@ -64,7 +64,7 @@ Legacy structural join присоединяет первый подходящи�
 ```ts
 join('attributes').by({
   left: 'leg.id',
-  right: 'legId',
+  right: 'entityId',
   as: 'legAttributes',
 })
 ```
@@ -78,7 +78,7 @@ join('attributes').by({
 ```ts
 map({
   ...spread('row'),
-  flightNumber: path('row.flight'),
+  title: path('row.name'),
 })
 ```
 
@@ -128,7 +128,7 @@ path('row.items').where(match({ active: true })).map(get('id'))
 ### Legacy-операции `path`
 
 ```ts
-path('row.airport').pick('code')
+path('row.category').pick('code')
 path('row.statuses').find({ active: true })
 path('row.std').convert(converter('date.iso-to-time'), { format: 'HH:mm' })
 ```
@@ -144,7 +144,7 @@ path('row.std').convert(converter('date.iso-to-time'), { format: 'HH:mm' })
 Подставляет значения текущего scope в строковый шаблон:
 
 ```ts
-template('{row.flight} / {row.destination}')
+template('{row.name} / {row.status}')
 ```
 
 ## Incremental materialization

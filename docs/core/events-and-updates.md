@@ -23,7 +23,7 @@ const unsubscribe = Endge.events.onEvent('query:completed', event => {
 })
 
 Endge.events.emitEvent('query:completed', {
-  queryId: 'schedule',
+  queryId: 'items-query',
 })
 
 unsubscribe()

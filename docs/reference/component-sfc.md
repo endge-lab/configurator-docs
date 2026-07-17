@@ -19,7 +19,7 @@ interface Output {
 
 const ports = definePorts({
   board: computation<Input, Output>({
-    default: 'flight-board-state',
+    default: 'item-list-state',
   }),
 })
 
@@ -70,7 +70,7 @@ interface ProcessState {
 
 const ports = definePorts({
   state: computation<ProcessInput, ProcessState>({
-    default: 'groundhandling-process-state',
+    default: 'item-state',
   }),
 })
 
@@ -102,7 +102,7 @@ interface DetailsProps {
 
 const ports = definePorts({
   details: component<DetailsProps>({
-    default: 'groundhandling-process-details',
+    default: 'item-details',
     tag: 'ProcessDetails',
   }),
 })

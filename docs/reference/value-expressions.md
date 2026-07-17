@@ -47,7 +47,7 @@ map(
 `get`, `pick` и другие выражения можно передавать как селекторы, а `match`, `eq`, `gt`, `and` — как предикаты:
 
 ```ts
-prop('flights')
+prop('items')
   .where(and(
     eq(get('status'), 'active'),
     gt(get('delay'), 5),
@@ -212,9 +212,9 @@ Lookup связывает текущий объект с внешней колл
 
 ```ts
 lookupOne(response('attributes'))
-  .by({ source: 'legId', target: 'id' })
+  .by({ source: 'entityId', target: 'id' })
 
-lookupMany(response('events')).by('flightId')
+lookupMany(response('events')).by('entityId')
 ```
 
 - `.by('foreignId')` сравнивает `source.foreignId` с `current.id`;
@@ -228,8 +228,8 @@ lookupMany(response('events')).by('flightId')
 `enrich` неизменяемо дополняет вложенную ветку каждого элемента коллекции:
 
 ```ts
-rows.enrich('arrivalLeg', {
-  attributes: lookupMany(response('attributes')).by('legId'),
+rows.enrich('details', {
+  attributes: lookupMany(response('attributes')).by('entityId'),
 })
 ```
 

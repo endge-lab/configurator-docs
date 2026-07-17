@@ -18,7 +18,7 @@
 ## `@scope`
 
 ```css
-@scope (:component(FlightBoard)) to (.nested-board) {
+@scope (:component(ItemList)) to (.nested-list) {
   Text { letter-spacing: .01em; }
 }
 ```

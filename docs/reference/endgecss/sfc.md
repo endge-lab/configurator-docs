@@ -47,4 +47,4 @@
 }
 ```
 
-Полный пример тем можно скачать как <a href="/examples/hub-table-themes.endgecss">hub-table-themes.endgecss</a>.
+Полный пример тем можно скачать как <a href="/examples/table-themes.endgecss">table-themes.endgecss</a>.

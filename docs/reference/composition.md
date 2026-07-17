@@ -11,8 +11,8 @@ defineComposition({
   activateOn: startup(),
 
   data: {
-    schedule: store('schedule'),
-    airports: vocab('airports'),
+    application: store('application-data'),
+    categories: vocab('item-categories'),
   },
 
   resources: {
@@ -20,23 +20,23 @@ defineComposition({
   },
 
   runtimes: {
-    filters: filter('schedule-filter')
-      .persist({ key: 'schedule-filters' }),
+    filters: filter('items-filter')
+      .persist({ key: 'items-filter-state' }),
 
-    filterPanel: filterView('schedule-filter')
+    filterPanel: filterView('items-filter')
       .fields(['from', 'to'])
-      .component('schedule-filter-sfc'),
+      .component('items-filter-panel'),
 
-    request: query('schedule-query')
+    request: query('items-query')
       .withProps({
         filter: fromOutput('filters', 'request'),
       })
-      .storeTo(data('schedule'), {
+      .storeTo(data('application'), {
         rows: output('rows'),
       }),
 
-    table: component('schedule-table').withProps({
-      rows: fromData('schedule.rows'),
+    table: component('items-table').withProps({
+      rows: fromData('application.rows'),
     }),
   },
 
@@ -58,7 +58,7 @@ defineComposition({
 
 ```ts
 activateOn: startup()
-query('schedule').activateOn(manual())
+query('items-query').activateOn(manual())
 ```
 
 - `startup()` активирует узел вместе с родительским scope;
@@ -71,11 +71,11 @@ query('schedule').activateOn(manual())
 
 ```ts
 data: {
-  db: store('groundhandling-db'),
-  airports: vocab('airports'),
+  application: store('application-data'),
+  categories: vocab('item-categories'),
 },
 resources: {
-  tableTheme: style('groundhandling-table'),
+  tableTheme: style('items-table-theme'),
 }
 ```
 
@@ -96,13 +96,16 @@ resources: {
 ### FilterView
 
 ```ts
-filterView('schedule-filter')
+filterView('items-filter')
   .fields(['from', 'direction'])
   .controls({
     from: control('Input'),
     direction: control('Select'),
   })
-  .component('schedule-filter-sfc')
+
+filterView('items-filter')
+  .fields(['from', 'direction'])
+  .component('items-filter-panel')
 ```
 
 Типы controls: `Input`, `Textarea`, `Checkbox`, `Select`. Методы `.fields`, `.controls` и `.component` доступны только у `filterView`.
@@ -119,9 +122,9 @@ query('search').withProps({
     .getOr('rows', [])
     .where(match({ active: true }))
     .map(get('id')),
-  rows: fromData('schedule.rows'),
+  rows: fromData('application.rows'),
   locale: fromStore('preferences.locale'),
-  columns: metadata('component-sfc', 'flight-table')
+  columns: metadata('component-sfc', 'items-table')
     .getOr('columns', []),
   model: fromFilter('filters').fields(['from', 'to']),
 })
@@ -142,7 +145,7 @@ query('search').withProps({
 Query и вложенная Composition могут публиковать outputs в объявленный Store:
 
 ```ts
-query('schedule-query').storeTo(data('schedule'), {
+query('items-query').storeTo(data('application'), {
   'raw.items': output('raw'),
   rows: output('rows'),
 })
@@ -174,10 +177,10 @@ Scope группирует resources, runtime-ноды и вложенные sco
 runtimes: {
   pages: scope({
     resources: {
-      theme: style('control-page-theme'),
+      theme: style('application-page-theme'),
     },
     runtimes: {
-      control: composition('control-page'),
+      content: composition('application-page'),
     },
   }).activateOn(manual()),
 }

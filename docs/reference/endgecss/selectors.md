@@ -5,8 +5,8 @@ EndgeCSS поддерживает tags, `.class`, локальный `#id`, attr
 ```css
 Text { color: gray; }
 #status[data-tone="danger"] { color: red; }
-:component(FlightBoard) > Flex:nth-child(odd) { background: #f8fafc; }
-:identity(flight-board) ::part(status) { font-weight: 700; }
+:component(ItemList) > Flex:nth-child(odd) { background: #f8fafc; }
+:identity(item-list) ::part(status) { font-weight: 700; }
 ```
 
 Поддерживаются:
