@@ -83,6 +83,48 @@
   content: '—';
 }
 
+.endge-principle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin: 22px 0;
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 60%, #2563eb);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 84%, #dbeafe);
+}
+
+.endge-principle__title {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.endge-principle p {
+  margin: 0 !important;
+  color: var(--vp-c-text-1);
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.dark .endge-principle {
+  border-color: color-mix(in srgb, var(--vp-c-divider) 55%, #7dd3fc);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 84%, #0c4a6e);
+}
+
+.dark .endge-principle__title {
+  background: #38bdf8;
+  color: #082f49;
+}
+
 .nova-example {
   margin: 28px 0;
   overflow: hidden;
@@ -364,6 +406,11 @@
 
   .endge-author-quote figcaption span::before {
     content: none;
+  }
+
+  .endge-principle {
+    gap: 10px;
+    padding: 14px 15px;
   }
 
   .nova-example__header,

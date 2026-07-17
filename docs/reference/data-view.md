@@ -1,13 +1,17 @@
 # DataView
 
-DataView описывает преобразование входных данных в выходную форму. Один механизм используется для глобальных доменных DataView и локальных DataView внутри Query.
+DataView описывает чистую проекцию входных данных в форму, нужную потребителю. Глобальный DataView и локальный DataView внутри Query компилируются в один program-контракт и исполняются одним runtime-механизмом.
 
-## Основные правила
+Во всех декларативных режимах доступен [общий API функциональных выражений](/reference/value-expressions). DataView дополнительно предоставляет структурный pipeline, `path`, `template`, `spread` и вызов Converter.
 
-- `defineDataView({...})` описывает source.
-- Режим `pipeline` декларативен и выполняется runtime-интерпретатором.
-- Режим `manual` содержит пользовательский код и разрешён только для trusted/global сценария.
-- Глобальная и локальная формы компилируются в один `DataViewProgramPayload`.
+## Режимы
+
+| Режим | Когда использовать |
+| --- | --- |
+| `pipeline` | Последовательная обработка коллекции через `from`, `join` и `map` |
+| `projection` | Построение одного объекта из входного scope |
+| `expression` | Возврат произвольного ValueExpression |
+| `manual` | Trusted/global пользовательский код, когда декларативного API недостаточно |
 
 ## Pipeline
 
@@ -18,36 +22,58 @@ defineDataView({
     from('raw').as('row'),
     map({
       ...spread('row'),
-      flightNumber: path('row.flight'),
+      id: path('row.id'),
+      title: path('row.title').trim().defaultTo('Без названия'),
+      activeItems: path('row.items').where(match({ active: true })),
     }),
   ],
 })
 ```
 
-Шаги выполняются последовательно. Базовые операции — `from`, `join` и `map`.
+### `from(source).as(alias)`
 
-## `from(source).as(alias)`
-
-Выбирает массив из входного scope и задаёт имя текущей строки:
+Выбирает коллекцию из входного scope и задаёт alias текущей строки:
 
 ```ts
-from('raw').as('row')
+from('response.items').as('row')
 ```
 
-## `map({...})`
-
-Формирует выходной объект для каждой строки:
+Перед обходом можно применить глобальный или inline DataView:
 
 ```ts
-map({
-  id: path('row.id'),
-  flightNumber: path('row.flight'),
+from('items')
+  .dataView(dataView('normalize-flight'))
+  .as('row')
+```
+
+```ts
+from('items')
+  .dataView(defineDataView({
+    mode: 'pipeline',
+    steps: [from('').as('item'), map({ id: path('item.id') })],
+  }))
+  .as('row')
+```
+
+Inline DataView внутри другого DataView должен использовать `pipeline`.
+
+### `join(source).by(...)`
+
+Legacy structural join присоединяет первый подходящий элемент другой коллекции:
+
+```ts
+join('attributes').by({
+  left: 'leg.id',
+  right: 'legId',
+  as: 'legAttributes',
 })
 ```
 
-## `spread(alias)`
+Для новых преобразований, составных ключей и сохранения кардинальности используйте общие [`leftJoin`, `fullJoin`, `lookupOne` и `lookupMany`](/reference/value-expressions#объединение-коллекций).
 
-Копирует поля исходного объекта. Явно заданное после `spread` поле переопределяет скопированное значение.
+### `map({...})` и `spread(alias)`
+
+`map` формирует выходной объект для каждой строки. `spread` копирует поля объекта; явно объявленное поле имеет приоритет:
 
 ```ts
 map({
@@ -56,61 +82,93 @@ map({
 })
 ```
 
-## `path(path)`
+## Projection
 
-Читает значение из scope:
-
-```ts
-path('input.meta.requestId')
-path('row.flight')
-path('attrs.items')
-```
-
-## `join(source).by(...)`
-
-Присоединяет данные из другого массива:
+Projection строит один объект без структурных steps:
 
 ```ts
-join('attrs').by({
-  left: 'leg.id',
-  right: 'legId',
-  as: 'legAttrs',
+defineDataView({
+  mode: 'projection',
+  output: {
+    requestId: path('meta.requestId'),
+    rows: path('items')
+      .where(match({ active: true }))
+      .sortBy(get('name')),
+  },
 })
 ```
 
-`left` читается из текущего scope, `right` — из каждого элемента массива `source`. Первый найденный элемент сохраняется под именем `as`.
+Если `output` является объектом, compiler также может вывести режим projection из формы source.
 
-## Операции над `path`
+## Expression
+
+Expression возвращает результат одного общего выражения:
+
+```ts
+defineDataView({
+  mode: 'expression',
+  output: path('items')
+    .where(match({ active: true }))
+    .map(pick(['id', 'name'])),
+})
+```
+
+Используйте этот режим, когда не нужен объект projection и структурный pipeline.
+
+## Специальные выражения DataView
+
+### `path(path)`
+
+Читает значение из входного scope или alias pipeline и может продолжаться любым [общим методом ValueExpression](/reference/value-expressions):
+
+```ts
+path('row.items').where(match({ active: true })).map(get('id'))
+```
+
+### Legacy-операции `path`
 
 ```ts
 path('row.airport').pick('code')
 path('row.statuses').find({ active: true })
-path('row.std').convert(converter('date.iso_to_time'), { format: 'HH:mm' })
+path('row.std').convert(converter('date.iso-to-time'), { format: 'HH:mm' })
 ```
 
-- `pick` берёт вложенное поле;
-- `find` ищет элемент массива;
-- `convert` применяет глобальный Converter.
+- `.pick(path)` читает вложенный путь;
+- `.find(criteria)` находит первый подходящий элемент массива;
+- `.convert(converter, options?)` вызывает зарегистрированный [Converter](/reference/converter).
 
-## `template(template)`
+Для новых выражений `pick` и `find` также доступны в общем API, но `convert` остаётся специальной возможностью DataView.
 
-Формирует строку из текущего scope:
+### `template(template)`
+
+Подставляет значения текущего scope в строковый шаблон:
 
 ```ts
 template('{row.flight} / {row.destination}')
 ```
 
-## DataView внутри DataView
+## Incremental materialization
 
-Другой DataView можно применить к выбранному source до обхода строк:
+DataView может запросить стратегию обновления результата:
 
 ```ts
-from('items')
-  .dataView(dataView('normalizeFlight'))
-  .as('row')
+defineDataView({
+  mode: 'pipeline',
+  incremental: collectionByKey('id'),
+  steps: [
+    from('items').as('row'),
+    map({ ...spread('row') }),
+  ],
+})
 ```
 
-Локальный вложенный DataView должен использовать режим `pipeline`.
+| API | Поведение |
+| --- | --- |
+| `auto()` | Compiler выбирает безопасную стратегию |
+| `full()` | Полная повторная материализация |
+| `collectionByKey(key)` | Переисполнение изменившихся строк коллекции по стабильному ключу |
+
+`collectionByKey` применяется только к доказуемо row-local pipeline. Для projection, expression, manual или pipeline с глобальными зависимостями используется полная материализация.
 
 ## Manual DataView
 
@@ -123,8 +181,8 @@ defineDataView({
 })
 ```
 
-Manual-режим выполняет пользовательский код, поэтому не разрешён для локального DataView внутри Query или другого DataView первой версии.
+Manual-режим содержит пользовательский код и разрешён только для trusted/global сценария. Он не поддерживается для локального DataView внутри Query или inline DataView.
 
-## Компиляция и исполнение
+## Граница ответственности
 
-Compiler создаёт ProgramArtifact с payload типа DataViewProgramPayload. Глобальный и query-owned DataView исполняются одним runtime-executor, что сохраняет одинаковую семантику преобразования.
+DataView не хранит состояние и не запускает HTTP-запросы. [Query](/reference/query) получает данные, DataView формирует проекцию, а [Composition](/reference/composition) связывает результат с Store и потребителями.

@@ -26,7 +26,21 @@ export default defineConfig({
         items: [
           { text: 'Что такое Endge', link: '/' },
           { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
-          { text: 'Быстрый старт', link: '/getting-started/quick-start' },
+        ],
+      },
+      {
+        text: 'Домен Endge',
+        items: [
+          { text: 'Сущности Endge', link: '/domain/entities' },
+          { text: 'Converter', link: '/reference/converter' },
+          { text: 'Computation', link: '/reference/computation' },
+          { text: 'DataView', link: '/reference/data-view' },
+          { text: 'Query', link: '/reference/query' },
+          { text: 'Component SFC', link: '/reference/component-sfc' },
+          { text: 'Composition', link: '/reference/composition' },
+          { text: 'Функциональные выражения', link: '/reference/value-expressions' },
+          { text: 'Связи сущностей', link: '/domain/relations' },
+          { text: 'Жизненный цикл документа', link: '/domain/lifecycle' },
         ],
       },
       {
@@ -34,14 +48,6 @@ export default defineConfig({
         items: [
           { text: 'Модули конфигуратора', link: '/configurator/modules' },
           { text: 'Основной рабочий процесс', link: '/configurator/workflow' },
-        ],
-      },
-      {
-        text: 'Домен Endge',
-        items: [
-          { text: 'Сущности Endge', link: '/domain/entities' },
-          { text: 'Связи сущностей', link: '/domain/relations' },
-          { text: 'Жизненный цикл документа', link: '/domain/lifecycle' },
         ],
       },
       {
@@ -56,26 +62,15 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Синтаксис и контракты',
+        text: 'EndgeCSS',
         collapsed: false,
         items: [
-          { text: 'Query', link: '/reference/query' },
-          { text: 'DataView', link: '/reference/data-view' },
-          { text: 'Computation', link: '/reference/computation' },
-          { text: 'Component SFC', link: '/reference/component-sfc' },
-          { text: 'Converter', link: '/reference/converter' },
-          {
-            text: 'EndgeCSS',
-            collapsed: true,
-            items: [
-              { text: 'Обзор', link: '/reference/endgecss/overview' },
-              { text: 'Синтаксис и значения', link: '/reference/endgecss/syntax' },
-              { text: 'Селекторы и каскад', link: '/reference/endgecss/selectors' },
-              { text: 'Темы и директивы', link: '/reference/endgecss/directives' },
-              { text: 'Стили ComponentSFC', link: '/reference/endgecss/sfc' },
-              { text: 'Граница DOM и Canvas', link: '/reference/endgecss/dom-and-canvas' },
-            ],
-          },
+          { text: 'Обзор', link: '/reference/endgecss/overview' },
+          { text: 'Синтаксис и значения', link: '/reference/endgecss/syntax' },
+          { text: 'Селекторы и каскад', link: '/reference/endgecss/selectors' },
+          { text: 'Темы и директивы', link: '/reference/endgecss/directives' },
+          { text: 'Стили ComponentSFC', link: '/reference/endgecss/sfc' },
+          { text: 'Граница DOM и Canvas', link: '/reference/endgecss/dom-and-canvas' },
         ],
       },
       {

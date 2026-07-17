@@ -17,6 +17,8 @@ Filter → Query.outputs → DataView → Store → ComponentSFC
 - ComponentSFC получает данные через порты.
 - Computation вычисляет производное значение из входного контекста.
 
+Конкретный runtime-граф описывается в [Composition](/reference/composition). Общие операции преобразования значений вынесены в [функциональные выражения](/reference/value-expressions), а доступные readers зависят от сущности.
+
 ## Правила хорошей связи
 
 1. Ссылайтесь на стабильный identity, а не на отображаемое имя.

@@ -1,8 +1,10 @@
 # Query
 
-Query — source-first описание получения данных. Он формирует именованные `outputs`, но не определяет, где они будут храниться и кто станет их потребителем.
+Query — source-first описание получения данных. Он объявляет входные props, HTTP-контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем.
 
-## Базовый пример
+В `request.body` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions). Специальные readers Query — `prop(path)` и `response(path?)`.
+
+## Полный пример
 
 ```ts
 defineQuery({
@@ -12,6 +14,7 @@ defineQuery({
     filterPayload: field('Object')
       .optional()
       .from(filter('schedule').output('request')),
+    limit: field('Number').default(100),
   }),
 
   request: {
@@ -26,11 +29,21 @@ defineQuery({
       mode: 'profile',
       profile: 'keycloak-dev',
     },
-    body: body(({ prop }) => merge({}, prop('filterPayload'))),
+    timeoutMs: 15000,
+    formUrlencoded: false,
+    body: body(({ prop }) => merge(
+      { limit: prop('limit') },
+      prop('filterPayload'),
+    )),
   },
 
   outputs: {
-    raw: output().from(response()),
+    raw: output().from(response('items')),
+    active: output().from(
+      response('items')
+        .where(match({ active: true }))
+        .sortBy(get('name')),
+    ),
   },
 
   mock: {
@@ -40,57 +53,96 @@ defineQuery({
 })
 ```
 
-## Ответственность
-
-Query отвечает за:
-
-- входные `props`;
-- transport и auth;
-- request body;
-- mock response;
-- упорядоченный граф outputs;
-- локальные и внешние DataView внутри outputs.
-
-Query не записывает данные в Store или произвольный путь Raph. Это делает Composition.
+В текущей версии поддерживается `kind: 'rest'`.
 
 ## Props
 
+`defineProps` задаёт единственный runtime input-контракт Query:
+
 ```ts
 props: defineProps({
-  filterPayload: field('Object').optional(),
-  limit: field('Number').default(100),
+  statuses: field('String')
+    .array()
+    .optional()
+    .default(['active'])
+    .options([
+      { value: 'active', label: 'Активен' },
+      { value: 'closed', label: 'Закрыт' },
+    ]),
 })
 ```
 
-Prop участвует в HTTP-запросе только при явной ссылке из `request`:
+| API | Назначение |
+| --- | --- |
+| `field(type)` | Тип: `String`, `Number`, `Boolean`, `Date`, `Time`, `DateTime` или `Object` |
+| `.optional()` | Поле не является обязательным |
+| `.array()` | Значение является массивом указанного типа |
+| `.default(expression)` | Значение по умолчанию |
+| `.options([{ value, label? }])` | Статический список допустимых значений |
+| `.vocab(identity, { valuePath, labelPath })` | Значения и подписи из Vocab |
+| `.from(filter(identity).output(name))` | Default из output внешнего Filter |
+| `.from(defineFilter({...}).output(name))` | Default из output inline Filter |
+
+`.options` и `.vocab` взаимоисключающие. Нельзя одновременно задавать `.default(...)` и `.from(...)`.
+
+Prop участвует в запросе только при явной ссылке через `prop(path)`:
 
 ```ts
-body: body(({ prop }) =>
-  merge({ limit: prop('limit') }, prop('filterPayload')),
-)
+body: body(({ prop }) => ({
+  limit: prop('limit'),
+  filter: prop('filterPayload'),
+}))
 ```
+
+`request.body` может читать только объявленные props. Произвольного доступа к Composition, Store или глобальному окружению внутри Query source нет.
+
+## Request
+
+| Поле | Назначение |
+| --- | --- |
+| `endpoint` | Базовый endpoint или Endge var-token |
+| `path` | REST path |
+| `method` | HTTP method |
+| `headers` | Статические HTTP headers |
+| `auth` | Auth-конфигурация запроса |
+| `timeoutMs` | Необязательный timeout запроса |
+| `formUrlencoded` | Кодировать body как `application/x-www-form-urlencoded` |
+| `body` | Безопасное выражение, построенное через `body(...)` |
+
+Callback `body` должен непосредственно возвращать выражение. Block body, произвольный JavaScript и side effects не поддерживаются.
 
 ## Outputs
 
-Output получает данные из response или предыдущего output:
+Output читает response или output, объявленный выше:
 
 ```ts
 outputs: {
-  raw: output().from(response('items')),
-  rows: output().from('raw'),
+  raw: output().from(response()),
+  items: output().from(response('data.items')),
+  rows: output().from('items'),
 }
 ```
 
-Ссылаться можно только на output, объявленный выше. Такой порядок делает граф однозначным.
+`response()` возвращает весь ответ, `response('items')` — значение по dot-path. К reader можно применять любые [общие операции](/reference/value-expressions):
 
-## DataView в Query
+```ts
+rows: output().from(
+  response('items')
+    .where(match({ active: true }))
+    .map(pick(['id', 'name'])),
+)
+```
+
+Ссылаться можно только на предыдущий output. Такой порядок делает граф однозначным и исключает циклы.
+
+## DataView в output
 
 Ссылка на глобальный DataView:
 
 ```ts
 rows: output()
   .from('raw')
-  .dataView(dataView('flightRows'))
+  .dataView(dataView('flight-rows'))
 ```
 
 Локальный DataView:
@@ -105,26 +157,26 @@ rows: output()
       map({
         ...spread('row'),
         departureTime: path('row.departureTime')
-          .convert('time-string-to-date'),
+          .convert(converter('time-string-to-date')),
       }),
     ],
   }))
 ```
 
-Локальный DataView компилируется как child artifact Query и не создаёт отдельный документ домена.
+Локальный DataView компилируется как child artifact Query и не создаёт отдельный документ домена. Полный API преобразований: [DataView](/reference/data-view).
 
-## Preview и runtime
+## Mock, preview и runtime
 
-Preview компилирует Query, создаёт временный `QueryRuntimeHost`, выполняет запрос и показывает outputs. После отдельного запуска временный host уничтожается.
+`mock.enabled` переключает Query на `mock.data` без транспортного запроса.
 
-В Composition host может жить дольше одного вызова. Он обеспечивает повторные запуски, reactive props, отмену устаревшего HTTP-запроса и события изменения outputs.
+Preview компилирует Query, создаёт временный `QueryRuntimeHost`, выполняет запрос и показывает outputs. После отдельного запуска временный host уничтожается. В Composition host живёт вместе с графом, поддерживает повторные запуски, reactive props, отмену устаревшего HTTP-запроса и изменение outputs.
 
 ## Связывание в Composition
 
 ```ts
-query: query('schedule').withProps({
+request: query('schedule').withProps({
   filterPayload: fromOutput('filter', 'request'),
 })
 ```
 
-Запись output в Store является частью binding-контракта Composition, а не Query source.
+Query не записывает данные в Store. `.withProps`, hooks и публикация output через `.storeTo(...)` являются контрактом [Composition](/reference/composition).
