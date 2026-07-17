@@ -137,7 +137,7 @@ path('row.std').convert('date.iso-to-time', { format: 'HH:mm' })
 
 - `.pick(path)` читает вложенный путь;
 - `.find(criteria)` находит первый подходящий элемент массива;
-- `.convert(converter, options?)` вызывает зарегистрированный [Converter](/reference/converter).
+- `.convert(identity, options?)` вызывает зарегистрированный [Converter](/reference/converter).
 
 Для Converter также принимается явная совместимая форма `.convert(converter('date.iso-to-time'), options)`.
 
