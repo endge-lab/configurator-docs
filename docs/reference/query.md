@@ -142,8 +142,10 @@ rows: output().from(
 ```ts
 rows: output()
   .from('raw')
-  .dataView(dataView('item-rows'))
+  .dataView('item-rows')
 ```
+
+Прежняя явная форма `.dataView(dataView('item-rows'))` остаётся совместимой.
 
 Локальный DataView:
 
@@ -157,7 +159,7 @@ rows: output()
       map({
         ...spread('row'),
         formattedDate: path('row.createdAt')
-          .convert(converter('time-string-to-date')),
+          .convert('time-string-to-date'),
       }),
     ],
   }))

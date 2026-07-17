@@ -42,9 +42,11 @@ from('response.items').as('row')
 
 ```ts
 from('items')
-  .dataView(dataView('normalize-item'))
+  .dataView('normalize-item')
   .as('row')
 ```
+
+Прежняя явная форма `.dataView(dataView('normalize-item'))` остаётся совместимой.
 
 ```ts
 from('items')
@@ -130,12 +132,14 @@ path('row.items').where(match({ active: true })).map(get('id'))
 ```ts
 path('row.category').pick('code')
 path('row.statuses').find({ active: true })
-path('row.std').convert(converter('date.iso-to-time'), { format: 'HH:mm' })
+path('row.std').convert('date.iso-to-time', { format: 'HH:mm' })
 ```
 
 - `.pick(path)` читает вложенный путь;
 - `.find(criteria)` находит первый подходящий элемент массива;
 - `.convert(converter, options?)` вызывает зарегистрированный [Converter](/reference/converter).
+
+Для Converter также принимается явная совместимая форма `.convert(converter('date.iso-to-time'), options)`.
 
 Для новых выражений `pick` и `find` также доступны в общем API, но `convert` остаётся специальной возможностью DataView.
 

@@ -27,17 +27,19 @@ Binding следует выполнять после загрузки домен
 ## Использование в DataView
 
 ```ts
-path('row.amount').convert(converter('string-to-number'))
+path('row.amount').convert('string-to-number')
 ```
 
 Опции можно передать вторым аргументом:
 
 ```ts
 path('row.std').convert(
-  converter('date.iso_to_time'),
+  'date.iso_to_time',
   { format: 'HH:mm' },
 )
 ```
+
+Legacy wrapper syntax остаётся допустимым: `.convert(converter('string-to-number'))` компилируется в ту же внешнюю ссылку.
 
 ## Значение и массив
 
