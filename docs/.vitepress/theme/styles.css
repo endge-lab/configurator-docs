@@ -1,6 +1,9 @@
 @import 'vitepress/dist/client/theme-default/styles/vars.css';
 
 :root {
+  --endge-quote-accent: #2563eb;
+  --endge-quote-accent-soft: rgba(37, 99, 235, 0.1);
+  --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 82%, #dbeafe);
   --nova-accent: #0f766e;
   --nova-accent-soft: rgba(15, 118, 110, 0.12);
   --nova-panel: #071a2f;
@@ -11,8 +14,73 @@
 }
 
 .dark {
+  --endge-quote-accent: #7dd3fc;
+  --endge-quote-accent-soft: rgba(125, 211, 252, 0.11);
+  --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 88%, #0c4a6e);
   --nova-accent: #5eead4;
   --nova-accent-soft: rgba(94, 234, 212, 0.12);
+}
+
+.endge-author-quote {
+  position: relative;
+  margin: 28px 0 34px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 62%, var(--endge-quote-accent));
+  border-left: 4px solid var(--endge-quote-accent);
+  border-radius: 4px 18px 18px 4px;
+  padding: 28px 30px 24px;
+  background:
+    radial-gradient(circle at 100% 0, var(--endge-quote-accent-soft), transparent 42%),
+    var(--endge-quote-surface);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07);
+}
+
+.endge-author-quote::before {
+  position: absolute;
+  top: 6px;
+  right: 22px;
+  color: var(--endge-quote-accent-soft);
+  content: '“';
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 108px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.endge-author-quote blockquote {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  color: var(--vp-c-text-1);
+  font-size: clamp(15px, 1.4vw, 17px);
+  font-weight: 560;
+  letter-spacing: -0.005em;
+  line-height: 1.65;
+}
+
+.endge-author-quote figcaption {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 20px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.endge-author-quote figcaption strong {
+  color: var(--endge-quote-accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.endge-author-quote figcaption span::before {
+  margin-right: 9px;
+  color: var(--vp-c-divider);
+  content: '—';
 }
 
 .nova-example {
@@ -278,6 +346,26 @@
 }
 
 @media (max-width: 760px) {
+  .endge-author-quote {
+    margin: 22px 0 28px;
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 20px 20px;
+  }
+
+  .endge-author-quote::before {
+    right: 12px;
+    font-size: 82px;
+  }
+
+  .endge-author-quote figcaption {
+    display: grid;
+    gap: 2px;
+  }
+
+  .endge-author-quote figcaption span::before {
+    content: none;
+  }
+
   .nova-example__header,
   .nova-contract > header {
     align-items: stretch;
