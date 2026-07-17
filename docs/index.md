@@ -1,12 +1,7 @@
----
-layout: home
+# Тестовая страница
 
-hero:
-  name: Endge Configurator
-  text: Documentation
-  tagline: Стартовый шаблон документации на VitePress
-  actions:
-    - theme: brand
-      text: Открыть тестовую страницу
-      link: /guide/
----
+Это главная страница документации Endge Configurator.
+
+## Markdown content
+
+Основной контент читается напрямую из файла `docs/index.md`. Новые Markdown-файлы будут открываться как отдельные страницы и добавляться в навигацию слева.

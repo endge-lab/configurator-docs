@@ -8,14 +8,13 @@ export default defineConfig({
   lastUpdated: true,
   themeConfig: {
     nav: [
-      { text: 'Главная', link: '/' },
-      { text: 'Тестовая страница', link: '/guide/' },
+      { text: 'Документация', link: '/' },
     ],
     sidebar: [
       {
-        text: 'Документация',
+        text: 'Содержание',
         items: [
-          { text: 'Тестовая страница', link: '/guide/' },
+          { text: 'Тестовая страница', link: '/' },
         ],
       },
     ],
