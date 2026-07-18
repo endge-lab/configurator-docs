@@ -385,6 +385,10 @@ Endge.diagnostics.problems  ── subscribe ──→ global/entity Problems UI
 
 Configurator использует небольшой structural Vue adapter над `subscribe()`: он не копирует records или problems и не добавляет второй lifecycle. Core не хранит `LogNode`, раскрытые строки или состояние выбранной вкладки. Это позволяет использовать тот же diagnostics module без Vue и без configurator-а.
 
+Актуальные problems отображаются в самостоятельной [рабочей области Problems](/configurator/problems-workspace). Левый widget содержит собственное problem-centric дерево и не изменяет Project tree. При выборе сущности основная часть конфигуратора показывает её problems по фазам. Старый нижний Errors widget удалён; telemetry остаётся в Pulse и других telemetry views.
+
+Один presentation-компонент `EntityProblemsPanel` используется и в глобальной рабочей области, и во вкладках **Диагностика** редакторов сущностей. In an entity editor, the panel receives only a stable `entityRef` and subscribes to `Endge.diagnostics.problems` directly. It does not receive legacy `validationErrors` and does not render raw diagnostics JSON. Workspace may pass its already computed problem selection to the same component, including runtime-only owners without a persisted document.
+
 ## Безопасность
 
 Перед записью core redacts attributes, имя которых содержит `authorization`, `cookie`, `credential`, `password`, `secret` или `token`. Producers всё равно должны передавать только минимальный безопасный контекст и не помещать пользовательские payload в `body` или attributes.

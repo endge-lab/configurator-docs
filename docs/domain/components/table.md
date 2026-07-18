@@ -1,9 +1,17 @@
 # Table
 
 `Table` материализует rows через declarative [Column](./column) children. Это
-runtime primitive: он использует table host, sorting, pinning и command boundary.
+runtime primitive: он использует table host, sorting, pinning и единый Action boundary.
 
 ```vue
+<script setup lang="ts">
+const ports = definePorts({
+  provides: {
+    'table.sort.clearAll': action<unknown, void>(),
+  },
+})
+</script>
+
 <Table
   :rows="flights"
   row-key="id"
@@ -14,7 +22,7 @@ runtime primitive: он использует table host, sorting, pinning и com
   default-pin="number:left,status:right"
 >
   <ColumnMenu>
-    <MenuItem command="table.sort.clearAll" label="Clear sorting" />
+    <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
   </ColumnMenu>
   <Column key="number" title="Flight" sortable />
   <Column key="std" title="STD" sortable sort="date" />
@@ -39,3 +47,24 @@ runtime primitive: он использует table host, sorting, pinning и com
 Допустимые прямые children: один [ColumnMenu](./column-menu) и любое число
 [Column](./column).
 
+Встроенное menu использует Table Actions автоматически. Для inline menu каждая
+Action identity должна быть явно объявлена в `definePorts.provides`. Это делает
+публичные возможности компонента видимыми в compiled contract.
+
+## Встроенные Actions
+
+| Identity | Эффект |
+| --- | --- |
+| `table.sort.setColumnAsc` | Сортировать текущую колонку по возрастанию. |
+| `table.sort.setColumnDesc` | Сортировать текущую колонку по убыванию. |
+| `table.sort.clearColumn` | Удалить сортировку текущей колонки. |
+| `table.sort.clearAll` | Удалить все сортировки. |
+| `table.column.pinLeft` | Закрепить текущую колонку слева. |
+| `table.column.pinRight` | Закрепить текущую колонку справа. |
+| `table.column.unpin` | Снять закрепление текущей колонки. |
+| `table.column.resetPin` | Вернуть default pin текущей колонки. |
+| `table.column.resetAllPins` | Вернуть defaults всех колонок. |
+
+Action получает context конкретной mounted Table instance. Поэтому одну и ту же
+Component SFC definition можно смонтировать несколько раз: сортировка и pin state
+не становятся global singleton.

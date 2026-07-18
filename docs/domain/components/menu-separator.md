@@ -1,12 +1,12 @@
 # MenuSeparator
 
-`MenuSeparator` разделяет группы команд внутри [ColumnMenu](./column-menu).
+`MenuSeparator` разделяет группы Actions внутри [ColumnMenu](./column-menu).
 
 ```vue
 <ColumnMenu>
-  <MenuItem command="table.sort.setColumnAsc" label="Sort ascending" />
+  <MenuItem action="table.sort.setColumnAsc" label="По возрастанию" />
   <MenuSeparator id="sort-actions-end" />
-  <MenuItem command="table.sort.clearAll" label="Clear sorting" />
+  <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
 </ColumnMenu>
 ```
 
@@ -15,4 +15,3 @@
 | `id` | literal string | Опциональный stable id; иначе `separator-{index}`. |
 
 Тег не имеет children и допустим только внутри `ColumnMenu`.
-

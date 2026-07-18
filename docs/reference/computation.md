@@ -196,23 +196,25 @@ normalized: typescript({
 
 Component SFC подключает Computation через порт. Порт объявляет типизированную зависимость компонента от внешнего вычисления и скрывает поиск, компиляцию и исполнение конкретной Computation.
 
-Компонент передаёт вычислению входные данные и получает реактивный ресурс с состояниями `loading`, `value` и `error`. Подробнее об устройстве этого контракта: [порты Component SFC](/reference/component-sfc#порты).
+Компонент передаёт вычислению входные данные и получает реактивный ресурс с состояниями `loading`, `value` и `error`. Подробнее об устройстве этого контракта: [порты Component SFC](/reference/component-sfc#направления-портов).
 
 ```ts
 const ports = definePorts({
-  state: computation<Input, Output>({
-    default: 'item-state',
-  }),
+  request: {
+    state: computation<Input, Output>({
+      default: 'item-state',
+    }),
+  },
 })
 
-const state = ports.state({ process: props.process })
+const state = ports.request.state({ process: props.process })
 ```
 
 - `state` — локальное имя порта;
 - `Input` — тип входных данных Computation;
 - `Output` — тип результата;
 - `default` — identity Computation по умолчанию;
-- `ports.state(input)` создаёт связанный с компонентом вычислительный ресурс.
+- `ports.request.state(input)` создаёт связанный с компонентом вычислительный ресурс.
 
 ```vue
 <Text if="state.loading">Загрузка…</Text>

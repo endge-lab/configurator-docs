@@ -78,6 +78,7 @@ export default defineConfig({
           { text: 'Модули конфигуратора', link: '/configurator/modules' },
           { text: 'Основной рабочий процесс', link: '/configurator/workflow' },
           { text: 'Рабочая область Runtime Preview', link: '/configurator/runtime-preview-workspace' },
+          { text: 'Рабочая область Problems', link: '/configurator/problems-workspace' },
           { text: 'Горячие клавиши редактора', link: '/configurator/editor-hotkeys' },
         ],
       },

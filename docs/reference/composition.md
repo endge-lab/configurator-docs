@@ -137,6 +137,20 @@ filterView('items-filter')
 
 `.controls(...)` настраивает встроенный generator, а `.component(...)` выбирает пользовательский renderer. Эти варианты взаимоисключающие.
 
+Filter state меняется через Actions, а не через commands. Runtime host предоставляет
+четыре стандартных Action handles:
+
+```ts
+await filter.action('set').run({ key: 'search', value: 'SU' })
+await filter.action('patch').run({ search: 'SU', direction: 'departure' })
+await filter.action('reset').run()
+await filter.action('clear').run()
+```
+
+`set` и `patch` валидируют значения по compiled Filter fields. `reset` возвращает
+defaults, `clear` создаёт пустой state. После изменения Filter публикует Events
+`state:change` и, только для действительно изменившихся outputs, `output:change`.
+
 ## Передача props
 
 `.withProps({...})` доступен для Query, Component и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
