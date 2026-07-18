@@ -42,7 +42,6 @@
 | Модуль | Назначение |
 | --- | --- |
 | `Endge.diagnostics` | Logs, exceptions, completed spans, bounded storage, subscriptions и adapter routes |
-| `Endge.console` | Команды консоли разработчика |
 | `Endge.runtimeDebugger` | Отдельный inspection tool для runtime-host, вкладок и реактивного графа |
 | `Endge.ui` | Registry UI-примитивов и presentation adapters |
 | `Endge.styles` | Компиляция и исполнение EndgeCSS |

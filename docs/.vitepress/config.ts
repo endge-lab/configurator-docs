@@ -121,7 +121,6 @@ export default defineConfig({
           { text: 'Codegen', link: '/tools/codegen' },
           { text: 'Расширение Chrome', link: '/tools/chrome-extension' },
           { text: 'Утилита Codegen', link: '/tools/codegen-utility' },
-          { text: 'Консоль', link: '/tools/console' },
           { text: 'DSL Playground (legacy)', link: '/tools/dsl-playground' },
         ],
       },
