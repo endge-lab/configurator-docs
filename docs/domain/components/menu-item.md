@@ -1,7 +1,7 @@
 # MenuItem
 
-`MenuItem` связывает пункт [ColumnMenu](./column-menu) с Action, объявленным в
-`definePorts.provides` текущего Component SFC.
+`MenuItem` связывает пункт [ColumnMenu](./column-menu) с intrinsic Action Table
+или Action, явно объявленным в `definePorts.provides` текущего Component SFC.
 
 ```vue
 <MenuItem
@@ -14,7 +14,7 @@
 
 | Атрибут | Тип | Назначение |
 | --- | --- | --- |
-| `action` | literal string | Обязательная provided Action identity. |
+| `action` | literal string | Обязательная intrinsic/provided Action identity. |
 | `label` | literal string | Обязательная подпись. |
 | `id` | literal string | Stable item id; default равен `action`. |
 | `icon` | literal string | Опциональная renderer-neutral icon identity. |

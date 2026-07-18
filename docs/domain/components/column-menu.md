@@ -3,16 +3,6 @@
 `ColumnMenu` объявляет единое context menu для всех колонок Table.
 
 ```vue
-<script setup lang="ts">
-const ports = definePorts({
-  provides: {
-    'table.sort.setColumnAsc': action<unknown, void>(),
-    'table.sort.setColumnDesc': action<unknown, void>(),
-    'table.sort.clearAll': action<unknown, void>(),
-  },
-})
-</script>
-
 <Table :rows="rows" row-key="id">
   <ColumnMenu>
     <MenuItem action="table.sort.setColumnAsc" label="По возрастанию" />
@@ -23,6 +13,10 @@ const ports = definePorts({
   <Column key="number" title="Flight" sortable />
 </Table>
 ```
+
+Intrinsic Table Actions доступны внутри `ColumnMenu` без повторного объявления
+в `definePorts.provides`. Для публикации этих Actions наружу используйте
+[`definePorts.forward`](/reference/component-sfc#forward-повторная-публикация-портов-локальных-компонентов).
 
 | Контракт | Значение |
 | --- | --- |
