@@ -5,13 +5,18 @@
 ## Реализованная основа
 
 - одна публичная точка входа `Endge.diagnostics`;
+- два независимо подписываемых подмодуля: `telemetry` и `problems`;
 - OTel-aligned records двух типов: `log` и completed `span`;
 - ERROR/FATAL exceptions как structured logs с `exception.*` attributes;
 - W3C-compatible `traceId`, `spanId`, `parentSpanId` и `traceFlags`;
 - bounded in-memory storage текущей session;
 - filters, subscriptions, counters и snapshots;
+- синхронные context providers и автоматические `user.id`/`session.id` из auth context;
 - декларативные routes и runtime `DiagnosticsAdapter` registry;
 - configuration cascade `Workspace → Tenant → Project → Environment`;
+- replaceable problem registry с owner/entity/runtime filters;
+- compiler publication в problems и correlated build logs;
+- удаление `REntity.validationErrors` и configurator Pinia diagnostics mirror;
 - compiler spans и configurator presentation layer;
 - удаление старого отдельного debug journal.
 
