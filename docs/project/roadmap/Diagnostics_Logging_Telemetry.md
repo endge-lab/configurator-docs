@@ -1,82 +1,66 @@
-# Модуль диагностики (nge diagnostics): логирование, телеметрия и отладка
+# Развитие диагностики, логирования и телеметрии
 
-Анализ и план доработки единого модуля диагностики платформы Endge.
+Базовая архитектура единого observability-модуля реализована. Текущий контракт, методы, configuration и migration описаны в разделе [«Диагностика и отладка»](../../core/diagnostics-and-debugging.md).
 
-## Текущее состояние
+## Реализованная основа
 
-### Endge.diagnostics (ядро)
+- одна публичная точка входа `Endge.diagnostics`;
+- OTel-aligned records двух типов: `log` и completed `span`;
+- ERROR/FATAL exceptions как structured logs с `exception.*` attributes;
+- W3C-compatible `traceId`, `spanId`, `parentSpanId` и `traceFlags`;
+- bounded in-memory storage текущей session;
+- filters, subscriptions, counters и snapshots;
+- декларативные routes и runtime `DiagnosticsAdapter` registry;
+- configuration cascade `Workspace → Tenant → Project → Environment`;
+- compiler spans и configurator presentation layer;
+- удаление старого отдельного debug journal.
 
-- Уже описан в `core-modules/EndgeDiagnostics.md` и зарегистрирован в федерации как `Endge.diagnostics`.
-- Задача: единый источник диагностической истины на уровне ядра (traces, spans, events, measurements, snapshots).
-- Capture API, Policy Layer, In-Memory Store, Read Model, контракт Exporters.
-- Сейчас в режиме «shadow module»: `enabled: false`, потребители подключаются позже.
+## Следующие этапы
 
-### Логирование
+### 1. Console adapter
 
-- **@endge/utils**: `StructuredLogger` — иерархический контекст, уровни (debug/info/warn/error/success), action-кнопки для логов, подписка через Subscribable. Ориентирован на UI/отладку в админке, не на production-транспорты.
-- **@endge/core**: типы `LogLevel`, `LogKind` (span_start, span_end, event) в domain/types/debug.
+Добавить небольшой встроенный adapter с читаемым browser/Node console output. Он должен форматировать logs и completed spans, но не менять core record format.
 
-## Нужно ли разделять диагностику и логирование?
+### 2. Integration adapters
 
-**Рекомендация: один модуль «диагностика» с подсистемами.**
+Реализовывать adapters отдельными packages или integrations:
 
-| Аспект | Диагностика | Логирование |
-|--------|-------------|-------------|
-| Цель | Понимание «что произошло в системе» (traces, spans, метрики, срезы состояния). | Текстовые/структурированные записи для отладки и аудита. |
-| Типичный потребитель | Мониторинг, APM, дашборды, экспорт в внешние системы. | Разработчик, поддержка, поиск по логам. |
+- Sentry — exceptions, ERROR/FATAL events и tracing context;
+- OTLP — универсальная доставка logs и spans в OpenTelemetry Collector;
+- Loki/Tempo — обычно через OTLP или специализированный backend gateway.
 
-В практике Low-Code/Enterprise (OutSystems, Mendix, Appian, внутренние платформы) логи и диагностика часто идут в одном observability-слое: одни и те же traceId/spanId связывают лог-строки и спаны. Разделение на два пакета даёт дублирование контекста (trace/span), двух точек настройки policy и двух форматов экспорта. Имеет смысл:
+Credentials должны оставаться в защищённой integration configuration. Diagnostics route хранит только `adapterId` и optional `integrationId`.
 
-- **Один модуль** (например, развивать `Endge.diagnostics` / пакет `@endge/diagnostics`): единый Capture API, единая Policy, единый буфер/хранилище и единые Exporters.
-- **Внутри модуля** — явные подсистемы или «каналы»: `logging`, `tracing`, `metrics` (measurements), `telemetry`. Уровни и форматы могут отличаться, но correlation (traceId, spanId, context) общий.
+### 3. Configurator editor
 
-Исключение: если позже появится тяжёлый «enterprise logger» с ротацией файлов, буферизацией на диск и т.д., его можно вынести в адаптер (exporter), а не в отдельный пакет.
+Добавить UI для collection policy и routes. Сначала достаточно контролов для:
 
-## Телеметрия: в том же модуле или отдельно?
+- включения signals;
+- severity threshold;
+- bounded capacity;
+- выбора adapter/integration;
+- фильтра по scope, event name и attributes.
 
-**Рекомендация: телеметрия — часть модуля диагностики.**
+Core configuration уже поддерживает эти поля, поэтому UI не требует изменения runtime contract.
 
-- **Телеметрия** в широком смысле — это «сбор данных о работе системы» (события, метрики, производительность). Это по сути то же observability, что и диагностика.
-- В Endge уже есть контур ядра: `Endge.diagnostics` (traces, spans, events, measurements).
-- Целевая модель:
-  - Модуль диагностики определяет **единый контракт** записей (trace/span/event/measurement/snapshot) и **каналы** (channels), например: `runtime`, `domain`, `query`, `bindings`, `events`, `render`, `app`.
-  - Подсистемы платформы отправляют события в `Endge.diagnostics` по своим каналам. Так сохраняется единая корреляция и один пункт настройки policy/export.
-  - Прикладная телеметрия (клики, навигация, бизнес-события) тоже идёт в тот же модуль по каналу `app` или `analytics` — без отдельного пакета.
+### 4. Дополнительные producers
 
-Итого: один модуль диагностики, внутри — подсистемы логирование (текст/структурные логи), трейсинг (traces/spans), метрики (measurements), телеметрия платформы и приложения. Разделение — по каналам и уровням, а не по пакетам.
+Подключать spans только к операциям, для которых duration и correlation реально полезны: query execution, action flow, remote request и renderer boundary. Обычные факты должны оставаться logs, чтобы не создавать лишние spans.
 
-## Что доработать в модуле диагностики
+### 5. Metrics
 
-1. **Объединение с логированием**
-   - Добавить в контракт записей тип «log» (или использовать event с полем `logLevel`/`message`) и уровни, совместимые с текущим `LogLevel` из core.
-   - Либо формально считать `StructuredLogger` из tools «видом» consumer’а диагностики: он подписывается на записи диагностики и отображает их в UI; при этом запись в буфер идёт через `Endge.diagnostics.writeEvent` / writeLog.
+Metrics пока не входят в API. Перед добавлением нужны реальные use cases, aggregation model, cardinality limits и export contract. Metrics следует добавить отдельным signal, а не кодировать через log attributes или псевдо-measurement events.
 
-2. **Транспорты (Exporters)**
-   - Реализовать и включить в pipeline экспортеры: консоль (dev), удалённый лог-сервис (production), опционально Sentry/аналог для ошибок.
-   - Policy: включение/выключение экспортеров, sample rate, фильтры по каналам/уровням.
+### 6. Production policies
 
-3. **Интеграция с runtime**
-   - Постепенно переводить ключевые операции (domain compile, query run, runtime execute, flow steps) на вызовы Capture API (beginTrace/startSpan/writeEvent/writeMeasurement), чтобы в production был полный trace.
+До массового production export нужны:
 
-4. **Телеметрия подсистем платформы**
-   - Договориться об общем формате событий подсистема → diagnostics.
-   - Подключать runtime и presentation adapters через отдельные каналы без создания второго observability-контура.
+- sampling для traces;
+- batch и retry policy внутри adapters;
+- limits на размер body и attributes;
+- allowlist/redaction поверх обязательной core redaction;
+- monitoring adapter failures и dropped records.
 
-5. **Прикладная телеметрия**
-   - API для приложения: например `Endge.diagnostics.event('app', 'pageView', { path })` или `Endge.diagnostics.measurement('app', 'actionDuration', value)`.
-   - Это позволит единообразно собирать аналитику и производительность без отдельного модуля.
+## Архитектурное правило
 
-6. **Виджет документации**
-   - В разделе Roadmap добавлен пункт «Модуль диагностики: логирование и телеметрия» со ссылкой на этот файл.
-   - Существующий пункт «Endge.diagnostics» в разделе ядра (core-modules) остаётся для описания текущего контракта модуля.
-
-## Риски и ограничения
-
-- Включение диагностики и экспортеров в production увеличивает объём данных и нагрузку на сеть; обязательны policy (sample rate, max records, фильтры по каналам) и мониторинг размера буфера. Интеграция с ошибками (канал `errors`) и с обработкой ошибок — см. **Error_Handling**.
-
-## Вывод
-
-- **Один модуль** — диагностика: логирование, трейсинг, метрики и телеметрия платформы и приложения.
-- **Не разделять** диагностику и логирование на разные пакеты; разделение — по каналам и типам записей внутри модуля.
-- **Телеметрию** платформы и приложения включать в тот же модуль через общий Capture API и каналы.
-- Дальнейшие шаги: доработка контракта записей (log/event), включение exporters в pipeline, интеграция runtime и прикладной API телеметрии.
+Новые backend formats не добавляются в core как `SentryRecord`, `GrafanaRecord` или `LokiRecord`. Core сохраняет универсальный diagnostics contract; transport-specific mapping принадлежит adapter-у.
