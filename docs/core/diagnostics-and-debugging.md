@@ -28,7 +28,7 @@ Problems-подмодуль хранит актуальное состояние
 - внешний вид вкладки «Диагностика»;
 - постоянное хранение истории между запусками;
 - credentials для Sentry, Grafana или другого backend;
-- runtime inspection snapshots и управление подключёнными browser tabs.
+- управление подключёнными browser tabs.
 
 `ProgramArtifact.diagnostics` остаётся self-contained частью compiled artifact, необходимой runtime. После компиляции тот же набор атомарно публикуется в `Endge.diagnostics.problems` как централизованный индекс актуальных проблем. `EndgeRuntimeDebugger` остаётся отдельным transport/inspection tool, но передаёт нормализованные telemetry records.
 
@@ -61,6 +61,7 @@ interface DiagnosticsLogRecord {
   traceId?: string
   spanId?: string
   traceFlags?: number
+  phase?: 'authoring' | 'build' | 'runtime'
 }
 ```
 
@@ -80,6 +81,7 @@ interface DiagnosticsSpanRecord {
   status: { code: 'unset' | 'ok' | 'error'; message?: string }
   scope: { name: string; version?: string }
   attributes: DiagnosticsAttributes
+  phase?: 'authoring' | 'build' | 'runtime'
 }
 ```
 
@@ -118,6 +120,7 @@ catch (error) {
 ```ts
 const compile = Endge.diagnostics.startSpan('domain.compile', {
   scope: { name: 'endge.compiler', version: '1.0.0' },
+  phase: 'build',
   attributes: { 'endge.project.id': projectIdentity },
 })
 
@@ -151,13 +154,42 @@ Span handle предоставляет:
 
 ```ts
 const defaultDiagnosticsConfiguration = {
-  collection: {
-    enabled: true,
-    signals: ['log', 'span'],
-    minSeverity: 9,
-    maxRecords: 2_000,
+  telemetry: {
+    collection: {
+      enabled: true,
+      signals: ['log', 'span'],
+      minSeverity: 9,
+      maxRecords: 2_000,
+    },
+    outputs: [
+      {
+        id: 'output-1',
+        name: 'Канал вывода 1',
+        enabled: true,
+        adapterType: 'console',
+        options: { format: 'pretty', groupByTrace: true },
+      },
+    ],
+    routes: [
+      {
+        id: 'runtime-fatal-console',
+        name: 'Runtime fatal errors',
+        enabled: true,
+        match: { signals: ['log'], phases: ['runtime'], minSeverity: 21 },
+        outputId: 'output-1',
+      },
+    ],
   },
-  routes: [],
+  snapshots: {
+    content: { telemetry: true, problems: true, configuration: false },
+    automatic: {
+      enabled: false,
+      errorCount: 10,
+      windowSeconds: 60,
+      cooldownSeconds: 300,
+      outputIds: ['output-1'],
+    },
+  },
 }
 ```
 
@@ -255,21 +287,42 @@ Diagnostics является частью effective configuration:
 interface EndgeConfiguration {
   // остальные поля configuration
   diagnostics: {
-    collection: {
-      enabled: boolean
-      signals: Array<'log' | 'span'>
-      minSeverity: 1 | 5 | 9 | 13 | 17 | 21
-      maxRecords: number
-    }
-    routes: Array<{
-      id: string
-      enabled: boolean
-      match: DiagnosticsFilter
-      target: {
-        adapterId: string
-        integrationId?: string
+    telemetry: {
+      collection: {
+        enabled: boolean
+        signals: Array<'log' | 'span'>
+        minSeverity: 1 | 5 | 9 | 13 | 17 | 21
+        maxRecords: number
       }
-    }>
+      outputs: Array<{
+        id: string
+        name: string
+        enabled: boolean
+        adapterType: string
+        options: Record<string, JsonValue>
+      }>
+      routes: Array<{
+        id: string
+        name: string
+        enabled: boolean
+        match: DiagnosticsFilter
+        outputId: string
+      }>
+    }
+    snapshots: {
+      content: {
+        telemetry: boolean
+        problems: boolean
+        configuration: boolean
+      }
+      automatic: {
+        enabled: boolean
+        errorCount: number
+        windowSeconds: number
+        cooldownSeconds: number
+        outputIds: string[]
+      }
+    }
   }
 }
 ```
@@ -280,9 +333,9 @@ interface EndgeConfiguration {
 Workspace → Tenant → Project → Environment
 ```
 
-Каждый следующий слой переопределяет effective result предыдущего. Collection fields применяются как value overrides, а routes merge-ятся по стабильному `id` через стандартные collection patch operations.
+Каждый следующий слой переопределяет effective result предыдущего. Scalar policy fields применяются как value overrides. Signals, outputs, routes и snapshot output ids merge-ятся стандартными collection patch operations; outputs и routes адресуются по стабильному `id`.
 
-В первой UI-версии configurator только отображает собранные records. Визуальный редактор configuration routes можно добавить позже: отсутствие editor-а не мешает хранить и применять поля `EndgeConfiguration.diagnostics`.
+Configurator редактирует эти поля в разделе **Configuration → Диагностика**. Workspace задаёт базовую model, а Tenant, Project и Environment сохраняют только локальный patch относительно upstream effective configuration.
 
 ## Чтение и подписка
 
@@ -316,41 +369,56 @@ unsubscribe()
 Дополнительные read methods:
 
 - `getCounters()` — размеры store, drops, adapter/listener/context-provider failures, active providers и spans;
-- `snapshot()` — session id, configuration, resource, counters и optional records;
+- `snapshot()` — JSON-safe снимок telemetry, problems и optional diagnostics configuration;
 - `configuration` — копия effective diagnostics configuration;
 - `resource` — общие attributes запуска;
 - `sessionId` — identifier текущей diagnostics session.
 
 ## Adapters и routes
 
-Adapter — runtime integration, которая принимает уже нормализованный `DiagnosticsRecord`. Route определяет, какие records направить в adapter.
+Output — persisted именованный канал. Он хранит только `adapterType` и JSON-safe options. Adapter — runtime integration, создаваемая factory для конкретного output. Route определяет, какие records направить в output.
 
 ```ts
-const unregister = Endge.diagnostics.registerAdapter({
-  id: 'console',
+const unregister = Endge.diagnostics.registerAdapterFactory({
+  type: 'sentry',
+  capabilities: { records: true, snapshots: true, test: true },
 
-  accept(record, context) {
-    console.log(context.routeId, record)
-  },
+  create(output, createContext) {
+    return {
+      id: output.id,
 
-  flush() {
-    // Доставить внутренний buffer adapter-а.
-  },
+      acceptRecord(record, context) {
+        // Выполнить Sentry-specific mapping и transport.
+      },
 
-  dispose() {
-    // Освободить transport или connection.
+      acceptSnapshot(snapshot) {
+        // Отправить полный JSON-safe snapshot.
+      },
+
+      flush() {
+        // Доставить внутренний buffer adapter-а.
+      },
+
+      dispose() {
+        // Освободить transport или connection.
+      },
+    }
   },
 })
 ```
 
 Основные методы:
 
-- `registerAdapter()` — зарегистрировать runtime adapter;
+- `registerAdapterFactory()` — зарегистрировать внешний adapter type;
+- `registerAdapter()` — зарегистрировать готовый программный adapter для output id;
 - `unregisterAdapter()` — flush, dispose и удалить adapter;
+- `testOutput()` — выполнить adapter-specific проверку канала;
 - `flush()` — best-effort flush всех adapters без завершения session;
 - `configure()` — применить уже разрешённую effective configuration и resource.
 
-Adapter failures учитываются в counters и не прерывают producer. Credentials не должны находиться в diagnostics routes. `integrationId` ссылается на отдельно защищённую integration configuration.
+Системный `console` adapter зарегистрирован ядром автоматически. Его implementation и registry находятся в `src/model/adapters/diagnostics`, а reusable contracts — в `src/domain/types/diagnostics`. External package может зарегистрировать Sentry, Loki, OTLP или database adapter без изменения core.
+
+Если одна record совпала с несколькими routes одного output, adapter получает её один раз и видит все matched `routeIds`. Adapter failures учитываются в counters и не прерывают producer. Credentials нельзя хранить в diagnostics configuration: options должны ссылаться на отдельно защищённую integration configuration.
 
 ### Sentry
 
@@ -360,7 +428,7 @@ Sentry adapter обычно отправляет:
 - trace/span correlation — в Sentry tracing context;
 - scope и attributes — как tags/extra с дополнительной allowlist policy.
 
-Compiler records получают attribute `endge.phase = build`. Если compile problems нужны только configurator-у, Sentry route должен принимать только `endge.phase = runtime`. Локальная build history при этом остаётся доступной и не отправляется наружу.
+Compiler records получают first-class `phase: 'build'`, runtime producers — `phase: 'runtime'`. Если compile problems нужны только configurator-у, Sentry route должен принимать только `phases: ['runtime']`. Локальная build history при этом остаётся доступной и не отправляется наружу.
 
 ### Grafana
 
@@ -374,6 +442,12 @@ Grafana обычно является visual layer над Loki, Tempo и Prometh
 
 Metrics не входят в первую версию API. Их следует добавлять отдельным signal после появления реального producer и storage/export contract, а не моделировать заранее через псевдо-logs.
 
+## Диагностические снимки
+
+`Endge.diagnostics.snapshot()` создаёт JSON-safe object. Browser download не находится в core: configurator превращает object в `Blob` и скачивает файл. Headless runtime может записать тот же object в filesystem, database или remote adapter.
+
+Автоматическая policy считает ERROR/FATAL logs в sliding window. При `errorCount: 10` и `windowSeconds: 60` девять ошибок за последнюю минуту не создают snapshot; десятая создаёт. После этого `cooldownSeconds` блокирует новые автоматические snapshots, но сами records продолжают собираться. После cooldown новое окно начинается с нуля.
+
 ## Configurator UI
 
 Configurator не создаёт Pinia-копию diagnostics state. Vue layer подписывается непосредственно на независимые core submodules и строит только computed presentation:
@@ -384,6 +458,15 @@ Endge.diagnostics.problems  ── subscribe ──→ global/entity Problems UI
 ```
 
 Configurator использует небольшой structural Vue adapter над `subscribe()`: он не копирует records или problems и не добавляет второй lifecycle. Core не хранит `LogNode`, раскрытые строки или состояние выбранной вкладки. Это позволяет использовать тот же diagnostics module без Vue и без configurator-а.
+
+Configuration editor использует четыре вкладки:
+
+- **Сбор и история** — collection policy и текущая заполненность bounded store;
+- **Каналы вывода** — именованные outputs и adapter options;
+- **Маршрутизация** — signal, severity, phase и output каждого route;
+- **Снимки** — состав snapshot, sliding window и cooldown.
+
+UI редактирует full effective diagnostics model. Для contribution layer parent editor вычисляет минимальный patch относительно upstream, поэтому локальная форма не дублирует cascade logic и не мутирует core module напрямую.
 
 Актуальные problems отображаются в самостоятельной [рабочей области Problems](/configurator/problems-workspace). Левый widget содержит собственное problem-centric дерево и не изменяет Project tree. При выборе сущности основная часть конфигуратора показывает её problems по фазам. Старый нижний Errors widget удалён; telemetry остаётся в Pulse и других telemetry views.
 

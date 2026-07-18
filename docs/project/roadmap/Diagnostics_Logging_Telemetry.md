@@ -10,23 +10,21 @@
 - ERROR/FATAL exceptions как structured logs с `exception.*` attributes;
 - W3C-compatible `traceId`, `spanId`, `parentSpanId` и `traceFlags`;
 - bounded in-memory storage текущей session;
-- filters, subscriptions, counters и snapshots;
+- filters, subscriptions, counters и JSON-safe manual/automatic snapshots;
 - синхронные context providers и автоматические `user.id`/`session.id` из auth context;
-- декларативные routes и runtime `DiagnosticsAdapter` registry;
+- именованные outputs, декларативные routes и runtime `DiagnosticsAdapterFactory` registry;
+- встроенный console adapter с pretty/JSON форматами;
 - configuration cascade `Workspace → Tenant → Project → Environment`;
 - replaceable problem registry с owner/entity/runtime filters;
 - compiler publication в problems и correlated build logs;
 - удаление `REntity.validationErrors` и configurator Pinia diagnostics mirror;
-- compiler spans и configurator presentation layer;
+- compiler spans и first-class `authoring`/`build`/`runtime` phase;
+- configuration editor для collection, outputs, routing и snapshots;
 - удаление старого отдельного debug journal.
 
 ## Следующие этапы
 
-### 1. Console adapter
-
-Добавить небольшой встроенный adapter с читаемым browser/Node console output. Он должен форматировать logs и completed spans, но не менять core record format.
-
-### 2. Integration adapters
+### 1. Integration adapters
 
 Реализовывать adapters отдельными packages или integrations:
 
@@ -34,29 +32,17 @@
 - OTLP — универсальная доставка logs и spans в OpenTelemetry Collector;
 - Loki/Tempo — обычно через OTLP или специализированный backend gateway.
 
-Credentials должны оставаться в защищённой integration configuration. Diagnostics route хранит только `adapterId` и optional `integrationId`.
+Credentials должны оставаться в защищённой integration configuration. Diagnostics output хранит только `adapterType` и JSON-safe options; route ссылается на output по `outputId`.
 
-### 3. Configurator editor
-
-Добавить UI для collection policy и routes. Сначала достаточно контролов для:
-
-- включения signals;
-- severity threshold;
-- bounded capacity;
-- выбора adapter/integration;
-- фильтра по scope, event name и attributes.
-
-Core configuration уже поддерживает эти поля, поэтому UI не требует изменения runtime contract.
-
-### 4. Дополнительные producers
+### 2. Дополнительные producers
 
 Подключать spans только к операциям, для которых duration и correlation реально полезны: query execution, action flow, remote request и renderer boundary. Обычные факты должны оставаться logs, чтобы не создавать лишние spans.
 
-### 5. Metrics
+### 3. Metrics
 
 Metrics пока не входят в API. Перед добавлением нужны реальные use cases, aggregation model, cardinality limits и export contract. Metrics следует добавить отдельным signal, а не кодировать через log attributes или псевдо-measurement events.
 
-### 6. Production policies
+### 4. Production policies
 
 До массового production export нужны:
 
