@@ -36,6 +36,7 @@ export default defineConfig({
           { text: 'Computation', link: '/reference/computation' },
           { text: 'DataView', link: '/reference/data-view' },
           { text: 'Query', link: '/reference/query' },
+          { text: 'Action', link: '/reference/action' },
           { text: 'Component SFC', link: '/reference/component-sfc' },
           { text: 'Composition', link: '/reference/composition' },
           { text: 'Функциональные выражения', link: '/reference/value-expressions' },

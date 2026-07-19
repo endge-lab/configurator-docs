@@ -23,9 +23,17 @@ Program — immutable результат успешной компиляции. 
 
 Program не должен содержать Vue-компоненты, открытый editor state или живые подписки.
 
+Для Action artifact содержит normalized Flow, input/output, typed target contract и
+default implementation descriptor. JavaScript functions здесь не хранятся.
+
 ## Runtime
 
 Runtime получает program и контекст запуска, создаёт host и управляет его lifecycle. Один program может породить несколько runtime instances с разными входами.
+
+`Endge.runtime.implementations` — generic runtime boundary для code providers,
+scope bindings и effective resolution. Action-specific facade валидирует contract,
+затем делегирует выполнение этому модулю. Такая граница позже может обслуживать
+Converters и другие executable entities без смешивания их semantic models.
 
 ## Почему граница обязательна
 

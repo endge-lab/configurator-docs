@@ -6,6 +6,12 @@
 
 Она хранит identity, metadata и source. Документ можно загрузить, сравнить, версионировать и отредактировать без запуска приложения.
 
+Effective domain также содержит read-only descriptors с provenance `builtin`,
+`local` или `derived`. Они имеют стабильную ссылку `type + identity`, но не обязаны
+иметь storage id. Только `origin.kind === 'storage'` участвует в Payload, export,
+delete, rename и folder persistence. Generic resolved-entity index хранит такие
+descriptors отдельно от persisted maps.
+
 ## Runtime-сущность
 
 Это живой объект, у которого есть:
@@ -25,6 +31,10 @@ Typed runtime hosts существуют для Query, Action, Filter, Compositi
 - Binding — сохраняемая конфигурация реакции;
 - editor model — временное состояние конфигуратора;
 - ProgramArtifact — исполняемый контракт, но ещё не живой экземпляр.
+
+Runtime implementation binding для Action не является persisted Binding-документом.
+Это локальная связь semantic identity с загруженной TypeScript function. Она
+исчезает вместе с application session и восстанавливается регистрацией кода.
 
 ## Правило владения
 
