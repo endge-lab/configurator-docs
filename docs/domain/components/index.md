@@ -14,7 +14,7 @@ adapter материализует их во Vue, Native DOM или другой
 
 Эти теги входят в обязательный renderer-adapter contract. Стандартные adapters:
 
-- `native-vue` из `@endge/vue`;
+- `native-vue` из `@endge/ui-vue`;
 - `native-dom` из `@endge/native-dom`.
 
 ## Runtime и structural primitives
