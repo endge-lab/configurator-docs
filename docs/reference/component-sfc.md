@@ -333,7 +333,10 @@ Compiler отклоняет:
 - `default` у provided Action или Event;
 - required port без `default`;
 - `MenuItem command="..."`;
-- `MenuItem action="..."`, если Action не является intrinsic capability Table и не объявлен в `definePorts.provides`;
+- `MenuItem action="..."`, если Action не является intrinsic capability Table,
+  известным built-in Action или не объявлен в `definePorts.provides`;
+- `MenuItem :action="..."` без static `{ identity, input? }`;
+- `payload` или пользовательские поля вне `action.input` в object binding;
 - неоднозначные или конфликтующие `forward` rules;
 - повторяющиеся имена ports и неправильные kinds в секции.
 

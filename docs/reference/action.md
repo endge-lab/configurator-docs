@@ -64,6 +64,34 @@ await Endge.actions.execute('app.console.info', {
 dispose()
 ```
 
+### Built-in console log
+
+Core регистрирует `built-in-console-log` локально при создании runtime. У Action
+нет Payload-документа и database id; его stable identity и implementation
+принадлежат коду `@endge/core`.
+
+Runtime metadata `catalogPath: ['Debug']` размещает Action в
+`Built-in → Debug`, не подменяя этим реального owner `@endge/core`.
+
+Без input Action выводит диагностическое сообщение по умолчанию:
+
+```ts
+await Endge.actions.execute('built-in-console-log')
+```
+
+Можно передать строку или object с полем `message`:
+
+```ts
+await Endge.actions.execute('built-in-console-log', {
+  input: {
+    message: 'Проверка контекстного меню',
+  },
+})
+```
+
+Legacy persisted Action `console-log` удаляется миграцией и больше не создаётся
+Payload seed-ом. Старый runtime-step handler также не используется.
+
 `defineBuiltin()` имеет такой же контракт, но создаёт `origin.kind = builtin`.
 Повторная identity является ошибкой. Для изменения существующего Action нужен
 явный `override()`.
@@ -134,7 +162,9 @@ Component SFC definition, а поле `value` указывает на конкр
 ## Domain Widget
 
 В дереве Actions persisted документы остаются в своих папках. Дополнительно
-показываются read-only группы `Components`, `Built-in` и `Local`. Badges:
+показываются read-only группы `Built-in`, `Provided` и `Local`.
+`Provided` располагается сразу после `Built-in`, имеет синее runtime-оформление и
+содержит папку `Компоненты` с Component SFC owners и их Actions. Badges:
 `system`, `built-in`, `local`, `provided`, `overridden`. Virtual nodes нельзя
 перетаскивать, переименовывать, дублировать, удалять или экспортировать.
 

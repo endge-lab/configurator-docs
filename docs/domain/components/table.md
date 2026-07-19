@@ -1,7 +1,236 @@
 # Table
 
-`Table` материализует rows через declarative [Column](./column) children. Это
-runtime primitive: он использует table host, sorting, pinning и единый Action boundary.
+`Table` отображает коллекцию строк и описывает её колонки через дочерние теги
+[Column](./column). Таблица поддерживает сортировку, закрепление колонок,
+контекстное меню, локальное разбиение на страницы и виртуальную прокрутку.
+
+Один и тот же тег работает в обоих UI-адаптерах:
+
+- Native Vue использует RevoGrid;
+- vue-shadcn использует TanStack Table и TanStack Virtual.
+
+Внешний контракт тега при этом остаётся одинаковым. Разработчику Component SFC
+не требуется знать, какой grid используется внутри активного адаптера.
+
+## Минимальный пример
+
+```vue
+<script setup lang="ts">
+defineProps<{
+  rows: Array<{
+    id: string
+    flight: string
+    gate: string
+  }>
+}>()
+</script>
+
+<template>
+  <Table :rows="rows" row-key="id">
+    <Column key="flight" title="Рейс" />
+    <Column key="gate" title="Выход" />
+  </Table>
+</template>
+```
+
+`rows` содержит полную локальную коллекцию. `row-key` указывает поле со
+стабильным идентификатором строки.
+
+## Атрибуты
+
+| Атрибут | Тип | Значение по умолчанию | Назначение |
+| --- | --- | --- | --- |
+| `rows` / `:rows` | массив / выражение | `[]` | Данные таблицы. |
+| `row-key` / `rowKey` | строка | `id` | Поле со стабильным идентификатором строки. |
+| `id` / `tableId` | строка | — | Идентификатор экземпляра для сохранения состояния таблицы. |
+| `paging` | `pages` / `virtual` | `pages` | Выбирает локальные страницы или единый виртуальный список. |
+| `page-size` / `pageSize` | число / строка | `10` | Число строк на странице в режиме `pages`. |
+| `page-sizes` / `pageSizes` | строка / массив | `10,25,50,100` | Размеры страницы, доступные пользователю. |
+| `lazy` | boolean | `false` | Зарезервированный признак будущей удалённой загрузки. Сейчас запросы не выполняет. |
+| `row-size` / `rowSize` | число / строка | `40` | Расчётная высота строки в пикселях. |
+| `width` / `w` | число / строка | `100%` | Ширина таблицы. |
+| `height` / `h` | число / строка | доступная высота | Высота таблицы. |
+| `theme` | строка | зависит от адаптера | Подсказка адаптеру для выбора темы grid. |
+| `sort-mode` | строка | зависит от декларации сортировки | Режим сортировки: `single`, `multiple`, `fixed` или `disabled`. |
+| `default-sort` | строка | — | Начальная сортировка в формате `column:asc` или `column:desc`. |
+| `column-pin` | `enabled` / `disabled` | зависит от адаптера | Разрешает или запрещает закрепление колонок. |
+| `default-pin` | строка | — | Начальное закрепление в формате `column:left` или `column:right`. |
+| `column-menu` | `default` / `disabled` | `default` | Включает встроенное меню колонок или отключает его. |
+| `cell-align` | строка | `left` | Горизонтальное выравнивание содержимого ячеек. |
+| `cell-vertical-align` | строка | `middle` | Вертикальное выравнивание содержимого ячеек. |
+
+Допустимые прямые дочерние элементы: один [ColumnMenu](./column-menu) и любое
+число [Column](./column).
+
+## Как выбрать режим отображения
+
+| Задача | Конфигурация |
+| --- | --- |
+| Показать данные по 10 строк с переключением страниц | `paging="pages"` |
+| Разрешить пользователю выбирать размер страницы | `paging="pages" page-sizes="10,25,50,100"` |
+| Показать всю локальную выборку одной прокручиваемой таблицей | `paging="virtual"` |
+| Подготовить декларацию к будущей серверной загрузке | `lazy`, но пока без изменения поведения запроса |
+
+## Локальное разбиение на страницы
+
+Режим `pages` используется по умолчанию. Все строки уже должны находиться в
+`rows`: таблица не обращается к серверу, а сама выбирает текущую страницу из
+локального массива.
+
+```vue
+<Table
+  id="departures"
+  :rows="rows"
+  row-key="id"
+  paging="pages"
+  page-size="10"
+  page-sizes="10,25,50,100"
+>
+  <Column key="flight" title="Рейс" sortable />
+  <Column key="std" title="Вылет" sortable sort="date" />
+  <Column key="gate" title="Выход" />
+</Table>
+```
+
+В этом режиме таблица:
+
+1. получает полную локальную коллекцию;
+2. применяет сортировку ко всей коллекции;
+3. выбирает строки текущей страницы;
+4. показывает панель управления страницами.
+
+`page-size="10"` означает, что одновременно отображается не более десяти строк.
+`page-sizes="10,25,50,100"` формирует список доступных размеров страницы. После
+смены размера таблица возвращается на первую страницу.
+
+Следующая сокращённая запись полностью допустима:
+
+```vue
+<Table :rows="rows" />
+```
+
+Она эквивалентна следующей конфигурации:
+
+```vue
+<Table
+  :rows="rows"
+  paging="pages"
+  page-size="10"
+  page-sizes="10,25,50,100"
+/>
+```
+
+## Единый виртуальный список
+
+Режим `virtual` нужен, когда все данные уже загружены локально, но пользователю
+не нужны страницы. Он может непрерывно прокручивать всю выборку.
+
+```vue
+<Table
+  id="departures"
+  :rows="rows"
+  row-key="id"
+  paging="virtual"
+  row-size="40"
+>
+  <Column key="flight" title="Рейс" sortable />
+  <Column key="std" title="Вылет" sortable sort="date" />
+  <Column key="gate" title="Выход" />
+</Table>
+```
+
+В режиме `virtual`:
+
+- таблица получает всю локальную коллекцию;
+- страницы и панель переключения страниц отсутствуют;
+- сортировка применяется ко всей коллекции;
+- в интерфейсе создаются только строки, попавшие в видимую область, и небольшой
+  запас строк рядом с ней;
+- при прокрутке видимое окно строк пересчитывается автоматически.
+
+Это позволяет работать с тысячами локальных строк без одновременного создания
+тысяч DOM-элементов. Native Vue делегирует виртуализацию RevoGrid, а vue-shadcn
+использует TanStack Virtual.
+
+`page-size` и `page-sizes` в этом режиме не управляют отображением, поэтому их
+указывать не нужно.
+
+## Атрибут lazy
+
+`lazy` предназначен для будущей удалённой загрузки страниц:
+
+```vue
+<Table
+  :rows="rows"
+  paging="pages"
+  page-size="10"
+  lazy
+>
+  <Column key="flight" title="Рейс" />
+</Table>
+```
+
+::: warning Текущее ограничение
+Сейчас `lazy` не отправляет запросы, не передаёт `limit` и `offset` и не знает
+об общем количестве строк на сервере. Пока backend contract не реализован,
+таблица продолжает считать `rows` полной локальной коллекцией и выполняет обычное
+локальное разбиение на страницы.
+:::
+
+Таким образом, `lazy` не является третьим режимом `paging`. `paging` отвечает за
+визуальное представление уже переданных строк, а `lazy` в будущем будет отвечать
+за способ получения данных.
+
+## Состояние таблицы
+
+Для таблицы, состояние которой должно сохраняться между повторными отрисовками,
+задайте стабильный `id`:
+
+```vue
+<Table
+  id="schedule-departures"
+  :rows="rows"
+  paging="pages"
+  page-size="25"
+>
+  <Column key="flight" title="Рейс" sortable />
+  <Column key="std" title="Вылет" sortable />
+</Table>
+```
+
+Если runtime предоставляет хранилище состояния, адаптер использует этот
+идентификатор для сохранения текущей страницы, выбранного размера страницы,
+сортировки, порядка, видимости и закрепления колонок. Не используйте один `id`
+для двух разных таблиц, смонтированных одновременно.
+
+## Пользовательское содержимое ячейки
+
+Внутри `Cell` доступны текущая строка `row`, значение колонки `value` и индекс
+строки `rowIndex`:
+
+```vue
+<Table :rows="rows" row-key="id" paging="virtual">
+  <Column key="flight" title="Рейс" sortable>
+    <Cell>
+      <Badge tone="info">{{ row.flight }}</Badge>
+    </Cell>
+  </Column>
+
+  <Column key="std" title="Вылет" sortable sort="date">
+    <Cell>
+      <DateTime :value="value" format="HH:mm" />
+    </Cell>
+  </Column>
+</Table>
+```
+
+Виртуализация не меняет контекст ячейки: `rowIndex` остаётся индексом строки в
+полной отсортированной коллекции, а не позицией внутри видимого окна.
+
+## Меню и встроенные Actions
+
+Встроенное и объявленное через `ColumnMenu` меню автоматически использует
+системные Table Actions. Повторно объявлять их в `definePorts.provides` не нужно.
 
 ```vue
 <script setup lang="ts">
@@ -15,61 +244,42 @@ const ports = definePorts({
 })
 </script>
 
-<Table
-  ref="departures"
-  :rows="flights"
-  row-key="id"
-  table-id="departures"
-  sort-mode="multiple"
-  default-sort="std:asc,number:desc"
-  column-pin="enabled"
-  default-pin="number:left,status:right"
->
-  <ColumnMenu>
-    <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
-  </ColumnMenu>
-  <Column key="number" title="Flight" sortable />
-  <Column key="std" title="STD" sortable sort="date" />
-</Table>
+<template>
+  <Table
+    ref="departures"
+    id="departures"
+    :rows="rows"
+    sort-mode="multiple"
+    default-sort="std:asc,flight:asc"
+    column-pin="enabled"
+    default-pin="flight:left,status:right"
+  >
+    <ColumnMenu>
+      <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
+    </ColumnMenu>
+
+    <Column key="flight" title="Рейс" sortable />
+    <Column key="std" title="Вылет" sortable sort="date" />
+    <Column key="status" title="Статус" />
+  </Table>
+</template>
 ```
 
-| Атрибут | Тип | Назначение |
-| --- | --- | --- |
-| `rows` / `:rows` | array/expression | Строки таблицы. |
-| `row-key` / `rowKey` | string | Path стабильного row id. |
-| `table-id` / `tableId` | string | Runtime-state owner identity. |
-| `row-size` / `rowSize` | number/string | Высота строки. |
-| `width` / `w`, `height` / `h` | number/string | Bounds. |
-| `theme` | string | Renderer theme hint. |
-| `sort-mode` | string | `single`, `multiple` или disabled mode adapter-а. |
-| `default-sort` | string | `column:asc|desc`, разделённые запятыми. |
-| `column-pin` | `enabled` / `disabled` | Column pin capability. |
-| `default-pin` | string | `column:left|right`, разделённые запятыми. |
-| `column-menu` | `default` / `disabled` | Built-in или отключённое column menu. |
-| `cell-align`, `cell-vertical-align` | string | Table-level cell alignment defaults. |
+Если Actions должны стать частью внешнего контракта всего Component SFC,
+используйте `forward` от literal `ref`, как в примере выше.
 
-Допустимые прямые children: один [ColumnMenu](./column-menu) и любое число
-[Column](./column).
-
-Встроенное и inline menu используют intrinsic Table Actions автоматически.
-Повторно объявлять их в `definePorts.provides` не нужно. Если Actions должны стать
-частью внешнего контракта всего Component SFC, используйте `forward` от literal
-`ref`, как в примере выше.
-
-## Встроенные Actions
-
-| Identity | Эффект |
+| Action | Эффект |
 | --- | --- |
-| `table.sort.setColumnAsc` | Сортировать текущую колонку по возрастанию. |
-| `table.sort.setColumnDesc` | Сортировать текущую колонку по убыванию. |
-| `table.sort.clearColumn` | Удалить сортировку текущей колонки. |
-| `table.sort.clearAll` | Удалить все сортировки. |
-| `table.column.pinLeft` | Закрепить текущую колонку слева. |
-| `table.column.pinRight` | Закрепить текущую колонку справа. |
-| `table.column.unpin` | Снять закрепление текущей колонки. |
-| `table.column.resetPin` | Вернуть default pin текущей колонки. |
-| `table.column.resetAllPins` | Вернуть defaults всех колонок. |
+| `table.sort.setColumnAsc` | Сортирует текущую колонку по возрастанию. |
+| `table.sort.setColumnDesc` | Сортирует текущую колонку по убыванию. |
+| `table.sort.clearColumn` | Удаляет сортировку текущей колонки. |
+| `table.sort.clearAll` | Удаляет все активные сортировки. |
+| `table.column.pinLeft` | Закрепляет текущую колонку слева. |
+| `table.column.pinRight` | Закрепляет текущую колонку справа. |
+| `table.column.unpin` | Снимает закрепление текущей колонки. |
+| `table.column.resetPin` | Возвращает начальное закрепление текущей колонки. |
+| `table.column.resetAllPins` | Возвращает начальное закрепление всех колонок. |
 
-Action получает context конкретной mounted Table instance. Поэтому одну и ту же
-Component SFC definition можно смонтировать несколько раз: сортировка и pin state
-не становятся global singleton.
+Каждый Action получает контекст конкретного смонтированного экземпляра `Table`.
+Состояние сортировки и закрепления не становится глобальным singleton даже при
+нескольких экземплярах одного Component SFC.
