@@ -35,6 +35,7 @@ export default defineConfig({
           { text: 'Converter', link: '/reference/converter' },
           { text: 'Computation', link: '/reference/computation' },
           { text: 'DataView', link: '/reference/data-view' },
+          { text: 'Type', link: '/reference/type' },
           { text: 'Query', link: '/reference/query' },
           { text: 'Action', link: '/reference/action' },
           { text: 'Component SFC', link: '/reference/component-sfc' },
