@@ -1,6 +1,6 @@
 # Composition
 
-Composition собирает доменные документы в исполняемый runtime-граф: создаёт runtime-ноды, связывает их inputs и outputs, управляет запуском и публикует результаты в Store. Она описывает оркестрацию, но не layout и не способ визуализации компонентов.
+Composition собирает доменные документы в исполняемый runtime-граф: создаёт runtime-ноды, связывает их props и outputs, управляет запуском и публикует результаты в Store. Она описывает оркестрацию, но не layout и не способ визуализации компонентов.
 
 Значения в `.withProps({...})` поддерживают [общие функциональные выражения](/reference/value-expressions). Специальные readers Composition перечислены ниже.
 
@@ -113,10 +113,10 @@ composition('flight-board').withData({
 | `filter(identity)` | Filter runtime | `activateOn`, `persist` |
 | `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
 | `component(identity)` | Component SFC runtime | `activateOn`, `withProps` |
-| `composition(identity)` | Вложенная Composition | `activateOn`, `withData`, `storeTo` |
+| `composition(identity)` | Вложенная Composition | `activateOn`, `withProps`, `withData`, `storeTo` |
 | `filterView(identity)` | Представление Filter | `activateOn`, `fields`, `controls`, `component`, `withProps` |
 
-`composition(...).withProps(...)` не поддерживается: у Composition v1 нет публичного input-контракта.
+Вложенная Composition принимает значения своего публичного props-контракта через `.withProps(...)`. Соответствие обязательным и объявленным props проверяется после linking с compiled artifact вызываемой Composition.
 
 ### FilterView
 
@@ -151,9 +151,42 @@ await filter.action('clear').run()
 defaults, `clear` создаёт пустой state. После изменения Filter публикует Events
 `state:change` и, только для действительно изменившихся outputs, `output:change`.
 
-## Передача props
+## Публичные props Composition
 
-`.withProps({...})` доступен для Query, Component и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
+Composition использует тот же author-facing vocabulary, что Query и Component: объявляет контракт через `props: defineProps({...})`, читает значения через `prop(path)`, а caller передаёт их через `.withProps({...})`.
+
+```ts
+defineComposition({
+  props: defineProps({
+    requirements: field('Object'),
+  }),
+
+  runtimes: {
+    attributes: query('attributes-leg-select').withProps({
+      names: prop('requirements.arrival.attributes'),
+    }),
+  },
+})
+```
+
+Caller может передать literal, обычный Composition binding или namespace compiled metadata компонента:
+
+```ts
+defineComposition({
+  runtimes: {
+    requests: composition('groundhandling-default').withProps({
+      requirements: metadataOf('table', 'groundhandling.query'),
+    }),
+    table: component('groundhandling-control-table'),
+  },
+})
+```
+
+`metadataOf(runtime, namespace)` разрешает документ через runtime alias и читает `ProgramArtifact.metadata.self[namespace]`. Source SFC и renderer state во время выполнения не анализируются. При самостоятельном запуске те же значения передаются как `{ props }` в `Endge.runtime.composition.mount(...)`.
+
+## Передача props runtime-нодам
+
+`.withProps({...})` доступен для Query, Component, вложенной Composition и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
 
 ```ts
 query('search').withProps({
@@ -176,6 +209,8 @@ query('search').withProps({
 | `fromStore(key)` | Значение общего Store по ключу |
 | `fromFilter(runtime).fields([...])` | Типизированный срез полей Filter runtime |
 | `metadata(entityType, identity)` | Скомпилированные metadata документа |
+| `prop(path)` | Значение публичного prop текущей Composition |
+| `metadataOf(runtime, namespace)` | Namespace compiled metadata документа, указанного runtime alias-ом; используется как прямой binding |
 
 Зависимости между `.withProps` компилируются в граф. Циклическая связь runtime-нод считается ошибкой.
 
