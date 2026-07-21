@@ -70,17 +70,31 @@ defineProps<{
 Оба адаптера публикуют одинаковые события и payload. DOM Event никогда не
 выходит за границу renderer-а.
 
-| Event | Основные поля payload |
-| --- | --- |
-| `rowActivated` | `tableId`, `rowId`, `rowIndex`, `row`, `columnKey`, `activation` |
-| `rowContextMenuRequested` | данные строки, `columnKey`, `anchor: { x, y }` |
-| `selectionChanged` | `mode`, выбранные строки и идентификаторы, добавленные и удалённые идентификаторы |
-| `sortChanged` | `sort: { columnKey, direction }[]` |
-| `columnVisibilityChanged` | `visibility`, `hiddenColumnKeys` |
-| `columnPinChanged` | `left`, `right` |
-| `columnOrderChanged` | `columnKeys` |
-| `columnSizeChanged` | `sizes`, `changedColumnKey` |
-| `pageChanged` | `pageIndex`, `pageSize`, `pageCount` |
+| Event identity | Название в UI | Основные поля payload |
+| --- | --- | --- |
+| `rowActivated` | Активация строки | `tableId`, `rowId`, `rowIndex`, `row`, `columnKey`, `activation` |
+| `rowContextMenuRequested` | Контекстное меню строки | данные строки, `columnKey`, `anchor: { x, y }` |
+| `selectionChanged` | Изменение выбора строк | `mode`, выбранные строки и идентификаторы, добавленные и удалённые идентификаторы |
+| `sortChanged` | Изменение сортировки | `sort: { columnKey, direction }[]` |
+| `columnVisibilityChanged` | Изменение видимости колонок | `visibility`, `hiddenColumnKeys` |
+| `columnPinChanged` | Изменение закрепления колонок | `left`, `right` |
+| `columnOrderChanged` | Изменение порядка колонок | `columnKeys` |
+| `columnSizeChanged` | Изменение размера колонки | `sizes`, `changedColumnKey` |
+| `pageChanged` | Изменение страницы | `pageIndex`, `pageSize`, `pageCount` |
+
+Кроме этих смысловых Events, корневой тег `Table` поддерживает общие события
+указателя, мыши, клавиатуры, фокуса, прокрутки и drag-and-drop. В частности,
+доступны `click`, `dblclick`, `contextmenu`, `mouseover`, `pointerdown`,
+`keydown`, `focus`, `wheel`, `scroll` и события drag-and-drop.
+
+Есть важное различие: `@contextmenu` относится ко всей области Table и имеет
+общий pointer payload, а `@rowContextMenuRequested` возникает только для строки
+и содержит `rowId`, `row`, `columnKey` и `anchor`. Оба варианта можно обработать
+локально через `action(...)` в атрибуте или вывести наружу через
+`definePorts.emits`/`forward`.
+
+Общий список браузерных Events, их payload и правила `.stop`/bubbling описаны в
+[руководстве по событиям Component SFC](/guides/component-events).
 
 Начальная гидратация состояния события не создаёт. Изменения через встроенные
 Table Actions, напротив, публикуют те же события, что и действия пользователя.

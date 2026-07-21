@@ -413,6 +413,54 @@ emits: {
 Удаление реакции в визуальном редакторе удаляет только `action`. Сам Event
 остаётся в `emits` и продолжает публиковаться.
 
+### События непосредственно на тегах
+
+Если реакция нужна только внутри текущего шаблона, Event необязательно выводить
+в публичный `emits`. Action можно указать прямо в атрибуте тега:
+
+```vue
+<Text
+  ref="title"
+  @click.stop="action({
+    identity: 'audit.track-click',
+    input: { pointer: event() },
+  })"
+>
+  Открыть рейс
+</Text>
+```
+
+Такой обработчик остаётся локальным. Чтобы тот же `click` был доступен
+родительскому компоненту, его нужно явно опубликовать через `emits.from` или
+`forward`:
+
+```ts
+emits: {
+  titleClicked: event<ComponentSFCPointerEventPayload>({
+    from: { ref: 'title', event: 'click' },
+  }),
+}
+```
+
+Built-in registry описывает общие события указателя, мыши, клавиатуры, фокуса,
+прокрутки и drag-and-drop. Для `Input`, `Textarea`, `Checkbox` и `Select` также
+доступны `input` и `change`. Payload не содержит DOM Event и одинаков для всех
+renderer-ов.
+
+Поддержаны modifiers `.stop`, `.prevent`, `.self`, `.once`, `.capture` и
+`.passive`. `.stop` останавливает DOM bubbling и дальнейшую публикацию этого
+occurrence через Event boundary, но локальный Action выполняется. Комбинация
+`.passive.prevent` запрещена compiler-ом.
+
+`Table` имеет и общие браузерные Events (`click`, `contextmenu`, `keydown` и
+другие), и девять смысловых Table Events. Например, `contextmenu` сообщает о
+нажатии на область Table, а `rowContextMenuRequested` дополнительно содержит
+строку, колонку и координаты anchor.
+
+Полный список event-capable тегов, intrinsic Events, payload-полей, modifiers и
+вариантов routing приведён в руководстве
+[«События Component SFC на практике»](/guides/component-events).
+
 ## Компиляция и runtime
 
 1. Source parser читает `definePorts`.
