@@ -18,6 +18,8 @@
 
 Такой подход позволяет безопасно проверять изменения кнопкой запуска, а все средства визуализации и управления жизненным циклом остаются в единой рабочей области Runtime Preview.
 
+Composition получает fixtures из `previewProps: definePreviewProps({...})`. Inline values и ссылки `mock(identity)` materialize в обычные mount props перед созданием runtime graph. Component SFC читает собственный `definePreviewProps(...)`, включая `fromStore`/`fromData` и preview options. Эти значения существуют только в Runtime Preview и не подменяют production inputs.
+
 ## Контракт интерфейса
 
 - Для запуска используется одно действие Run; отдельного действия Debug нет.

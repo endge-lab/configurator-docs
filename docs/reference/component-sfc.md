@@ -2,6 +2,49 @@
 
 Component SFC — основной исполняемый документ интерфейса. Он объединяет публичные порты, renderer-neutral template, локальные вычислительные ресурсы и EndgeCSS в одном source-документе.
 
+## Preview props
+
+`definePreviewProps({...})` задаёт входные значения только для Component SFC preview. Они не становятся defaults публичного component contract и не применяются, когда компонент монтирует Composition.
+
+```vue
+<script setup lang="ts">
+defineProps<{
+  title: string
+  rows: FlightRow[]
+}>()
+
+definePreviewProps({
+  title: 'Рейсы на перроне',
+  rows: [
+    { id: 'SU100', status: 'boarding' },
+  ],
+})
+</script>
+
+<template>
+  <Table :rows="rows" row-key="id" />
+</template>
+```
+
+Для runtime-backed preview component props поддерживаются `fromStore(path)` и `fromData('store.path')`. Второй аргумент позволяет подготовить Store seed и запустить Query перед render:
+
+```ts
+definePreviewProps(
+  {
+    rows: fromData('schedule.table'),
+  },
+  {
+    run: [
+      query('schedule').storeTo(store('schedule'), {
+        table: output('rows'),
+      }),
+    ],
+  },
+)
+```
+
+`RMock` references через `mock(identity)` сейчас являются preview API Composition и Store initializer API. Component SFC использует inline values, `fromStore` или `fromData`; различия собраны на странице [Mock data](/reference/mock).
+
 Порт — это типизированная граница компонента. Он отвечает сразу на два вопроса: какое взаимодействие разрешено и в каком направлении оно идёт. Все порты объявляются одним top-level вызовом `definePorts({...})` и попадают в compiled artifact `Endge.program`. Неиспользуемые секции можно не указывать.
 
 ## Направления портов

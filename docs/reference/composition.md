@@ -184,6 +184,60 @@ defineComposition({
 
 `metadataOf(runtime, namespace)` разрешает документ через runtime alias и читает `ProgramArtifact.metadata.self[namespace]`. Source SFC и renderer state во время выполнения не анализируются. При самостоятельном запуске те же значения передаются как `{ props }` в `Endge.runtime.composition.mount(...)`.
 
+## Preview props
+
+`previewProps: definePreviewProps({...})` задаёт fixtures для самостоятельного запуска Composition из Runtime Preview. Ключи соответствуют публичному контракту `props`, а значения можно записать прямо в source:
+
+```ts
+defineComposition({
+  props: defineProps({
+    requirements: field('GroundHandlingQueryRequirements'),
+    airport: field('String'),
+  }),
+
+  previewProps: definePreviewProps({
+    requirements: {
+      arrival: {
+        attributes: ['LegStatus', 'BestOn'],
+        groundHandling: [
+          { code: 'Bridge On', points: ['value'] },
+        ],
+      },
+      departure: {
+        attributes: ['LegStatus', 'BestOff'],
+        groundHandling: [
+          { code: 'Bridge Off', points: ['value'] },
+        ],
+      },
+    },
+    airport: 'SVO',
+  }),
+
+  runtimes: {},
+})
+```
+
+Большой или переиспользуемый fixture можно вынести в [Mock data](/reference/mock):
+
+```ts
+previewProps: definePreviewProps({
+  requirements: mock('groundhandling-query-requirements'),
+  airport: 'SVO',
+}),
+```
+
+`mock(identity)` относится к одному prop, поэтому inline values и несколько Mock-документов можно смешивать в одном `definePreviewProps`. Содержимое Mock должно соответствовать типу именно этого prop, а не быть объектом всех preview props.
+
+Compiler проверяет имена props, индексирует RMock dependency и сверяет inline fixtures с доступным RType artifact. Проблемы preview остаются warnings: они видимы в Problems и Runtime Preview, но не делают production Composition неисполняемой.
+
+`definePreviewProps` не задаёт runtime defaults. Значения применяются только Configurator preview launcher-ом:
+
+```text
+definePreviewProps → ProgramArtifact.previewProps → Runtime Preview → mount({ props })
+```
+
+Обычный `Endge.runtime.composition.mount()`, запуск через Project и вложенная `composition(...).withProps(...)` не читают preview fixtures автоматически.
+
 ## Передача props runtime-нодам
 
 `.withProps({...})` доступен для Query, Component, вложенной Composition и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):

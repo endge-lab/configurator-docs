@@ -12,6 +12,14 @@
 | `Command+Enter` | `Control+Enter` | Запустить текущий документ и активировать Runtime Tree | Редактор Project, Composition, Component SFC или Store |
 | `Escape` | `Escape` | Активировать Project и выйти из специальной рабочей области | Активен Runtime Tree или Problems |
 
+## Дерево Project
+
+| macOS | Windows / Linux | Действие | Контекст |
+| --- | --- | --- | --- |
+| `Option` (удерживать) | `Alt` (удерживать) | Временно показывать `identity` документов вместо отображаемого имени | Дерево документов в виджете Project |
+
+После отпускания `Option` или `Alt` дерево автоматически возвращает обычные отображаемые имена. Названия папок и корневых папок не меняются. Если у документа нет собственного `identity`, его подпись также остаётся прежней.
+
 ## Source-редактор
 
 | macOS | Windows / Linux | Действие | Контекст |
@@ -33,4 +41,4 @@
 
 ## Источник истины
 
-Глобальные горячие клавиши регистрируются в `src/features/endge-ide/model/core/endge-ide-hotkeys.ts`. Комбинация для перехода к определению в Source-редакторе Endge регистрируется в `src/features/endge-ide/tools/source-editor/use-endge-source-monaco.ts`. Локальные команды визуального редактора таблицы обрабатываются в `ComponentSFCTableVisualEditor.vue`; область с атрибутом `data-editor-shortcut-scope` получает приоритет над глобальной командой.
+Глобальные горячие клавиши регистрируются в `src/features/endge-ide/model/core/endge-ide-hotkeys.ts`. Временное переключение подписей дерева Project обрабатывается в `Domain_Widget.vue`. Комбинация для перехода к определению в Source-редакторе Endge регистрируется в `src/features/endge-ide/tools/source-editor/use-endge-source-monaco.ts`. Локальные команды визуального редактора таблицы обрабатываются в `ComponentSFCTableVisualEditor.vue`; область с атрибутом `data-editor-shortcut-scope` получает приоритет над глобальной командой.

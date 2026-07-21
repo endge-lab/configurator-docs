@@ -171,6 +171,8 @@ rows: output()
 
 `mock.enabled` переключает Query на `mock.data` без транспортного запроса.
 
+Это inline mock конкретного Query, а не persisted `RMock`. Переиспользуемые fixtures, `mock(identity)`, document/code-provider modes и Composition preview описаны отдельно: [Mock data](/reference/mock).
+
 Preview компилирует Query, создаёт временный `QueryRuntimeHost`, выполняет запрос и показывает outputs. После отдельного запуска временный host уничтожается. В Composition host живёт вместе с графом, поддерживает повторные запуски, reactive props, отмену устаревшего HTTP-запроса и изменение outputs.
 
 ## Связывание в Composition
