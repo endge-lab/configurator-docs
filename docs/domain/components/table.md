@@ -43,6 +43,7 @@ defineProps<{
 | --- | --- | --- | --- |
 | `rows` / `:rows` | массив / выражение | `[]` | Данные таблицы. |
 | `row-key` / `rowKey` | строка | `id` | Поле со стабильным идентификатором строки. |
+| `selection-mode` / `selectionMode` | `none` / `single` / `multiple` | `none` | Режим локального выбора строк. |
 | `id` / `tableId` | строка | — | Идентификатор экземпляра для сохранения состояния таблицы. |
 | `paging` | `pages` / `virtual` | `pages` | Выбирает локальные страницы или единый виртуальный список. |
 | `page-size` / `pageSize` | число / строка | `10` | Число строк на странице в режиме `pages`. |
@@ -63,6 +64,60 @@ defineProps<{
 
 Допустимые прямые дочерние элементы: один [ColumnMenu](./column-menu) и любое
 число [Column](./column).
+
+## События Table
+
+Оба адаптера публикуют одинаковые события и payload. DOM Event никогда не
+выходит за границу renderer-а.
+
+| Event | Основные поля payload |
+| --- | --- |
+| `rowActivated` | `tableId`, `rowId`, `rowIndex`, `row`, `columnKey`, `activation` |
+| `rowContextMenuRequested` | данные строки, `columnKey`, `anchor: { x, y }` |
+| `selectionChanged` | `mode`, выбранные строки и идентификаторы, добавленные и удалённые идентификаторы |
+| `sortChanged` | `sort: { columnKey, direction }[]` |
+| `columnVisibilityChanged` | `visibility`, `hiddenColumnKeys` |
+| `columnPinChanged` | `left`, `right` |
+| `columnOrderChanged` | `columnKeys` |
+| `columnSizeChanged` | `sizes`, `changedColumnKey` |
+| `pageChanged` | `pageIndex`, `pageSize`, `pageCount` |
+
+Начальная гидратация состояния события не создаёт. Изменения через встроенные
+Table Actions, напротив, публикуют те же события, что и действия пользователя.
+Resize объединяется: подписчик получает итоговый размер, а не сообщение на
+каждое движение указателя.
+
+## Выбор и активация строк
+
+```vue
+<Table
+  ref="table"
+  id="departures"
+  :rows="rows"
+  row-key="id"
+  selection-mode="multiple"
+/>
+```
+
+- одинарный клик или `Space` изменяет выбор;
+- в режиме `multiple` `Cmd/Ctrl` переключает одну строку, а `Shift` выбирает диапазон;
+- двойной клик или `Enter` публикует `rowActivated`;
+- контекстное меню строки публикует `rowContextMenuRequested`;
+- выбор хранится только в смонтированном экземпляре;
+- если выбранная строка исчезла из `rows`, Table пересчитывает выбор и публикует `selectionChanged`.
+
+Чтобы вывести события Table в контракт Component SFC, используйте `from` или
+`forward`:
+
+```ts
+const ports = definePorts({
+  emits: {
+    rowActivated: event<TableRowActivatedEvent>({
+      from: { ref: 'table', event: 'rowActivated' },
+    }),
+  },
+})
+```
 
 ## Видимость колонок
 

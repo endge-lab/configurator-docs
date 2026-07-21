@@ -93,6 +93,7 @@ export default defineConfig({
           { text: 'Преобразование данных', link: '/guides/transformations' },
           { text: 'Вычисления', link: '/guides/computations' },
           { text: 'Создание интерфейса', link: '/guides/components' },
+          { text: 'События Component SFC', link: '/guides/component-events' },
           { text: 'Стилизация', link: '/guides/styling' },
         ],
       },
