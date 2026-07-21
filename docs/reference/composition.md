@@ -288,14 +288,79 @@ hooks: [
   onMount().run('request'),
   onChange('filters.request').run('request'),
   onChange('filters.request').debounce(300).run('request'),
+  onSuccess('request').run('requestDetails'),
 ]
 ```
 
 - `onMount` запускает Query после монтирования графа;
 - `onChange('runtime.output')` запускает Query при изменении output;
-- `.debounce(ms)` принимает значение от `0` до `60000`;
+- `onSuccess('runtime')` запускает Query после успешного выполнения исходной Query;
+- `.debounce(ms)` доступен только для `onChange` и принимает значение от `0` до `60000`;
 - если `.debounce(...)` не указан, для `onChange` используется `200` мс;
-- целью `.run(...)` в текущем контракте может быть только Query runtime.
+- источником `onSuccess(...)` и целью `.run(...)` может быть только Query runtime;
+- ошибка исходной Query не запускает её `onSuccess` targets;
+- циклы, созданные bindings, `onChange` или `onSuccess`, запрещены compiler-ом.
+
+Hooks одного готового уровня выполняются параллельно. Порядок строк в `hooks` не задаёт последовательность. Последовательность появляется только из явно объявленной зависимости.
+
+```ts
+hooks: [
+  // Оба root-запроса стартуют параллельно.
+  onMount().run('arrivalPairs'),
+  onMount().run('departurePairs'),
+
+  // После arrivalPairs оба targets стартуют параллельно.
+  onSuccess('arrivalPairs').run('arrivalAttributes'),
+  onSuccess('arrivalPairs').run('arrivalGroundHandling'),
+
+  // Эта ветка не зависит от arrival и стартует после departurePairs.
+  onSuccess('departurePairs').run('departureAttributes'),
+  onSuccess('departurePairs').run('departureGroundHandling'),
+]
+```
+
+Исполняемый граф для этого примера имеет два независимых branches:
+
+```text
+arrivalPairs   ──success──> [arrivalAttributes || arrivalGroundHandling]
+departurePairs ──success──> [departureAttributes || departureGroundHandling]
+```
+
+Если `arrivalPairs` завершится раньше, два arrival targets начнутся раньше departure targets. Если обе root Query завершатся одновременно, все четыре дочерние Query смогут выполняться одновременно.
+
+Чтобы получить строгую последовательность, следующий hook должен зависеть от предыдущей Query, а не от общего parent:
+
+```ts
+hooks: [
+  onMount().run('arrivalPairs'),
+  onSuccess('arrivalPairs').run('arrivalAttributes'),
+  onSuccess('arrivalAttributes').run('arrivalGroundHandling'),
+]
+```
+
+При initial mount Composition ожидает завершения всей цепочки, начатой через `onMount` и продолженной через `onSuccess`. При последующих запусках, например через `onChange`, success-chain выполняется реактивно без повторного mount Composition.
+
+Props дочерней Query разрешаются непосредственно перед её запуском. Поэтому результат parent Query можно преобразовать через ValueExpression и передать в дочерний request:
+
+```ts
+runtimes: {
+  arrivalPairs: query('groundhandling-legs-pair-filter-arrival'),
+
+  arrivalAttributes: query('attributes-leg-select').withProps({
+    legIds: fromOutput('arrivalPairs', 'raw')
+      .map(get('arrivalLeg.id'))
+      .compact()
+      .uniq(),
+  }),
+},
+
+hooks: [
+  onMount().run('arrivalPairs'),
+  onSuccess('arrivalPairs').run('arrivalAttributes'),
+]
+```
+
+Здесь data dependency задаётся через `fromOutput(...)`, а control dependency — через `onSuccess(...)`. Это разные части одного compiled runtime graph: binding передаёт значение, hook определяет момент запуска.
 
 ## Scopes
 
