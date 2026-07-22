@@ -17,6 +17,7 @@ defineComposition({
 
   resources: {
     theme: style('application-theme'),
+    common: i18n('application-common-default'),
   },
 
   runtimes: {
@@ -76,10 +77,21 @@ data: {
 },
 resources: {
   tableTheme: style('items-table-theme'),
+  common: i18n('application-common-default'),
+  schedule: i18n('schedule-default'),
 }
 ```
 
-В `data` доступны `store(identity)` и `vocab(identity)`. В `resources` текущий контракт поддерживает `style(identity)`.
+В `data` доступны `store(identity)` и `vocab(identity)`. В `resources` доступны `style(identity)` и `i18n(identity)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
+
+```vue
+<Text>{{ t('schedule:columns.status') }}</Text>
+<Text>{{ t('schedule:empty', 'Нет данных') }}</Text>
+```
+
+Translation resources накапливаются по lifecycle scope и при входе во вложенную Composition. Compiler запрещает повтор одного полного ключа `alias:key.path` ниже по иерархии: такая коллизия создаёт error diagnostic и Composition не запускается. Одинаковый `key.path` в разных aliases допустим.
+
+Подмена словаря по specific override pattern в этот контракт пока не входит. Она будет отдельным этапом и не должна обходить compiler/linker.
 
 `store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри project tree, и самостоятельно в preview.
 

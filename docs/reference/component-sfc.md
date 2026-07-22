@@ -2,6 +2,25 @@
 
 Component SFC — основной исполняемый документ интерфейса. Он объединяет публичные порты, renderer-neutral template, локальные вычислительные ресурсы и EndgeCSS в одном source-документе.
 
+## Переводы в выражениях
+
+Глобальная функция `t` доступна в безопасных SFC template-выражениях без `useI18n` и импортов:
+
+```vue
+<template>
+  <Text>{{ t('schedule:title') }}</Text>
+  <Text :tooltip="t('schedule:refreshHint', 'Обновить данные')">
+    {{ t('common:actions.refresh') }}
+  </Text>
+</template>
+```
+
+Первый сегмент до двоеточия — alias ресурса из `Composition.resources`, а не identity документа. Второй аргумент — необязательный fallback. Если ключ не найден и fallback не передан, renderer показывает исходный ключ как <code>&#123;&#123;schedule:title&#125;&#125;</code>.
+
+Компонент получает только catalog своего Composition/runtime scope. Словари родительских и вложенных Composition накапливаются; глобальный список всех документов workspace компоненту не открывается. При смене `Endge.context.currentLocale` runtime инвалидирует application scope и заново рендерит активные компоненты.
+
+Регистрация словаря и правила коллизий описаны в [Composition](/reference/composition#data-и-resources), а структура отдельного документа — в [I18n Bundle](/reference/i18n-bundle).
+
 ## Preview props
 
 `definePreviewProps({...})` задаёт входные значения только для Component SFC preview. Они не становятся defaults публичного component contract и не применяются, когда компонент монтирует Composition.

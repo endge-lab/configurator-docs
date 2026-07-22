@@ -41,6 +41,7 @@ export default defineConfig({
           { text: 'Action', link: '/reference/action' },
           { text: 'Component SFC', link: '/reference/component-sfc' },
           { text: 'Composition', link: '/reference/composition' },
+          { text: 'I18n Bundle', link: '/reference/i18n-bundle' },
           { text: 'Функциональные выражения', link: '/reference/value-expressions' },
           { text: 'Связи сущностей', link: '/domain/relations' },
           { text: 'Жизненный цикл документа', link: '/domain/lifecycle' },

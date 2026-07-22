@@ -6,10 +6,11 @@
 
 1. Определите входы и ресурсы компонента через ports.
 2. Соберите шаблон из доступных UI-примитивов и компонентов.
-3. Вынесите бизнес-вычисления в Computation.
-4. Вынесите подготовку коллекций в DataView.
-5. Добавьте локальные EndgeCSS-стили.
-6. Проверьте loading, empty, error и success-состояния.
+3. Пользовательский текст получайте через `t('resource:key', fallback?)`; resource регистрирует Composition.
+4. Вынесите бизнес-вычисления в Computation.
+5. Вынесите подготовку коллекций в DataView.
+6. Добавьте локальные EndgeCSS-стили.
+7. Проверьте loading, empty, error и success-состояния.
 
 ## Граница компонента
 
@@ -20,3 +21,5 @@
 Сущность `Component` хранит старую Table/DSL-конфигурацию и используется для просмотра исторических документов. Новые исполняемые интерфейсы следует создавать как `ComponentSFC`.
 
 Синтаксис: [Component SFC](/reference/component-sfc).
+
+Переводы: [I18n Bundle](/reference/i18n-bundle) и [resources Composition](/reference/composition#data-и-resources).

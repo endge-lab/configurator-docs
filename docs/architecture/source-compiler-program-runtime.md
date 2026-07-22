@@ -23,6 +23,8 @@ Program — immutable результат успешной компиляции. 
 
 Program не должен содержать Vue-компоненты, открытый editor state или живые подписки.
 
+Для `Composition.resources` compiler материализует i18n-документы в плоские locale indexes внутри Composition artifact. Runtime не читает общий список словарей Domain и не связывает public alias с physical identity повторно.
+
 Для Action artifact содержит normalized Flow, input/output, typed target contract и
 default implementation descriptor. JavaScript functions здесь не хранятся.
 
