@@ -183,4 +183,6 @@ request: query('items-query').withProps({
 })
 ```
 
+Здесь выбирается значение конкретного output без внешней обёртки. `fromOutput('filter')` вернул бы объект всех outputs Filter, например `{ request: value }`. Правила автоматической и ручной сборки описаны в разделе [передачи props Composition](/reference/composition#передача-props-runtime-нодам).
+
 Query не записывает данные в Store. `.withProps`, hooks и публикация output через `.storeTo(...)` являются контрактом [Composition](/reference/composition).
