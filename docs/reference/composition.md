@@ -329,23 +329,109 @@ query('items-query').storeTo(data('application'), {
 
 ## Hooks
 
+`hooks` описывает control dependencies: когда именно нужно выполнить Query. Передача значений через `.withProps(...)` относится к data dependencies и не запускает Query сама по себе.
+
+### Поддерживаемые hooks
+
 ```ts
 hooks: [
   onMount().run('request'),
   onChange('filters.request').run('request'),
   onChange('filters.request').debounce(300).run('request'),
+  onChange(prop('filter.arrival')).debounce(200).run('arrivalPairs'),
   onSuccess('request').run('requestDetails'),
 ]
 ```
 
-- `onMount` запускает Query после монтирования графа;
-- `onChange('runtime.output')` запускает Query при изменении output;
-- `onSuccess('runtime')` запускает Query после успешного выполнения исходной Query;
-- `.debounce(ms)` доступен только для `onChange` и принимает значение от `0` до `60000`;
-- если `.debounce(...)` не указан, для `onChange` используется `200` мс;
-- источником `onSuccess(...)` и целью `.run(...)` может быть только Query runtime;
-- ошибка исходной Query не запускает её `onSuccess` targets;
-- циклы, созданные bindings, `onChange` или `onSuccess`, запрещены compiler-ом.
+| Hook | Когда срабатывает | Что можно запускать |
+| --- | --- | --- |
+| `onMount().run(query)` | Один раз после монтирования runtime-графа | Query текущей Composition |
+| `onChange('runtime.output').run(query)` | После структурного изменения named output runtime-ноды | Query текущей Composition |
+| `onChange(prop('path')).run(query)` | После структурного изменения public prop или его вложенного пути | Query текущей Composition |
+| `onSuccess(query).run(query)` | После успешного завершения исходной Query | Query текущей Composition |
+
+Цель `.run(...)` всегда должна быть Query текущей Composition. Нельзя направить hook на Filter, Component, FilterView, scope или вложенную Composition.
+
+`onChange('runtime.output')` может наблюдать output Filter, Query или вложенной Composition, если этот output существует в compiled contract. `onChange(prop('path'))` наблюдает public prop текущей Composition, объявленный через `defineProps`. Произвольное выражение в качестве источника hook не поддерживается:
+
+```ts
+// Поддерживается.
+onChange('filters.request').run('request')
+onChange(prop('filter.arrival')).run('arrivalPairs')
+
+// Не поддерживается.
+onChange(fromOutput('filters', 'request')).run('request')
+onChange(fromData('application.rows')).run('request')
+```
+
+### Debounce и повторные изменения
+
+`.debounce(ms)` доступен только для `onChange` и принимает целое значение от `0` до `60000`:
+
+```ts
+onChange('filters.request')
+  .debounce(300)
+  .run('request')
+```
+
+Если `.debounce(...)` не указан, runtime неявно использует `200` мс. Пользователь может изменить задержку или указать `0`, чтобы запускать Query без задержки.
+
+Runtime также неявно сравнивает значение источника структурно. Если результат Filter output или выбранный `prop(path)` не изменился по структуре, повторного запуска не будет. Этот `structural distinct` включён всегда и пока не имеет отдельной настройки в source.
+
+Если новый запуск той же Query начинается до завершения предыдущего, `QueryRuntimeHost` применяет latest-wins: отменяет предыдущий transport через `AbortController` и сохраняет результат только актуального запуска. Это встроенное поведение Query runtime, а не отдельный hook modifier; управлять этой политикой через `hooks` сейчас нельзя.
+
+### Public props вложенной Composition
+
+Caller реактивно передаёт Filter output во вложенную Composition:
+
+```ts
+requests: composition('groundhandling-query-general')
+  .withProps({
+    filter: {
+      arrival: fromOutput('filters', 'arrival'),
+      departure: fromOutput('filters', 'departure'),
+    },
+  })
+```
+
+Внутри `groundhandling-query-general` значение `prop('filter.arrival')` обновляется автоматически. Для повторного выполнения запроса child Composition явно объявляет control dependency:
+
+```ts
+defineComposition({
+  props: defineProps({
+    filter: field('Object'),
+  }),
+
+  runtimes: {
+    arrivalPairs: query('groundhandling-legs-pair-filter-arrival')
+      .withProps({
+        filter: prop('filter.arrival'),
+      }),
+
+    departurePairs: query('groundhandling-legs-pair-filter-departure')
+      .withProps({
+        filter: prop('filter.departure'),
+      }),
+  },
+
+  hooks: [
+    onMount().run('arrivalPairs'),
+    onMount().run('departurePairs'),
+
+    onChange(prop('filter.arrival'))
+      .debounce(200)
+      .run('arrivalPairs'),
+
+    onChange(prop('filter.departure'))
+      .debounce(200)
+      .run('departurePairs'),
+  ],
+})
+```
+
+Изменение `arrival` запускает только arrival-ветку, а изменение `departure` — только departure-ветку. Вложенная Composition не перезапускается и не монтируется заново: остаются прежние runtime instances, Store bindings и lifecycle.
+
+### Последовательность и параллельность
 
 Hooks одного готового уровня выполняются параллельно. Порядок строк в `hooks` не задаёт последовательность. Последовательность появляется только из явно объявленной зависимости.
 
@@ -386,6 +472,8 @@ hooks: [
 
 При initial mount Composition ожидает завершения всей цепочки, начатой через `onMount` и продолженной через `onSuccess`. При последующих запусках, например через `onChange`, success-chain выполняется реактивно без повторного mount Composition.
 
+Ошибка исходной Query не запускает её `onSuccess` targets. Hooks `onError`, `onFinally`, `onUnmount` и условный `.run(...)` текущим контрактом не поддерживаются.
+
 Props дочерней Query разрешаются непосредственно перед её запуском. Поэтому результат parent Query можно преобразовать через ValueExpression и передать в дочерний request:
 
 ```ts
@@ -407,6 +495,22 @@ hooks: [
 ```
 
 Здесь data dependency задаётся через `fromOutput(...)`, а control dependency — через `onSuccess(...)`. Это разные части одного compiled runtime graph: binding передаёт значение, hook определяет момент запуска.
+
+### Что происходит неявно
+
+| Поведение | Нужен hook | Может ли пользователь управлять |
+| --- | --- | --- |
+| Передача нового значения через `fromOutput`, `fromData`, `fromStore`, `fromFilter` или `prop` | Нет | Выбирает binding и путь в `.withProps(...)` |
+| Первый запуск Query | Да, `onMount` | Да: можно не объявлять hook или выбрать нужные root Query |
+| Повторный запуск после изменения output/prop | Да, `onChange` | Да: выбирает источник, target и debounce |
+| Запуск зависимой Query после успеха | Да, `onSuccess` | Да: явно строит success-chain |
+| Structural distinct для `onChange` | Нет, применяется автоматически | Нет, сейчас всегда включён |
+| Debounce `200` мс без `.debounce(...)` | Нет, применяется автоматически | Да: `.debounce(0..60000)` |
+| Latest-wins и отмена предыдущего запроса | Нет, поведение Query runtime | Нет через hooks |
+| Реактивная публикация output через `.storeTo(...)` | Нет | Да: пользователь явно задаёт mapping публикации |
+| Перезапуск всей вложенной Composition при изменении prop | Не происходит | Пользователь управляет отдельными Query через `onChange(prop(...))` |
+
+Compiler запрещает циклы, созданные bindings, `onChange` и `onSuccess`. Эти проверки выполняются автоматически и не отключаются source-настройкой.
 
 ## Scopes
 
