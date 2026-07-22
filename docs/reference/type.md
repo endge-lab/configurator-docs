@@ -74,7 +74,7 @@ defineType({
 
 Use `objectOf` when the shape belongs only to its parent field. Use `field(Address)` when the type needs reuse, a stable identity, separate documentation, permissions, or recursive references.
 
-`objectOf`, `enumOf`, `unionOf` and `arrayOf` are recursive type expressions. Поэтому их можно вкладывать друг в друга:
+`objectOf`, `recordOf`, `enumOf`, `unionOf` and `arrayOf` are recursive type expressions. Поэтому их можно вкладывать друг в друга:
 
 ```ts
 defineType({
@@ -90,7 +90,7 @@ defineType({
 | API | Назначение |
 | --- | --- |
 | `field(typeIdentity)` | Обязательное поле со ссылкой на primitive или named Type |
-| `field(typeExpression)` | Поле с inline `objectOf`, `enumOf`, `unionOf` или `arrayOf` |
+| `field(typeExpression)` | Поле с inline `objectOf`, `recordOf`, `enumOf`, `unionOf` или `arrayOf` |
 | `.description(text)` | Описание поля |
 | `.optional()` | Поле не является обязательным |
 | `.array()` | Значение является массивом указанного типа |
@@ -146,6 +146,19 @@ defineType(arrayOf(
 Root `arrayOf` описывает тип, который сам является массивом. Для массива внутри object field используется modifier `.array()`.
 
 `arrayOf(...)` также принимает любой type expression, например `arrayOf(objectOf({...}))`. Modifier `.array()` остаётся короткой формой для массива значения конкретного field.
+
+`recordOf(...)` описывает inline-словарь с произвольными string-ключами и единым типом значений:
+
+```ts
+defineType({
+  properties: field(recordOf(objectOf({
+    name: field(String),
+    text: field(String),
+  }))),
+})
+```
+
+В текущей версии `recordOf` является только вложенным type expression и не используется как корень `defineType(...)`.
 
 ## Ограничения синтаксиса
 

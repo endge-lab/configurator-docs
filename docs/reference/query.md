@@ -74,7 +74,7 @@ props: defineProps({
 
 | API | Назначение |
 | --- | --- |
-| `field(type)` | Тип: `String`, `Number`, `Boolean`, `Date`, `Time`, `DateTime` или `Object` |
+| `field(type)` | Тип: `String`, `Number`, `Boolean`, `Date`, `Time`, `DateTime`, `Object`, доменный Type или inline `objectOf`/`recordOf` |
 | `.optional()` | Поле не является обязательным |
 | `.array()` | Значение является массивом указанного типа |
 | `.default(expression)` | Значение по умолчанию |
@@ -84,6 +84,28 @@ props: defineProps({
 | `.from(defineFilter({...}).output(name))` | Default из output inline Filter |
 
 `.options` и `.vocab` взаимоисключающие. Нельзя одновременно задавать `.default(...)` и `.from(...)`.
+
+Вложенный объект описывается тем же рекурсивным field-синтаксисом, что и Type Source:
+
+```ts
+payload: field(objectOf({
+  flightNumber: field(String),
+  route: field(objectOf({
+    departure: field(String),
+    arrival: field(String),
+  })),
+}))
+```
+
+Для объекта с произвольными string-ключами используется `recordOf`:
+
+```ts
+properties: field(recordOf(objectOf({
+  name: field(String),
+  type: field(String),
+  text: field(String),
+})))
+```
 
 Prop участвует в запросе только при явной ссылке через `prop(path)`:
 
