@@ -6,9 +6,15 @@
 
 1. Откройте документ, который можно запустить в runtime: Project, Composition, Component SFC или Store.
 2. Нажмите кнопку запуска либо `Command+Enter` / `Control+Enter`.
-3. Редактор запустит текущий документ в Runtime Preview и активирует виджет Runtime Tree.
-4. Выберите runtime-узел, чтобы посмотреть его жизненный цикл, результат отображения и входные props.
-5. Нажмите `Escape`, чтобы активировать виджет Project и вернуться в рабочую область документа.
+3. Для Component SFC и Composition редактор сначала ищет использование документа в Program текущего Project:
+   - одно безопасное вхождение запускается сразу;
+   - для нескольких вхождений предлагается выбрать runtime-ветку;
+   - если в Live mode активация ветки может выполнить Query из mount-графа, требуется явное подтверждение;
+   - если вхождений нет, используется standalone preview.
+4. Выбранное вхождение запускается внутри Project runtime с текущими tenant, project, environment, locale, theme, Store, i18n и style scope.
+5. Редактор активирует виджет Runtime Tree и выбирает найденный runtime-узел.
+6. Выберите другой runtime-узел, чтобы посмотреть его жизненный цикл, результат отображения и входные props.
+7. Нажмите `Escape`, чтобы активировать виджет Project и вернуться в рабочую область документа.
 
 Возврат к Project не останавливает runtime. Управление его жизненным циклом выполняется в Runtime Tree.
 
@@ -18,7 +24,9 @@
 
 Такой подход позволяет безопасно проверять изменения кнопкой запуска, а все средства визуализации и управления жизненным циклом остаются в единой рабочей области Runtime Preview.
 
-Composition получает fixtures из `previewProps: definePreviewProps({...})`. Inline values и ссылки `mock(identity)` materialize в обычные mount props перед созданием runtime graph. Component SFC читает собственный `definePreviewProps(...)`, включая `fromStore`/`fromData` и preview options. Эти значения существуют только в Runtime Preview и не подменяют production inputs.
+В контекстном режиме draft текущего Component SFC или Composition накладывается на session-local artifact reader. Остальные сущности читаются из неизменяемого `Endge.program`; общий build и сохранённый документ не меняются.
+
+В standalone режиме Composition получает fixtures из `previewProps: definePreviewProps({...})`. Inline values и ссылки `mock(identity)` materialize в обычные mount props перед созданием runtime graph. Component SFC читает собственный `definePreviewProps(...)`, включая `fromStore`/`fromData` и preview options. Эти значения существуют только в Runtime Preview и не подменяют production inputs.
 
 ## Контракт интерфейса
 
