@@ -12,7 +12,11 @@ defineComposition({
 
   data: {
     application: store('application-data'),
-    categories: vocab('item-categories'),
+    categories: vocab('item-categories').policy({
+      strategy: 'cache-first',
+      maxAgeMs: 300_000,
+      onError: 'use-cache',
+    }),
   },
 
   resources: {
@@ -82,7 +86,30 @@ resources: {
 }
 ```
 
-В `data` доступны `store(identity)` и `vocab(identity)`. В `resources` доступны `style(identity)` и `i18n(identity)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
+В `data` доступны `store(identity)` и `vocab(identity)`. `store` задаёт state provider, а `vocab` — декларативную зависимость от внешнего справочника. Значения Vocab загружаются через `Endge.vocabs` и остаются в общем Raph-кеше `vocabs.<collectionSlug>`.
+
+```ts
+data: {
+  airlines: vocab('airlines'),
+  aircrafts: vocab('aircrafts').policy({
+    strategy: 'cache-first',
+    maxAgeMs: 86_400_000,
+  }),
+  stations: vocab('stations').policy({
+    strategy: 'stale-while-revalidate',
+    maxAgeMs: 300_000,
+    onError: 'use-cache',
+  }),
+  flightServiceTypes: vocab('flight-service-types').policy({
+    strategy: 'network-first',
+    onError: 'fail',
+  }),
+}
+```
+
+Без `.policy(...)` используется `cache-first`, `maxAgeMs: null`, `onError: 'fail'`. Полный контракт стратегий, ручных built-in Actions и хранения в Raph описан в разделе [Справочники (Vocab)](/reference/vocab).
+
+В `resources` доступны `style(identity)` и `i18n(identity)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
 
 ```vue
 <Text>{{ t('schedule:columns.status') }}</Text>
@@ -526,11 +553,17 @@ Compiler запрещает циклы, созданные bindings, `onChange` 
 
 ## Scopes
 
-Scope группирует resources, runtime-ноды и вложенные scopes, а также задаёт собственную активацию:
+Scope группирует Vocab data, resources, runtime-ноды и вложенные scopes, а также задаёт собственную активацию:
 
 ```ts
 runtimes: {
   pages: scope({
+    data: {
+      pageTypes: vocab('page-types').policy({
+        strategy: 'cache-first',
+        maxAgeMs: 300_000,
+      }),
+    },
     resources: {
       theme: style('application-page-theme'),
     },
@@ -540,6 +573,12 @@ runtimes: {
   }).activateOn(manual()),
 }
 ```
+
+Vocab-зависимости scope начинают разрешаться параллельно при его активации и до создания его runtime-нод. Поэтому `manual()` scope не загружает свои справочники заранее. Root `data` принадлежит implicit `scope_default`.
+
+Корневые data aliases доступны дочерним scopes. Alias scope доступен только этому scope и его потомкам; shadowing inherited alias запрещён. Сейчас Store объявляется только в корневом `data`, а вложенный `scope.data` предназначен для Vocab.
+
+Деактивация scope не очищает общий Raph-кеш: для этого существует явная операция `built-in-vocabs-invalidate`.
 
 Публичный handle scope можно экспортировать через `output().fromScope(path)`.
 
