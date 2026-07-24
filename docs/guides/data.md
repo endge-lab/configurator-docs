@@ -35,6 +35,22 @@ data: {
 
 Значения остаются в общем Raph-кеше и не копируются в Composition. Подробно: [Справочники (Vocab)](/reference/vocab).
 
+Component SFC читает объявленный alias напрямую из runtime-контекста:
+
+```vue
+<Select
+  :value="flight.flightCarrier"
+  :options="vocab('airlines', {
+    valuePath: 'code',
+    labelPath: 'description',
+  })"
+/>
+```
+
+Передавать `airlineOptions` через `defineProps` для этого не нужно. Composition
+загружает dependency до создания runtime-ноды, а Component host подписывается на
+общий cache path и повторяет render при обновлении справочника.
+
 ## Подготовка данных
 
 Если форма ответа не подходит компоненту, добавьте DataView. Преобразование должно быть отдельным, повторяемым этапом, а не скрытой логикой визуального компонента.

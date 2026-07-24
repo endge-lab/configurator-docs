@@ -39,6 +39,11 @@ defineComposition({
 <Text>{{ t('schedule:columns.status') }}</Text>
 ```
 
+`t()` является встроенной функцией безопасных Component SFC template
+expressions. Её не нужно импортировать, получать через `useI18n` или объявлять в
+`defineProps`. В `<script setup>` она не выполняется как обычная JavaScript
+функция.
+
 `t(key, fallback?)` сначала читает текущую locale из `Endge.context`, затем workspace fallback locale. Если значение отсутствует, возвращается переданный fallback, а без него — заметный маркер <code>&#123;&#123;schedule:columns.status&#125;&#125;</code>.
 
 ## Вложенные Composition

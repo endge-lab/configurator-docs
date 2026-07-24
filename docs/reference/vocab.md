@@ -64,6 +64,61 @@ defineComposition({
 }
 ```
 
+## Использование в Component SFC
+
+Component SFC не получает загруженный массив через `defineProps` и не вызывает
+загрузку самостоятельно. Имя поля в `Composition.data` становится публичным
+alias ближайшего runtime scope:
+
+```ts
+defineComposition({
+  data: {
+    airlines: vocab('aodb-airlines'),
+  },
+
+  runtimes: {
+    card: component('schedule-card'),
+  },
+})
+```
+
+SFC преобразует записи справочника в `SourceFieldOption[]` встроенной функцией:
+
+```vue
+<Select
+  :value="flight.flightCarrier"
+  :options="vocab('airlines', {
+    valuePath: 'code',
+    labelPath: 'description',
+  })"
+/>
+```
+
+Первый аргумент — статический публичный alias `airlines`, а не физическая
+identity `aodb-airlines`. Mapping также статичен и задаёт пути внутри одной
+записи. Если записи уже имеют поля `value` и `label`, второй аргумент можно
+опустить:
+
+```vue
+<Select :value="status" :options="vocab('statuses')" />
+```
+
+Compiler сохраняет alias и mapping в runtime dependencies SFC artifact.
+Component host разрешает alias через effective Composition catalog и
+подписывается на связанный `vocabs.<collectionSlug>` path. Обновление общего
+Raph-кеша приводит к повторному render без передачи нового prop.
+
+Если alias отсутствует в runtime tree, это ошибка конфигурации. SFC не выполняет
+fallback-поиск по глобальному cache и не может подставить физическую identity.
+Полный SFC-контракт описан в
+[Component SFC: функции runtime-контекста](/reference/component-sfc#функции-runtime-контекста).
+
+В прямом Component SFC preview Configurator создаёт временную Composition по
+compiler-derived dependencies. Он использует единственное соответствие alias к
+Vocab identity из compiled Composition artifacts; неоднозначный alias требует
+запуска через конкретную Composition preview. Это preview-only поведение и не
+меняет production resolution.
+
 ## Политика загрузки
 
 ```ts
@@ -131,7 +186,11 @@ defineComposition({
 2. для блокирующих стратегий ожидает их завершения;
 3. затем создаёт runtime-ноды scope.
 
-Корневые aliases видимы во всех дочерних scopes. Alias вложенного scope видим в нем и его потомках; переопределять inherited alias нельзя. В текущем контракте вложенный `scope.data` принимает Vocab, а Store объявляется только в корневом `data`.
+Корневые aliases видимы во всех дочерних scopes. Alias вложенного scope видим в
+нём и его потомках. Если вложенный scope объявляет alias с тем же именем, его
+Vocab становится ближайшим provider только для этого поддерева; после выхода из
+scope снова действует родительский alias. В текущем контракте вложенный
+`scope.data` принимает Vocab, а Store объявляется только в корневом `data`.
 
 Деактивация или уничтожение Composition не удаляет общий Vocab-кеш. Явное удаление выполняет только `invalidate`. Параллельные запросы одного `identity` объединяются в один in-flight запрос.
 
@@ -142,6 +201,8 @@ defineComposition({
 - Composition runtime решает, когда dependency нужна.
 - `Endge.vocabs` загружает и дедуплицирует запросы.
 - Raph хранит текущие значения.
+- Component SFC host разрешает публичный alias, строит options и подписывается на cache path.
+- Renderer повторяет render при изменении использованного справочника.
 - Приложение самостоятельно определяет ручные загрузки до активации Composition.
 
 Разделение кеша по пользователю, workspace или auth-сессии не выводится неявно из Composition. До появления отдельного `cacheScope` приложение должно явно инвалидировать чувствительные справочники при смене контекста авторизации.

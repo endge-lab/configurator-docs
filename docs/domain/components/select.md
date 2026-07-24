@@ -9,7 +9,14 @@
   placeholder="Status"
 />
 
-<Select multiple :value="airlines" :options="airlineOptions" />
+<Select
+  multiple
+  :value="airlines"
+  :options="vocab('airlines', {
+    valuePath: 'code',
+    labelPath: 'description',
+  })"
+/>
 ```
 
 ```ts
@@ -31,3 +38,22 @@ type SourceFieldOption = {
 DOM values сравниваются через string normalization. Тег display-only и не
 передаёт `change` обратно в runtime.
 
+Статический массив options можно передать обычным prop-выражением. Для внешнего
+справочника не нужно добавлять массив в `defineProps`: Composition предоставляет
+Vocab alias, а встроенная функция `vocab(alias, mapping?)` возвращает
+`SourceFieldOption[]` и реактивно обновляет Select после refresh кеша.
+
+```ts
+defineComposition({
+  data: {
+    airlines: vocab('aodb-airlines'),
+  },
+
+  runtimes: {
+    card: component('schedule-card'),
+  },
+})
+```
+
+Подробнее: [Component SFC: справочники](/reference/component-sfc#справочники-vocab)
+и [Справочники (Vocab)](/reference/vocab).

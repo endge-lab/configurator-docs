@@ -120,6 +120,28 @@ Translation resources накапливаются по lifecycle scope и при 
 
 Подмена словаря по specific override pattern в этот контракт пока не входит. Она будет отдельным этапом и не должна обходить compiler/linker.
 
+Имя поля Vocab в `data` аналогично становится публичным alias, но SFC читает
+его отдельной функцией `vocab()`:
+
+```vue
+<Select
+  :value="flight.flightCarrier"
+  :options="vocab('airlines', {
+    valuePath: 'code',
+    labelPath: 'description',
+  })"
+/>
+```
+
+Composition передаёт дочернему runtime не копию массива и не физическую Vocab
+identity, а effective catalog `alias → Raph path`. Catalog наследуется по
+lifecycle scopes и вложенным Composition; ближайший Vocab alias перекрывает
+одноимённый alias предка. Component host подписывается на использованный path,
+поэтому refresh справочника повторно рендерит SFC без обновления component props.
+
+`t()` и `vocab()` не являются частью `defineProps`. Их общий контракт описан в
+[Component SFC: функции runtime-контекста](/reference/component-sfc#функции-runtime-контекста).
+
 `store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри project tree, и самостоятельно в preview.
 
 ```ts
