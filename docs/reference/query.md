@@ -2,7 +2,7 @@
 
 Query — source-first описание получения данных. Он объявляет входные props, HTTP-контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем.
 
-В `request.body` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions). Специальные readers Query — `prop(path)` и `response(path?)`.
+В `request.body` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. Специальные readers Query — `prop(path)` и `response(path?)`. Сетевой контракт Query от расширения словаря операций не меняется.
 
 ## Полный пример
 

@@ -47,10 +47,7 @@ v1 не поддерживается: меню размещается непос
   :metadata="{
     'groundhandling.process': {
       version: 1,
-      displayMode: 'active',
-      criticality: 'critical',
-      targetPrefix: true,
-      actualPrefix: false,
+      critical: true,
     },
   }"
 >
@@ -89,6 +86,9 @@ Metadata компилируется в `ProgramArtifact.metadata.nodes` вмес
 - `groundhandling.process` — настройки `GroundHandlingProcess`;
 - `endge.table.cell-presentation` — общие branches условного представления
   внешней ячейки.
+
+`groundhandling.process` влияет только на внутренние plan/actual-секторы
+`GroundHandlingProcess`. Он не задаёт фон или текст заголовка `Column`.
 
 Подробности: [вычисления представления таблиц](/guides/table-presentation-computations)
 и [общий контракт metadata](/reference/metadata).

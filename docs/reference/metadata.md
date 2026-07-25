@@ -138,11 +138,14 @@ Metadata содержит параметры вызова, но не выбир�
 {
   'groundhandling.process': {
     version: 1,
-    criticality: 'critical',
-    displayMode: 'active',
+    critical: true,
   },
 }
 ```
+
+В актуальном контракте это единственная настройка ячейки ТГО. Имя и фон
+заголовка колонки, а также Gantt не относятся к
+`groundhandling-process-state`.
 
 Неправильно:
 

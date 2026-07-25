@@ -78,6 +78,13 @@ prop('items')
 | `value.keys()` | Массив ключей объекта |
 | `value.values()` | Массив значений объекта |
 | `value.entries()` | Массив пар `[key, value]` |
+| `value.set(path, next)` | Новая копия объекта со значением по dot-path |
+| `value.unset(path)` | Новая копия объекта без значения по dot-path |
+| `value.rename(from, to)` | Неизменяемо переносит значение между путями |
+| `value.getKey(key)` | Читает динамический ключ объекта |
+| `fromEntries(entries)` | Собирает объект из массива пар `[key, value]` |
+| `lookupValue(key, dictionary, fallback?)` | Читает значение словаря по динамическому ключу |
+| `coalesce(first, ...)` | Первое значение, которое не равно `null`, `undefined` или `NaN` |
 
 ```ts
 prop('profile')
@@ -107,6 +114,16 @@ prop('profile')
 | `collection.groupBy(selector)` | Группирует элементы в объект `{ key: items[] }` |
 | `collection.keyBy(selector)` | Индексирует элементы в объект; последний элемент ключа побеждает |
 | `collection.size()` | Количество элементов |
+| `collection.first()` / `.last()` | Первый или последний элемент |
+| `collection.at(index)` | Элемент по индексу; отрицательный индекс считается с конца |
+| `collection.reverse()` | Новая коллекция в обратном порядке |
+| `collection.sortByDesc(selector)` | Сортировка по убыванию |
+| `orderBy(collection, descriptors)` | Стабильная сортировка по нескольким `{ by, direction }` |
+| `collection.chunk(size)` | Разбивает коллекцию на части |
+| `union(left, right, ...)` | Объединение без структурных дублей |
+| `intersection(left, right)` | Структурное пересечение |
+| `difference(left, right)` | Элементы left, отсутствующие в right |
+| `collection.countBy(selector)` | Считает элементы по ключу селектора |
 
 Если операция коллекции получает одиночное значение, оно рассматривается как коллекция из одного элемента; `null` и `undefined` становятся пустой коллекцией.
 
@@ -117,6 +134,15 @@ response('items')
   .sortBy(get('name'))
 ```
 
+Сортировка по нескольким полям задаётся декларативно:
+
+```ts
+orderBy(response('items'), [
+  { by: get('priority'), direction: 'desc' },
+  { by: get('name'), direction: 'asc' },
+])
+```
+
 ## Агрегации
 
 | API | Результат |
@@ -125,6 +151,8 @@ response('items')
 | `collection.sumBy(selector)` | Сумма значений селектора |
 | `collection.min()` / `.max()` | Минимальное или максимальное значение |
 | `collection.minBy(selector)` / `.maxBy(selector)` | Элемент с минимальным или максимальным значением селектора |
+| `collection.average()` | Среднее арифметическое |
+| `collection.averageBy(selector)` | Среднее арифметическое значений селектора |
 
 ```ts
 response('orders').where(match({ paid: true })).sumBy(get('amount'))
@@ -142,6 +170,13 @@ response('orders').where(match({ paid: true })).sumBy(get('amount'))
 | `value.split(separator)` | Массив частей строки |
 | `collection.join(separator?)` | Строка из элементов; separator по умолчанию `,` |
 | `value.includes(fragment)` | Подстрока для строки или структурное вхождение для массива |
+| `concat(first, ...)` | Склеивает строки, если все arguments строковые; иначе объединяет коллекции |
+| `value.startsWith(prefix)` / `.endsWith(suffix)` | Проверяет начало или конец строки |
+| `value.replace(search, replacement)` | Заменяет первое буквальное вхождение |
+| `value.replaceAll(search, replacement)` | Заменяет все буквальные вхождения |
+| `value.slice(start, end?)` | Возвращает часть строки или массива |
+| `value.padStart(length, fill?)` / `.padEnd(...)` | Дополняет строку |
+| `value.normalizeWhitespace()` | Убирает пробелы по краям и схлопывает внутренние whitespace |
 
 Строковые операции преобразуют `null` и `undefined` в пустую строку.
 
@@ -161,6 +196,9 @@ response('orders').where(match({ paid: true })).sumBy(get('amount'))
 | `when(condition, value, fallback)` | Выбирает и вычисляет только нужную ветку |
 | `isNil(value)` | `true` для `null` или `undefined` |
 | `isEmpty(value)` | Проверка пустой строки, массива или объекта |
+| `choose([{ when, then }], fallback)` | Вычисляет `then` только у первой истинной ветки |
+| `containsAll(container, values)` | Контейнер содержит все значения |
+| `containsAny(container, values)` | Контейнер содержит хотя бы одно значение |
 
 ```ts
 when(
@@ -170,9 +208,77 @@ when(
 )
 ```
 
+`when` и `choose` ленивые: невыбранные ветки не вычисляются.
+
+## Типы и преобразования
+
+| API | Результат |
+| --- | --- |
+| `toString(value)` | Строка; nullish-значение становится пустой строкой |
+| `toNumber(value, fallback?)` | Конечное число либо fallback |
+| `toBoolean(value, fallback?)` | Boolean для boolean, чисел и строк `true/false`, `1/0`, `yes/no`, `on/off` |
+| `typeOf(value)` | `undefined`, `null`, `string`, `number`, `boolean`, `array`, `object`, `date-time` или `duration` |
+| `isString`, `isNumber`, `isBoolean` | Проверка scalar-типа |
+| `isArray`, `isObject` | Проверка структуры |
+| `isDateTime`, `isDuration` | Проверка допустимого DateTime или Duration |
+
+Преобразования не бросают исключение из-за пользовательского значения. Если
+преобразование невозможно, `toNumber` и `toBoolean` возвращают переданный
+fallback либо `undefined`.
+
+## Числа
+
+| API | Результат |
+| --- | --- |
+| `add(first, ...)` / `subtract(left, right)` | Сложение и вычитание |
+| `multiply(first, ...)` / `divide(left, right)` | Умножение и деление |
+| `modulo(left, right)` | Остаток от деления |
+| `abs`, `negate`, `floor`, `ceil` | Базовые числовые преобразования |
+| `round(value, precision?)` | Округление; precision — число знаков после запятой |
+| `clamp(value, min, max)` | Ограничивает значение диапазоном |
+
+Деление и остаток от деления на ноль возвращают `undefined`. В арифметических
+операциях нечисловое значение даёт `0`, как и в существующем `sum`.
+
 Одноаргументная форма `inList(list)` сохранена для совместимости и формирует legacy-дескриптор `{ in: list }`. В новых ValueExpression используйте явную форму `inList(value, list)`.
 
-## Относительные даты
+## DateTime и Duration
+
+Новые операции времени чистые: они не читают системные часы. Текущее время,
+если оно нужно бизнес-правилу, передаётся в выражение как обычный реактивный
+вход.
+
+```ts
+dateTimeSubtract(
+  input('now'),
+  duration({ minutes: 5 }),
+)
+```
+
+`dateTime(value)` нормализует допустимое значение в ISO UTC. `duration({...})`
+принимает `weeks`, `days`, `hours`, `minutes`, `seconds` и `milliseconds` и
+возвращает JSON-compatible объект:
+
+```ts
+{ kind: 'duration', milliseconds: 300000 }
+```
+
+| API | Результат |
+| --- | --- |
+| `dateTime(value)` | ISO UTC либо `undefined` |
+| `duration(parts)` | Нормализованная длительность |
+| `dateTimeAdd(value, duration)` / `dateTimeSubtract(...)` | DateTime со сдвигом |
+| `dateTimeDifference(left, right)` | Длительность `left - right` |
+| `dateTimeStartOf(value, unit)` / `dateTimeEndOf(...)` | UTC-граница `year/month/week/day/hour/minute/second` |
+| `dateTimePart(value, part)` | UTC-часть: `year/month/day/weekday/hour/minute/second/millisecond/timestamp` |
+| `durationAdd(first, ...)` / `durationSubtract(left, right)` | Арифметика длительностей |
+| `durationTotal(value, unit)` | Полное число `weeks/days/hours/minutes/seconds/milliseconds` |
+
+`days` и `weeks` в Duration — точные интервалы по 24 часа и 7 дней. Операции
+форматирования и преобразования временных зон в ValueExpression намеренно не
+входят: это ответственность отображения.
+
+### Legacy relative date
 
 | API | Результат |
 | --- | --- |
@@ -184,9 +290,14 @@ when(
 between(
   get('createdAt'),
   relativeDateTime('-7d', 'startOfDay'),
-  relativeDateTime('0d', 'endOfDay'),
+relativeDateTime('0d', 'endOfDay'),
 )
 ```
+
+`relativeDate` и `relativeDateTime` сохранены для совместимости, но читают
+системное время и потому не подходят для реактивных Computation. В новых
+вычислениях используйте явный `now` вместе с `dateTimeAdd` /
+`dateTimeSubtract`.
 
 ## Объединение коллекций
 
@@ -250,6 +361,8 @@ ValueExpression намеренно не поддерживает:
 - доступ к глобальному окружению;
 - object spread и вычисляемые ключи внутри общего выражения;
 - пользовательские comparator-функции для сортировки.
+- чтение текущего времени через `now()` или другой скрытый глобальный источник;
+- регулярные выражения и JSON parse/stringify.
 
 Вместо callback используются выражения-селекторы: `.map(get('id'))`, `.where(match({...}))`, `.sortBy(get('name'))`. Если задачу нельзя выразить общим API, используйте [Computation с `typescript`-узлом](/reference/computation#typescript-узел) либо зарегистрированный [Converter](/reference/converter), сохраняя императивную часть в явной границе.
 

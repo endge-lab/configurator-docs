@@ -31,7 +31,29 @@ defineComputation({
 
 В persisted-документе Computation хранится один canonical source, начинающийся с `defineComputation`.
 
+## Запуск в редакторе
+
+Вкладка **Запуск** позволяет проверить несохранённый draft Computation:
+
+- слева редактируется `Input JSON`;
+- справа отображается `Output JSON`;
+- кнопка `Run preview` выполняет source с текущим input;
+- синтаксические и runtime-ошибки показываются как ошибка Preview.
+
+Вкладка **Реализация** также показывает live `output.json` справа, когда source
+и input можно успешно обработать. Live-preview запускается после короткой паузы
+ввода и не публикует временный artifact в `Endge.program`.
+
+Input может быть объектом, массивом или scalar — форма определяется контрактом
+конкретной Computation. Для async-графа с `typescript(...)` используется
+зарегистрированный Computation sandbox.
+
 Обычные узлы графа поддерживают весь [API функциональных выражений](/reference/value-expressions). Специальные readers Computation — `input(path?)` и `output(name)`.
+
+В том числе в обычных узлах доступны преобразования типов, арифметика,
+многоступенчатый `choose`, неизменяемая работа с объектами и коллекциями,
+DateTime и Duration. Эти операции остаются статическим IR и не требуют
+`typescript(...)`.
 
 ```ts
 defineComputation({
@@ -77,6 +99,31 @@ defineComputation({
   },
 })
 ```
+
+## Реактивное время
+
+В ValueExpression нет `now()`: скрытые системные часы не являются зависимостью
+графа и не вызовут пересчёт ресурса. Владелец runtime передаёт время как
+обычный input, а Computation использует чистые операции:
+
+```ts
+defineComputation({
+  outputs: {
+    overdueBoundary: dateTimeSubtract(
+      input('now'),
+      duration({ minutes: 5 }),
+    ),
+    overdue: and(
+      isDateTime(input('plannedAt')),
+      lt(dateTime(input('plannedAt')), output('overdueBoundary')),
+    ),
+  },
+  result: output('overdue'),
+})
+```
+
+В preview `now` задаётся фиксированным fixture, а production Composition
+обновляет его с требуемой бизнесу частотой.
 
 ## Вызов другой Computation
 

@@ -2,7 +2,7 @@
 
 DataView описывает чистую проекцию входных данных в форму, нужную потребителю. Глобальный DataView и локальный DataView внутри Query компилируются в один program-контракт и исполняются одним runtime-механизмом.
 
-Во всех декларативных режимах доступен [общий API функциональных выражений](/reference/value-expressions). DataView дополнительно предоставляет структурный pipeline, `path`, `template`, `spread` и вызов Converter.
+Во всех декларативных режимах доступен [общий API функциональных выражений](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. DataView дополнительно предоставляет структурный pipeline, `path`, `template`, `spread` и вызов Converter. Новые операции не превращают Converter в ValueExpression host.
 
 ## Режимы
 

@@ -19,15 +19,148 @@ tones через текущую тему.
 
 | Identity | Назначение |
 | --- | --- |
-| `groundhandling-process-state` | Состояние внутренних target/actual-точек `GroundHandlingProcess` |
+| `groundhandling-process-state` | Состояние plan/actual-секторов `GroundHandlingProcess` |
 | `table-cell-conditional-presentation` | Общие правила представления внешней ячейки Table |
 
 Оба документа используют canonical `defineComputation` source как граф
-именованных этапов. Обычные преобразования собраны из ValueExpression, а
-TypeScript оставлен только в узких узлах, которым не хватает текущих
-декларативных примитивов.
+именованных этапов. Актуальный `groundhandling-process-state` полностью
+выражается ValueExpression и не содержит `typescript(...)`.
 
 ## GroundHandlingProcess
+
+Текущий контракт относится только к содержимому ячейки. Имя и фон заголовка
+колонки, а также представление Gantt в это вычисление не входят.
+
+### Metadata
+
+Metadata колонки может переопределить критичность операции:
+
+```vue
+<Column
+  key="deboarding"
+  :metadata="{
+    'groundhandling.process': {
+      version: 1,
+      critical: true,
+    },
+  }"
+>
+  <GroundHandlingProcess
+    :process="row.arrivalLeg.groundHandling[code = 'Deboarding']"
+    :settings="columnMeta['groundhandling.process']"
+    :now="now"
+  />
+</Column>
+```
+
+| Поле | Тип | Default | Назначение |
+| --- | --- | --- | --- |
+| `version` | `1` | обязательно | Версия metadata-контракта |
+| `critical` | boolean | `process.critical`, затем `false` | Переопределение критичности |
+
+`now` не хранится в metadata. Это реактивный prop владельца runtime.
+Пятиминутная граница вычисляется чисто:
+
+```ts
+dateTimeSubtract(input('now'), duration({ minutes: 5 }))
+```
+
+### Вход
+
+```ts
+interface GroundHandlingProcessStateInput {
+  process?: {
+    operationType?: 'I' | 'P'
+    critical?: boolean
+    planStart?: string
+    planEnd?: string
+    actualStart?: string
+    actualEnd?: string
+    freshPlan?: boolean
+    freshActualStart?: boolean
+    freshActualEnd?: boolean
+    planTimestamp?: string
+    planType?: string
+    planComment?: string
+    actualSourceStart?: string
+    actualSourceEnd?: string
+    actualTimestampStart?: string
+    actualTimestampEnd?: string
+    actualCommentStart?: string
+    actualCommentEnd?: string
+  }
+  settings?: {
+    critical?: boolean
+  }
+  now?: string
+}
+```
+
+Для milestone `I` используется одна пара plan/actual: `planEnd` / `actualEnd`,
+а при их отсутствии — `planStart` / `actualStart`. Для process `P`
+используются обе пары start и end.
+
+### Результат и алгоритм
+
+Computation возвращает presentation-проекцию:
+
+- `layout: 'milestone' | 'process'`;
+- два sector descriptor для `I` или четыре для `P`;
+- пути к исходным value и tooltip-полям;
+- semantic `backgroundTone`, `fontWeight` и `status`.
+
+Значения времени, source и comment не копируются в presentation-state.
+`GroundHandlingProcess` читает их из исходного `process` по стабильным путям
+descriptor-а. Поэтому замена Computation не может сделать mock/API-данные
+ячейки пустыми или подменить их.
+
+Правило применяется отдельно к каждой паре plan/actual:
+
+| Условие | Semantic result |
+| --- | --- |
+| Факт есть, операция некритичная | `actual-non-critical`, neutral background |
+| Факт есть, critical и `actual > plan` | `actual-late-critical`, danger background |
+| Факт есть, critical и `actual <= plan` | `actual-on-time-critical`, success background |
+| Факта нет, critical и `plan < now - 5 минут` | `actual-missing-critical`, warning background |
+| Остальные случаи | `neutral` |
+
+`freshPlan` делает жирными оба плановых сектора. `freshActualStart` и
+`freshActualEnd` относятся только к своему фактическому сектору.
+
+Plan tooltip использует `planTimestamp`, `planType`, `planComment`. Actual
+tooltip использует соответствующие `actualSource*`, `actualTimestamp*`,
+`actualComment*`.
+
+### Required port
+
+```ts
+const ports = definePorts({
+  require: {
+    state: computation<
+      GroundHandlingProcessStateInput,
+      GroundHandlingProcessState
+    >({
+      default: 'groundhandling-process-state',
+    }),
+  },
+})
+```
+
+Default identity принадлежит `definePorts`, metadata содержит только settings.
+Компонент применяет semantic tones через активный RStyle:
+
+- `--endge-tone-neutral-background`;
+- `--endge-tone-warning-background`;
+- `--endge-tone-danger-background`;
+- `--endge-tone-success-background`.
+
+## Устаревший point-contract GroundHandlingProcess
+
+::: warning Исторический контракт
+Раздел ниже описывает прежнюю модель `process.points` и сохранён только для
+миграции уже созданных Payload-документов. Для новых таблиц ТГО используйте
+контракт `operationType I/P`, описанный выше.
+:::
 
 ### Metadata колонки
 
