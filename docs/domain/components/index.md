@@ -14,7 +14,7 @@ adapter материализует их во Vue, Native DOM или другой
 
 Эти теги входят в обязательный renderer-adapter contract. Стандартные adapters:
 
-- `native-vue` из `@endge/ui-vue`;
+- `vue-native` из `@endge/ui-vue`;
 - `native-dom` из `@endge/native-dom`.
 
 ## Runtime и structural primitives
@@ -55,4 +55,3 @@ defineProps<{
 
 Все visual tags принимают [общие атрибуты](./common-attributes), Endge
 control-flow directives и собственные атрибуты, перечисленные на их страницах.
-

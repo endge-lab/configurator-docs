@@ -20,7 +20,6 @@
 | `tooltip` / `:tooltip` | string/expression | Tooltip metadata. |
 
 ::: warning Current adapter scope
-`native-vue` v1 непосредственно поддерживает `HH:mm`, `date` и default format.
+`vue-native` v1 непосредственно поддерживает `HH:mm`, `date` и default format.
 Произвольная format string и `timezone` сохраняются в IR, но требуют adapter support.
 :::
-
