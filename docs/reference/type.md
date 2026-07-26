@@ -2,16 +2,11 @@
 
 Type Source — компактное source-first описание доменного типа. Оно хранится как авторский текст, проверяется безопасным parser и в дальнейшем может стать входом для генерации JSON Schema и визуального представления.
 
-В Type editor доступны четыре вкладки:
+В Type editor доступны три вкладки:
 
 - **Основное** — общие свойства документа;
-- **Legacy Form** — прежний редактор полей;
 - **Visual** — древовидное представление той же source schema с inline editing;
 - **Source** — Type Source в Monaco editor.
-
-::: warning Переходный режим
-`source` и legacy `schema` пока сохраняются одновременно, но независимо. Изменение Source не обновляет Legacy Form, а изменение Legacy Form не переписывает Source. Legacy data остаётся доступной только во вкладке Legacy Form; compiler, diagnostics и новые type selectors используют Type Source registry.
-:::
 
 Visual editor reads the compiled semantic document and writes changes back as deterministic Type Source. JSON Schema generation пока не является persisted source of truth и может быть добавлена как derived representation позднее.
 
@@ -185,18 +180,17 @@ Compiler creates one Type Program artifact for each Type document before compili
 - `Any` is valid and produces `type-any-usage` warning on the entity that uses it.
 - An artifact with warnings remains available to editor tooling and runtime orchestration.
 
-OpenAPI and GraphQL importers now generate Type Source and keep legacy fields at the same time. This allows old records to remain editable in Legacy Form while every new consumer reads the source-backed model.
+OpenAPI and GraphQL importers generate canonical Type Source directly.
 
 System `Ref*` types remain registry entries with `entityReference.target` and `entityReference.storage`. Они не разворачиваются в object schema: their purpose is to connect a typed value with a concrete domain entity selector.
 
 ## Persisted representation
 
-На переходном этапе Payload Type document хранит оба поля:
+Payload Type document хранит source-first контракт:
 
 | Поле | Содержимое |
 | --- | --- |
-| `schema` | Старое JSON-представление, которое редактирует Legacy Form |
 | `source` | Авторский Type Source |
 | `sourceVersion` | Версия Type Source syntax, сейчас `1` |
 
-Core сохраняет `source` отдельно и не вкладывает его внутрь legacy `schema`. Automatic synchronization remains intentionally absent: Stage 2 can remove old fields only after production data and integrations are verified against compiled Type Source.
+Структурные поля типа существуют только внутри `source`. Visual editor, compiler, diagnostics and Type Registry работают с одним каноническим представлением.
