@@ -10,12 +10,12 @@
 | `Endge.workspace.variables` | Переменные рабочего пространства и их разрешение для окружения |
 | `Endge.auth` | Профили и runtime-контекст авторизации |
 
-## Домен и схема
+## Домен и persistence
 
 | Модуль | Назначение |
 | --- | --- |
 | `Endge.domain` | Коллекции доменных документов, поиск и обход сущностей |
-| `Endge.schema` | Загрузка, сохранение и преобразование схемы |
+| `Endge.domainRepository` | Provider persisted Domain, загрузка snapshot, mutations, ETag и server state |
 | [`Endge.vocabs`](/reference/vocab) | Загрузка внешних справочников, policy, дедупликация и общий Raph-кеш |
 
 ## Компиляция и исполнение
