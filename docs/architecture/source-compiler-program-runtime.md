@@ -1,4 +1,4 @@
-# Source → Compiler → Program → Runtime
+# Source - Compiler - Program - Runtime
 
 Эта цепочка задаёт основную границу исполняемых сущностей Endge.
 

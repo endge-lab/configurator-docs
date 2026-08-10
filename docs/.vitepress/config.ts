@@ -137,7 +137,7 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Общая архитектура', link: '/architecture/overview' },
-          { text: 'Source → Compiler → Program → Runtime', link: '/architecture/source-compiler-program-runtime' },
+          { text: 'Source - Compiler - Program - Runtime', link: '/architecture/source-compiler-program-runtime' },
           { text: 'Доменные и runtime-сущности', link: '/architecture/domain-runtime-entities' },
           { text: 'Каскад конфигурации', link: '/architecture/configuration-cascade' },
           { text: 'Headless Runtime', link: '/architecture/headless-runtime' },

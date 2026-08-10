@@ -134,7 +134,7 @@ Translation resources накапливаются по lifecycle scope и при 
 ```
 
 Composition передаёт дочернему runtime не копию массива и не физическую Vocab
-identity, а effective catalog `alias → Raph path`. Catalog наследуется по
+identity, а effective catalog `alias - Raph path`. Catalog наследуется по
 lifecycle scopes и вложенным Composition; ближайший Vocab alias перекрывает
 одноимённый alias предка. Component host подписывается на использованный path,
 поэтому refresh справочника повторно рендерит SFC без обновления component props.
@@ -318,7 +318,7 @@ Compiler проверяет имена props, индексирует RMock depen
 `definePreviewProps` не задаёт runtime defaults. Значения применяются только Configurator preview launcher-ом:
 
 ```text
-definePreviewProps → ProgramArtifact.previewProps → Runtime Preview → mount({ props })
+definePreviewProps - ProgramArtifact.previewProps - Runtime Preview - mount({ props })
 ```
 
 Обычный `Endge.runtime.composition.mount()`, запуск через Project и вложенная `composition(...).withProps(...)` не читают preview fixtures автоматически.

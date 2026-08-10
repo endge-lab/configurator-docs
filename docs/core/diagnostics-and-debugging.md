@@ -330,12 +330,12 @@ interface EndgeConfiguration {
 Порядок configuration cascade:
 
 ```text
-Workspace → Tenant → Project → Environment
+Workspace - Tenant - Project - Environment
 ```
 
 Каждый следующий слой переопределяет effective result предыдущего. Scalar policy fields применяются как value overrides. Signals, outputs, routes и snapshot output ids merge-ятся стандартными collection patch operations; outputs и routes адресуются по стабильному `id`.
 
-Configurator редактирует эти поля в разделе **Configuration → Диагностика**. Workspace задаёт базовую model, а Tenant, Project и Environment сохраняют только локальный patch относительно upstream effective configuration.
+Configurator редактирует эти поля в разделе **Configuration - Диагностика**. Workspace задаёт базовую model, а Tenant, Project и Environment сохраняют только локальный patch относительно upstream effective configuration.
 
 ## Чтение и подписка
 
@@ -453,8 +453,8 @@ Metrics не входят в первую версию API. Их следует 
 Configurator не создаёт Pinia-копию diagnostics state. Vue layer подписывается непосредственно на независимые core submodules и строит только computed presentation:
 
 ```text
-Endge.diagnostics.telemetry ── subscribe ──→ span/log tree, timeline, Pulse
-Endge.diagnostics.problems  ── subscribe ──→ global/entity Problems UI
+Endge.diagnostics.telemetry ── subscribe ──- span/log tree, timeline, Pulse
+Endge.diagnostics.problems  ── subscribe ──- global/entity Problems UI
 ```
 
 Configurator использует небольшой structural Vue adapter над `subscribe()`: он не копирует records или problems и не добавляет второй lifecycle. Core не хранит `LogNode`, раскрытые строки или состояние выбранной вкладки. Это позволяет использовать тот же diagnostics module без Vue и без configurator-а.

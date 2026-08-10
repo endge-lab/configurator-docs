@@ -77,7 +77,7 @@
 
 - **Модуль/пакет**: централизованная обработка ошибок (можно в `@endge/core` как подмодуль или отдельно `@endge/errors`).
   - Контракт типов ошибок.
-  - `capture(error, context)` → классификация, запись в diagnostics, решение (toast / full page / boundary), опционально репорт во внешний сервис.
+  - `capture(error, context)` - классификация, запись в diagnostics, решение (toast / full page / boundary), опционально репорт во внешний сервис.
   - Интеграция с Vue: плагин или composable, регистрирующий глобальный `onErrorCaptured` и предоставляющий `useErrorBoundary()` для локальных boundary.
 - **App.vue**: тонкая обвязка — вызов capture и отображение ErrorView только при «fatal» или «full page» из решения handler’а.
 - **app-render-guard**: оставить как есть; при переходе в фатальное состояние дополнительно вызывать `ErrorHandling.capture` с типом `fatal`, чтобы событие ушло в диагностику и экспортеры.

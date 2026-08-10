@@ -20,7 +20,7 @@ descriptors отдельно от persisted maps.
 - тип и identity исходной сущности;
 - compiled program;
 - reactive node или другой runtime context;
-- lifecycle `create → work → destroy`;
+- lifecycle `create - work - destroy`;
 - собственные ресурсы, подписки и события.
 
 Typed runtime hosts существуют для Query, Action, Filter, Composition, Store и ComponentSFC. Другие документы могут быть metadata или входами и не обязаны иметь отдельный host.

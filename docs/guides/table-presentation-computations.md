@@ -3,10 +3,10 @@
 В таблицах данные, правила представления и renderer разделены:
 
 ```text
-DataView → нормализованные данные
-Column metadata → настройки конкретной колонки
-Computation → семантическое состояние
-Component SFC / Table adapter → тема и визуал
+DataView - нормализованные данные
+Column metadata - настройки конкретной колонки
+Computation - семантическое состояние
+Component SFC / Table adapter - тема и визуал
 ```
 
 DataView не должен возвращать CSS, цвета или выбранные для отображения точки.
@@ -493,12 +493,12 @@ props (`backgroundTone`, `textTone`, `fontWeight`), а adapter сопостав�
 
 ```text
 Column.metadata
-  → ProgramArtifact.metadata.nodes
-  → Table columnMeta
+  - ProgramArtifact.metadata.nodes
+  - Table columnMeta
   + Composition prop now
-  → GroundHandlingProcess.settings
-  → required port groundhandling-process-state
-  → semantic props Vue adapter
+  - GroundHandlingProcess.settings
+  - required port groundhandling-process-state
+  - semantic props Vue adapter
 ```
 
 Общий `table-cell-conditional-presentation` пока не вызывается автоматически

@@ -9,9 +9,9 @@ Action — это вызываемое типизированное поведе
 
 ```text
 Domain/source definition
-  → Compiler / Program artifact
-  → Endge.runtime.implementations
-  → Endge.actions.execute()
+  - Compiler / Program artifact
+  - Endge.runtime.implementations
+  - Endge.actions.execute()
 ```
 
 Persisted Action хранит semantic contract и Flow source. TypeScript function не
@@ -71,7 +71,7 @@ Core регистрирует `built-in-console-log` локально при с�
 принадлежат коду `@endge/core`.
 
 Runtime metadata `catalogPath: ['Debug']` размещает Action в
-`Built-in → Debug`, не подменяя этим реального owner `@endge/core`.
+`Built-in - Debug`, не подменяя этим реального owner `@endge/core`.
 
 Без input Action выводит диагностическое сообщение по умолчанию:
 
@@ -108,8 +108,8 @@ const removeOverride = Endge.actions.override('orders.recalculate', {
 removeOverride() // default Flow снова effective немедленно
 ```
 
-Порядок разрешения: `invocation → component → composition → workspace →
-application → default`. Внутри одного scope учитывается `priority`. Два bindings
+Порядок разрешения: `invocation - component - composition - workspace -
+application - default`. Внутри одного scope учитывается `priority`. Два bindings
 одного scope и priority дают diagnostic error; registration order не используется.
 
 Persisted Action с override остаётся в своей папке. В редакторе доступны metadata

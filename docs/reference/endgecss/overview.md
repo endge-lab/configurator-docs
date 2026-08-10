@@ -4,10 +4,10 @@ EndgeCSS — единый renderer-neutral язык стилей для глоб
 
 ```text
 Style.source / SFC <style>
-→ parser и diagnostics
-→ EndgeStyleSheetArtifact в Endge.program
-→ abstract selector matcher
-→ DOM или другой materializer
+- parser и diagnostics
+- EndgeStyleSheetArtifact в Endge.program
+- abstract selector matcher
+- DOM или другой materializer
 ```
 
 Source является единственной авторской истиной. Сгенерированный CSS для DOM — результат компиляции и preview, а не редактируемое состояние.

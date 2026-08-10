@@ -14,7 +14,7 @@
 - синхронные context providers и автоматические `user.id`/`session.id` из auth context;
 - именованные outputs, декларативные routes и runtime `DiagnosticsAdapterFactory` registry;
 - встроенный console adapter с pretty/JSON форматами;
-- configuration cascade `Workspace → Tenant → Project → Environment`;
+- configuration cascade `Workspace - Tenant - Project - Environment`;
 - replaceable problem registry с owner/entity/runtime filters;
 - compiler publication в problems и correlated build logs;
 - удаление `REntity.validationErrors` и configurator Pinia diagnostics mirror;

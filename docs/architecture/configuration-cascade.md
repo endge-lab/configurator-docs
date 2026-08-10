@@ -5,7 +5,7 @@ Endge собирает effective configuration для одного execution con
 Нормативный порядок:
 
 ```text
-Workspace → Project → Tenant → Environment
+Workspace - Project - Tenant - Environment
 ```
 
 Следовательно, при переопределении одного и того же значения действует такой приоритет:
@@ -17,7 +17,7 @@ Environment > Tenant > Project > Workspace
 `Environment` имеет наивысший приоритет, `Workspace` служит фундаментом. Отсутствующее переопределение ничего не меняет: значение продолжает наследоваться из предыдущего слоя.
 
 ::: warning Статус реализации
-Этот документ фиксирует целевой архитектурный контракт. На момент его принятия `@endge/core` применяет слои в порядке `Workspace → Project → Environment → Tenant`. До синхронизации Core с этим контрактом фактический runtime order отличается: последним применяется `Tenant`.
+Этот документ фиксирует целевой архитектурный контракт. На момент его принятия `@endge/core` применяет слои в порядке `Workspace - Project - Environment - Tenant`. До синхронизации Core с этим контрактом фактический runtime order отличается: последним применяется `Tenant`.
 :::
 
 ## Роль каждого слоя
@@ -208,7 +208,7 @@ export interface EndgeConfigurationPatch {
 `replace` полностью отбрасывает accumulated upstream result и начинает разрешение с переданной полной конфигурации:
 
 ```text
-Workspace → Project → Tenant (replace) → Environment
+Workspace - Project - Tenant (replace) - Environment
                          └───────────────┘
                          новый полный base
 ```
@@ -251,8 +251,8 @@ interface ConfigurationContributionEditorProps {
 | Редактируемый слой | Upstream preview |
 |---|---|
 | `Project` | `Workspace` |
-| `Tenant` | `Workspace → Project` |
-| `Environment` | `Workspace → Project → Tenant` |
+| `Tenant` | `Workspace - Project` |
+| `Environment` | `Workspace - Project - Tenant` |
 
 UI редактора должен показывать для каждого значения:
 

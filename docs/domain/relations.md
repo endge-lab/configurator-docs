@@ -5,7 +5,7 @@ Endge связывает документы через identity и явные к
 ## Типичный поток данных
 
 ```text
-Filter → Query.outputs → DataView → Store → ComponentSFC
+Filter - Query.outputs - DataView - Store - ComponentSFC
                          ↓
                     Computation
 ```

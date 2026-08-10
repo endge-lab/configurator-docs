@@ -52,8 +52,8 @@ Catalog накапливается от родительской Composition к 
 
 ```text
 parent: schedule:columns.status
-child:  schedule:columns.status  → compile error
-child:  details:columns.status   → допустимо
+child:  schedule:columns.status  - compile error
+child:  details:columns.status   - допустимо
 ```
 
 Это правило не является override-механизмом. Specific override pattern для tenant-specific документов добавляется отдельным этапом.
