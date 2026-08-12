@@ -270,6 +270,13 @@ const board = ports.require.board({ rows: props.rows })
       <MenuSeparator />
       <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
     </ColumnMenu>
+    <RowMenu>
+      <MenuItem
+        action="openDetails"
+        :label="t('schedule:menu.open', 'Открыть')"
+        :input="{ id: rowId, row, columnKey, value }"
+      />
+    </RowMenu>
     <Column key="number" title="Рейс" sortable pinnable />
   </Table>
 </template>
@@ -610,8 +617,9 @@ Compiler отклоняет:
 - required port без `default`;
 - `MenuItem command="..."`;
 - `MenuItem action="..."`, если Action не является intrinsic capability Table,
-  известным built-in Action или не объявлен в `definePorts.provides`;
+  известным built-in Action или не объявлен в `definePorts.require/provides`;
 - `MenuItem :action="..."` без static `{ identity, input? }`;
+- одновременный input внутри legacy `:action` object и отдельный `:input`;
 - `payload` или пользовательские поля вне `action.input` в object binding;
 - неоднозначные или конфликтующие `forward` rules;
 - повторяющиеся имена ports и неправильные kinds в секции.

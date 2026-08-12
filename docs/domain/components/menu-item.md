@@ -1,7 +1,7 @@
 # MenuItem
 
-`MenuItem` связывает пункт [ColumnMenu](./column-menu) с intrinsic Action Table,
-built-in Action или Action, явно объявленным в `definePorts.provides` текущего
+`MenuItem` связывает пункт [ColumnMenu](./column-menu) или [RowMenu](./row-menu) с intrinsic Action Table,
+built-in Action или Action, объявленным в `definePorts.require/provides` текущего
 Component SFC.
 
 ```vue
@@ -23,7 +23,17 @@ provider использует своё default behavior:
 />
 ```
 
-Статический input можно записать в object binding:
+Основной синтаксис отделяет Action identity от вычисляемого input:
+
+```vue
+<MenuItem
+  action="flight.open-details"
+  :label="t('schedule:menu.open', 'Открыть')"
+  :input="{ id: rowId, row, columnKey, value }"
+/>
+```
+
+Старый статический input в object binding остаётся совместимым:
 
 ```vue
 <MenuItem
@@ -40,15 +50,14 @@ provider использует своё default behavior:
 Action contract использует термин `input`, поэтому `payload` не поддерживается.
 Пользовательские поля нельзя располагать рядом с `identity`: форма
 `{ identity, message }` является compiler error. На текущем этапе `input` должен
-быть static object literal; runtime expressions будут добавлены отдельным
-expression artifact.
+быть static object literal. Dynamic input записывается отдельным `:input`.
 
 | Атрибут | Тип | Назначение |
 | --- | --- | --- |
-| `action` | literal string / static object | Action identity либо `{ identity, input? }`. |
-| `label` | literal string | Обязательная подпись. |
+| `action` | literal string / static object | Action identity либо legacy `{ identity, input? }`. |
+| `input` | safe SFC expression | Input, вычисляемый в текущем menu context. |
+| `label` | literal / safe SFC expression | Обязательная подпись, включая `t(key, fallback)`. |
 | `id` | literal string | Stable item id; default равен `action`. |
 | `icon` | literal string | Опциональная renderer-neutral icon identity. |
 
-В v1 `label`, `id` и `icon` должны быть literals. Атрибут `command` удалён и
-является compiler error.
+`id` и `icon` остаются literals. Атрибут `command` удалён и является compiler error.

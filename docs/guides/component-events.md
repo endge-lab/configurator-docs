@@ -80,7 +80,7 @@ diagnostics, но не отменяет публикацию Event другим 
 `Text`, `DateTime`, `Number`, `Icon`, `Badge`, `Dot`, `Box`, `Flex`, `Grid`,
 `Divider`, `Input`, `Textarea`, `Checkbox`, `Select` и `Table`.
 
-Структурные теги `Column`, `Cell`, `ColumnMenu`, `MenuItem` и `MenuSeparator`
+Структурные теги `Column`, `Cell`, `ColumnMenu`, `RowMenu`, `MenuItem` и `MenuSeparator`
 не являются самостоятельными rendered event targets. Вложенный пользовательский
 `Component` публикует Events из собственного typed manifest.
 

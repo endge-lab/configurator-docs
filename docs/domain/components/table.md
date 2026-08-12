@@ -63,7 +63,8 @@ defineProps<{
 | `cell-align` | строка | `left` | Горизонтальное выравнивание содержимого ячеек. |
 | `cell-vertical-align` | строка | `middle` | Вертикальное выравнивание содержимого ячеек. |
 
-Допустимые прямые дочерние элементы: один [ColumnMenu](./column-menu) и любое
+Допустимые прямые дочерние элементы: по одному [ColumnMenu](./column-menu) и
+[RowMenu](./row-menu), а также любое
 число [Column](./column).
 
 ## События Table
@@ -342,7 +343,7 @@ Source-значение применяется, когда сохранённо�
 
 ## Меню и встроенные Actions
 
-Встроенное и объявленное через `ColumnMenu` меню автоматически использует
+Встроенное и объявленное через `ColumnMenu`/`RowMenu` меню автоматически использует
 системные Table Actions. Повторно объявлять их в `definePorts.provides` не нужно.
 
 ```vue
@@ -371,6 +372,13 @@ const ports = definePorts({
     <ColumnMenu>
       <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
     </ColumnMenu>
+    <RowMenu>
+      <MenuItem
+        action="built-in-console-log"
+        :label="t('schedule:menu.inspect', 'Показать строку')"
+        :input="{ row, rowId, rowIndex, columnKey, value }"
+      />
+    </RowMenu>
 
     <Column key="flight" title="Рейс" sortable />
     <Column key="std" title="Вылет" sortable sort="date" />

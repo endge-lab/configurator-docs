@@ -18,6 +18,9 @@ Intrinsic Table Actions доступны внутри `ColumnMenu` без пов
 в `definePorts.provides`. Для публикации этих Actions наружу используйте
 [`definePorts.forward`](/reference/component-sfc#forward-повторная-публикация-портов-локальных-компонентов).
 
+`label` и `input` вычисляются при открытии меню. Поэтому допустимы `:label="t(...)"`
+и безопасные SFC expressions; для заголовка доступен обычный Table context.
+
 | Контракт | Значение |
 | --- | --- |
 | Placement | Ровно один прямой child `Table`. |

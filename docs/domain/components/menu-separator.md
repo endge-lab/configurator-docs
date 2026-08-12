@@ -1,6 +1,6 @@
 # MenuSeparator
 
-`MenuSeparator` разделяет группы Actions внутри [ColumnMenu](./column-menu).
+`MenuSeparator` разделяет группы Actions внутри [ColumnMenu](./column-menu) или [RowMenu](./row-menu).
 
 ```vue
 <ColumnMenu>
@@ -14,4 +14,4 @@
 | --- | --- | --- |
 | `id` | literal string | Опциональный stable id; иначе `separator-{index}`. |
 
-Тег не имеет children и допустим только внутри `ColumnMenu`.
+Тег не имеет children и допустим только внутри `ColumnMenu` или `RowMenu`.
