@@ -46,7 +46,7 @@ Vocab alias, а встроенная функция `vocab(alias, mapping?)` в�
 ```ts
 defineComposition({
   data: {
-    airlines: vocab('aodb-airlines'),
+    airlines: vocab('catalog-airlines'),
   },
 
   runtimes: {

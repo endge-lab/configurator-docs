@@ -44,8 +44,8 @@ Composition загружает физические Vocab documents и публ�
 ```ts
 defineComposition({
   data: {
-    airlines: vocab('aodb-airlines'),
-    serviceTypes: vocab('aodb-flight-service-types'),
+    airlines: vocab('catalog-airlines'),
+    serviceTypes: vocab('catalog-flight-service-types'),
   },
 
   runtimes: {
@@ -54,7 +54,7 @@ defineComposition({
 })
 ```
 
-`aodb-airlines` и `aodb-flight-service-types` — физические identities. Component
+`catalog-airlines` и `catalog-flight-service-types` — физические identities. Component
 SFC их не знает и обращается только к aliases `airlines` и `serviceTypes`:
 
 ```vue
