@@ -4,6 +4,30 @@
 
 Mock не является runtime state, Store или production default. `mock(identity)` создаёт явную ссылку на документ, а consumer решает, когда materialize его значение.
 
+## Глобальный и локальный mock-mode
+
+Workspace задаёт data mode по умолчанию. Конкретная Composition может переопределить его только для собственного runtime-поддерева:
+
+```ts
+defineComposition({
+  dataMode: 'mock',
+
+  data: {
+    state: store('telegraphy').isolated(),
+  },
+
+  runtimes: {
+    page: composition('telegraphy-page'),
+  },
+})
+```
+
+Порядок разрешения: текущая Composition, ближайшая родительская Composition, effective `Endge.context.dataMode`, Workspace default. Поле `dataMode` отсутствует — режим наследуется; `'mock'` и `'live'` являются явными override.
+
+Composition-level mode не создаёт новые mock-данные и не переписывает source. Он только определяет, будут ли Store initializers читать существующие RMock fixtures и должна ли существующая mock-mode ветка Query пропустить transport request. Query-local `mock.enabled` остаётся независимым.
+
+Borrowed contextual/injected Store сохраняет state provider-а и не переинициализируется режимом consumer-а. Для независимого mock-state используйте `store(identity).isolated()`. Полный контракт наследования: [Composition: режим данных](/reference/composition#режим-данных).
+
 ## Основные поля
 
 | Поле | Назначение |
@@ -113,6 +137,8 @@ defineStore({
 ```
 
 В отличие от Composition preview, это значение materialize уже самим `StoreRuntimeHost` как начальное runtime state поля `raw`.
+
+Store читает initializer только при создании runtime. Изменение глобального data mode для уже смонтированного Store требует пересоздания соответствующего runtime-дерева.
 
 ## Query mock и RMock
 

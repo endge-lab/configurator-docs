@@ -72,6 +72,38 @@ query('items-query').activateOn(manual())
 
 `onMount().run(...)` нельзя направить на runtime с ручной активацией.
 
+## Режим данных
+
+По умолчанию Composition наследует effective data mode рабочего пространства. Локальный override задаётся статическим корневым полем:
+
+```ts
+defineComposition({
+  dataMode: 'mock',
+
+  data: {
+    telegraphy: store('telegraphy').isolated(),
+  },
+
+  runtimes: {
+    content: component('telegraphy'),
+    request: query('telegraphy-request'),
+    nested: composition('telegraphy-details'),
+  },
+})
+```
+
+Допустимые значения:
+
+- `dataMode: 'mock'` принудительно включает mock-mode для Composition и её runtime-поддерева;
+- `dataMode: 'live'` принудительно включает live-mode, даже если глобально выбран mock;
+- отсутствие `dataMode` наследует ближайшую родительскую Composition, а затем effective Workspace/Configurator mode.
+
+Ближайший Composition override имеет приоритет. Поэтому вложенная Composition может вернуть собственное поддерево в `live` внутри mock-родителя или, наоборот, включить mock только для одной ветки проекта.
+
+Режим не меняет persisted Mock, Query source или Store source. В `mock` режиме Store materialize существующие `value(mock(identity))` при создании runtime, а Query сохраняет обычное поведение mock-mode и не выполняет transport request. Query-local `mock.enabled` остаётся отдельным контрактом конкретного Query.
+
+Contextual или injected Store может принадлежать родительской Composition. Такой borrowed Store не переинициализируется локальным `dataMode`, потому что один runtime instance сохраняет state своего provider-а. Если ветке нужен независимый mock-state, объявите Store через `.isolated()`.
+
 ## Data и resources
 
 ```ts

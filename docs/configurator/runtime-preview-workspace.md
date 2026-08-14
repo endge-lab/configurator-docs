@@ -26,7 +26,7 @@
 
 В контекстном режиме draft текущего Component SFC или Composition накладывается на session-local artifact reader. Остальные сущности читаются из неизменяемого `Endge.program`; общий build и сохранённый документ не меняются.
 
-В standalone режиме Composition получает fixtures из `previewProps: definePreviewProps({...})`. Inline values и ссылки `mock(identity)` materialize в обычные mount props перед созданием runtime graph. Component SFC читает собственный `definePreviewProps(...)`, включая `fromStore`/`fromData` и preview options. Эти значения существуют только в Runtime Preview и не подменяют production inputs.
+В standalone режиме Composition получает fixtures из `previewProps: definePreviewProps({...})`. Inline values и ссылки `mock(identity)` materialize в обычные mount props перед созданием runtime graph; локальный `dataMode` Composition имеет приоритет над глобальным режимом. Component SFC читает собственный `definePreviewProps(...)`, включая `fromStore`/`fromData` и preview options. Эти значения существуют только в Runtime Preview и не подменяют production inputs.
 
 ## Контракт интерфейса
 
