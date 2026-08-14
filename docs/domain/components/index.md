@@ -28,24 +28,27 @@ adapter материализует их во Vue, Native DOM или другой
 Structural tags компилируются в тот же IR, но обрабатываются runtime renderer-ом,
 а не visual adapter map.
 
+Подробные сценарии paging, selection, меню, состояния и редактирования находятся
+в отдельном разделе [«Таблицы SFC»](/sfc-tables/).
+
 ## Полный пример
 
 ```vue
 <script setup lang="ts">
 defineProps<{
-  flights: FlightLeg[]
+  orders: Order[]
 }>()
 </script>
 
 <template>
   <Grid columns="12" gap="2">
     <Flex col gap="2" colStart="1" colSpan="12">
-      <Text weight="600">Flights</Text>
-      <Badge tone="info">{{ flights.length }}</Badge>
+      <Text weight="600">Orders</Text>
+      <Badge tone="info">{{ orders.length }}</Badge>
     </Flex>
 
-    <Table :rows="flights" row-key="id" colStart="1" colSpan="12">
-      <Column key="number" title="Flight" sortable>
+    <Table :rows="orders" row-key="id" colStart="1" colSpan="12">
+      <Column key="number" title="Номер" sortable>
         <Cell><Text>{{ row.number }}</Text></Cell>
       </Column>
     </Table>

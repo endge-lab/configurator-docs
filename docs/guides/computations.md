@@ -33,8 +33,7 @@ defineComputation({
 ## Вычисления представления таблиц
 
 Для conditional presentation таблиц используются semantic results вместо CSS и
-hex-цветов. Готовые контракты `groundhandling-process-state` и
-`table-cell-conditional-presentation`, а также metadata колонок описаны в
+hex-цветов. Контракт `table-cell-conditional-presentation` и metadata колонок описаны в
 [отдельном руководстве](/guides/table-presentation-computations).
 
 Оба вычисления разделены на именованные `outputs`: каждый output становится

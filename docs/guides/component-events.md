@@ -276,6 +276,9 @@ Sandbox возвращает один effect или массив effects. Раз
 
 ## Контекстное меню Table
 
+Полное руководство по декларативному `RowMenu` находится в разделе
+[«Контекстное меню строк»](/sfc-tables/row-context-menu).
+
 У Table есть два разных контракта:
 
 - `contextmenu` — стандартный Event всей rendered-области Table;

@@ -267,10 +267,10 @@ Caller может передать literal, обычный Composition binding �
 ```ts
 defineComposition({
   runtimes: {
-    requests: composition('groundhandling-default').withProps({
+    requests: composition('orders-default').withProps({
       requirements: metadataOf('table'),
     }),
-    table: component('groundhandling-control-table'),
+    table: component('orders-table'),
   },
 })
 ```
@@ -284,22 +284,22 @@ requirements: metadataOf('table')
 
 requirements: metadataOf(
   'table',
-  'groundhandling.query',
+  'orders.query',
 )
 
 requirements: {
-  arrival: metadataOf(
+  list: metadataOf(
     'table',
-    'groundhandling.arrival',
+    'orders.list',
   ),
-  departure: metadataOf(
+  summary: metadataOf(
     'table',
-    'groundhandling.departure',
+    'orders.summary',
   ),
 }
 ```
 
-Одноаргументная форма не извлекает автоматически единственный namespace. Если `metadata.self` имеет вид `{ 'groundhandling.query': value }`, результат сохранит эту обёртку.
+Одноаргументная форма не извлекает автоматически единственный namespace. Если `metadata.self` имеет вид `{ 'orders.query': value }`, результат сохранит эту обёртку.
 
 ## Preview props
 
@@ -308,26 +308,17 @@ requirements: {
 ```ts
 defineComposition({
   props: defineProps({
-    requirements: field('GroundHandlingQueryRequirements'),
-    airport: field('String'),
+    requirements: field('OrderQueryRequirements'),
+    region: field('String'),
   }),
 
   previewProps: definePreviewProps({
     requirements: {
-      arrival: {
-        attributes: ['LegStatus', 'BestOn'],
-        groundHandling: [
-          { code: 'Bridge On', points: ['value'] },
-        ],
-      },
-      departure: {
-        attributes: ['LegStatus', 'BestOff'],
-        groundHandling: [
-          { code: 'Bridge Off', points: ['value'] },
-        ],
-      },
+      statuses: ['new', 'in-progress'],
+      fields: ['id', 'number', 'status'],
+      minimumPriority: 1,
     },
-    airport: 'SVO',
+    region: 'north',
   }),
 
   runtimes: {},
@@ -338,8 +329,8 @@ defineComposition({
 
 ```ts
 previewProps: definePreviewProps({
-  requirements: mock('groundhandling-query-requirements'),
-  airport: 'SVO',
+  requirements: mock('order-query-requirements'),
+  region: 'north',
 }),
 ```
 
@@ -398,12 +389,12 @@ query('search').withProps({
 filter: fromOutput('filters')
 
 // Один output без внешней обёртки.
-arrival: fromOutput('filters', 'arrival')
+active: fromOutput('filters', 'active')
 
 // Ручная сборка с собственными именами и структурой.
 filter: {
-  arrival: fromOutput('filters', 'arrival'),
-  departure: fromOutput('filters', 'departure'),
+  active: fromOutput('filters', 'active'),
+  archived: fromOutput('filters', 'archived'),
 }
 ```
 
@@ -431,7 +422,7 @@ hooks: [
   onMount().run('request'),
   onChange('filters.request').run('request'),
   onChange('filters.request').debounce(300).run('request'),
-  onChange(prop('filter.arrival')).debounce(200).run('arrivalPairs'),
+  onChange(prop('filter.active')).debounce(200).run('activeOrders'),
   onSuccess('request').run('requestDetails'),
 ]
 ```
@@ -450,7 +441,7 @@ hooks: [
 ```ts
 // Поддерживается.
 onChange('filters.request').run('request')
-onChange(prop('filter.arrival')).run('arrivalPairs')
+onChange(prop('filter.active')).run('activeOrders')
 
 // Не поддерживается.
 onChange(fromOutput('filters', 'request')).run('request')
@@ -478,16 +469,16 @@ Runtime также неявно сравнивает значение источ
 Caller реактивно передаёт Filter output во вложенную Composition:
 
 ```ts
-requests: composition('groundhandling-query-general')
+requests: composition('orders-query-general')
   .withProps({
     filter: {
-      arrival: fromOutput('filters', 'arrival'),
-      departure: fromOutput('filters', 'departure'),
+      active: fromOutput('filters', 'active'),
+      archived: fromOutput('filters', 'archived'),
     },
   })
 ```
 
-Внутри `groundhandling-query-general` значение `prop('filter.arrival')` обновляется автоматически. Для повторного выполнения запроса child Composition явно объявляет control dependency:
+Внутри `orders-query-general` значение `prop('filter.active')` обновляется автоматически. Для повторного выполнения запроса child Composition явно объявляет control dependency:
 
 ```ts
 defineComposition({
@@ -496,33 +487,36 @@ defineComposition({
   }),
 
   runtimes: {
-    arrivalPairs: query('groundhandling-legs-pair-filter-arrival')
+    activeOrders: query('orders-filter-active')
       .withProps({
-        filter: prop('filter.arrival'),
+        filter: prop('filter.active'),
       }),
 
-    departurePairs: query('groundhandling-legs-pair-filter-departure')
+    archivedOrders: query('orders-filter-archived')
       .withProps({
-        filter: prop('filter.departure'),
+        filter: prop('filter.archived'),
       }),
   },
 
   hooks: [
-    onMount().run('arrivalPairs'),
-    onMount().run('departurePairs'),
+    onMount().run('activeOrders'),
+    onMount().run('archivedOrders'),
 
-    onChange(prop('filter.arrival'))
+    onChange(prop('filter.active'))
       .debounce(200)
-      .run('arrivalPairs'),
+      .run('activeOrders'),
 
-    onChange(prop('filter.departure'))
+    onChange(prop('filter.archived'))
       .debounce(200)
-      .run('departurePairs'),
+      .run('archivedOrders'),
   ],
 })
 ```
 
-Изменение `arrival` запускает только arrival-ветку, а изменение `departure` — только departure-ветку. Вложенная Composition не перезапускается и не монтируется заново: остаются прежние runtime instances, Store bindings и lifecycle.
+Изменение `active` запускает только ветку активных записей, а изменение
+`archived` — только архивную ветку. Вложенная Composition не перезапускается и
+не монтируется заново: остаются прежние runtime instances, Store bindings и
+lifecycle.
 
 ### Последовательность и параллельность
 
@@ -531,35 +525,37 @@ Hooks одного готового уровня выполняются пара
 ```ts
 hooks: [
   // Оба root-запроса стартуют параллельно.
-  onMount().run('arrivalPairs'),
-  onMount().run('departurePairs'),
+  onMount().run('activeOrders'),
+  onMount().run('archivedOrders'),
 
-  // После arrivalPairs оба targets стартуют параллельно.
-  onSuccess('arrivalPairs').run('arrivalAttributes'),
-  onSuccess('arrivalPairs').run('arrivalGroundHandling'),
+  // После activeOrders оба targets стартуют параллельно.
+  onSuccess('activeOrders').run('activeDetails'),
+  onSuccess('activeOrders').run('activeSummary'),
 
-  // Эта ветка не зависит от arrival и стартует после departurePairs.
-  onSuccess('departurePairs').run('departureAttributes'),
-  onSuccess('departurePairs').run('departureGroundHandling'),
+  // Эта ветка не зависит от active и стартует после archivedOrders.
+  onSuccess('archivedOrders').run('archivedDetails'),
+  onSuccess('archivedOrders').run('archivedSummary'),
 ]
 ```
 
 Исполняемый граф для этого примера имеет два независимых branches:
 
 ```text
-arrivalPairs   ──success──> [arrivalAttributes || arrivalGroundHandling]
-departurePairs ──success──> [departureAttributes || departureGroundHandling]
+activeOrders   ──success──> [activeDetails || activeSummary]
+archivedOrders ──success──> [archivedDetails || archivedSummary]
 ```
 
-Если `arrivalPairs` завершится раньше, два arrival targets начнутся раньше departure targets. Если обе root Query завершатся одновременно, все четыре дочерние Query смогут выполняться одновременно.
+Если `activeOrders` завершится раньше, два его target начнутся раньше target
+архивной ветки. Если обе root Query завершатся одновременно, все четыре
+дочерние Query смогут выполняться одновременно.
 
 Чтобы получить строгую последовательность, следующий hook должен зависеть от предыдущей Query, а не от общего parent:
 
 ```ts
 hooks: [
-  onMount().run('arrivalPairs'),
-  onSuccess('arrivalPairs').run('arrivalAttributes'),
-  onSuccess('arrivalAttributes').run('arrivalGroundHandling'),
+  onMount().run('activeOrders'),
+  onSuccess('activeOrders').run('activeDetails'),
+  onSuccess('activeDetails').run('activeSummary'),
 ]
 ```
 
@@ -571,19 +567,19 @@ Props дочерней Query разрешаются непосредственн
 
 ```ts
 runtimes: {
-  arrivalPairs: query('groundhandling-legs-pair-filter-arrival'),
+  activeOrders: query('orders-filter-active'),
 
-  arrivalAttributes: query('attributes-leg-select').withProps({
-    legIds: fromOutput('arrivalPairs', 'raw')
-      .map(get('arrivalLeg.id'))
+  activeDetails: query('orders-details').withProps({
+    orderIds: fromOutput('activeOrders', 'raw')
+      .map(get('id'))
       .compact()
       .uniq(),
   }),
 },
 
 hooks: [
-  onMount().run('arrivalPairs'),
-  onSuccess('arrivalPairs').run('arrivalAttributes'),
+  onMount().run('activeOrders'),
+  onSuccess('activeOrders').run('activeDetails'),
 ]
 ```
 

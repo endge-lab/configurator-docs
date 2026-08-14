@@ -10,7 +10,7 @@
     <MenuSeparator />
     <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
   </ColumnMenu>
-  <Column key="number" title="Flight" sortable />
+  <Column key="number" title="Номер" sortable />
 </Table>
 ```
 
@@ -28,3 +28,6 @@ Intrinsic Table Actions доступны внутри `ColumnMenu` без пов
 | Attributes | Собственных attributes в v1 нет. |
 
 Если `Table` содержит `column-menu="disabled"`, inline descriptor не используется.
+
+Режимы открытия, context и intrinsic Actions описаны в
+[«Меню заголовков колонок»](/sfc-tables/column-header-menu).

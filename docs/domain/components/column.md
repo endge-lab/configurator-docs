@@ -1,94 +1,71 @@
 # Column
 
-`Column` описывает одну видимую колонку [Table](./table). Без `Cell` renderer
-читает значение по `key`; с `Cell` используется custom template.
+`Column` описывает одну колонку [Table](./table). Без `Cell` renderer читает
+значение по `key`; с [Cell](./cell) используется пользовательский template.
 
 ```vue
-<Column key="number" title="Flight" width="120" sortable />
+<Column key="number" title="Номер" width="120" sortable />
 
 <Column
-  key="std"
-  title="STD"
+  key="createdAt"
+  title="Создан"
   sortable
   sort="date"
-  sort-by="std"
   pinnable
-  align="center"
 >
   <Cell>
-    <DateTime :value="row.std" format="HH:mm" />
+    <DateTime :value="value" format="dd.MM.yyyy HH:mm" />
   </Cell>
 </Column>
 ```
 
 | Атрибут | Тип | Назначение |
 | --- | --- | --- |
-| `key` | string | Column identity и default row path. |
-| `title` | string | Header. |
-| `width` / `size` | number/string | Column width. |
-| `sortable` | boolean | Разрешает sorting. |
-| `sort` | `natural` / `date` / `number` | Comparator. |
-| `sort-by` | string | Один или несколько comma-separated row paths. |
-| `pinnable` | boolean/string | Можно ли закреплять колонку; default `true`. |
-| `align` / `cell-align` | string | Horizontal cell alignment. |
-| `valign` / `cell-vertical-align` | string | Vertical cell alignment. |
-| `:metadata` | static object | Namespaced metadata конкретной колонки. |
+| `key` | string | Identity колонки и default row path |
+| `title` / `name` | string | Заголовок |
+| `width` / `size` | number / string | Начальная ширина |
+| `sortable` | boolean | Разрешает runtime sorting |
+| `sort` | `natural` / `text` / `number` / `date` / `time` / `boolean` | Comparator |
+| `sort-by` / `sortBy` | string | Один или несколько comma-separated row paths |
+| `pinnable` | boolean | Можно ли закреплять колонку; default `true` |
+| `:metadata` | static object | Namespaced metadata колонки |
 
-Допускается не более одного прямого [Cell](./cell). `ColumnMenu` внутри Column в
-v1 не поддерживается: меню размещается непосредственно внутри Table.
+Допускается не более одного прямого `Cell`. `ColumnMenu` внутри `Column` в v1
+не поддерживается: меню размещается непосредственно внутри `Table`.
 
 ## Metadata колонки
 
-`Column` поддерживает статическую JSON-совместимую metadata:
-
 ```vue
 <Column
-  key="fueling"
+  key="priority"
   :metadata="{
-    'groundhandling.process': {
+    'endge.table.cell-presentation': {
       version: 1,
-      critical: true,
+      branches: [
+        {
+          when: { source: 'value', operator: 'gte', value: 8 },
+          then: { backgroundTone: 'warning' },
+        },
+      ],
     },
   }"
 >
-  <GroundHandlingProcess
-    :process="value"
-    :settings="columnMeta['groundhandling.process']"
-    :now="now"
-  />
+  <Cell>
+    <PriorityValue
+      :value="value"
+      :rules="columnMeta['endge.table.cell-presentation']"
+    />
+  </Cell>
 </Column>
 ```
 
-Верхние ключи являются namespaces consumer-ов. Контракт каждого namespace
-версионируется независимо.
+Metadata компилируется в `ProgramArtifact.metadata.nodes`. Внутри ячейки
+доступны `row`, `rowKey`, `rowIndex`, `columnKey`, `columnMeta` и
+`value`. Вложенный компонент получает только явно выбранный namespace.
 
-Metadata компилируется в `ProgramArtifact.metadata.nodes` вместе со стабильным
-`nodeId`, типом `Column` и пользовательским `key`. `Table` предоставляет всю
-карту namespaces в cell context как `columnMeta`. Она не превращается в props
-дочернего компонента автоматически: автор ячейки явно выбирает namespace,
-например `columnMeta['groundhandling.process']`.
+Подробности:
 
-В cell context доступны:
-
-| Local | Назначение |
-| --- | --- |
-| `row` | Текущая строка |
-| `rowIndex` / `rowKey` | Индекс и identity строки |
-| `columnKey` | Identity колонки |
-| `columnMeta` | Compiled metadata текущей `Column` |
-| `value` | `row[columnKey]` |
-
-`columnMeta` доступна только внутри содержимого `Column` / `Cell`. В header и за
-пределами `Table` этого local нет.
-
-Для условного представления доступны два контракта:
-
-- `groundhandling.process` — настройки `GroundHandlingProcess`;
-- `endge.table.cell-presentation` — общие branches условного представления
-  внешней ячейки.
-
-`groundhandling.process` влияет только на внутренние plan/actual-секторы
-`GroundHandlingProcess`. Он не задаёт фон или текст заголовка `Column`.
-
-Подробности: [вычисления представления таблиц](/guides/table-presentation-computations)
-и [общий контракт metadata](/reference/metadata).
+- [данные, строки и ячейки](/sfc-tables/data-rows-cells);
+- [управление колонками](/sfc-tables/column-management);
+- [сортировка](/sfc-tables/sorting);
+- [стили и условное представление](/sfc-tables/styling-and-presentation).

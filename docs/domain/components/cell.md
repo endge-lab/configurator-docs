@@ -4,7 +4,7 @@
 `row` текущей записи и сведения о row/column context.
 
 ```vue
-<Table :rows="flights" row-key="id">
+<Table :rows="orders" row-key="id">
   <Column key="status" title="Status">
     <Cell>
       <Flex row gap="2" align="center">
@@ -25,3 +25,5 @@
 `Cell` — structural tag без собственных визуальных атрибутов. Он должен быть
 прямым ребёнком `Column`.
 
+Полный список locals и правила row identity описаны в
+[«Данные, строки и ячейки»](/sfc-tables/data-rows-cells).

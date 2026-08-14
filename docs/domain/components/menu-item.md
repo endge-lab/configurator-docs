@@ -27,8 +27,8 @@ provider использует своё default behavior:
 
 ```vue
 <MenuItem
-  action="flight.open-details"
-  :label="t('schedule:menu.open', 'Открыть')"
+  action="order.open-details"
+  :label="t('orders:menu.open', 'Открыть')"
   :input="{ id: rowId, row, columnKey, value }"
 />
 ```

@@ -44,28 +44,13 @@ Borrowed contextual/injected Store сохраняет state provider-а и не 
 
 ## JSON document
 
-Для обычного fixture выберите `contentSource: document` и `contentType: application/json`. Например, Mock с identity `groundhandling-query-requirements` может хранить значение одного typed Composition prop:
+Для обычного fixture выберите `contentSource: document` и `contentType: application/json`. Например, Mock с identity `order-query-requirements` может хранить значение одного typed Composition prop:
 
 ```json
 {
-  "arrival": {
-    "attributes": ["LegStatus", "BestOn"],
-    "groundHandling": [
-      {
-        "code": "Bridge On",
-        "points": ["value"]
-      }
-    ]
-  },
-  "departure": {
-    "attributes": ["LegStatus", "BestOff"],
-    "groundHandling": [
-      {
-        "code": "Bridge Off",
-        "points": ["value"]
-      }
-    ]
-  }
+  "statuses": ["new", "in-progress"],
+  "fields": ["id", "number", "status", "priority"],
+  "minimumPriority": 1
 }
 ```
 
@@ -77,17 +62,12 @@ Borrowed contextual/injected Store сохраняет state provider-а и не 
 
 ```ts
 Endge.mock.registerProvider({
-  ref: '@application:mocks.groundhandling-requirements',
-  description: 'Ground handling requirements fixture',
+  ref: '@application:mocks.order-requirements',
+  description: 'Order query requirements fixture',
   provide: () => ({
-    arrival: {
-      attributes: ['LegStatus', 'BestOn'],
-      groundHandling: [],
-    },
-    departure: {
-      attributes: ['LegStatus', 'BestOff'],
-      groundHandling: [],
-    },
+    statuses: ['new', 'in-progress'],
+    fields: ['id', 'number', 'status', 'priority'],
+    minimumPriority: 1,
   }),
 })
 ```
@@ -95,9 +75,9 @@ Endge.mock.registerProvider({
 Persisted RMock при этом содержит:
 
 ```text
-identity: groundhandling-query-requirements
+identity: order-query-requirements
 contentSource: code-provider
-codeRef: @application:mocks.groundhandling-requirements
+codeRef: @application:mocks.order-requirements
 ```
 
 Provider должен быть синхронным и возвращать JSON-compatible значение. Регистрация provider-а сама по себе не создаёт RMock document.
@@ -109,11 +89,11 @@ Composition принимает RMock как значение конкретно�
 ```ts
 defineComposition({
   props: defineProps({
-    requirements: field('GroundHandlingQueryRequirements'),
+    requirements: field('OrderQueryRequirements'),
   }),
 
   previewProps: definePreviewProps({
-    requirements: mock('groundhandling-query-requirements'),
+    requirements: mock('order-query-requirements'),
   }),
 
   runtimes: {},
@@ -131,7 +111,7 @@ Store может использовать RMock как initial value:
 ```ts
 defineStore({
   data: {
-    raw: value(mock('groundhandling-response')),
+    raw: value(mock('orders-response')),
   },
 })
 ```

@@ -5,18 +5,18 @@
 `columnKey` и `value`. Правый клик не меняет selection.
 
 ```vue
-<Table ref="schedule" :rows="rows" row-key="id">
+<Table ref="orders" :rows="rows" row-key="id">
   <RowMenu>
     <MenuItem
       action="openDetails"
-      :label="t('schedule:menu.open', 'Открыть')"
+      :label="t('orders:menu.open', 'Открыть')"
       :input="{ id: rowId, row, columnKey, value }"
       icon="external-link"
     />
     <MenuSeparator />
     <MenuItem action="deleteRow" label="Удалить" :input="{ id: rowId }" icon="trash" />
   </RowMenu>
-  <Column key="flight" title="Рейс" />
+  <Column key="number" title="Номер" />
 </Table>
 ```
 
@@ -29,3 +29,6 @@ DOM event и координаты не входят в Action context; они о
 | Placement | Не более одного прямого child `Table`. |
 | Children | Только `MenuItem` и `MenuSeparator`. |
 | Cell context | `row`, `rowId`, `rowIndex`, `columnKey`, `value`. |
+
+Подробный runtime flow и правила Action provider-а:
+[«Контекстное меню строк»](/sfc-tables/row-context-menu).

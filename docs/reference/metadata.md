@@ -1,66 +1,55 @@
 # Metadata
 
 Metadata — статическая JSON-совместимая конфигурация доменного документа или
-внутреннего узла его source. Она описывает возможности, требования и настройки,
-которые принадлежат не данным runtime, а собранному artifact.
+внутреннего узла source. Она описывает возможности и настройки собранного
+artifact, а не изменяемые данные runtime.
 
 Metadata не является:
 
 - входными бизнес-данными;
 - состоянием Store;
-- способом передать секрет;
+- способом передать secret;
 - заменой props;
-- identity реализации, которую должен разрешать port binding.
+- identity реализации required port.
 
-## Два уровня metadata
-
-В Endge необходимо различать persisted `meta` и публичную compiled metadata.
+## Два уровня
 
 | Уровень | Где хранится | Назначение |
 | --- | --- | --- |
-| Persisted `meta` | В Payload-документе любой `REntity` | Служебная и интеграционная metadata самого документа |
-| Compiled metadata | В canonical source и затем в `ProgramArtifact.metadata` | Публичный versioned-контракт для compiler, Composition и renderer adapter |
+| Persisted `meta` | В Payload-документе `REntity` | Служебная metadata документа |
+| Compiled metadata | В canonical source и `ProgramArtifact.metadata` | Публичный versioned-контракт consumer-а |
 
-Persisted `meta` доступна всем доменным сущностям, но сама по себе не становится
-частью исполняемого контракта. Если metadata должна участвовать в Program,
-предпочтителен source-first вариант конкретной сущности.
+Если metadata участвует в Program, используйте source-first форму конкретной
+сущности.
 
-## Формы объявления в source
+## Формы объявления
 
 | Сущность | Форма |
 | --- | --- |
-| Query | `metadata: { ... }` внутри `defineQuery` |
-| DataView | `metadata: { ... }` внутри `defineDataView` |
-| Filter | `metadata: { ... }` внутри `defineFilter` |
-| Composition | `metadata: { ... }` внутри `defineComposition` |
+| Query / DataView / Filter / Composition | `metadata: { ... }` в definition |
 | Component SFC | `defineMetadata({ ... })` |
 | Узел Component SFC | статический `:metadata="{ ... }"` |
-| Computation | persisted `meta`; `defineComputation` v1 принимает только `outputs` и `result` |
+| Computation | persisted `meta`; definition v1 принимает `outputs` и `result` |
 
-Формы source принимают только статические JSON-совместимые значения: строки,
-числа, boolean, `null`, массивы и объекты. Props, вызовы функций, spread,
-computed keys и runtime-значения запрещены.
+Source принимает только JSON-compatible literals. Props, function calls,
+spread, computed keys и runtime-значения запрещены.
 
 ```ts
 defineMetadata({
-  'groundhandling.query': {
+  'orders.query': {
     version: 1,
-    arrival: {
-      attributes: ['STA', 'ETA', 'ATA'],
-    },
+    fields: ['id', 'number', 'status'],
   },
 })
 ```
 
 ## Namespace и версия
 
-Верхний ключ metadata — namespace consumer-а или интеграции:
-
 ```ts
 {
-  'groundhandling.process': {
+  'orders.presentation': {
     version: 1,
-    criticality: 'critical',
+    compact: true,
   },
   'analytics.export': {
     version: 2,
@@ -69,18 +58,14 @@ defineMetadata({
 }
 ```
 
-Правила контракта:
-
-1. Namespace должен принадлежать consumer-у, который понимает его структуру.
-2. Внутри публичного namespace указывается целочисленный `version`.
+1. Namespace принадлежит consumer-у, который понимает его структуру.
+2. Публичный namespace содержит целочисленный `version`.
 3. Неизвестный namespace игнорируется.
-4. Неизвестная версия не должна молча интерпретироваться как текущая.
-5. Defaults применяет consumer; compiler только сохраняет статическое значение.
-6. Несовместимое изменение структуры требует новой версии.
+4. Неизвестная версия не интерпретируется как текущая.
+5. Defaults применяет consumer; compiler сохраняет статическое значение.
+6. Несовместимое изменение требует новой версии.
 
 ## Представление в Program
-
-Compiler нормализует metadata в общий контракт:
 
 ```ts
 interface ProgramMetadata {
@@ -94,39 +79,31 @@ interface ProgramMetadata {
 }
 ```
 
-`self` содержит metadata документа. `nodes` содержит metadata внутренних
-source-узлов, например отдельных `Column`.
+`self` содержит metadata документа. `nodes` содержит metadata внутренних узлов,
+например `Column`.
 
-Metadata узла сохраняется в artifact, но не становится runtime prop
-автоматически. Renderer или другой consumer должен явно выбрать runtime-
-поверхность. Для `Table` карта metadata текущей колонки доступна внутри ячейки
-как `columnMeta`; дочерний компонент всё равно получает выбранный namespace
-явным prop:
+Для Table metadata текущей колонки доступна внутри ячейки как `columnMeta`:
 
 ```vue
-<GroundHandlingProcess
-  :process="value"
-  :settings="columnMeta['groundhandling.process']"
+<StatusValue
+  :value="value"
+  :settings="columnMeta['orders.presentation']"
 />
 ```
 
-## Чтение metadata
+Она не становится prop вложенного компонента автоматически.
 
-Composition может получить compiled metadata документа:
-
-```ts
-metadata('component-sfc', 'groundhandling-tgo-table')
-```
-
-Для runtime alias доступны:
+## Чтение из Composition
 
 ```ts
+metadata('component-sfc', 'orders-table')
+
 metadataOf('table')
-metadataOf('table', 'groundhandling.query')
+metadataOf('table', 'orders.query')
 ```
 
-Одноаргументный `metadataOf` возвращает всю карту namespaces без автоматического
-извлечения единственного ключа.
+Одноаргументный `metadataOf` возвращает всю карту namespaces без
+автоматического извлечения единственного ключа.
 
 ## Metadata и порты
 
@@ -136,37 +113,30 @@ Metadata содержит параметры вызова, но не выбир�
 
 ```ts
 {
-  'groundhandling.process': {
+  'orders.presentation': {
     version: 1,
-    critical: true,
+    compact: true,
   },
 }
 ```
-
-В актуальном контракте это единственная настройка ячейки ТГО. Имя и фон
-заголовка колонки, а также Gantt не относятся к
-`groundhandling-process-state`.
 
 Неправильно:
 
 ```ts
 {
-  computation: 'customer-groundhandling-process-state',
+  computation: 'customer-order-presentation',
 }
 ```
 
-Default provider объявляется в `definePorts`. Runtime override той же identity
-регистрируется через `Endge.bind.computation(...)`; будущий выбор другой
-persisted Computation для конкретного экземпляра должен принадлежать
-Composition port-binding contract. В обоих случаях metadata не превращается в
-service locator.
+Default provider объявляется в `definePorts`. Runtime override регистрируется
+через binding API; metadata не превращается в service locator.
 
 ## Что не следует хранить
 
-- JWT, API keys и другие credentials;
+- JWT, API keys и credentials;
 - текущее время и изменяемое runtime-состояние;
 - значения строк таблицы;
-- CSS selectors, DOM classes и hex-цвета для renderer-neutral контрактов;
+- CSS selectors, DOM classes и hex-цвета;
 - callbacks или исполняемый source;
 - вычисленные статусы, которые можно получить из входных данных.
 
