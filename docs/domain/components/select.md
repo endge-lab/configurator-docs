@@ -32,8 +32,18 @@ type SourceFieldOption = {
 | `options` / `:options` | `SourceFieldOption[]`/expression | Доступные варианты. |
 | `multiple` | boolean | Multiple selection. |
 | `placeholder` | string | Placeholder одиночного режима. |
+| `searchable` | boolean | Явно показать или скрыть строку поиска. |
+| `virtualized` | boolean | Явно включить или отключить виртуальный список. |
 | `readonly` | boolean | Metadata; native select не блокируется. |
 | `disabled` | boolean | Disabled state. |
+
+Во встроенных adapters списки длиннее 10 элементов автоматически получают
+поиск и виртуализацию. Явный `searchable` переопределяет только видимость поиска;
+для больших списков виртуализация остаётся включённой по умолчанию.
+
+Generated Filter передаёт эти настройки из field metadata. Контракт и пример:
+[Filter](/reference/filter#поиск-и-виртуализация-select) и
+[Metadata поля](/reference/metadata#metadata-поля).
 
 DOM values сравниваются через string normalization. Тег display-only и не
 передаёт `change` обратно в runtime.

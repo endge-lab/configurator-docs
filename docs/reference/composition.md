@@ -230,6 +230,9 @@ filterView('items-filter')
 
 `.controls(...)` настраивает встроенный generator, а `.component(...)` выбирает пользовательский renderer. Эти варианты взаимоисключающие.
 
+Типы полей, варианты и presentation metadata объявляются в самом Filter:
+[Filter](/reference/filter). FilterView только выбирает поля, labels и controls.
+
 Filter state меняется через Actions, а не через commands. Runtime host предоставляет
 четыре стандартных Action handles:
 

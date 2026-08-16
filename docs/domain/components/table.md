@@ -24,6 +24,7 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 | `rows` / `:rows` | массив / выражение | `[]` | Полная локальная коллекция строк. |
 | `row-key` / `rowKey` | string | `id` | Поле со стабильной identity строки. |
 | `selection-mode` / `selectionMode` | `none` / `single` / `multiple` | `none` | Режим выбора строк. |
+| `selection-trigger` / `selectionTrigger` | `auto` / `control` / `row` / `both` | `auto` | Каким взаимодействием изменяется selection. |
 | `id` / `tableId` | string | — | Стабильный ключ сохраняемого состояния. |
 | `paging` | `pages` / `virtual` | `pages` | Страницы или единый виртуальный список. |
 | `page-size` / `pageSize` | number | `10` | Размер локальной страницы. |
@@ -61,6 +62,7 @@ Payload, отличие от браузерных событий и способ
 ## Подробные руководства
 
 - [данные, строки и ячейки](/sfc-tables/data-rows-cells);
+- [выбор и активация строк](/sfc-tables/selection-and-activation);
 - [пейджинг и виртуализация](/sfc-tables/paging-and-virtualization);
 - [контекстное меню строк](/sfc-tables/row-context-menu);
 - [меню заголовков колонок](/sfc-tables/column-header-menu);

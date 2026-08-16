@@ -27,6 +27,7 @@ Metadata не является:
 | Сущность | Форма |
 | --- | --- |
 | Query / DataView / Filter / Composition | `metadata: { ... }` в definition |
+| Поле Filter / Query props | `.meta({ ... })` в chain `field(...)` |
 | Component SFC | `defineMetadata({ ... })` |
 | Узел Component SFC | статический `:metadata="{ ... }"` |
 | Computation | persisted `meta`; definition v1 принимает `outputs` и `result` |
@@ -42,6 +43,40 @@ defineMetadata({
   },
 })
 ```
+
+## Metadata поля
+
+`.meta(...)` прикрепляет статические подсказки к конкретному `field`. Они
+компилируются вместе с field contract, не попадают в Filter state и не меняют
+значение output.
+
+```ts
+aircrafts: field('String')
+  .array()
+  .vocab('aircrafts', {
+    valuePath: 'type',
+    labelPath: 'description',
+  })
+  .meta({
+    'endge.ui.select': {
+      searchable: true,
+    },
+  })
+  .default([])
+```
+
+Встроенные adapters понимают namespace `endge.ui.select`:
+
+| Поле | Поведение |
+| --- | --- |
+| `searchable: true` | Всегда показывать поиск, включая короткий список. |
+| `searchable: false` | Не показывать поиск. Виртуализация большого списка сохраняется. |
+| `searchable` не задан | Автоматически включить поиск, если вариантов больше 10. |
+
+Если вариантов больше 10, `vue-native`, `vue-shadcn` и `ramax-aodb`
+виртуализируют список автоматически. Виртуализация — внутренняя оптимизация
+adapter-а и не требует отдельной metadata. Неизвестные namespace и ключи
+игнорируются.
 
 ## Namespace и версия
 

@@ -7,10 +7,28 @@ grid-библиотеки. Стандартные Vue-адаптеры испо�
 | --- | --- |
 | `vue-native` | RevoGrid |
 | `vue-shadcn` | TanStack Table и TanStack Virtual |
+| `aodb` | Прикладной TanStack Table adapter |
 
-Оба должны сохранять структуру `Table`/`Column`/`Cell`, смысловые Events,
+Все адаптеры должны сохранять структуру `Table`/`Column`/`Cell`, смысловые Events,
 Actions, row identity и authored defaults. Внешний Component SFC не импортирует
 RevoGrid или TanStack.
+
+## Стандартный selection UX
+
+`selection-trigger="auto"` позволяет адаптеру выбрать привычное для его
+окружения взаимодействие, не меняя публичный Source-контракт:
+
+| Адаптер | `auto` разрешается как |
+| --- | --- |
+| `vue-native` | `row` |
+| `vue-shadcn` | `row` |
+| `aodb` | `control` |
+
+Если переносимый Component SFC требует конкретного поведения, укажите
+`control`, `row` или `both` явно. Явное значение имеет приоритет над стандартом
+адаптера. Во всех вариантах используется одно состояние selection, поэтому
+выбор через control обязан давать ту же подсветку, Events и Actions, что и
+выбор через строку.
 
 ## Что может различаться
 

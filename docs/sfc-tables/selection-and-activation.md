@@ -9,6 +9,7 @@ Selection и activation — разные механики. Selection храни�
   :rows="rows"
   row-key="id"
   selection-mode="multiple"
+  selection-trigger="both"
 >
   <Column key="number" title="Номер" />
   <Column key="status" title="Статус" />
@@ -20,12 +21,28 @@ Selection и activation — разные механики. Selection храни�
 | Режим | Поведение |
 | --- | --- |
 | `none` | Строки не выбираются |
-| `single` | Клик выбирает одну строку |
-| `multiple` | Cmd/Ctrl переключает строку, Shift выбирает диапазон |
+| `single` | В selection может находиться только одна строка |
+| `multiple` | В selection может находиться несколько строк |
 
-Обычный клик в `multiple` начинает новый selection. `Space` выполняет то же
-действие с клавиатуры. Если строка исчезает из `rows`, runtime удаляет её из
-selection и публикует изменение.
+Способ изменения selection задаёт отдельный атрибут `selection-trigger`:
+
+| Значение | Поведение |
+| --- | --- |
+| `auto` | Используется стандартный UX активного адаптера |
+| `control` | Selection меняется только control-элементом в левой колонке |
+| `row` | Selection меняется кликом или `Space` на строке |
+| `both` | Доступны control и взаимодействие со строкой |
+
+При `multiple` control отображается как checkbox, а при `single` — как
+одиночный переключатель. Header checkbox в `multiple` меняет выбор строк
+текущей страницы или текущего видимого набора. `selection-mode="none"`
+отключает selection независимо от trigger.
+
+Для `row` и `both` обычный клик в `multiple` начинает новый selection,
+Cmd/Ctrl переключает строку, а Shift выбирает диапазон. `Space` выполняет то же
+действие с клавиатуры. Для `control` используется стандартная клавиатурная
+семантика checkbox или radio. Если строка исчезает из `rows`, runtime удаляет
+её из selection и публикует изменение.
 
 Shift выбирает диапазон в текущем отображаемом наборе: внутри текущей страницы
 для `paging="pages"` и во всей отсортированной коллекции для `paging="virtual"`.
@@ -46,6 +63,12 @@ Shift выбирает диапазон в текущем отображаемо
 Selection живёт только внутри смонтированного Table и не входит в сохраняемое
 состояние. Для долгоживущего бизнес-выбора обработайте Event и сохраните identity
 во внешнем Store.
+
+Control и строка не создают два независимых selection. При любом trigger
+выбранные строки получают одинаковое смысловое и визуальное состояние:
+`aria-selected`, selected-стиль, `selectionChanged` и доступность групповых
+Actions. Конкретные цвета hover и selected задаются темой или CSS активного
+адаптера.
 
 ## Activation
 
