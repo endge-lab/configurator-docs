@@ -272,7 +272,7 @@ const board = ports.require.board({ rows: props.rows })
     </ColumnMenu>
     <RowMenu>
       <MenuItem
-        action="openDetails"
+        :action="openDetails"
         :label="t('schedule:menu.open', 'Открыть')"
         :input="{ id: rowId, row, columnKey, value }"
       />
@@ -330,6 +330,22 @@ const ports = definePorts({
 ```
 
 Компонент зависит от стабильного Action contract. В текущей версии declaration, `RAction` provider validation и program dependency уже компилируются. Composition override и универсальный template handler для произвольных primitives вводятся отдельно, чтобы не создавать скрытые DOM callbacks.
+
+В `MenuItem` port key задаётся expression binding, а не строковой identity:
+
+```vue
+<MenuItem :action="openDetails" label="Открыть" :input="{ id: rowId }" />
+```
+
+Если компонент намеренно зависит от конкретного Action и отдельный port contract не нужен,
+identity указывается напрямую. Compiler всё равно сохранит её в dependencies:
+
+```vue
+<MenuItem action="flight.open-details" label="Открыть" :input="{ id: rowId }" />
+```
+
+Прежняя строковая ссылка на объявленный port пока поддерживается для совместимости,
+но новый Source должен использовать `:action="openDetails"`.
 
 ## `forward`: повторная публикация портов локальных компонентов
 
@@ -616,9 +632,9 @@ Compiler отклоняет:
 - `default` у provided Action или Event; реакция Event задаётся полем `action`;
 - required port без `default`;
 - `MenuItem command="..."`;
-- `MenuItem action="..."`, если Action не является intrinsic capability Table,
-  известным built-in Action или не объявлен в `definePorts.require/provides`;
-- `MenuItem :action="..."` без static `{ identity, input? }`;
+- `MenuItem :action="portName"`, если port не объявлен в `definePorts.require/provides`;
+- произвольный dynamic `MenuItem :action="..."`, который не является port reference
+  или static `{ identity, input? }`;
 - одновременный input внутри legacy `:action` object и отдельный `:input`;
 - `payload` или пользовательские поля вне `action.input` в object binding;
 - неоднозначные или конфликтующие `forward` rules;

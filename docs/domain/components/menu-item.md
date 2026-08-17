@@ -1,8 +1,7 @@
 # MenuItem
 
-`MenuItem` связывает пункт [ColumnMenu](./column-menu) или [RowMenu](./row-menu) с intrinsic Action Table,
-built-in Action или Action, объявленным в `definePorts.require/provides` текущего
-Component SFC.
+`MenuItem` связывает пункт [ColumnMenu](./column-menu) или [RowMenu](./row-menu)
+с прямой Action identity либо с Action port текущего Component SFC.
 
 ```vue
 <MenuItem
@@ -33,6 +32,17 @@ provider использует своё default behavior:
 />
 ```
 
+Прямая строка является внешней Action dependency и не требует объявления в
+`definePorts`. Если Action объявлен как `definePorts.require/provides`, ссылка
+на его key задаётся expression binding:
+
+```vue
+<MenuItem :action="openDetails" label="Открыть" :input="{ id: rowId }" />
+```
+
+Прежняя строковая ссылка на существующий port key остаётся совместимой, но для
+нового Source рекомендуется явный expression binding.
+
 Старый статический input в object binding остаётся совместимым:
 
 ```vue
@@ -54,7 +64,7 @@ Action contract использует термин `input`, поэтому `paylo
 
 | Атрибут | Тип | Назначение |
 | --- | --- | --- |
-| `action` | literal string / static object | Action identity либо legacy `{ identity, input? }`. |
+| `action` | literal string / port expression / static object | Прямая Action identity, Action port key либо legacy `{ identity, input? }`. |
 | `input` | safe SFC expression | Input, вычисляемый в текущем menu context. |
 | `label` | literal / safe SFC expression | Обязательная подпись, включая `t(key, fallback)`. |
 | `id` | literal string | Stable item id; default равен `action`. |

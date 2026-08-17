@@ -8,20 +8,22 @@
 <Table ref="orders" :rows="rows" row-key="id">
   <RowMenu>
     <MenuItem
-      action="openDetails"
+      :action="openDetails"
       :label="t('orders:menu.open', 'Открыть')"
       :input="{ id: rowId, row, columnKey, value }"
       icon="external-link"
     />
     <MenuSeparator />
-    <MenuItem action="deleteRow" label="Удалить" :input="{ id: rowId }" icon="trash" />
+    <MenuItem action="order.delete-row" label="Удалить" :input="{ id: rowId }" icon="trash" />
   </RowMenu>
   <Column key="number" title="Номер" />
 </Table>
 ```
 
-Actions могут быть intrinsic, built-in, required или совместимыми aliases,
-forwarded именно из этой Table. Alias другой mounted child отклоняется compiler diagnostic.
+Строковый `action="..."` означает прямую Action identity. Expression
+`:action="openDetails"` означает required/provided port key. Forwarded alias
+должен принадлежать именно этой Table; alias другого mounted child отклоняется
+compiler diagnostic.
 DOM event и координаты не входят в Action context; они остаются внутри overlay адаптера.
 
 | Контракт | Значение |
