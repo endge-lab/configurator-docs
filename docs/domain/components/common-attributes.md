@@ -3,6 +3,13 @@
 Эти атрибуты доступны visual primitives. Structural tags могут поддерживать
 только явно описанную часть контракта.
 
+## События
+
+Все visual primitives поддерживают простые `@event` reactions и условную
+аннотацию `:on`. Комбинации клавиш, modifiers, последовательные Actions и
+ограничения структурных тегов описаны в разделе
+[«Сложные события через :on»](./interactions).
+
 ## Flow и data binding
 
 | Атрибут | Тип | Назначение |
@@ -66,4 +73,3 @@ Placement attributes читаются только в контексте пря�
   <Box colStart="2" colSpan="5" rowStart="1" rowSpan="2" />
 </Grid>
 ```
-

@@ -16,6 +16,9 @@ Event является multicast-контрактом: реакция не за�
 превращает Event в Action. Исключение — явный local modifier `.stop`, который
 останавливает дальнейший маршрут конкретного occurrence.
 
+Для условных pointer/keyboard комбинаций и последовательных reactions используйте
+[универсальную аннотацию `:on`](/domain/components/interactions).
+
 ## Только собственный контракт
 
 ```ts

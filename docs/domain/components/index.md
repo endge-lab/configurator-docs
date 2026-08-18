@@ -58,3 +58,4 @@ defineProps<{
 
 Все visual tags принимают [общие атрибуты](./common-attributes), Endge
 control-flow directives и собственные атрибуты, перечисленные на их страницах.
+Для сложных комбинаций событий используйте [универсальную аннотацию `:on`](./interactions).
