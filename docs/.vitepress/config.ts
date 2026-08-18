@@ -93,7 +93,7 @@ export default defineConfig({
           { text: 'Контекстное меню строк', link: '/sfc-tables/row-context-menu' },
           { text: 'Меню заголовков колонок', link: '/sfc-tables/column-header-menu' },
           { text: 'Управление колонками', link: '/sfc-tables/column-management' },
-          { text: 'Редактирование ячеек', link: '/sfc-tables/cell-editing' },
+          { text: 'Editable и редактирование ячеек', link: '/sfc-tables/cell-editing' },
           { text: 'Состояние таблицы', link: '/sfc-tables/state' },
           { text: 'События, порты и Actions', link: '/sfc-tables/events-and-actions' },
           { text: 'Стили и представление', link: '/sfc-tables/styling-and-presentation' },
