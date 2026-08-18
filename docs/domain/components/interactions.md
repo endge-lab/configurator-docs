@@ -149,11 +149,12 @@ Reactions выполняются последовательно и ожидаю�
 
 Аннотация работает на visual tags с собственной event-поверхностью: `Text`,
 `DateTime`, `Number`, `Icon`, `Badge`, `Dot`, `Box`, `Flex`, `Grid`, `Divider`,
-`Input`, `Textarea`, `Checkbox`, `Select` и `Table`.
+`Input`, `Textarea`, `Checkbox`, `Select`, `Table` и `Cell`.
 
-Структурные `Column`, `Cell`, `Variant`, `ColumnMenu`, `RowMenu`, `MenuItem` и
-`MenuSeparator` не создают самостоятельный event target. Compiler выдаёт
-диагностику; поместите `:on` на визуальный дочерний `Box`, `Flex` или `Text`.
+`Cell` является специальной структурной границей: адаптер связывает его `:on` с
+реальной renderer-owned поверхностью табличной ячейки. Остальные структурные
+`Column`, `Variant`, `ColumnMenu`, `RowMenu`, `MenuItem` и `MenuSeparator` не
+создают самостоятельный event target; compiler выдаёт диагностику.
 
 У вложенного пользовательского SFC можно обрабатывать Events его typed manifest.
 Для raw DOM-жеста используйте visual wrapper: Vue fallthrough и форма корневого

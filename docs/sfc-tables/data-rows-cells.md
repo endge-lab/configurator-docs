@@ -65,6 +65,32 @@ identity находится внутри объекта, подготовьте 
 внутри `Column` есть визуальные children без обёртки `Cell`, они получают тот же
 контекст.
 
+## Обработка browser events на Cell
+
+`Cell` поддерживает общий атрибут `:on`. Это позволяет привязать реакцию к жесту
+конкретной ячейки без дополнительного `Box` или `Flex`:
+
+```vue
+<Column key="status" title="Статус">
+  <Cell
+    :on="{
+      event: 'click',
+      modifiers: { shift: true },
+      reaction: action({
+        identity: 'status.inspect',
+        input: { rowId: rowKey, row, columnKey, value, event: event() },
+      }),
+    }"
+  >
+    <Text>{{ value }}</Text>
+  </Cell>
+</Column>
+```
+
+В Visual editor обработчики находятся в настройках выбранной колонки. При первом
+добавлении редактор автоматически оборачивает существующих прямых children
+колонки в `Cell`, не заменяя их Source.
+
 ## Обновление `rows`
 
 Новый массив строк не сбрасывает authored-конфигурацию Table. Runtime:

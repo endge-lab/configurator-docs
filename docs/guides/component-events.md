@@ -81,11 +81,12 @@ diagnostics, но не отменяет публикацию Event другим 
 Общий Event registry подключён к следующим renderer-neutral тегам:
 
 `Text`, `DateTime`, `Number`, `Icon`, `Badge`, `Dot`, `Box`, `Flex`, `Grid`,
-`Divider`, `Input`, `Textarea`, `Checkbox`, `Select` и `Table`.
+`Divider`, `Input`, `Textarea`, `Checkbox`, `Select`, `Table` и `Cell`.
 
-Структурные теги `Column`, `Cell`, `ColumnMenu`, `RowMenu`, `MenuItem` и `MenuSeparator`
-не являются самостоятельными rendered event targets. Вложенный пользовательский
-`Component` публикует Events из собственного typed manifest.
+`Cell` связывает обработчик с renderer-owned поверхностью конкретной ячейки и
+передаёт её row/column locals. Структурные теги `Column`, `ColumnMenu`, `RowMenu`,
+`MenuItem` и `MenuSeparator` не являются самостоятельными rendered event targets.
+Вложенный пользовательский `Component` публикует Events из собственного typed manifest.
 
 ### Указатель и мышь
 
