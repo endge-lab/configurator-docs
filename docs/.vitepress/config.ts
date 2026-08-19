@@ -38,6 +38,8 @@ export default defineConfig({
           { text: 'Type', link: '/reference/type' },
           { text: 'Mock data', link: '/reference/mock' },
           { text: 'Query', link: '/reference/query' },
+          { text: 'Stream', link: '/reference/stream' },
+          { text: 'Update', link: '/reference/update' },
           { text: 'Filter', link: '/reference/filter' },
           { text: 'Action', link: '/reference/action' },
           { text: 'Component SFC', link: '/reference/component-sfc' },

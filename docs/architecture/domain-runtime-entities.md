@@ -23,7 +23,10 @@ descriptors отдельно от persisted maps.
 - lifecycle `create - work - destroy`;
 - собственные ресурсы, подписки и события.
 
-Typed runtime hosts существуют для Query, Action, Filter, Composition, Store и ComponentSFC. Другие документы могут быть metadata или входами и не обязаны иметь отдельный host.
+Typed runtime hosts существуют для Query, Action, Filter, Composition, Store,
+Stream и ComponentSFC. Update исполняется владеющим Store и не требует отдельного
+runtime-host. Другие документы могут быть metadata или входами и не обязаны иметь
+отдельный host.
 
 ## Что не является runtime-сущностью
 

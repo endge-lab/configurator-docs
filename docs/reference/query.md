@@ -131,6 +131,17 @@ body: body(({ prop }) => ({
 | `formUrlencoded` | Кодировать body как `application/x-www-form-urlencoded` |
 | `body` | Безопасное выражение, построенное через `body(...)` |
 
+Для `auth` используются те же формы, что и в Stream: `mode: 'inherit'`,
+`mode: 'none'` или `mode: 'profile'` с полем `profile`. Значение `profile` —
+identity существующего AuthProfile:
+
+```ts
+auth: {
+  mode: 'profile',
+  profile: 'keycloak-dev',
+}
+```
+
 Callback `body` должен непосредственно возвращать выражение. Block body, произвольный JavaScript и side effects не поддерживаются.
 
 ## Outputs

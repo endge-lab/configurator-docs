@@ -103,7 +103,6 @@ Workspace хранит полную `EndgeConfiguration`:
 ```ts
 export interface EndgeConfiguration {
   vars: EndgeVariableDefinition[]
-  sse?: EndgeSSEConfiguration
 
   locales: EndgeLocaleDefinition[]
   defaultLocale: string
@@ -152,7 +151,6 @@ export interface EndgeCollectionPatch<T> {
 
 export interface EndgeConfigurationPatch {
   vars?: EndgeCollectionPatch<EndgeVariableDefinition>
-  sse?: EndgeValueOverride<EndgeSSEConfiguration>
 
   locales?: EndgeCollectionPatch<EndgeLocaleDefinition>
   defaultLocale?: EndgeValueOverride<string>
@@ -277,4 +275,3 @@ type EnvironmentConfigurationContribution = /* operational settings */
 ```
 
 Такое разделение не меняет общий resolution order. Оно ограничивает только набор полей, которые конкретный слой имеет право переопределять. Пока layer-specific contracts не введены, Environment остаётся последним и имеет наивысший формальный приоритет для любого конфликта в общей конфигурации.
-
