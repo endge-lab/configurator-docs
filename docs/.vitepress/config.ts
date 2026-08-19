@@ -59,6 +59,7 @@ export default defineConfig({
           { text: 'Обзор компонентов', link: '/domain/components/' },
           { text: 'Общие атрибуты', link: '/domain/components/common-attributes' },
           { text: 'Сложные события через :on', link: '/domain/components/interactions' },
+          { text: 'Tooltip', link: '/domain/components/tooltip' },
           { text: 'Text', link: '/domain/components/text' },
           { text: 'DateTime', link: '/domain/components/date-time' },
           { text: 'Number', link: '/domain/components/number' },

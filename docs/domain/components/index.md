@@ -11,11 +11,14 @@ adapter материализует их во Vue, Native DOM или другой
 | Layout | [Box](./box), [Flex](./flex), [Grid](./grid), [Divider](./divider) |
 | Content | [Text](./text), [DateTime](./date-time), [Number](./number), [Icon](./icon), [Badge](./badge), [Dot](./dot) |
 | Display-only controls | [Input](./input), [Textarea](./textarea), [Checkbox](./checkbox), [Select](./select) |
+| Overlay | [Tooltip](./tooltip) |
 
-Эти теги входят в обязательный renderer-adapter contract. Стандартные adapters:
+Visual primitives входят в базовый renderer-adapter contract. Shell-owned
+`Tooltip` дополнительно входит в Vue adapter contract. Поддерживаемые adapters:
 
 - `vue-native` из `@endge/ui-vue`;
-- `native-dom` из `@endge/native-dom`.
+- `vue-shadcn` из `@endge/ui-vue-shadcn`;
+- `ramax-aodb` из приложения AODB.
 
 ## Runtime и structural primitives
 

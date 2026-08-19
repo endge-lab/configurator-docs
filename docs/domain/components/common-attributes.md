@@ -28,7 +28,7 @@
 | --- | --- | --- |
 | `id` | string | Локальный id template-узла. |
 | `class` | string | Семантический class для EndgeCSS и adapter-а. |
-| `tooltip` / `:tooltip` | string / expression | Tooltip metadata; DOM adapter использует `title`. |
+| `tooltip` / `:tooltip` | string / expression | Lazy text tooltip; подробности на странице [Tooltip](./tooltip). |
 | `visible` / `:visible` | boolean / expression | Мягкая видимость; для удаления узла используйте `if`. |
 
 ## Размеры и spacing

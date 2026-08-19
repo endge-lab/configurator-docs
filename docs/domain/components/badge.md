@@ -14,7 +14,6 @@
 | `color`, `bg` | token/string | Цвет текста и фон. |
 | `size` | string/number | Размер badge. |
 | `radius` / `r` | number/string | Скругление. |
-| `tooltip` / `:tooltip` | string/expression | Tooltip metadata. |
+| `tooltip` / `:tooltip` | string/expression | Lazy text [Tooltip](./tooltip). |
 
 Adapter получает `tone` как semantic metadata и сам выбирает visual theme.
-
