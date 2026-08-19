@@ -40,9 +40,11 @@ defineComposition({
         rows: output('rows'),
       }),
 
-    table: component('items-table').withProps({
-      rows: fromData('application.rows'),
-    }),
+    table: component('items-table')
+      .persist({ key: 'items-table-state' })
+      .withProps({
+        rows: fromData('application.rows'),
+      }),
   },
 
   hooks: [
@@ -205,7 +207,7 @@ composition('flight-board').withData({
 | --- | --- | --- |
 | `filter(identity)` | Filter runtime | `activateOn`, `persist` |
 | `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
-| `component(identity)` | Component SFC runtime | `activateOn`, `withProps` |
+| `component(identity)` | Component SFC runtime | `activateOn`, `persist`, `withProps` |
 | `composition(identity)` | Вложенная Composition | `activateOn`, `withProps`, `withData`, `storeTo` |
 | `filterView(identity)` | Представление Filter | `activateOn`, `fields`, `controls`, `component`, `withProps` |
 
@@ -246,6 +248,95 @@ await filter.action('clear').run()
 `set` и `patch` валидируют значения по compiled Filter fields. `reset` возвращает
 defaults, `clear` создаёт пустой state. После изменения Filter публикует Events
 `state:change` и, только для действительно изменившихся outputs, `output:change`.
+
+## Persistence runtime-состояния
+
+`.persist({ key })` включает локальное сохранение состояния конкретной runtime-ноды. Modifier не применяется ко всей Composition и не распространяется на соседние ноды:
+
+```ts
+defineComposition({
+  runtimes: {
+    filters: filter('schedule')
+      .persist({ key: 'schedule-sandbox-filter' }),
+
+    filterPanel: filterView('schedule')
+      .fields(['search', 'season', 'airlines']),
+
+    table: component('schedule-sandbox')
+      .persist({ key: 'schedule-sandbox-table' }),
+  },
+})
+```
+
+В текущем контракте `.persist(...)` поддерживают только `filter(...)` и `component(...)`. У `filterView(...)` собственного persisted state нет: несколько FilterView читают и изменяют один Filter runtime, поэтому persistence задаётся на исходном `filter(...)`.
+
+### Filter
+
+Filter сохраняет значения своих полей и восстанавливает их при следующем mount в том же runtime-контексте:
+
+```ts
+runtimes: {
+  filter: filter('schedule')
+    .persist({ key: 'schedule-published-filter' }),
+
+  searchFilter: filterView('schedule').fields(['search']),
+  seasonFilter: filterView('schedule').fields(['season']),
+  filterPanel: filterView('schedule').fields([
+    'from',
+    'to',
+    'airlines',
+  ]),
+}
+```
+
+Все три FilterView используют восстановленное состояние одного Filter. Открытое или закрытое состояние визуальной панели к Filter state не относится и таким `persist` не сохраняется.
+
+### Component и Table
+
+Для Component modifier предоставляет renderer-у state controller. Renderer сохраняет собственные секции состояния; например, Table хранит сортировку, pagination, порядок, видимость, закрепление и размеры колонок.
+
+```ts
+runtimes: {
+  table: component('schedule-published')
+    .persist({ key: 'schedule-published-table' }),
+}
+```
+
+В source самого Component SFC каждому сохраняемому экземпляру Table нужен стабильный `id`:
+
+```vue
+<Table
+  id="schedule-published"
+  :rows="rows"
+>
+  <!-- columns -->
+</Table>
+```
+
+Без стабильного `id` Component runtime может иметь state controller, но renderer не сможет надёжно связать сохранённые секции с новым экземпляром Table после перезагрузки. Полный список табличных секций и правила authored defaults описаны в разделе [Состояние таблицы](/sfc-tables/state).
+
+### Ключи и область хранения
+
+Ключ должен быть непустым и стабильным. Durable address дополнительно включает текущие `workspace`, `tenant`, `project`, `environment` и пользователя, поэтому одинаковый ключ в разных runtime-контекстах не смешивает состояние.
+
+Для независимого состояния используйте разные ключи:
+
+```ts
+// Sandbox и Published восстанавливаются независимо.
+filter('schedule').persist({ key: 'schedule-sandbox-filter' })
+filter('schedule').persist({ key: 'schedule-published-filter' })
+```
+
+Одинаковый ключ используйте только намеренно, когда два поочерёдно монтируемых runtime должны разделять одно состояние:
+
+```ts
+// Обе страницы используют общие значения Filter.
+filter('schedule').persist({ key: 'schedule-filter' })
+```
+
+Повтор одного `persist` key у разных runtime-нод внутри одной Composition является compiler error.
+
+Persistence хранит только runtime-owned state. Он не сохраняет rows, Query outputs, Store data, изменения доменных документов или Component SFC source. Такие данные должны записываться через соответствующие Store/Update/Query/backend-контракты.
 
 ## Публичные props Composition
 
