@@ -1,8 +1,8 @@
 # Query
 
-Query — source-first описание получения данных. Он объявляет входные props, HTTP-контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем.
+Query — source-first описание получения данных. Он объявляет входные props, транспортный контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем. Поддерживаются два варианта: `kind: 'rest'` и `kind: 'graphql'`.
 
-В `request.body` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. Специальные readers Query — `prop(path)` и `response(path?)`. Сетевой контракт Query от расширения словаря операций не меняется.
+В `request.body`, `request.variables` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. Специальные readers Query — `prop(path)`, `response(path?)` для REST и `data(path?)` для GraphQL.
 
 ## Полный пример
 
@@ -53,7 +53,51 @@ defineQuery({
 })
 ```
 
-В текущей версии поддерживается `kind: 'rest'`.
+## GraphQL-вариант
+
+GraphQL Query хранит operation отдельно от variables. Это полноценный GraphQL transport, а не REST body с текстом мутации:
+
+```ts
+defineQuery({
+  kind: 'graphql',
+
+  props: defineProps({
+    leadId: field('String'),
+    actualTime: field('DateTime'),
+  }),
+
+  request: {
+    endpoint: env('ENDPOINT_HUB_GRAPHQL'),
+    operationName: 'UpdateActualTime',
+    document: gql`
+      mutation UpdateActualTime($leadId: ID!, $actualTime: DateTime!) {
+        updateActualTime(leadId: $leadId, actualTime: $actualTime) {
+          id
+          actualTime
+        }
+      }
+    `,
+    variables: variables(({ prop }) => ({
+      leadId: prop('leadId'),
+      actualTime: prop('actualTime'),
+    })),
+    headers: {},
+    auth: { mode: 'inherit' },
+    errorPolicy: 'throw',
+  },
+
+  outputs: {
+    updated: output().from(data('updateActualTime')),
+  },
+
+  mock: {
+    enabled: false,
+    data: null,
+  },
+})
+```
+
+`gql` должен быть статическим tagged template без JavaScript interpolation. Кнопка «Форматировать» форматирует одновременно Query source и GraphQL document внутри `gql`.
 
 ## Props
 
@@ -107,7 +151,7 @@ properties: field(recordOf(objectOf({
 })))
 ```
 
-Prop участвует в запросе только при явной ссылке через `prop(path)`:
+Prop участвует в запросе только при явной ссылке через `prop(path)` в `body(...)` или `variables(...)`:
 
 ```ts
 body: body(({ prop }) => ({
@@ -116,9 +160,9 @@ body: body(({ prop }) => ({
 }))
 ```
 
-`request.body` может читать только объявленные props. Произвольного доступа к Composition, Store или глобальному окружению внутри Query source нет.
+`request.body` и `request.variables` могут читать только объявленные props. Произвольного доступа к Composition, Store или глобальному окружению внутри Query source нет.
 
-## Request
+## REST request
 
 | Поле | Назначение |
 | --- | --- |
@@ -144,9 +188,24 @@ auth: {
 
 Callback `body` должен непосредственно возвращать выражение. Block body, произвольный JavaScript и side effects не поддерживаются.
 
+## GraphQL request
+
+| Поле | Назначение |
+| --- | --- |
+| `endpoint` | GraphQL endpoint или Endge var-token |
+| `document` | Статический GraphQL document в `gql` tagged template |
+| `operationName` | Имя operation; обязательно, если document содержит несколько operations |
+| `variables` | Безопасное выражение, построенное через `variables(...)` |
+| `headers` | Дополнительные HTTP headers |
+| `auth` | Общая Auth-конфигурация Query |
+| `timeoutMs` | Необязательный timeout запроса |
+| `errorPolicy` | `throw` по умолчанию или `ignore` |
+
+Executor отправляет `POST` с полями `query`, `operationName` и `variables`. HTTP-ошибки всегда завершают Query с ошибкой. При `errorPolicy: 'throw'` наличие `errors` в успешном HTTP-ответе также считается ошибкой; при `ignore` executor возвращает доступное `data`.
+
 ## Outputs
 
-Output читает response или output, объявленный выше:
+REST output читает response, GraphQL output — поле `data`; оба могут ссылаться на output, объявленный выше:
 
 ```ts
 outputs: {
@@ -164,6 +223,15 @@ rows: output().from(
     .where(match({ active: true }))
     .map(pick(['id', 'name'])),
 )
+```
+
+Для GraphQL executor сначала отделяет envelope и передаёт в output только поле `data`, поэтому путь не содержит дополнительный префикс:
+
+```ts
+outputs: {
+  raw: output().from(data()),
+  items: output().from(data('items')),
+}
 ```
 
 Ссылаться можно только на предыдущий output. Такой порядок делает граф однозначным и исключает циклы.
