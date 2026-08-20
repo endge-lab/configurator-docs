@@ -70,7 +70,10 @@ rowActivated: event<TableRowActivatedEvent>({
 })
 ```
 
-`event()` передаёт весь payload. `event('row.id')` читает вложенное значение.
+`event()` передаёт весь payload. `event('row.id')` читает вложенное значение,
+а `now()` возвращает текущий ISO 8601 UTC timestamp. Полный каталог intrinsic и
+Table payload-полей приведён в
+[справочнике `event()` и `now()`](/domain/components/interactions#значения-event-и-now).
 
 Direct Action запускается через `Endge.actions.execute` со scope текущего
 runtime-компонента и target исходного элемента. Ошибка Action попадает в

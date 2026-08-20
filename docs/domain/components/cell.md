@@ -54,5 +54,28 @@ browser events через `:on` и простой `@event`.
 `.capture` и `.passive` имеют ту же семантику, что и на других visual tags.
 Полный trigger-контракт описан в [«Условные взаимодействия `:on`»](./interactions).
 
+Если trigger хранится в Configuration, а Query должен запускаться сразу без
+режима редактирования, используйте ссылочную форму:
+
+```vue
+<Cell
+  :on="{
+    triggers: $context.config.groundHandling.actualTimeTriggers,
+    reaction: query({
+      identity: 'groundHandling.actualTime.update',
+      input: {
+        legId: row.arrivalLeg.id,
+        value: now(),
+      },
+    }),
+  }"
+>
+  <Text>{{ value }}</Text>
+</Cell>
+```
+
+Такой `:on` не включает `editable`: он выполняет Query непосредственно после
+совпадения одного из effective triggers.
+
 Полный список locals и правила row identity описаны в
 [«Данные, строки и ячейки»](/sfc-tables/data-rows-cells).

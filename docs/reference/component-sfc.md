@@ -527,7 +527,14 @@ payload. Для `Table` список событий берётся из встр
 - `event()` передаёт весь payload;
 - `event('rowId')` читает поле;
 - `event('row.id')` читает вложенное поле по dot-path;
+- `now()` возвращает текущий ISO 8601 UTC timestamp;
 - literal, массивы и объекты можно комбинировать с этими выражениями.
+
+Для intrinsic browser events доступны common-поля `type`, `occurredAt`,
+`modifiers.*`, `held.*`; pointer-поля `x`, `y`, `button`, `buttons`,
+`pointerType`; wheel-поля `deltaX`, `deltaY`; keyboard-поля `key`, `code`,
+`repeat`, `composing`; form-поля `value`, `checked`. Полная таблица и примеры:
+[значения `event()` и `now()`](/domain/components/interactions#значения-event-и-now).
 
 Action выполняется через `Endge.actions.execute` и получает scope текущего
 runtime-компонента и target исходной Table.

@@ -1,76 +1,161 @@
 # Каскад конфигурации
 
-Endge собирает effective configuration для одного execution context из четырёх слоёв. Слои применяются последовательно, а более поздний слой имеет более высокий приоритет при конфликте.
+Endge собирает effective configuration одного execution context из defaults активных Configuration-документов и четырёх уровней контекста.
 
 Нормативный порядок:
 
 ```text
-Source defaults - Workspace - Tenant - Project - Environment
+Source defaults → Workspace → Tenant → Project → Environment
 ```
 
-Следовательно, при переопределении одного и того же значения действует такой приоритет:
+Более поздний слой имеет больший приоритет:
 
 ```text
 Environment > Project > Tenant > Workspace > Source defaults
 ```
 
-`Environment` имеет наивысший приоритет, `Workspace` служит фундаментом. Отсутствующее переопределение ничего не меняет: значение продолжает наследоваться из предыдущего слоя.
+Отсутствующее локальное переопределение ничего не меняет: значение наследуется из предыдущего слоя.
 
-## Роль каждого слоя
+## Источники значений
 
 | Слой | Назначение | Приоритет |
 |---|---|---:|
-| `Workspace` | Полная исходная конфигурация пространства | 1 — базовый |
-| Source defaults | Defaults из активных Configuration-документов | 0 — исходный |
+| Source defaults | Defaults из активных [Configuration-документов](/reference/configuration) | 0 |
+| `Workspace` | Полная persisted-конфигурация рабочего пространства | 1 |
 | `Tenant` | Настройки организации или заказчика | 2 |
-| `Project` | Настройки конкретного приложения или прикладной модели | 3 |
-| `Environment` | Настройки конкретной среды исполнения: development, test, staging, production | 4 — наивысший |
+| `Project` | Настройки конкретного приложения | 3 |
+| `Environment` | Настройки конкретной среды исполнения | 4 |
 
-`Project`, `Tenant` и `Environment` являются независимыми координатами execution context. Они не образуют обязательную цепочку владения: Tenant не обязан принадлежать Project, а Environment может использоваться несколькими Project. Порядок выше описывает только resolution — вычисление итоговой конфигурации.
+`Project`, `Tenant` и `Environment` — независимые координаты execution context. Они не обязаны образовывать цепочку владения. Порядок описывает resolution, а не иерархию сущностей.
 
-Здесь `Environment` означает доменную сущность Endge, выбранную в execution context. Не следует смешивать её с переменными процесса, такими как `VITE_*`, переменными контейнера или операционной системы. Если platform environment variables участвуют в разрешении значений, для них нужен отдельный явный контракт.
+`Environment` здесь означает доменную сущность Endge. Это не переменные процесса, `VITE_*`, параметры контейнера или операционной системы.
 
-## Как вычисляется effective configuration
+## Две части конфигурации
 
-Resolver начинает с полной конфигурации Workspace и применяет три contribution:
+Effective configuration содержит:
+
+1. системные настройки Endge: locale, theme, timezone, auth-profile identity, SFC adapters, editing, tooltips и diagnostics;
+2. динамические типизированные значения из Configuration-документов.
+
+Workspace хранит их в одном `EndgeConfiguration`, но пользовательские категории находятся во внутреннем namespace `values`:
 
 ```ts
-let effective = applyConfigurationDefaults()
-effective = apply(effective, workspace.configuration)
-effective = apply(effective, tenant.configuration)
-effective = apply(effective, project.configuration)
-effective = apply(effective, environment.configuration)
+type JsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JsonValue[]
+  | { [key: string]: JsonValue }
+
+type EndgeConfigurationValues =
+  Record<string, Record<string, JsonValue>>
+
+interface EndgeConfiguration {
+  vars: EndgeVariableDefinition[]
+
+  locales: EndgeLocaleDefinition[]
+  defaultLocale: string
+  fallbackLocale: string
+
+  themes: EndgeThemeDefinition[]
+  defaultTheme: string
+
+  timezones: EndgeTimezoneDefinition[]
+  defaultTimezone: string
+
+  defaultAuthProfileIdentity: string | null
+  sfcAdapterIds: string[]
+  defaultSfcAdapterId: string
+
+  sfcEditing: EndgeSFCEditingConfiguration
+  tooltips: EndgeTooltipConfiguration
+  diagnostics: EndgeDiagnosticsConfiguration
+
+  values: EndgeConfigurationValues
+}
 ```
 
-Полученный объект передаётся в build context и используется compiler и runtime. Effective configuration является производным результатом одного boot/build lifecycle:
+`values` — storage namespace. В публичном `$context.config` он удаляется, а identity Configuration-документа поднимается на первый уровень.
 
-- она не сохраняется как отдельный источник истины;
-- она не записывается обратно в Workspace, Project, Tenant или Environment;
-- изменение выбранного execution context требует нового resolution и нового build context;
-- одинаковые source configuration и execution context должны давать одинаковый результат.
+## Ранняя schema-фаза
 
-### Пример конфликта
+Configuration resolution начинается до основного compile lifecycle:
 
-Пусть все четыре слоя задают переменную `API_URL`:
+1. собирается ранний Type catalog;
+2. активные Configuration Source v1 компилируются без выполнения JavaScript;
+3. ссылки на пользовательские и reference-типы разрешаются через Type Registry;
+4. defaults проверяются по типам;
+5. категории сортируются по `displayName`, затем по `identity`;
+6. schema catalog передаётся effective configuration resolver.
 
-```text
-Workspace:   https://api.example.com
-Project:     https://project-api.example.com
-Tenant:      https://customer-api.example.com
-Environment: https://staging-api.example.com
+Ошибки Source, неизвестные Type, невалидные defaults и конфликтующие identity попадают в Problems. Основной compiler использует готовый schema catalog и не интерпретирует Configuration Source повторно.
+
+## Алгоритм resolution
+
+Упрощённо процесс выглядит так:
+
+```ts
+let effective = normalize(workspace.configuration)
+effective.values = applySourceDefaults(effective.values)
+
+effective = applyContribution(effective, tenant.configuration)
+effective.values = applySourceDefaults(effective.values)
+
+effective = applyContribution(effective, project.configuration)
+effective.values = applySourceDefaults(effective.values)
+
+effective = applyContribution(effective, environment.configuration)
+effective.values = applySourceDefaults(effective.values)
 ```
 
-Effective value:
+`applySourceDefaults(...)` не перезаписывает совместимые persisted values. Он добавляет отсутствующие defaults, проверяет активные поля и исключает stale-ключи из effective projection.
 
-```text
-https://staging-api.example.com
+Полученный объект становится immutable input для compiler и runtime. Он:
+
+- не сохраняется как отдельный источник истины;
+- не записывается обратно в Workspace, Tenant, Project или Environment;
+- пересчитывается при новом boot/build;
+- должен быть детерминирован для одинакового Domain и execution context;
+- входит в `contextHash`.
+
+## Пример вычисления
+
+Пусть Configuration `groundHandling` объявляет:
+
+```ts
+defineConfig({
+  rowHeight: value(Number, 32),
+  compactMode: value(Boolean, false),
+})
 ```
 
-Environment побеждает, потому что его contribution применяется последним. Если Environment не задаёт `API_URL`, результатом будет Project value. Если значение отсутствует и в Project, используется Tenant, затем Workspace и Source default.
+Слои задают следующие значения:
+
+| Слой | `rowHeight` | `compactMode` |
+|---|---:|---:|
+| Source default | `32` | `false` |
+| Workspace | `36` | `true` |
+| Tenant | — | `false` |
+| Project | `40` | — |
+| Environment | `44` | — |
+
+Результат:
+
+```json
+{
+  "groundHandling": {
+    "rowHeight": 44,
+    "compactMode": false
+  }
+}
+```
+
+Если удалить Environment override для `rowHeight`, effective value станет `40`. После удаления Project override вернётся Workspace value `36`. Source default `32` используется только когда значение не задано ни одним persisted-слоем.
 
 ## Execution context и build context
 
-Выбор слоёв задаётся structural context одного запуска:
+Активные координаты задаются execution context:
 
 ```ts
 export interface EndgeExecutionContext {
@@ -80,7 +165,7 @@ export interface EndgeExecutionContext {
 }
 ```
 
-После resolution compiler получает immutable build context:
+После resolution compiler получает build context:
 
 ```ts
 export interface EndgeBuildContext {
@@ -91,31 +176,30 @@ export interface EndgeBuildContext {
 }
 ```
 
-`configuration` здесь уже является effective configuration, а не contribution одного из слоёв. `contextHash` должен учитывать Workspace, выбранные Project/Tenant/Environment и итоговую конфигурацию.
+`configuration` здесь уже является effective configuration. Она не является contribution какого-либо одного слоя.
 
-## Persisted configuration interface
+## Persisted Workspace values
 
-Workspace хранит полную `EndgeConfiguration`:
+Workspace хранит полные пользовательские значения:
 
-```ts
-export interface EndgeConfiguration {
-  vars: EndgeVariableDefinition[]
-
-  locales: EndgeLocaleDefinition[]
-  defaultLocale: string
-  fallbackLocale: string
-
-  themes: EndgeThemeDefinition[]
-  defaultTheme: string
-
-  defaultAuthProfileIdentity: string | null
-
-  sfcAdapterIds: string[]
-  defaultSfcAdapterId: string
+```json
+{
+  "configuration": {
+    "values": {
+      "groundHandling": {
+        "rowHeight": 36,
+        "compactMode": true
+      }
+    }
+  }
 }
 ```
 
-Project, Tenant и Environment хранят не копию результата, а собственный `EndgeConfigurationContribution`:
+Первый key — identity Configuration-документа, второй — key значения из `defineConfig(...)`.
+
+## Contribution Tenant, Project и Environment
+
+Остальные уровни хранят contribution, а не копию effective result:
 
 ```ts
 export type EndgeConfigurationContribution =
@@ -131,92 +215,89 @@ export type EndgeConfigurationContribution =
 
 ### Режим `inherit`
 
-`inherit` сохраняет upstream configuration и содержит только локальные операции слоя:
+`inherit` сохраняет upstream configuration и применяет только локальные операции.
 
 ```ts
 export type EndgeValueOverride<T> =
   | { op: 'set', value: T }
   | { op: 'remove' }
 
-export type EndgeCollectionPatchEntry<T> =
-  | { key: string, op: 'upsert', value: T }
-  | { key: string, op: 'remove' }
-
-export interface EndgeCollectionPatch<T> {
-  entries: EndgeCollectionPatchEntry<T>[]
-}
+export type EndgeConfigurationValuePatch = Record<
+  string,
+  Record<string, EndgeValueOverride<JsonValue>>
+>
 
 export interface EndgeConfigurationPatch {
-  vars?: EndgeCollectionPatch<EndgeVariableDefinition>
-
-  locales?: EndgeCollectionPatch<EndgeLocaleDefinition>
-  defaultLocale?: EndgeValueOverride<string>
-  fallbackLocale?: EndgeValueOverride<string>
-
-  themes?: EndgeCollectionPatch<EndgeThemeDefinition>
-  defaultTheme?: EndgeValueOverride<string>
-
-  defaultAuthProfileIdentity?: EndgeValueOverride<string>
-
-  sfcAdapterIds?: EndgeCollectionPatch<string>
-  defaultSfcAdapterId?: EndgeValueOverride<string>
+  // системные scalar и collection patches
+  values?: EndgeConfigurationValuePatch
 }
 ```
 
-Правила операций:
-
-- отсутствующее поле наследуется без изменений;
-- `set` явно задаёт scalar value;
-- `remove` удаляет optional value или сбрасывает nullable value;
-- `upsert` добавляет либо заменяет collection item по стабильному ключу;
-- `remove` для collection удаляет item по ключу;
-- required scalar нельзя удалить, если после этого конфигурация станет невалидной.
-
-Пример tenant contribution:
+Пример Environment contribution:
 
 ```json
 {
   "mode": "inherit",
   "patch": {
-    "defaultLocale": {
-      "op": "set",
-      "value": "en"
-    },
-    "themes": {
-      "entries": [
-        {
-          "key": "tenant-brand",
-          "op": "upsert",
-          "value": {
-            "identity": "tenant-brand",
-            "displayName": "Tenant Brand"
-          }
+    "values": {
+      "groundHandling": {
+        "rowHeight": {
+          "op": "set",
+          "value": 44
+        },
+        "compactMode": {
+          "op": "remove"
         }
-      ]
+      }
     }
   }
 }
 ```
 
+Для Configuration values:
+
+- `set` задаёт локальное значение поля;
+- `remove` удаляет override текущего слоя и сохраняет upstream value;
+- отсутствие операции также означает inheritance;
+- операция одного поля не затрагивает соседние поля категории.
+
+Для системных collections используются `upsert` и `remove` по стабильному ключу. Их semantics отличаются от field-level Configuration value: collection `remove` действительно удаляет item из effective collection.
+
 ### Режим `replace`
 
-`replace` полностью отбрасывает accumulated upstream result и начинает разрешение с переданной полной конфигурации:
+`replace` отбрасывает накопленный upstream result и начинает разрешение с полной конфигурации replace-слоя:
 
 ```text
-Workspace - Tenant - Project (replace) - Environment
-                   └────────────────────┘
-                    новый полный base
+Workspace → Tenant → Project (replace) → Environment
+                        │
+                        └─ новый полный base
 ```
 
-Environment всё равно применяется после Project replacement. `Tenant (replace)` сбрасывает Workspace, но не отменяет последующие Project и Environment.
+После replace schema resolver снова дополняет отсутствующие Configuration values defaults активных source-документов. Последующие слои продолжают применяться в обычном порядке.
 
-`replace` следует применять только когда слою действительно нужен независимый полный configuration contract. Для обычных переопределений предпочтителен `inherit`: он сохраняет происхождение значений и уменьшает риск случайно удалить настройки предыдущих слоёв.
+Например, `Project (replace)` сбрасывает Workspace и Tenant, но не отменяет Environment contribution.
 
-## Интерфейс редактора конфигурации
+Для обычных переопределений предпочтителен `inherit`. `replace` нужен только слою, который действительно владеет независимой полной конфигурацией.
 
-Редактор должен явно разделять root configuration и contribution.
+## Ошибочные и stale-значения
 
-### Workspace editor
+Persisted данные не удаляются автоматически при изменении Source:
+
+| Ситуация | Persisted JSON | Effective configuration | Diagnostic |
+|---|---|---|---|
+| значение совместимо с активным полем | сохраняется | применяется | нет |
+| значение несовместимо с Type | сохраняется | build блокируется | error |
+| field удалён из Source | сохраняется | игнорируется | warning |
+| Configuration удалена или неактивна | сохраняется | игнорируется | stale |
+| field/document восстановлен с совместимым Type | сохраняется | применяется повторно | снимается |
+
+Resolver не выполняет silent fallback к default для несовместимого значения и не исправляет persisted JSON за пользователя.
+
+## Интерфейс редактора
+
+Один `ConfigurationSettingsEditor` используется для всех уровней.
+
+### Workspace
 
 Workspace редактирует полную конфигурацию:
 
@@ -227,11 +308,11 @@ interface WorkspaceConfigurationEditorProps {
 }
 ```
 
-Все required values должны быть заполнены и валидны до сохранения.
+Для каждой активной Configuration schema после системных разделов добавляется отдельная категория.
 
-### Project, Tenant и Environment editor
+### Tenant, Project и Environment
 
-Остальные слои редактируют contribution относительно upstream snapshot:
+Остальные уровни редактируют contribution относительно upstream snapshot:
 
 ```ts
 interface ConfigurationContributionEditorProps {
@@ -241,34 +322,41 @@ interface ConfigurationContributionEditorProps {
 }
 ```
 
-`upstream` зависит от редактируемого слоя:
+Upstream зависит от слоя:
 
 | Редактируемый слой | Upstream preview |
 |---|---|
-| `Tenant` | `Source defaults - Workspace` |
-| `Project` | `Source defaults - Workspace - Tenant` |
-| `Environment` | `Source defaults - Workspace - Tenant - Project` |
+| `Tenant` | Source defaults → Workspace |
+| `Project` | Source defaults → Workspace → Tenant |
+| `Environment` | Source defaults → Workspace → Tenant → Project |
 
-UI редактора должен показывать для каждого значения:
+UI должен различать:
 
-- inherited value из upstream;
-- local operation текущего contribution;
-- effective value после применения contribution;
-- режим слоя: `inherit` или `replace`;
-- источник итогового значения, если он известен.
+- inherited value;
+- local override;
+- effective value;
+- источник итогового значения;
+- invalid и stale persisted values;
+- режим `inherit` или `replace`.
 
-Для collection fields UI должен отличать inherited item, local `upsert` и local `remove`. Сброс локальной операции означает возврат к inheritance, а не удаление upstream value.
+Сброс локального override означает возврат к inheritance, а не удаление upstream value.
 
-## Границы и дальнейшее развитие
+## Публичная runtime-проекция
 
-Текущий общий contribution interface технически разрешает каждому слою менять любое поле `EndgeConfiguration`. Это простой deterministic contract, но он не выражает ownership разных классов настроек.
-
-В дальнейшем interface может быть разделён на layer-specific contracts, например:
+После boot effective configuration публикуется в Component SFC как глубоко замороженный `$context.config`:
 
 ```ts
-type ProjectConfigurationContribution = /* application settings */
-type TenantConfigurationContribution = /* customer settings */
-type EnvironmentConfigurationContribution = /* operational settings */
+$context.config.defaultTheme
+$context.config.defaultTimezone
+$context.config.sfcEditing
+$context.config.tooltips
+$context.config.groundHandling.rowHeight
 ```
 
-Такое разделение не меняет общий resolution order. Оно ограничивает только набор полей, которые конкретный слой имеет право переопределять. Пока layer-specific contracts не введены, Environment остаётся последним и имеет наивысший формальный приоритет для любого конфликта в общей конфигурации.
+Системные публичные поля и Configuration identities находятся на одном уровне. Внутренний `values`, `vars`, diagnostics internals и credentials в snapshot не входят.
+
+Snapshot не создаёт runtime subscriptions и не обновляется реактивно. Новые persisted values становятся доступны после нового boot/build.
+
+::: warning Публичные данные
+Effective Configuration доступна в браузере. Каскад не является механизмом хранения secrets или разграничения доступа к credentials.
+:::
