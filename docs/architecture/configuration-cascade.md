@@ -5,28 +5,25 @@ Endge собирает effective configuration для одного execution con
 Нормативный порядок:
 
 ```text
-Workspace - Project - Tenant - Environment
+Source defaults - Workspace - Tenant - Project - Environment
 ```
 
 Следовательно, при переопределении одного и того же значения действует такой приоритет:
 
 ```text
-Environment > Tenant > Project > Workspace
+Environment > Project > Tenant > Workspace > Source defaults
 ```
 
 `Environment` имеет наивысший приоритет, `Workspace` служит фундаментом. Отсутствующее переопределение ничего не меняет: значение продолжает наследоваться из предыдущего слоя.
-
-::: warning Статус реализации
-Этот документ фиксирует целевой архитектурный контракт. На момент его принятия `@endge/core` применяет слои в порядке `Workspace - Project - Environment - Tenant`. До синхронизации Core с этим контрактом фактический runtime order отличается: последним применяется `Tenant`.
-:::
 
 ## Роль каждого слоя
 
 | Слой | Назначение | Приоритет |
 |---|---|---:|
 | `Workspace` | Полная исходная конфигурация пространства | 1 — базовый |
-| `Project` | Настройки конкретного приложения или прикладной модели | 2 |
-| `Tenant` | Настройки организации или заказчика | 3 |
+| Source defaults | Defaults из активных Configuration-документов | 0 — исходный |
+| `Tenant` | Настройки организации или заказчика | 2 |
+| `Project` | Настройки конкретного приложения или прикладной модели | 3 |
 | `Environment` | Настройки конкретной среды исполнения: development, test, staging, production | 4 — наивысший |
 
 `Project`, `Tenant` и `Environment` являются независимыми координатами execution context. Они не образуют обязательную цепочку владения: Tenant не обязан принадлежать Project, а Environment может использоваться несколькими Project. Порядок выше описывает только resolution — вычисление итоговой конфигурации.
@@ -38,10 +35,10 @@ Environment > Tenant > Project > Workspace
 Resolver начинает с полной конфигурации Workspace и применяет три contribution:
 
 ```ts
-let effective = normalize(workspace.configuration)
-
-effective = apply(effective, project.configuration)
+let effective = applyConfigurationDefaults()
+effective = apply(effective, workspace.configuration)
 effective = apply(effective, tenant.configuration)
+effective = apply(effective, project.configuration)
 effective = apply(effective, environment.configuration)
 ```
 
@@ -69,7 +66,7 @@ Effective value:
 https://staging-api.example.com
 ```
 
-Environment побеждает, потому что его contribution применяется последним. Если Environment не задаёт `API_URL`, результатом будет tenant value. Если значение отсутствует и в Tenant, используется Project, затем Workspace.
+Environment побеждает, потому что его contribution применяется последним. Если Environment не задаёт `API_URL`, результатом будет Project value. Если значение отсутствует и в Project, используется Tenant, затем Workspace и Source default.
 
 ## Execution context и build context
 
@@ -206,12 +203,12 @@ export interface EndgeConfigurationPatch {
 `replace` полностью отбрасывает accumulated upstream result и начинает разрешение с переданной полной конфигурации:
 
 ```text
-Workspace - Project - Tenant (replace) - Environment
-                         └───────────────┘
-                         новый полный base
+Workspace - Tenant - Project (replace) - Environment
+                   └────────────────────┘
+                    новый полный base
 ```
 
-Environment всё равно применяется после tenant replacement. Аналогично, `Project (replace)` сбрасывает Workspace, но не отменяет последующие Tenant и Environment.
+Environment всё равно применяется после Project replacement. `Tenant (replace)` сбрасывает Workspace, но не отменяет последующие Project и Environment.
 
 `replace` следует применять только когда слою действительно нужен независимый полный configuration contract. Для обычных переопределений предпочтителен `inherit`: он сохраняет происхождение значений и уменьшает риск случайно удалить настройки предыдущих слоёв.
 
@@ -248,9 +245,9 @@ interface ConfigurationContributionEditorProps {
 
 | Редактируемый слой | Upstream preview |
 |---|---|
-| `Project` | `Workspace` |
-| `Tenant` | `Workspace - Project` |
-| `Environment` | `Workspace - Project - Tenant` |
+| `Tenant` | `Source defaults - Workspace` |
+| `Project` | `Source defaults - Workspace - Tenant` |
+| `Environment` | `Source defaults - Workspace - Tenant - Project` |
 
 UI редактора должен показывать для каждого значения:
 

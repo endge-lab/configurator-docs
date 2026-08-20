@@ -46,6 +46,7 @@ export default defineConfig({
           { text: 'Composition', link: '/reference/composition' },
           { text: 'Справочники (Vocab)', link: '/reference/vocab' },
           { text: 'I18n Bundle', link: '/reference/i18n-bundle' },
+          { text: 'Configuration', link: '/reference/configuration' },
           { text: 'Функциональные выражения', link: '/reference/value-expressions' },
           { text: 'Metadata', link: '/reference/metadata' },
           { text: 'Связи сущностей', link: '/domain/relations' },
