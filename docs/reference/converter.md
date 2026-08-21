@@ -1,6 +1,6 @@
 # Converter
 
-Converter — доменная сущность, которая преобразует отдельное значение в другой тип или формат. Чтобы Converter работал в runtime, нужен доменный документ и привязанный обработчик.
+Converter — доменная сущность, которая синхронно преобразует текущее значение в другой тип или формат. Чтобы Converter работал в runtime, нужен доменный документ и привязанный обработчик.
 
 Converter не является host для [общих функциональных выражений](/reference/value-expressions): это явная императивная граница с зарегистрированным handler. В source он вызывается специальной операцией [DataView](/reference/data-view#legacy-операции-path).
 
@@ -13,7 +13,7 @@ Converter не является host для [общих функциональн
 ```ts
 import { Endge } from '@endge/core'
 
-function stringToNumber(value: unknown): number | null {
+function stringToNumber(value: unknown, options?: { emptyAsNull?: boolean }): number | null {
   if (value == null || value === '') return null
   const result = Number(value)
   return Number.isNaN(result) ? null : result
@@ -43,7 +43,15 @@ Legacy wrapper syntax остаётся допустимым: `.convert(converter
 
 ## Значение и массив
 
-Обработчик обычно описывает преобразование одного значения. Если механизм вызова получает массив, один Converter может быть применён к каждому элементу автоматически.
+Обработчик получает текущее значение целиком и вызывается один раз. Массив не преобразуется поэлементно автоматически. Для явного обхода элементов используйте DataView, а Converter вызывайте внутри его `map`/projection.
+
+Каноническая сигнатура handler:
+
+```ts
+(value: unknown, options?: unknown) => unknown
+```
+
+Однопараметрические обработчики остаются совместимыми. Возвращать `Promise` нельзя: async Converter завершается runtime-ошибкой.
 
 ## Проверка ошибок
 

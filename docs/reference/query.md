@@ -268,6 +268,20 @@ rows: output()
 
 Локальный DataView компилируется как child artifact Query и не создаёт отдельный документ домена. Полный API преобразований: [DataView](/reference/data-view).
 
+## Упорядоченные преобразования output
+
+После `.from(...)` DataView и Converter можно чередовать. Порядок сохраняется в Program artifact и исполняется буквально:
+
+```ts
+items: output()
+  .from(response())
+  .dataView('unwrap-items')
+  .convert('normalize-codes', { trim: true })
+  .dataView('only-active')
+```
+
+Converter получает результат предыдущего шага целиком и вызывается один раз. Legacy-поле artifact `dataViews` временно остаётся compatibility projection, но source и новый runtime используют единый ordered-transform список.
+
 ## Mock, preview и runtime
 
 `mock.enabled` переключает Query на `mock.data` без транспортного запроса.

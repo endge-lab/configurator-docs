@@ -156,3 +156,20 @@ Component SFC также поддерживает `definePreviewProps`, но е�
 Store initializer рассматривает недоступный Mock как compile error, потому что от него зависит runtime state. Composition preview публикует warning: сломанный fixture не должен делать production Composition неисполняемой, но Runtime Preview завершится понятной ошибкой при попытке materialize значение.
 
 Не храните в Mock secrets, access tokens или production credentials. Mock documents являются конфигурационными данными и могут экспортироваться вместе с workspace.
+
+## Vocab source
+
+Vocab может выбрать весь JSON Mock либо значение по dot-path:
+
+```ts
+defineVocab({
+  mock: mock('aodb-fixtures').path('lookups.airlines'),
+  outputs: {
+    items: output().from(response()),
+  },
+})
+```
+
+Числовые сегменты пути адресуют массивы, например `groups.0.items`. Явная ссылка на отсутствующий документ или путь публикует diagnostic и завершает materialization ошибкой.
+
+Если Vocab не содержит `mock(...)`, Mock Runtime возвращает для него `[]`. При этом live provider, Auth и SSE не запускаются. Это отличается от authoring-команды «Полная загрузка словаря»: она намеренно обращается к live provider и может потребовать авторизацию.

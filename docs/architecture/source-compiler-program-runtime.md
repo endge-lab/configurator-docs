@@ -25,7 +25,7 @@ Program не должен содержать Vue-компоненты, откр�
 
 Для `Composition.resources` compiler материализует i18n-документы в плоские locale indexes внутри Composition artifact. Runtime не читает общий список словарей Domain и не связывает public alias с physical identity повторно.
 
-Для `Composition.data` с `vocab(identity)` compiler сохраняет dependency, scope и нормализованную load policy. Значения справочника в Program не встраиваются: runtime перед активацией нод scope передаёт descriptor в `Endge.vocabs`, а тот читает или обновляет общий Raph-кеш `vocabs.<collectionSlug>`.
+Vocab compiler преобразует `sourceVersion: 1` в artifact с Payload-provider, необязательной Mock-ссылкой и ordered output transforms. Для `Composition.data` с `vocab(identity)` compiler сохраняет dependency, scope и нормализованную load policy. Значения справочника в Program не встраиваются: runtime перед активацией нод scope передаёт descriptor в `Endge.vocabs`, а тот читает или обновляет общий Raph-кеш `vocabs.<identity>`.
 
 Для Action artifact содержит normalized Flow, input/output, typed target contract и
 default implementation descriptor. JavaScript functions здесь не хранятся.
@@ -35,6 +35,8 @@ default implementation descriptor. JavaScript functions здесь не хран
 Runtime получает program и контекст запуска, создаёт host и управляет его lifecycle. Один program может породить несколько runtime instances с разными входами.
 
 Несколько Composition runtime instances могут ссылаться на один Vocab. Они разделяют cache entry и in-flight загрузку, но не владеют временем жизни значения: уничтожение host не очищает справочник.
+
+В Mock Runtime Vocab host не создаёт provider/Auth transport: он materialize явный RMock либо возвращает `[]`. Stream/SSE host в этом режиме также не запускает подписку. Эти ветки выбираются по effective data mode из Program/runtime context и не требуют чтения persisted source.
 
 `Endge.runtime.implementations` — generic runtime boundary для code providers,
 scope bindings и effective resolution. Action-specific facade валидирует contract,
