@@ -224,9 +224,11 @@ const ports = definePorts({
 публичный Event продолжает публиковаться при следующих occurrences; один раз
 выполняется именно локальная реакция.
 
-Template handler обязан содержать безопасную reaction-форму `action({...})` или
-`typescript({...})`. Вызов произвольной функции из `<script setup>` и передача
-сырого DOM Event не поддерживаются.
+Template handler обязан содержать безопасную reaction-форму `action({...})`,
+`query({...})`, `ports.require.<action-or-query>({...})` или
+`typescript({...})`. Required port сохраняет provider заменяемым на уровне
+конкретного Component SFC call. Вызов произвольной функции из `<script setup>`
+и передача сырого DOM Event не поддерживаются.
 
 ## Локальный TypeScript
 

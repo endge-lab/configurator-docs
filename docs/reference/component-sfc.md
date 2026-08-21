@@ -177,7 +177,7 @@ definePreviewProps(
 
 | Секция | Кто владеет реализацией | Что разрешено |
 | --- | --- | --- |
-| `require` | Внешний provider | `computation`, `component`, `action` |
+| `require` | Внешний provider | `computation`, `component`, `action`, `query` |
 | `provides` | Экземпляр Component SFC | `action` |
 | `emits` | Provider не нужен | `event` |
 
@@ -284,7 +284,18 @@ const board = ports.require.board({ rows: props.rows })
 
 ## `require`: компонент зависит от внешнего мира
 
-Required port всегда содержит `default`. Это provider по умолчанию, который compiler проверяет на существование, active state и правильный kind. Manifest допускает будущую подмену provider без изменения source компонента; Composition override syntax ещё не включён в текущую версию.
+Required port всегда содержит `default`. Это provider по умолчанию, который compiler проверяет на существование, active state, правильный kind и совместимый contract.
+
+На конкретном вызове Component SFC provider можно заменить плоским dynamic attribute. Имя attribute совпадает с именем port; отдельный объект `ports` не создаётся:
+
+```vue
+<GroundHandlingProcess
+  :update-actual-time="query('groundhandling-actual-time-update-v2')"
+  :state="computation('groundhandling-cell-computation-v2')"
+/>
+```
+
+Для `action`, `component`, `computation` и `query` используется одноимённая binding-функция. Kebab-case attribute нормализуется в camelCase port name. Compiler удаляет port binding из runtime props, проверяет provider и запрещает одинаковые public имена у props и ports.
 
 ### Computation
 
@@ -329,7 +340,13 @@ const ports = definePorts({
 })
 ```
 
-Компонент зависит от стабильного Action contract. В текущей версии declaration, `RAction` provider validation и program dependency уже компилируются. Composition override и универсальный template handler для произвольных primitives вводятся отдельно, чтобы не создавать скрытые DOM callbacks.
+Компонент зависит от стабильного Action contract. Provider можно вызвать из безопасной template reaction и переопределить на месте вызова компонента:
+
+```vue
+<Button @click="ports.require.openDetails({ id: props.id })">Открыть</Button>
+
+<FlightCard :open-details="action('flight.open-details-in-drawer')" />
+```
 
 В `MenuItem` port key задаётся expression binding, а не строковой identity:
 
@@ -346,6 +363,51 @@ identity указывается напрямую. Compiler всё равно с�
 
 Прежняя строковая ссылка на объявленный port пока поддерживается для совместимости,
 но новый Source должен использовать `:action="openDetails"`.
+
+### Required Query
+
+```ts
+interface ActualTimeInput {
+  legId: String
+  station: String
+  operationCode: String
+  pointCode: String
+  utcTime: DateTime
+  comment?: String
+}
+
+const ports = definePorts({
+  require: {
+    updateActualTime: query<ActualTimeInput, void>({
+      default: 'groundhandling-actual-time-update',
+    }),
+  },
+})
+```
+
+Query port вызывается только как reaction на Event и получает один object input:
+
+```vue
+<DateTime
+  format="HH:mm"
+  edit-mode="time"
+  :timezone="$context.timezone"
+  @edited="ports.require.updateActualTime({
+    legId: props.legId,
+    station: props.station,
+    operationCode: props.operationCode,
+    pointCode: 'value',
+    utcTime: event('value'),
+    comment: null,
+  })"
+/>
+```
+
+`edit-mode="time"` оставляет model value полным `DateTime`, но показывает при редактировании только `HH:mm`.
+При commit renderer сохраняет календарную дату исходного значения в указанной `timezone`, заменяет часы и минуты
+и публикует в `event('value')` нормализованный UTC ISO timestamp. Если исходное значение пустое, используется текущая дата.
+
+В artifact сохраняется ссылка на port, а не зафиксированная Query identity. Runtime выбирает provider из flat binding конкретного экземпляра или использует `default`.
 
 ## `forward`: повторная публикация портов локальных компонентов
 
@@ -638,6 +700,8 @@ Compiler отклоняет:
 - удалённую секцию `request`: используйте `require` и `ports.require`;
 - `default` у provided Action или Event; реакция Event задаётся полем `action`;
 - required port без `default`;
+- одинаковое public имя у prop и любого port;
+- flat override, у которого kind или contract provider не совпадает с required port;
 - `MenuItem command="..."`;
 - `MenuItem :action="portName"`, если port не объявлен в `definePorts.require/provides`;
 - произвольный dynamic `MenuItem :action="..."`, который не является port reference
