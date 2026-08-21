@@ -48,7 +48,7 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 
 - любое число [Column](./column);
 - не более одного [ColumnMenu](./column-menu);
-- не более одного [RowMenu](./row-menu).
+- не более одного табличного [CellMenu](./row-menu); `RowMenu` — deprecated alias.
 
 ## Смысловые события
 
@@ -74,7 +74,7 @@ Payload, отличие от браузерных событий и способ
 - [данные, строки и ячейки](/sfc-tables/data-rows-cells);
 - [выбор и активация строк](/sfc-tables/selection-and-activation);
 - [пейджинг и виртуализация](/sfc-tables/paging-and-virtualization);
-- [контекстное меню строк](/sfc-tables/row-context-menu);
+- [контекстное меню ячеек](/sfc-tables/row-context-menu);
 - [меню заголовков колонок](/sfc-tables/column-header-menu);
 - [редактирование ячеек](/sfc-tables/cell-editing);
 - [адаптеры и ограничения](/sfc-tables/adapters-and-limitations).

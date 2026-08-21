@@ -1,21 +1,22 @@
-# RowMenu
+# CellMenu и RowMenu
 
-`RowMenu` объявляет одно контекстное меню строк как прямой child `Table`.
-Меню cell-aware: при правом клике выражения получают `row`, `rowId`, `rowIndex`,
-`columnKey` и `value`. Правый клик не меняет selection.
+`CellMenu` объявляет контекстное меню ячеек как прямой child `Table` или `Column`.
+`RowMenu` сохранён как deprecated alias только для `Table > RowMenu`.
 
 ```vue
 <Table ref="orders" :rows="rows" row-key="id">
-  <RowMenu>
+  <CellMenu>
     <MenuItem
       :action="openDetails"
       :label="t('orders:menu.open', 'Открыть')"
-      :input="{ id: rowId, row, columnKey, value }"
+      v-if="$row.data.status !== 'archived'"
+      :disabled="!$row.data.canOpen"
+      :input="{ id: $row.id, field: $column.key, value: $cell.value }"
       icon="external-link"
     />
     <MenuSeparator />
-    <MenuItem action="order.delete-row" label="Удалить" :input="{ id: rowId }" icon="trash" />
-  </RowMenu>
+    <MenuItem action="order.delete-row" label="Удалить" :input="{ id: $row.id }" icon="trash" />
+  </CellMenu>
   <Column key="number" title="Номер" />
 </Table>
 ```
@@ -28,9 +29,9 @@ DOM event и координаты не входят в Action context; они о
 
 | Контракт | Значение |
 | --- | --- |
-| Placement | Не более одного прямого child `Table`. |
+| Placement | Не более одного прямого child `Table` или `Column`. |
 | Children | Только `MenuItem` и `MenuSeparator`. |
-| Cell context | `row`, `rowId`, `rowIndex`, `columnKey`, `value`. |
+| Cell context | `$table`, `$row`, `$column`, `$cell`, `$context`, `props`. |
 
 Подробный runtime flow и правила Action provider-а:
-[«Контекстное меню строк»](/sfc-tables/row-context-menu).
+[«Контекстное меню ячеек»](/sfc-tables/row-context-menu).

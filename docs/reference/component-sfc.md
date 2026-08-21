@@ -4,6 +4,11 @@ Component SFC — основной исполняемый документ ин�
 
 ## Функции runtime-контекста
 
+Платформенные значения отличаются префиксом `$`: глобальный `$context`, а внутри
+таблицы также `$table`, `$row`, `$column` и `$cell`. Обычные входы компонента
+читаются через `props`. Полные формы, области видимости и примеры условий меню:
+[контекстные переменные Component SFC](/sfc-tables/context-variables).
+
 `defineProps` описывает только публичные бизнес-входы Component SFC. Переводы и
 справочники не нужно добавлять в props: безопасные template-выражения получают
 их из ближайшего Composition runtime scope через две встроенные функции.
@@ -270,13 +275,13 @@ const board = ports.require.board({ rows: props.rows })
       <MenuSeparator />
       <MenuItem action="table.sort.clearAll" label="Сбросить сортировку" />
     </ColumnMenu>
-    <RowMenu>
+    <CellMenu>
       <MenuItem
         :action="openDetails"
         :label="t('schedule:menu.open', 'Открыть')"
-        :input="{ id: rowId, row, columnKey, value }"
+        :input="{ id: $row.id, row: $row.data, field: $column.key, value: $cell.value }"
       />
-    </RowMenu>
+    </CellMenu>
     <Column key="number" title="Рейс" sortable pinnable />
   </Table>
 </template>

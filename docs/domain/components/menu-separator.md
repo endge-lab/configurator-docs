@@ -1,6 +1,6 @@
 # MenuSeparator
 
-`MenuSeparator` разделяет группы Actions внутри [ColumnMenu](./column-menu) или [RowMenu](./row-menu).
+`MenuSeparator` разделяет группы Actions внутри [ColumnMenu](./column-menu) или [CellMenu](./row-menu).
 
 ```vue
 <ColumnMenu>

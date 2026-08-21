@@ -1,6 +1,6 @@
 # MenuItem
 
-`MenuItem` связывает пункт [ColumnMenu](./column-menu) или [RowMenu](./row-menu)
+`MenuItem` связывает пункт [ColumnMenu](./column-menu) или [CellMenu](./row-menu)
 с прямой Action identity либо с Action port текущего Component SFC.
 
 ```vue
@@ -28,7 +28,9 @@ provider использует своё default behavior:
 <MenuItem
   action="order.open-details"
   :label="t('orders:menu.open', 'Открыть')"
-  :input="{ id: rowId, row, columnKey, value }"
+  v-if="$row.data.status !== 'archived'"
+  :disabled="!$row.data.canOpen"
+  :input="{ id: $row.id, field: $column.key, value: $cell.value }"
 />
 ```
 
@@ -69,5 +71,7 @@ Action contract использует термин `input`, поэтому `paylo
 | `label` | literal / safe SFC expression | Обязательная подпись, включая `t(key, fallback)`. |
 | `id` | literal string | Stable item id; default равен `action`. |
 | `icon` | literal string | Опциональная renderer-neutral icon identity. |
+| `v-if` | safe SFC expression | Полностью скрывает пункт, если условие ложно. |
+| `disabled` | boolean / safe SFC expression | Оставляет пункт видимым, но запрещает выполнение. |
 
 `id` и `icon` остаются literals. Атрибут `command` удалён и является compiler error.

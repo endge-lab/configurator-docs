@@ -26,7 +26,7 @@ Visual primitives входят в базовый renderer-adapter contract. Shel
 | --- | --- |
 | Вызов дочернего SFC | [Component](./component) |
 | Таблица | [Table](./table), [Column](./column), [Cell](./cell) |
-| Меню таблицы | [ColumnMenu](./column-menu), [RowMenu](./row-menu), [MenuItem](./menu-item), [MenuSeparator](./menu-separator) |
+| Меню таблицы | [ColumnMenu](./column-menu), [CellMenu](./row-menu), [MenuItem](./menu-item), [MenuSeparator](./menu-separator) |
 
 Structural tags компилируются в тот же IR, но обрабатываются runtime renderer-ом,
 а не visual adapter map.
