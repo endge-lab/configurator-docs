@@ -15,6 +15,27 @@ defineComposition({
 По умолчанию undo использует `Mod+Z`, redo — `Mod+Shift+Z`; `Mod` означает
 Command на macOS и Control на Windows/Linux. Обработчик вызывает `preventDefault`.
 
+Defaults можно полностью заменить существующими `TriggerSet` из effective
+configuration. Отдельный тип shortcut не вводится:
+
+```ts
+defineComposition({
+  resources: {
+    operations: operationHistory({
+      limit: $editing.operationHistoryLimit,
+      shortcuts: [
+        onShortcut($editing.shortcuts.undo).undo(),
+        onShortcut($editing.shortcuts.redo).redo(),
+      ],
+    }),
+  },
+  runtimes: {},
+})
+```
+
+Если `shortcuts` указан, системные сочетания больше не добавляются. Пустой или
+некорректный `TriggerSet` останавливает активацию resource с явной ошибкой.
+
 Правила scope:
 
 - в одном Composition scope разрешена максимум одна History независимо от alias;
@@ -39,4 +60,3 @@ Endge.runtime.operations.getActiveHistory()
 Успешный undo перемещает cursor в redo branch. Ошибка undo/redo не меняет cursor.
 Новая Operation после undo удаляет redo branch. Undo и redo не создают новые
 History entries и выполняются последовательно.
-

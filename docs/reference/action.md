@@ -108,8 +108,8 @@ Endge.actions.define({
   displayName: 'Открыть инспектор',
   origin: { kind: 'local', owner: 'ramax-aodb' },
   contract: {
-    input: field('Object'),
-    output: field('Void'),
+    input: { type: 'Object' },
+    output: { type: 'Void' },
   },
   defaultProviderKey: 'ramax-aodb.schedule.open-inspector',
 })
@@ -146,6 +146,7 @@ Inline reaction остаётся компактной ссылкой:
 
 ```vue
 <Text
+  :value="row.flightCarrier"
   editable
   @edited.stop="action({
     identity: 'schedule-edit-flight-carrier',
@@ -160,4 +161,3 @@ Inline reaction остаётся компактной ссылкой:
 
 Одна reaction или массив выполняются в source order. Полный алгоритм и Operation
 следует выносить в Source Action.
-
