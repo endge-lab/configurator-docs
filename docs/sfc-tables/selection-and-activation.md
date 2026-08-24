@@ -1,4 +1,4 @@
-# Выбор и активация строк
+# Выбор строк, ячеек и активация
 
 Selection и activation — разные механики. Selection хранит текущий набор строк,
 а activation сообщает о намерении открыть или выполнить основное действие.
@@ -10,13 +10,14 @@ Selection и activation — разные механики. Selection храни�
   row-key="id"
   selection-mode="multiple"
   selection-trigger="both"
+  cell-selection-mode="single"
 >
   <Column key="number" title="Номер" />
   <Column key="status" title="Статус" />
 </Table>
 ```
 
-## Режимы selection
+## Выделение строк
 
 | Режим | Поведение |
 | --- | --- |
@@ -69,6 +70,92 @@ Control и строка не создают два независимых select
 `aria-selected`, selected-стиль, `selectionChanged` и доступность групповых
 Actions. Конкретные цвета hover и selected задаются темой или CSS активного
 адаптера.
+
+## Выбор одной ячейки
+
+Выбор конкретной ячейки включается отдельным атрибутом
+`cell-selection-mode="single"`:
+
+```vue
+<Table
+  id="orders"
+  ref="orders"
+  :rows="rows"
+  row-key="id"
+  selection-mode="multiple"
+  selection-trigger="both"
+  cell-selection-mode="single"
+>
+  <Column key="number" title="Номер" />
+  <Column key="status" title="Статус" />
+</Table>
+```
+
+| Режим | Поведение |
+| --- | --- |
+| `none` | Ячейки не выбираются; значение по умолчанию |
+| `single` | В Table находится одна выбранная ячейка |
+
+Identity ячейки состоит из стабильного `rowId` и `columnKey`. Выбор сохраняется
+при сортировке, смене страницы и виртуализации. Если строка или колонка исчезает,
+runtime очищает выбор и публикует новое событие.
+
+Выбор строк и выбор ячейки независимы. Оба режима можно включить одновременно:
+
+| Row selection | Cell selection | Клик по обычной области ячейки |
+| --- | --- | --- |
+| `none` | `single` | Выбирается только ячейка |
+| `single` | `single` | Выбираются ячейка и её строка |
+| `multiple` | `single` | Обычный клик заменяет набор строк её строкой; Cmd/Ctrl добавляет строку; выбранная ячейка остаётся одна |
+
+Совместное изменение строки выполняется только при `selection-trigger="row"`
+или `both`. При `control` клик меняет ячейку, а строки по-прежнему выбираются
+только control-элементами. Shift сохраняет диапазонный выбор строк.
+
+Клик по обычной области ячейки и клавиши `Enter`/`Space` выбирают ячейку.
+Интерактивные элементы внутри неё — input, button, link, select, editor —
+обрабатывают своё действие и не меняют выбор автоматически.
+
+Выбранная ячейка внутри выбранной строки получает одновременно semantic states
+`row-selected` и `cell-selected`. Это позволяет отдельно стилизовать строку и
+поверх неё — конкретную ячейку.
+
+`cellSelectionChanged` содержит новое и предыдущее значение:
+
+```ts
+type SelectedCell = {
+  rowId: string
+  rowIndex: number
+  row: Record<string, unknown>
+  columnKey: string
+  value: unknown
+}
+
+type CellSelectionChanged = {
+  tableId: string
+  selectedCell: SelectedCell | null
+  previousCell: SelectedCell | null
+}
+```
+
+Настройка цветов, outline и semantic states описана в разделе
+[Стили и представление](/sfc-tables/styling-and-presentation).
+
+## Сброс через Escape
+
+Когда фокус находится на строке, ячейке или поверхности Table, `Escape`
+очищает и выбранные строки, и выбранную ячейку. Фокус остаётся внутри таблицы.
+Если selection уже пуст, Events не публикуются.
+
+Вложенный интерактивный элемент имеет приоритет: editor сначала отменяет
+редактирование, menu закрывается, а input/select/button не передают свою
+обработанную клавишу общей очистке Table. Настройка этой клавиши пока не
+предусмотрена.
+
+При очистке публикуются только реально изменившиеся Events:
+`selectionChanged` с пустыми `selectedRowIds` и `cellSelectionChanged` с
+`selectedCell: null`. Полный каталог payload находится в разделе
+[События, порты и Actions](/sfc-tables/events-and-actions).
 
 ## Activation
 

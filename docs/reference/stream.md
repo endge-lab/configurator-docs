@@ -69,7 +69,7 @@ Stream поддерживает три правила авторизации:
 
 ```ts
 transport: sse({
-  url: env('ENDPOINT_AODB_SSE'),
+  url: env('ENDPOINT_EVENTS_SSE'),
   withCredentials: false,
   auth: {
     mode: 'profile',

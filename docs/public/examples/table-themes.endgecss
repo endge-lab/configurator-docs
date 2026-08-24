@@ -111,6 +111,16 @@ Table::part(body) {
   color: var(--table-text);
 }
 
+/* Публичные adapter-neutral переменные интерактивных состояний. */
+Table {
+  --endge-table-selection: var(--table-selected-row);
+  --endge-table-multiple-selection: var(--table-multi-selected-row);
+  --endge-table-selection-marker: var(--table-selected-cell-outline);
+  --endge-table-cell-selection: var(--table-selected-cell);
+  --endge-table-cell-selection-color: var(--table-text);
+  --endge-table-cell-selection-outline: var(--table-selected-cell-outline);
+}
+
 /* Вся полоса шапки. */
 Table::part(header) {
   background-color: var(--table-header) !important;
@@ -160,18 +170,14 @@ Table::part(group-row) {
   font-weight: 700;
 }
 
-/*
- * Интерактивная палитра таблицы.
- * Эти правила активируются, когда Table начнет публиковать соответствующие
- * semantic states строк и ячеек. Structural parts выше работают уже сейчас;
- * wiring состояний — отдельный runtime-этап без зависимости от классов RevoGrid.
- */
-Table:state(selected)::part(row) {
-  background-color: var(--table-selected-row) !important;
+/* Одна выбранная строка: state опубликован на всех её cell surfaces. */
+Table:state(row-selected)::part(cell) {
+  --endge-table-selection: var(--table-selected-row);
 }
 
-Table:state(multi-selected)::part(row) {
-  background-color: var(--table-multi-selected-row) !important;
+/* Строки режима multiple можно оформить отдельно. */
+Table:state(multi-selected)::part(cell) {
+  --endge-table-multiple-selection: var(--table-multi-selected-row);
 }
 
 Table:state(search-match)::part(row) {
@@ -182,7 +188,8 @@ Table:state(search-match)::part(cell) {
   background-color: var(--table-search-cell) !important;
 }
 
-Table:state(selected)::part(cell) {
-  background-color: var(--table-selected-cell) !important;
-  outline: 1px solid var(--table-selected-cell-outline);
+/* Конкретная ячейка перекрывает заливку выбранной строки. */
+Table:state(cell-selected)::part(cell) {
+  --endge-table-cell-selection: var(--table-selected-cell);
+  --endge-table-cell-selection-outline: var(--table-selected-cell-outline);
 }

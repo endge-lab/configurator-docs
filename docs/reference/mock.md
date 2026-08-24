@@ -163,7 +163,7 @@ Vocab может выбрать весь JSON Mock либо значение п�
 
 ```ts
 defineVocab({
-  mock: mock('aodb-fixtures').path('lookups.airlines'),
+  mock: mock('demo-fixtures').path('lookups.airlines'),
   outputs: {
     items: output().from(response()),
   },

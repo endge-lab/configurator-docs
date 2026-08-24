@@ -5,21 +5,66 @@ Table использует два независимых контракта:
 - **Event** сообщает, что уже произошло;
 - **Action** описывает вызываемое поведение с одним runtime provider.
 
-## Смысловые Events
+## Полный каталог Events
 
-| Event | Основной payload |
-| --- | --- |
-| `rowActivated` | строка, колонка, pointer/keyboard activation |
-| `rowContextMenuRequested` | строка, колонка, screen anchor |
-| `selectionChanged` | полный selection и added/removed identities |
-| `sortChanged` | упорядоченный массив sort descriptors |
-| `columnVisibilityChanged` | visibility map и скрытые ключи |
-| `columnPinChanged` | ключи слева и справа |
-| `columnOrderChanged` | текущий порядок колонок |
-| `columnSizeChanged` | карта размеров и изменённая колонка |
-| `pageChanged` | индекс, размер и число страниц |
+| Event | Payload type | Основные поля |
+| --- | --- | --- |
+| `rowActivated` | `TableRowActivatedEvent` | `rowId`, `rowIndex`, `row`, `columnKey`, `activation` |
+| `rowContextMenuRequested` | `TableRowContextMenuRequestedEvent` | `rowId`, `rowIndex`, `row`, `columnKey`, `anchor` |
+| `selectionChanged` | `TableSelectionChangedEvent` | `mode`, `selectedRowIds`, `selectedRows`, `addedRowIds`, `removedRowIds` |
+| `cellSelectionChanged` | `TableCellSelectionChangedEvent` | `selectedCell`, `previousCell` |
+| `sortChanged` | `TableSortChangedEvent` | `sort` |
+| `columnVisibilityChanged` | `TableColumnVisibilityChangedEvent` | `visibility`, `hiddenColumnKeys` |
+| `columnPinChanged` | `TableColumnPinChangedEvent` | `left`, `right` |
+| `columnOrderChanged` | `TableColumnOrderChangedEvent` | `columnKeys` |
+| `columnSizeChanged` | `TableColumnSizeChangedEvent` | `sizes`, `changedColumnKey` |
+| `pageChanged` | `TablePageChangedEvent` | `pageIndex`, `pageSize`, `pageCount` |
 
 Все payload содержат `tableId`. DOM Event не выходит за границу renderer-а.
+Этот каталог является общим для Configurator, compiler и всех Table adapters:
+те же Events отображаются в выпадающем списке раздела Table → «События» и в
+каталоге built-in Events.
+
+## Контекст выделения строк и ячейки
+
+`selectionChanged` публикует полный актуальный набор строк и delta одного
+перехода:
+
+```ts
+type TableSelectionChangedEvent = {
+  tableId: string
+  mode: 'single' | 'multiple'
+  selectedRowIds: string[]
+  selectedRows: Record<string, unknown>[]
+  addedRowIds: string[]
+  removedRowIds: string[]
+}
+```
+
+`cellSelectionChanged` содержит контекст новой и предыдущей ячейки. При сбросе
+`selectedCell` равен `null`:
+
+```ts
+type TableSelectedCell = {
+  rowId: string
+  rowIndex: number
+  row: Record<string, unknown>
+  columnKey: string
+  value: unknown
+}
+
+type TableCellSelectionChangedEvent = {
+  tableId: string
+  selectedCell: TableSelectedCell | null
+  previousCell: TableSelectedCell | null
+}
+```
+
+Если row selection и cell selection включены вместе, один клик может
+последовательно опубликовать оба Events. Они остаются независимыми: обработчик
+строк получает полный row selection, а обработчик ячейки — её row/column/value
+context. `Escape` публикует только те Events, для которых состояние действительно
+изменилось.
 
 ## DOM и semantic Event
 
@@ -41,6 +86,33 @@ Table использует два независимых контракта:
   })"
 />
 ```
+
+Реакции на независимые selection Events:
+
+```vue
+<Table
+  ref="orders"
+  :rows="rows"
+  selection-mode="multiple"
+  selection-trigger="both"
+  cell-selection-mode="single"
+  @selectionChanged="action({
+    identity: 'orders.selectionChanged',
+    input: { ids: event('selectedRowIds') },
+  })"
+  @cellSelectionChanged="action({
+    identity: 'orders.cellChanged',
+    input: {
+      rowId: event('selectedCell.rowId'),
+      columnKey: event('selectedCell.columnKey'),
+      value: event('selectedCell.value'),
+    },
+  })"
+/>
+```
+
+Так как при очистке `selectedCell` равен `null`, прикладная Action должна
+принимать nullable cell context либо проверять его перед обращением к полям.
 
 ## Публикация наружу
 

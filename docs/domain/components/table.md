@@ -25,6 +25,7 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 | `row-key` / `rowKey` | string | `id` | Поле со стабильной identity строки. |
 | `selection-mode` / `selectionMode` | `none` / `single` / `multiple` | `none` | Режим выбора строк. |
 | `selection-trigger` / `selectionTrigger` | `auto` / `control` / `row` / `both` | `auto` | Каким взаимодействием изменяется selection. |
+| `cell-selection-mode` / `cellSelectionMode` | `none` / `single` | `none` | Независимый режим выбора конкретной ячейки. |
 | `id` / `tableId` | string | — | Стабильный ключ сохраняемого состояния. |
 | `paging` | `pages` / `virtual` | `pages` | Страницы или единый виртуальный список. |
 | `page-size` / `pageSize` | number | `10` | Размер локальной страницы. |
@@ -53,7 +54,7 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 ## Смысловые события
 
 `Table` публикует `rowActivated`, `rowContextMenuRequested`,
-`selectionChanged`, `sortChanged`, `columnVisibilityChanged`,
+`selectionChanged`, `cellSelectionChanged`, `sortChanged`, `columnVisibilityChanged`,
 `columnPinChanged`, `columnOrderChanged`, `columnSizeChanged` и `pageChanged`.
 
 Payload, отличие от браузерных событий и способы публикации наружу описаны в
@@ -72,7 +73,7 @@ Payload, отличие от браузерных событий и способ
 ## Подробные руководства
 
 - [данные, строки и ячейки](/sfc-tables/data-rows-cells);
-- [выбор и активация строк](/sfc-tables/selection-and-activation);
+- [выбор строк, ячеек и активация](/sfc-tables/selection-and-activation);
 - [пейджинг и виртуализация](/sfc-tables/paging-and-virtualization);
 - [контекстное меню ячеек](/sfc-tables/row-context-menu);
 - [меню заголовков колонок](/sfc-tables/column-header-menu);

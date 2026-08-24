@@ -16,7 +16,7 @@ defineVocab({
     auth: { mode: 'inherit' },
   }),
 
-  mock: mock('aodb-fixtures').path('lookups.airlines'),
+  mock: mock('demo-fixtures').path('lookups.airlines'),
 
   outputs: {
     items: output()
@@ -48,13 +48,13 @@ Live reader агрегирует все страницы Payload и нормал
 ## Mock и dot-path
 
 ```ts
-mock: mock('aodb-fixtures')
+mock: mock('demo-fixtures')
 ```
 
 Эта форма читает весь JSON-документ. Путь внутрь fixture задаётся через точечную JSON-нотацию:
 
 ```ts
-mock: mock('aodb-fixtures').path('lookups.airlines')
+mock: mock('demo-fixtures').path('lookups.airlines')
 ```
 
 Числовой сегмент обращается к элементу массива: `groups.0.items`. Отсутствующий явно указанный Mock-документ или путь является ошибкой компиляции/runtime, а не пустым значением.

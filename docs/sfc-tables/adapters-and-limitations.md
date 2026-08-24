@@ -7,7 +7,7 @@ grid-библиотеки. Стандартные Vue-адаптеры испо�
 | --- | --- |
 | `vue-native` | RevoGrid |
 | `vue-shadcn` | TanStack Table и TanStack Virtual |
-| `aodb` | Прикладной TanStack Table adapter |
+| `aodb` | AODB DataTable на TanStack Table |
 
 Все адаптеры должны сохранять структуру `Table`/`Column`/`Cell`, смысловые Events,
 Actions, row identity и authored defaults. Внешний Component SFC не импортирует
@@ -29,6 +29,14 @@ RevoGrid или TanStack.
 адаптера. Во всех вариантах используется одно состояние selection, поэтому
 выбор через control обязан давать ту же подсветку, Events и Actions, что и
 выбор через строку.
+
+`cell-selection-mode="single"` одинаково поддерживается `vue-native`,
+`vue-shadcn` и `aodb`. Во всех трёх реализациях identity ячейки — это
+`rowId + columnKey`, публикуется `cellSelectionChanged`, а выбранная surface
+получает states `selected` и `cell-selected`. Row selection и cell selection
+работают одновременно и хранят независимое состояние. При `row`/`both` клик
+по ячейке также применяет row-selection policy; при `control` — не меняет строки.
+`Escape` очищает оба selection, если клавишу не обработал вложенный control.
 
 ## Что может различаться
 
@@ -55,6 +63,7 @@ RevoGrid или TanStack.
 | Отдельный `ColumnMenu` на каждой Column | Не поддерживается в v1 |
 | Grouping и aggregation contract | Не объявлен публичным Table API |
 | Persistence selection | Не поддерживается |
+| Выбор одной ячейки | Поддерживается во всех обязательных адаптерах |
 
 ## Как документировать расширение
 

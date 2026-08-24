@@ -2,7 +2,7 @@
 
 `Tooltip` показывает дополнительное содержимое при наведении мышью или получении
 фокуса. Все варианты renderer-neutral и одинаково поддерживаются адаптерами
-`vue-native`, `vue-shadcn` и `ramax-aodb`.
+`vue-native` и `vue-shadcn`.
 
 ## Короткая запись: обычный текст
 
@@ -134,8 +134,7 @@ fenced code blocks и ссылки `http(s)`, `mailto`, `/path`, `#anchor`. Raw 
 Единственный overlay получает следующие hooks:
 
 - `.endge-tooltip`, `.endge-tooltip--text`, `--markdown`, `--rich`;
-- `.endge-tooltip--vue-native`, `.endge-tooltip--vue-shadcn` или
-  `.endge-tooltip--ramax-aodb`;
+- `.endge-tooltip--vue-native` или `.endge-tooltip--vue-shadcn`;
 - `[data-endge-tooltip-adapter]`, `[data-endge-tooltip-id]`, `[data-side]`,
   `[data-align]`;
 - `class`, `id` и `part` из `<Tooltip>`; authored `id` доступен как
@@ -159,7 +158,7 @@ fenced code blocks и ссылки `http(s)`, `mailto`, `/path`, `#anchor`. Raw 
   --endge-tooltip-padding: 4px 6px;
 }
 
-.endge-tooltip--ramax-aodb.flight-status-tooltip {
+.endge-tooltip--vue-shadcn.flight-status-tooltip {
   --endge-tooltip-background: hsl(var(--popover));
   --endge-tooltip-color: hsl(var(--popover-foreground));
 }

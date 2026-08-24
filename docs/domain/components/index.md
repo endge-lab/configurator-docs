@@ -4,23 +4,31 @@
 или Vue-компоненты: compiler преобразует теги в общий IR, после чего выбранный
 adapter материализует их во Vue, Native DOM или другой target.
 
-## Visual primitives
+## Компоненты представления
 
-| Группа | Теги |
-| --- | --- |
-| Layout | [Box](./box), [Flex](./flex), [Grid](./grid), [Divider](./divider) |
-| Content | [Text](./text), [DateTime](./date-time), [Number](./number), [Icon](./icon), [Badge](./badge), [Dot](./dot) |
-| Display-only controls | [Input](./input), [Textarea](./textarea), [Checkbox](./checkbox), [Select](./select) |
-| Overlay | [Tooltip](./tooltip) |
+[Text](./text), [DateTime](./date-time), [Number](./number), [Icon](./icon),
+[Badge](./badge), [Dot](./dot) и [Tooltip](./tooltip) отображают данные и
+состояние интерфейса. Они не определяют способ сохранения изменённого значения.
 
 Visual primitives входят в базовый renderer-adapter contract. Shell-owned
 `Tooltip` дополнительно входит в Vue adapter contract. Поддерживаемые adapters:
 
 - `vue-native` из `@endge/ui-vue`;
-- `vue-shadcn` из `@endge/ui-vue-shadcn`;
-- `ramax-aodb` из приложения AODB.
+- `vue-shadcn` из `@endge/ui-vue-shadcn`.
 
-## Runtime и structural primitives
+## Компоненты компоновки
+
+[Box](./box), [Flex](./flex), [Grid](./grid) и [Divider](./divider) задают
+расположение и визуальную структуру содержимого, не добавляя data-flow.
+
+## Элементы ввода
+
+[Input](./input), [Textarea](./textarea), [Checkbox](./checkbox) и
+[Select](./select) отображают привычные элементы управления. В текущем
+контракте они не владеют writeback: изменение данных определяется отдельным
+механизмом редактирования, а не самим тегом.
+
+## Структурные компоненты
 
 | Назначение | Теги |
 | --- | --- |
@@ -31,8 +39,16 @@ Visual primitives входят в базовый renderer-adapter contract. Shel
 Structural tags компилируются в тот же IR, но обрабатываются runtime renderer-ом,
 а не visual adapter map.
 
-Подробные сценарии paging, selection, меню, состояния и редактирования находятся
-в отдельном разделе [«Таблицы SFC»](/sfc-tables/).
+Подробные сценарии paging, selection, меню и состояния находятся в отдельном
+разделе [«Таблицы SFC»](/sfc-tables/).
+
+## Редактирование значений
+
+Редактирование — сквозное поведение, а не отдельный вид компонента. `Text`,
+`Number` и `DateTime` могут открыть встроенный editor через `editable`, а
+пользовательский editor подключается тем же runtime-контрактом. Запуск сессии,
+выбор editor-а, commit, cancel и событие `edited` описаны в руководстве
+[«Редактирование значений»](/sfc-tables/cell-editing).
 
 ## Полный пример
 
