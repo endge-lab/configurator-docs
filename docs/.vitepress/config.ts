@@ -191,19 +191,6 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Архитектура',
-        collapsed: true,
-        items: [
-          { text: 'Общая архитектура', link: '/architecture/overview' },
-          { text: 'Source - Compiler - Program - Runtime', link: '/architecture/source-compiler-program-runtime' },
-          { text: 'Доменные и runtime-сущности', link: '/architecture/domain-runtime-entities' },
-          { text: 'Каскад конфигурации', link: '/architecture/configuration-cascade' },
-          { text: 'Headless Runtime', link: '/architecture/headless-runtime' },
-          { text: 'Федерации и модули', link: '/architecture/federation-and-modules' },
-          { text: 'Bootstrap приложения', link: '/architecture/app-bootstrap' },
-        ],
-      },
-      {
         text: 'Развитие платформы',
         collapsed: true,
         items: [

@@ -35,7 +35,7 @@ Frontend, backend и интеграции
 
 Эти уровни не обязательно образуют одну жёсткую вложенную иерархию. Например, один workspace может содержать несколько проектов, один project может поставляться нескольким tenant, а для каждого из них может существовать несколько environment. Вместе они определяют, какая исходная модель, какие переопределения, данные и настройки относятся к текущему запуску.
 
-Порядок применения configuration layers, persisted interface и правила `inherit`/`replace` описаны в разделе [«Каскад конфигурации»](/architecture/configuration-cascade).
+Порядок применения configuration layers, persisted interface и правила `inherit`/`replace` описаны в [справочнике Configuration](/reference/configuration).
 
 ## Source: исходное описание системы
 
