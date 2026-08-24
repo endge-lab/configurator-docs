@@ -214,7 +214,7 @@ Computation A - Computation B - Computation C
 Compiler уже проверяет dependency graph, но пока не сравнивает автоматически persisted input/output metadata вызывающей и вызываемой Computation. Структуру передаваемого input и ожидаемого результата необходимо соблюдать в source.
 :::
 
-Локальный override, зарегистрированный через `Endge.bind.computation(...)`, применяется и тогда, когда Computation вызывается из другого вычисления. При этом вызываемый доменный документ всё равно должен существовать и успешно компилироваться.
+Локальный override, зарегистрированный через `Endge.computations.provide(...)` и `Endge.computations.override(...)`, применяется и тогда, когда Computation вызывается из другого вычисления. При этом вызываемый доменный документ всё равно должен существовать и успешно компилироваться.
 
 Режим локального override проверяется уже в runtime. В текущей версии асинхронный override нельзя прозрачно подставить вместо зависимости, слинкованной как `sync`: вызов завершится ошибкой `async-override`. Для такой зависимости используйте синхронный override либо заранее асинхронный artifact.
 
@@ -278,21 +278,28 @@ const state = ports.require.state({ process: props.process })
 ## Локальная замена
 
 ::: info Локальная реализация Computation
-Если вычисление удобнее реализовать обычным кодом в локальном репозитории приложения, его можно связать с identity существующей Computation через `Endge.bind.computation(...)`.
+Если вычисление удобнее реализовать обычным кодом в локальном репозитории приложения, для identity существующей Computation устанавливаются отдельный provider и явный override.
 
 После регистрации runtime будет вызывать локальный handler вместо скомпилированного persisted graph. Сам документ Computation при этом не изменяется: замена существует только в коде и окружении, где был выполнен binding.
 :::
 
 ```ts
-const unbind = Endge.bind.computation(
-  'item-state',
-  {
+const removeProvider = Endge.computations.provide({
+  identity: 'item-state',
+  key: 'application.item-state',
+  origin: { kind: 'local', owner: 'application' },
+  implementation: {
     execution: 'sync',
     run(input, api) {
       return calculateItemState(input, api)
     },
   },
-)
+})
+
+const removeOverride = Endge.computations.override({
+  identity: 'item-state',
+  providerKey: 'application.item-state',
+})
 ```
 
-Override полностью заменяет persisted graph. Функция `unbind()` удаляет локальную привязку. При ошибке локальной реализации runtime не выполняет скрытый fallback к persisted source — ошибка возвращается потребителю явно.
+Override полностью заменяет persisted graph. `removeOverride()` возвращает default Source implementation, а `removeProvider()` удаляет код. При ошибке локальной реализации runtime не выполняет скрытый fallback к persisted source — ошибка возвращается потребителю явно.

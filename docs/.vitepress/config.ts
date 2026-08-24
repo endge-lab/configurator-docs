@@ -42,6 +42,7 @@ export default defineConfig({
           { text: 'Update', link: '/reference/update' },
           { text: 'Filter', link: '/reference/filter' },
           { text: 'Action', link: '/reference/action' },
+          { text: 'Operation History', link: '/reference/operation-history' },
           { text: 'Component SFC', link: '/reference/component-sfc' },
           { text: 'Composition', link: '/reference/composition' },
           { text: 'Справочники (Vocab)', link: '/reference/vocab' },

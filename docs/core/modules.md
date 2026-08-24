@@ -26,13 +26,15 @@
 | `Endge.program` | Доступ к скомпилированным контрактам |
 | `Endge.runtime` | Создание и управление живыми runtime-host |
 | `Endge.runtime.query` | Исполнение Query program |
-| `Endge.runtime.flow` | Исполнение action flow |
+| `Endge.actions` | Definitions, providers, overrides и исполнение Actions |
+| `Endge.computations` | Definitions, providers, overrides и исполнение Computations |
+| `Endge.converters` | Definitions, providers, overrides и синхронное исполнение Converters |
+| `Endge.runtime.operations` | Undo/redo ближайшей активной Operation History |
 
 ## Связи и коммуникация
 
 | Модуль | Назначение |
 | --- | --- |
-| `Endge.bind` | Локальные реализации Converter, Computation и других открытых контрактов |
 | `Endge.events` | Доставка runtime-событий подписчикам из кода |
 | `Endge.updates` | Применение обновлений данных и конфигурации |
 

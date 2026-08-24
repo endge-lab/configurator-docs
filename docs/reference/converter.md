@@ -8,7 +8,7 @@ Converter не является host для [общих функциональн
 
 В конфигураторе создайте Converter с уникальным identity, например `string-to-number`. Identity будет использоваться во всех ссылках на преобразование.
 
-## 2. Привяжите обработчик
+## 2. Установите provider и override
 
 ```ts
 import { Endge } from '@endge/core'
@@ -19,10 +19,20 @@ function stringToNumber(value: unknown, options?: { emptyAsNull?: boolean }): nu
   return Number.isNaN(result) ? null : result
 }
 
-const unbind = Endge.bind.converter('string-to-number', stringToNumber)
+const removeProvider = Endge.converters.provide({
+  identity: 'string-to-number',
+  key: 'application.string-to-number',
+  origin: { kind: 'local', owner: 'application' },
+  convert: stringToNumber,
+})
+
+const removeOverride = Endge.converters.override({
+  identity: 'string-to-number',
+  providerKey: 'application.string-to-number',
+})
 ```
 
-Binding следует выполнять после загрузки домена. Если документа с таким identity нет, привязка не будет установлена.
+Provider следует устанавливать после загрузки домена. `override` полностью выбирает его вместо default implementation; скрытого fallback при ошибке нет. При остановке модуля сначала вызовите `removeOverride()`, затем `removeProvider()`.
 
 ## Использование в DataView
 
@@ -57,7 +67,7 @@ Legacy wrapper syntax остаётся допустимым: `.convert(converter
 
 | Ситуация | Что проверить |
 | --- | --- |
-| Binding не установился | Существует ли Converter в загруженном домене |
+| Provider не установился | Существует ли Converter в загруженном домене |
 | Результат `null` | Привязан ли handler и принимает ли он входной формат |
 | Неверный результат списка | Должно ли преобразование применяться к каждому элементу |
 | Разные результаты в окружениях | Одинакова ли регистрация обработчиков при bootstrap |
