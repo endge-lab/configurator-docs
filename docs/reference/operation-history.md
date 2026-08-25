@@ -3,6 +3,10 @@
 History — runtime resource Composition. Без активной History Operation выполняет
 `run`, но не создаёт запись.
 
+В одну и ту же ближайшую History попадают как Operation из Source Action, так и
+короткие `operation(...)` из Component SFC reactions. SFC не создаёт отдельный
+стек и использует обычные правила runtime ancestry.
+
 ```ts
 defineComposition({
   resources: {

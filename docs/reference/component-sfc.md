@@ -190,6 +190,33 @@ definePreviewProps(
 
 ## Action и Event
 
+Локальная реакция также может быть отменяемой `operation(...)`. `run` и `undo`
+обязательны, `input`, `redo` и block `output` необязательны. Для одного Query или
+Action используется короткая форма без `steps`:
+
+```vue
+<Text
+  :value="row.flightCarrier"
+  editable
+  @edited.stop="operation({
+    run: query({
+      identity: 'schedule-sandbox-update-leg',
+      input: { id: rowKey, payload: { flightCarrier: event('value') } },
+    }),
+    undo: query({
+      identity: 'schedule-sandbox-update-leg',
+      input: { id: rowKey, payload: { flightCarrier: event('previousValue') } },
+    }),
+  })"
+/>
+```
+
+Без явного `input` snapshot равен payload события и доступен блокам через
+нетипизированный `input()`. `event(...)`, `now()` и lexical SFC scope также
+вычисляются один раз до `run`. Полная
+форма `{ steps: {...}, output?: output('name') }` остаётся доступна для нескольких
+последовательных effects. Inline blocks v1 принимают `query(...)` и `action(...)`.
+
 `Action` — вызываемое типизированное поведение. У него один выбранный provider, input и output. Выполнение может завершиться ошибкой. Examples: открыть карточку, установить значение Filter, закрепить колонку, изменить сортировку.
 
 `Event` — уведомление о факте, который уже произошёл. Оно не возвращает результат и может иметь несколько подписчиков. Examples: строка выделена, сортировка изменилась, данные загружены.

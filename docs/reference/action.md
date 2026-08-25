@@ -59,6 +59,23 @@ DOM, сеть, timers или `Endge`; side effects остаются в Query, Up
 Operation — отменяемый шаг. `undo` обязателен, иначе нужно использовать обычный
 Action step.
 
+`input` необязателен: без него Operation один раз клонирует и замораживает
+текущий Action input. Блок из одного effect можно записать напрямую; именованные
+`steps` и `output` нужны только для многошагового алгоритма или явного результата.
+
+```ts
+edit: operation({
+  run: query({
+    identity: 'schedule-sandbox-update-leg',
+    input: { id: input('id'), payload: input('patch') },
+  }),
+  undo: query({
+    identity: 'schedule-sandbox-update-leg',
+    input: { id: input('id'), payload: input('previous') },
+  }),
+})
+```
+
 ```ts
 edit: operation({
   input: {
@@ -90,9 +107,9 @@ edit: operation({
 })
 ```
 
-`operation.input` вычисляется один раз, клонируется и замораживается. Именно
-пользователь включает в него id, новое и предыдущее значения. Отдельного
-`snapshot` API нет. Успешный `run` создаёт History entry; failed run — нет.
+Явный `operation.input` вычисляется один раз, клонируется и замораживается. Именно
+пользователь включает в него id, новое и предыдущее значения; без него snapshot
+равен текущему Action input. Отдельного `snapshot` API нет. Успешный `run` создаёт History entry; failed run — нет.
 Default `redo` повторяет `run`. Custom redo может читать `runOutput()` и
 `undoOutput()`.
 
@@ -160,4 +177,28 @@ Inline reaction остаётся компактной ссылкой:
 ```
 
 Одна reaction или массив выполняются в source order. Полный алгоритм и Operation
-следует выносить в Source Action.
+можно вынести в Source Action, но короткая локальная Operation также допустима
+непосредственно в SFC:
+
+```vue
+<Text
+  :value="row.flightCarrier"
+  editable
+  @edited.stop="operation({
+    run: query({
+      identity: 'schedule-sandbox-update-leg',
+      input: { id: rowKey, payload: { flightCarrier: event('value') } },
+    }),
+    undo: query({
+      identity: 'schedule-sandbox-update-leg',
+      input: { id: rowKey, payload: { flightCarrier: event('previousValue') } },
+    }),
+  })"
+/>
+```
+
+SFC compiler материализует использованные `event(...)` и lexical scope values
+до `run`; undo/redo не читают более позднее состояние таблицы. Если `input`
+отсутствует, неявным snapshot становится payload события, доступный через
+`input()` без отдельного контракта. Вложенная inline Operation не поддерживается.
+Если `redo` отсутствует, History повторяет `run`.
