@@ -10,17 +10,20 @@ importers:
     dependencies:
       '@endge/nova':
         specifier: 0.13.3
-        version: 0.13.3(pinia@3.0.4(vue@3.5.40))(vue@3.5.40)
+        version: 0.13.3(pinia@3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))
       mermaid:
         specifier: 11.14.0
         version: 11.14.0
       vue:
         specifier: ^3.5.40
-        version: 3.5.40
+        version: 3.5.40(typescript@6.0.3)
     devDependencies:
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
       vitepress:
         specifier: 1.6.4
-        version: 1.6.4(@algolia/client-search@5.56.0)(postcss@8.5.19)(search-insights@2.17.3)
+        version: 1.6.4(@algolia/client-search@5.56.0)(postcss@8.5.19)(search-insights@2.17.3)(typescript@6.0.3)
 
 packages:
 
@@ -1176,6 +1179,11 @@ packages:
     resolution: {integrity: sha512-JfJeIHke7y2egdGGgRAvpCwYFUsHlM2gPcrVOxFkznt/4uzQ7HFmvE63iFHVLBJNDuyDOQgijDK/tXH/f6Msjg==}
     engines: {node: '>=6.10'}
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
 
@@ -1422,10 +1430,10 @@ snapshots:
     transitivePeerDependencies:
       - '@algolia/client-search'
 
-  '@endge/nova@0.13.3(pinia@3.0.4(vue@3.5.40))(vue@3.5.40)':
+  '@endge/nova@0.13.3(pinia@3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))':
     dependencies:
       '@endge/raph': 3.0.1
-      '@endge/utils': 0.23.0(pinia@3.0.4(vue@3.5.40))(vue@3.5.40)
+      '@endge/utils': 0.23.0(pinia@3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))
       class-transformer: 0.5.1
       gl-matrix: 3.4.4
       rbush: 4.0.1
@@ -1435,7 +1443,7 @@ snapshots:
 
   '@endge/raph@3.0.1': {}
 
-  '@endge/utils@0.23.0(pinia@3.0.4(vue@3.5.40))(vue@3.5.40)':
+  '@endge/utils@0.23.0(pinia@3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))':
     dependencies:
       class-transformer: 0.5.1
       class-validator: 0.14.4
@@ -1444,10 +1452,10 @@ snapshots:
       date-fns-tz: 2.0.1(date-fns@2.30.0)
       destr: 2.0.5
       lodash: 4.18.1
-      pinia: 3.0.4(vue@3.5.40)
+      pinia: 3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3))
       reflect-metadata: 0.2.2
       uuid: 11.1.1
-      vue: 3.5.40
+      vue: 3.5.40(typescript@6.0.3)
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
@@ -1805,10 +1813,10 @@ snapshots:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21)(vue@3.5.40)':
+  '@vitejs/plugin-vue@5.2.4(vite@5.4.21)(vue@3.5.40(typescript@6.0.3))':
     dependencies:
       vite: 5.4.21
-      vue: 3.5.40
+      vue: 3.5.40(typescript@6.0.3)
 
   '@vue/compiler-core@3.5.40':
     dependencies:
@@ -1884,20 +1892,20 @@ snapshots:
 
   '@vue/shared@3.5.40': {}
 
-  '@vueuse/core@12.8.2':
+  '@vueuse/core@12.8.2(typescript@6.0.3)':
     dependencies:
       '@types/web-bluetooth': 0.0.21
       '@vueuse/metadata': 12.8.2
-      '@vueuse/shared': 12.8.2
-      vue: 3.5.40
+      '@vueuse/shared': 12.8.2(typescript@6.0.3)
+      vue: 3.5.40(typescript@6.0.3)
     transitivePeerDependencies:
       - typescript
 
-  '@vueuse/integrations@12.8.2(focus-trap@7.8.0)':
+  '@vueuse/integrations@12.8.2(focus-trap@7.8.0)(typescript@6.0.3)':
     dependencies:
-      '@vueuse/core': 12.8.2
-      '@vueuse/shared': 12.8.2
-      vue: 3.5.40
+      '@vueuse/core': 12.8.2(typescript@6.0.3)
+      '@vueuse/shared': 12.8.2(typescript@6.0.3)
+      vue: 3.5.40(typescript@6.0.3)
     optionalDependencies:
       focus-trap: 7.8.0
     transitivePeerDependencies:
@@ -1905,9 +1913,9 @@ snapshots:
 
   '@vueuse/metadata@12.8.2': {}
 
-  '@vueuse/shared@12.8.2':
+  '@vueuse/shared@12.8.2(typescript@6.0.3)':
     dependencies:
-      vue: 3.5.40
+      vue: 3.5.40(typescript@6.0.3)
     transitivePeerDependencies:
       - typescript
 
@@ -2350,10 +2358,12 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  pinia@3.0.4(vue@3.5.40):
+  pinia@3.0.4(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)):
     dependencies:
       '@vue/devtools-api': 7.7.10
-      vue: 3.5.40
+      vue: 3.5.40(typescript@6.0.3)
+    optionalDependencies:
+      typescript: 6.0.3
 
   points-on-curve@0.2.0: {}
 
@@ -2474,6 +2484,8 @@ snapshots:
 
   ts-dedent@2.3.0: {}
 
+  typescript@6.0.3: {}
+
   unist-util-is@6.0.1:
     dependencies:
       '@types/unist': 3.0.3
@@ -2519,7 +2531,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vitepress@1.6.4(@algolia/client-search@5.56.0)(postcss@8.5.19)(search-insights@2.17.3):
+  vitepress@1.6.4(@algolia/client-search@5.56.0)(postcss@8.5.19)(search-insights@2.17.3)(typescript@6.0.3):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.56.0)(search-insights@2.17.3)
@@ -2528,17 +2540,17 @@ snapshots:
       '@shikijs/transformers': 2.5.0
       '@shikijs/types': 2.5.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21)(vue@3.5.40)
+      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21)(vue@3.5.40(typescript@6.0.3))
       '@vue/devtools-api': 7.7.10
       '@vue/shared': 3.5.39
-      '@vueuse/core': 12.8.2
-      '@vueuse/integrations': 12.8.2(focus-trap@7.8.0)
+      '@vueuse/core': 12.8.2(typescript@6.0.3)
+      '@vueuse/integrations': 12.8.2(focus-trap@7.8.0)(typescript@6.0.3)
       focus-trap: 7.8.0
       mark.js: 8.11.1
       minisearch: 7.2.0
       shiki: 2.5.0
       vite: 5.4.21
-      vue: 3.5.40
+      vue: 3.5.40(typescript@6.0.3)
     optionalDependencies:
       postcss: 8.5.19
     transitivePeerDependencies:
@@ -2569,12 +2581,14 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vue@3.5.40:
+  vue@3.5.40(typescript@6.0.3):
     dependencies:
       '@vue/compiler-dom': 3.5.40
       '@vue/compiler-sfc': 3.5.40
       '@vue/runtime-dom': 3.5.40
       '@vue/server-renderer': 3.5.40
       '@vue/shared': 3.5.40
+    optionalDependencies:
+      typescript: 6.0.3
 
   zwitch@2.0.4: {}
