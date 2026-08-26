@@ -1,6 +1,6 @@
 {
   "name": "@endge/configurator-docs",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.23.0",
@@ -8,7 +8,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "vitepress dev docs --host 0.0.0.0",
+    "dev": "vitepress dev docs --host 0.0.0.0 --port 5179",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --host 0.0.0.0",
     "docs:import-nova": "node scripts/import-nova-docs.mjs"
