@@ -24,7 +24,7 @@ interface MarkdownItLike {
 }
 
 export function configureNovaMarkdown(markdown: MarkdownItLike): void {
-  markdown.core.ruler.before('block', 'nova-doc-directives', state => {
+  markdown.core.ruler.before('block', 'nova-doc-directives', (state) => {
     state.src = replaceNovaDirectives(state.src)
   })
 
@@ -53,10 +53,14 @@ function replaceNovaDirectives(source: string): string {
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index]!
-    const fenceMatch = line.match(/^\s*(```+|~~~+)/)
+    const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/)
     if (fenceMatch) {
-      if (!fence) fence = fenceMatch[1]![0]!
-      else if (fence === fenceMatch[1]![0]) fence = ''
+      if (!fence) {
+        fence = fenceMatch[1]![0]!
+      }
+      else if (fence === fenceMatch[1]![0]) {
+        fence = ''
+      }
       result.push(line)
       continue
     }

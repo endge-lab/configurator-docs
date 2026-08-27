@@ -99,5 +99,5 @@ function example(title: string, caption: string, scenario: DocsExampleScenario):
 }
 
 function escapeSource(value: string): string {
-  return value.replaceAll('\\', '\\\\').replaceAll("'", "\\'")
+  return value.replaceAll('\\', '\\\\').replaceAll('\'', '\\\'')
 }

@@ -1,7 +1,7 @@
-import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import vm from 'node:vm'
 import { fileURLToPath } from 'node:url'
+import vm from 'node:vm'
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = path.resolve(scriptDirectory, '..')
@@ -14,9 +14,9 @@ const targetDocumentsRoot = path.join(repositoryRoot, 'docs/nova')
 const targetNavigationPath = path.join(repositoryRoot, 'docs/.vitepress/nova-sidebar.generated.ts')
 
 const documentationTitles = {
-  core: 'NovaCore',
-  uikit: 'NovaUIKit',
-  advanced: 'NovaAdvanced',
+  'core': 'NovaCore',
+  'uikit': 'NovaUIKit',
+  'advanced': 'NovaAdvanced',
   'timeline-chart': 'Timeline chart',
 }
 
@@ -120,9 +120,11 @@ function createSidebar(tree, actualDocuments) {
     const categories = documentation.categories.map((category, categoryIndex) => ({
       text: category.title,
       collapsed: categoryIndex > 0,
-      items: category.pages.flatMap(page => {
+      items: category.pages.flatMap((page) => {
         const key = `${documentation.documentationId}/${page.slug}`
-        if (registered.has(key)) return []
+        if (registered.has(key)) {
+          return []
+        }
         registered.add(key)
 
         return [{
@@ -132,7 +134,7 @@ function createSidebar(tree, actualDocuments) {
       }),
     }))
 
-    const additionalDocuments = actualDocuments.filter(document => {
+    const additionalDocuments = actualDocuments.filter((document) => {
       const key = `${document.documentationId}/${document.slug}`
       return document.documentationId === documentation.documentationId && !registered.has(key)
     })
@@ -156,7 +158,7 @@ function createSidebar(tree, actualDocuments) {
     }
   })
 
-  const orphanDocuments = actualDocuments.filter(document => {
+  const orphanDocuments = actualDocuments.filter((document) => {
     return !registered.has(`${document.documentationId}/${document.slug}`)
   })
 

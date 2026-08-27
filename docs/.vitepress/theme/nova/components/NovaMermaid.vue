@@ -6,7 +6,9 @@ const diagram = ref<HTMLElement | null>(null)
 const error = ref('')
 
 async function renderDiagram(): Promise<void> {
-  if (!diagram.value) return
+  if (!diagram.value) {
+    return
+  }
   error.value = ''
 
   try {
@@ -33,6 +35,8 @@ onMounted(() => void renderDiagram())
 <template>
   <figure class="nova-mermaid">
     <div ref="diagram" />
-    <figcaption v-if="error">{{ error }}</figcaption>
+    <figcaption v-if="error">
+      {{ error }}
+    </figcaption>
   </figure>
 </template>

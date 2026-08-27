@@ -29,12 +29,16 @@ const definition = computed(() => NOVA_EXAMPLES[props.id] ?? {
 const source = computed(() => exampleSource(props.id, definition.value))
 const exampleStyle = computed(() => ({ '--nova-example-height': safeHeight(props.height) }))
 
-let runtime: { resize: (width: number, height: number) => void; destroy: () => void } | null = null
+let runtime: { resize: (width: number, height: number) => void, destroy: () => void } | null = null
 let resizeObserver: ResizeObserver | null = null
 
 function initialTab(): ExampleTab {
-  if (props.display === 'code-only') return 'code'
-  if (props.display === 'canvas-only') return 'canvas'
+  if (props.display === 'code-only') {
+    return 'code'
+  }
+  if (props.display === 'canvas-only') {
+    return 'canvas'
+  }
   return props.defaultTab
 }
 
@@ -45,7 +49,9 @@ function safeHeight(value: string): string {
 }
 
 function resizeRuntime(): void {
-  if (!host.value || !runtime) return
+  if (!host.value || !runtime) {
+    return
+  }
   runtime.resize(host.value.clientWidth, host.value.clientHeight)
 }
 
@@ -55,9 +61,13 @@ function destroyRuntime(): void {
 }
 
 async function mountRuntime(): Promise<void> {
-  if (props.display === 'code-only') return
+  if (props.display === 'code-only') {
+    return
+  }
   await nextTick()
-  if (!canvas.value || !host.value) return
+  if (!canvas.value || !host.value) {
+    return
+  }
 
   destroyRuntime()
   error.value = ''
@@ -73,16 +83,26 @@ async function mountRuntime(): Promise<void> {
 }
 
 watch(() => props.id, () => void mountRuntime())
-watch(() => props.defaultTab, () => { activeTab.value = initialTab() })
-watch(activeTab, tab => {
-  if (tab === 'canvas') void mountRuntime()
-  else if (props.layout !== 'split') destroyRuntime()
+watch(() => props.defaultTab, () => {
+  activeTab.value = initialTab()
+})
+watch(activeTab, (tab) => {
+  if (tab === 'canvas') {
+    void mountRuntime()
+  }
+  else if (props.layout !== 'split') {
+    destroyRuntime()
+  }
 })
 
 onMounted(() => {
   resizeObserver = new ResizeObserver(resizeRuntime)
-  if (host.value) resizeObserver.observe(host.value)
-  if (activeTab.value === 'canvas' || props.layout === 'split') void mountRuntime()
+  if (host.value) {
+    resizeObserver.observe(host.value)
+  }
+  if (activeTab.value === 'canvas' || props.layout === 'split') {
+    void mountRuntime()
+  }
 })
 
 onBeforeUnmount(() => {
@@ -129,7 +149,9 @@ onBeforeUnmount(() => {
       <pre v-if="display !== 'canvas-only'" class="nova-example__code"><code>{{ source }}</code></pre>
       <div v-if="display !== 'code-only'" ref="host" class="nova-example__canvas-host">
         <canvas ref="canvas" aria-label="Интерактивный пример Nova" />
-        <p v-if="error" class="nova-example__error">{{ error }}</p>
+        <p v-if="error" class="nova-example__error">
+          {{ error }}
+        </p>
       </div>
     </div>
 
@@ -137,7 +159,9 @@ onBeforeUnmount(() => {
       <pre v-if="activeTab === 'code'" class="nova-example__code"><code>{{ source }}</code></pre>
       <div v-else ref="host" class="nova-example__canvas-host">
         <canvas ref="canvas" aria-label="Интерактивный пример Nova" />
-        <p v-if="error" class="nova-example__error">{{ error }}</p>
+        <p v-if="error" class="nova-example__error">
+          {{ error }}
+        </p>
       </div>
     </div>
   </section>

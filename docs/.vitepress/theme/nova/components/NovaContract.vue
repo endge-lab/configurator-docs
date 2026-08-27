@@ -40,7 +40,9 @@ const expanded = ref(false)
     </details>
 
     <ul v-if="contract.notes?.length">
-      <li v-for="note in contract.notes" :key="note">{{ note }}</li>
+      <li v-for="note in contract.notes" :key="note">
+        {{ note }}
+      </li>
     </ul>
 
     <button v-if="contract.rawTs" type="button" class="nova-contract__raw-button" @click="expanded = !expanded">

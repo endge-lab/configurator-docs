@@ -65,14 +65,14 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
           },
           {
             name: 'input.keyboard.scope',
-            type: "'focused' | 'active' | 'hovered' | 'global' | 'manual'",
-            defaultValue: "'focused'",
+            type: '\'focused\' | \'active\' | \'hovered\' | \'global\' | \'manual\'',
+            defaultValue: '\'focused\'',
             description: 'Определяет, где Nova слушает keyboard events и когда их обрабатывает.',
           },
           {
             name: 'input.keyboard.preventDefault',
-            type: "'never' | 'handled' | 'always'",
-            defaultValue: "'handled'",
+            type: '\'never\' | \'handled\' | \'always\'',
+            defaultValue: '\'handled\'',
             description: 'Контролирует preventDefault для keyboard events.',
           },
         ],
@@ -139,7 +139,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     packageName: '@endge/nova',
     sourcePath: 'packages/@endge-nova/src/domain/types/renderer.types.ts',
     summary: 'Дискриминированный union всех primitives, которые renderer умеет отрисовывать через schema.',
-    signature: "type NovaSchemaItem = { type: 'rect' | 'border' | 'text' | 'line' | 'circle' | 'arc' | 'icon' | 'polygon' }",
+    signature: 'type NovaSchemaItem = { type: \'rect\' | \'border\' | \'text\' | \'line\' | \'circle\' | \'arc\' | \'icon\' | \'polygon\' }',
     groups: [
       {
         id: 'rect',
@@ -159,7 +159,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
         caption: 'Текст с padding, align, ellipsis, markdown parser и clip.',
         items: [
           { name: 'text', type: 'string', required: true, description: 'Строка для отрисовки.' },
-          { name: 'parser', type: "'string' | 'markdown'", defaultValue: "'string'", description: 'Markdown parser поддерживает базовые bold/italic/newline chunks.' },
+          { name: 'parser', type: '\'string\' | \'markdown\'', defaultValue: '\'string\'', description: 'Markdown parser поддерживает базовые bold/italic/newline chunks.' },
           { name: 'styles.font', type: '{ family, size, weight }', description: 'Шрифт текста.' },
           { name: 'styles.padding', type: 'NovaStylePadding', description: 'Inner padding. Включает безопасный inner clip.' },
           { name: 'styles.align', type: '{ horizontal, vertical }', description: 'Выравнивание внутри text box.' },
@@ -312,7 +312,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
         items: [
           { name: 'retained frame', type: 'NovaRenderFrame', description: 'Surface компилируется в retained frame и replay-ится через app-level backend.' },
           { name: 'frame dirty', type: 'NovaRenderCompileStats', description: 'Dirty-политика основана на retained graph и явных dirty reasons.' },
-          { name: 'renderCullingMode', type: "'off' | 'bounds'", defaultValue: "'off'", description: 'Отсекает nodes вне bounds surface.' },
+          { name: 'renderCullingMode', type: '\'off\' | \'bounds\'', defaultValue: '\'off\'', description: 'Отсекает nodes вне bounds surface.' },
         ],
       },
       {
@@ -465,7 +465,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
         id: 'options',
         title: 'Options',
         items: [
-          { name: 'direction', type: "'top' | 'right' | 'bottom' | 'left'", required: true, description: 'Сторона, по которой работает resize.' },
+          { name: 'direction', type: '\'top\' | \'right\' | \'bottom\' | \'left\'', required: true, description: 'Сторона, по которой работает resize.' },
           { name: 'minSize / maxSize', type: 'number', required: true, description: 'Ограничения размера при drag.' },
           { name: 'lineWidth', type: 'number', defaultValue: '1', description: 'Визуальная толщина line.' },
           { name: 'lineWidthHover', type: 'number', defaultValue: '10', description: 'Толщина hit zone.' },
@@ -630,7 +630,7 @@ scope.play('ambient.loop', { loop: true })`,
         items: [
           { name: 'id', type: 'string', required: true, description: 'Публичный ключ asset для app.sound.play(id).' },
           { name: 'src', type: 'string | string[]', required: true, description: 'URL, data URI, nova-tone source или список format fallback.' },
-          { name: 'category', type: 'string', defaultValue: "'default'", description: 'Mixer category для отдельной громкости.' },
+          { name: 'category', type: 'string', defaultValue: '\'default\'', description: 'Mixer category для отдельной громкости.' },
           { name: 'preload', type: 'boolean', defaultValue: 'false', description: 'Маркер намерения фоновой загрузки descriptor.' },
         ],
       },

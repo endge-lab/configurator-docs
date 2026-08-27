@@ -1,16 +1,15 @@
+import type { NovaApp, NovaSchema, NovaSoundDescriptor, NovaSurface } from '@endge/nova'
+import type { DocsExampleScenario } from '../nova-types'
 import {
   Nova,
+
   NovaNode,
+
   RaphSchedulerType,
   RendererType,
-  type NovaApp,
-  type NovaSchema,
-  type NovaSoundDescriptor,
-  type NovaSurface,
 } from '@endge/nova'
-import type { DocsExampleScenario } from '../nova-types'
 
-type ScenarioRuntime = {
+interface ScenarioRuntime {
   resize: (width: number, height: number) => void
   destroy: () => void
 }
@@ -162,7 +161,7 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
     })
 
     this.on('mousemove', event => this.setPointer(event))
-    this.on('mouseenter', event => {
+    this.on('mouseenter', (event) => {
       this.pointerInside = true
       this.setPointer(event)
     })
@@ -171,7 +170,7 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
       this.dragging = false
       this.dirty({ render: true })
     })
-    this.on('mousedown', event => {
+    this.on('mousedown', (event) => {
       this.capturePointer(event)
       this.focus(event, 'docs')
       this.dragging = true
@@ -190,7 +189,7 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
       this.dirty({ render: true })
     })
     this.on('click', () => this.activate())
-    this.on('keydown', event => {
+    this.on('keydown', (event) => {
       this.activeIndex = (this.activeIndex + 1) % 8
       this.lastAction = `key ${event.key}`
       this.dirty({ render: true })
@@ -359,12 +358,12 @@ function addPrimeComponents(schema: NovaSchema, width: number, height: number, t
 
   const sx = 52
   const sy = startY + 58
-  ;[0, 1, 2, 3].forEach(index => {
+  ;[0, 1, 2, 3].forEach((index) => {
     const angle = -Math.PI + index * 0.55
     schema.push(circle(sx + 70 + Math.cos(angle) * 52, sy + 78 + Math.sin(angle) * 52, 14 + (index === activeIndex % 4 ? pulse * 5 : 0), [theme.accent, theme.accent2, theme.accent3, '#7c3aed'][index]!, '#ffffff', 2))
   })
   schema.push(circle(sx + 70, sy + 78, 20, theme.accent, '#ffffff', 2))
-  ;[0, 1, 2, 3].forEach(index => {
+  ;[0, 1, 2, 3].forEach((index) => {
     schema.push(panel(sx + 126 + index * 34, sy + 104 - (index === activeIndex % 4 ? 8 : 0), 28, 28, '#ffffff', theme))
   })
 
@@ -380,7 +379,7 @@ function addPrimeComponents(schema: NovaSchema, width: number, height: number, t
     height: 10,
     styles: { background: theme.accent2 },
   })
-  ;[0, 1, 2].forEach(index => {
+  ;[0, 1, 2].forEach((index) => {
     schema.push(circle(mx + 34 + index * 28, sy + 124, 8, [theme.accent, theme.accent2, theme.accent3][index]!, '#ffffff', 1))
   })
 
@@ -501,7 +500,9 @@ function addSeatMap(schema: NovaSchema, width: number, height: number, theme: Sc
       const index = row * 8 + col
       const x = 54 + col * Math.max(26, (width - 108) / 9)
       const y = 78 + row * 30
-      if (pointerX >= x && pointerX <= x + 24 && pointerY >= y && pointerY <= y + 20) hovered = index
+      if (pointerX >= x && pointerX <= x + 24 && pointerY >= y && pointerY <= y + 20) {
+        hovered = index
+      }
       const selected = activeIndex === index % 8
       schema.push({
         type: 'rect',
@@ -536,7 +537,9 @@ function addDenseHitMap(schema: NovaSchema, width: number, height: number, theme
     const x = 42 + (index % 20) * ((width - 84) / 20)
     const y = 74 + Math.floor(index / 20) * 23
     const near = inside && Math.hypot(pointerX - x, pointerY - y) < 34
-    if (near) candidates += 1
+    if (near) {
+      candidates += 1
+    }
     schema.push(circle(x, y, near ? 6 : 3.5, near ? theme.accent3 : index % 13 === 0 ? theme.accent2 : theme.accent, 'transparent', 0))
   }
   schema.push(line(44, height - 50, 44 + ((time / 20) % Math.max(80, width - 88)), height - 50, theme.accent2, 3))
@@ -549,7 +552,9 @@ function addPipeline(schema: NovaSchema, width: number, height: number, theme: S
     const x = 46 + index * ((width - 92) / 4)
     schema.push(panel(x, 106, (width - 124) / 4, 58, index === 2 ? theme.panelAlt : theme.panel, theme))
     schema.push(text(step, x + 12, 126, (width - 170) / 4, 18, theme.text, 12, '800'))
-    if (index < steps.length - 1) schema.push(line(x + (width - 124) / 4, 135, x + (width - 92) / 4, 135, theme.accent, 2))
+    if (index < steps.length - 1) {
+      schema.push(line(x + (width - 124) / 4, 135, x + (width - 92) / 4, 135, theme.accent, 2))
+    }
   })
   schema.push(circle(56 + ((time / 8) % Math.max(100, width - 112)), height - 64, 8, theme.accent3, theme.background, 2))
 }
@@ -641,7 +646,7 @@ function addSoundMixer(
   theme: ScenarioTheme,
   activeIndex: number,
   lastAction: string,
-  stats: { loaded: number; active: number; played: number; skipped: number; unlocked: boolean; muted: boolean },
+  stats: { loaded: number, active: number, played: number, skipped: number, unlocked: boolean, muted: boolean },
 ): void {
   ;['low', 'mid', 'high', 'loop'].forEach((label, index) => {
     const x = 46 + (index % 2) * ((width - 110) / 2)
@@ -815,7 +820,9 @@ export function createNovaScenarioPreview(
   let destroyed = false
 
   const tick = (time: number): void => {
-    if (destroyed) return
+    if (destroyed) {
+      return
+    }
     root.setTime(time)
     app.invalidate()
     frame = window.requestAnimationFrame(tick)
