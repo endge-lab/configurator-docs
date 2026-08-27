@@ -1,7 +1,7 @@
 {
   "name": "@endge/configurator-docs",
   "type": "module",
-  "version": "0.3.8",
+  "version": "0.4.0",
   "private": true,
   "packageManager": "pnpm@10.23.0",
   "engines": {
@@ -12,6 +12,7 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --host 0.0.0.0",
     "docs:import-nova": "node scripts/import-nova-docs.mjs",
+    "knowledge:build": "node scripts/build-knowledge-bundle.mjs",
     "lint-check": "eslint . --cache",
     "lint-fix": "eslint . --fix --cache"
   },

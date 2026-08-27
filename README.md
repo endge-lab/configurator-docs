@@ -19,3 +19,15 @@ pnpm preview
 ```
 
 Production output создаётся в `docs/.vitepress/dist`.
+
+## Knowledge Bundle для AI Workbench
+
+Публичный срез Markdown-документации собирается отдельно от VitePress:
+
+```bash
+pnpm knowledge:build
+```
+
+Команда создаёт игнорируемый Git каталог `dist/knowledge` с файлами
+`manifest.json` и `documents.jsonl`. В bundle входят только публичные разделы;
+`project`, служебные файлы VitePress и внутренние документы не импортируются.
