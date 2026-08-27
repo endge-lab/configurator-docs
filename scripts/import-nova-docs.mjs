@@ -112,7 +112,7 @@ async function copyPublicDocuments() {
 }
 
 function readDocumentTitle(content, fallback) {
-  return content.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? fallback.replace(/\.md$/, '')
+  return content.match(/^#[ \t]+(\S.*)$/m)?.[1]?.trim() ?? fallback.replace(/\.md$/, '')
 }
 
 function createSidebar(tree, actualDocuments) {

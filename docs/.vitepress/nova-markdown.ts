@@ -66,7 +66,7 @@ function replaceNovaDirectives(source: string): string {
     }
 
     if (!fence && lines[index + 1]?.trim() === ':::') {
-      const directive = line.match(/^:::(example|contract)\s+(.+)$/)
+      const directive = line.match(/^:::(example|contract)[ \t]+(\S.*)$/)
       if (directive) {
         const component = directive[1] === 'example' ? 'NovaExample' : 'NovaContract'
         result.push(`<${component}${renderAttributes(parseAttributes(directive[2]!))} />`)

@@ -34,7 +34,7 @@ for (const documentPath of documentPaths) {
   chunks.push(...chunkDocument(relativePath, source))
 }
 
-const documentsJSONL = chunks.map(chunk => JSON.stringify(chunk)).join('\n') + '\n'
+const documentsJSONL = `${chunks.map(chunk => JSON.stringify(chunk)).join('\n')}\n`
 const documentsChecksum = createHash('sha256').update(documentsJSONL).digest('hex')
 const bundleId = `endge-docs-${packageManifest.version}`
 const manifest = {
@@ -96,7 +96,7 @@ function chunkDocument(relativePath, source) {
   }
 
   for (const line of lines) {
-    const heading = line.match(/^(#{1,6})\s+(.+?)\s*$/)
+    const heading = line.match(/^(#{1,6})[ \t]+(\S.*)$/)
     if (!heading) {
       content.push(line)
       continue
@@ -192,7 +192,7 @@ function stripFrontmatter(source) {
 function stripInlineMarkdown(value) {
   return value
     .replace(/`([^`]+)`/g, '$1')
-    .replace(/\[([^\]]+)]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
     .trim()
 }
 
