@@ -128,15 +128,15 @@ const SOUND_DESCRIPTORS: Array<NovaSoundDescriptor> = [
  * Описывает Nova-node DocsScenarioNode и его runtime-поведение.
  */
 class DocsScenarioNode extends NovaNode<ScenarioEvents> {
-  private time = 0
-  private activeIndex = 0
-  private pointerX = 0
-  private pointerY = 0
-  private pointerInside = false
-  private dragging = false
-  private dragX = 0
-  private dragY = 0
-  private lastAction = 'ready'
+  private _time = 0
+  private _activeIndex = 0
+  private _pointerX = 0
+  private _pointerY = 0
+  private _pointerInside = false
+  private _dragging = false
+  private _dragX = 0
+  private _dragY = 0
+  private _lastAction = 'ready'
 
   /**
    * Создает экземпляр DocsScenarioNode и подготавливает базовое состояние.
@@ -144,7 +144,7 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
   constructor(
     app: NovaApp<ScenarioEvents>,
     surface: NovaSurface<ScenarioEvents>,
-    private readonly scenario: DocsExampleScenario,
+    private readonly _scenario: DocsExampleScenario,
   ) {
     super(app, surface)
     this.options({
@@ -154,44 +154,44 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
       height: app.height,
       interactive: true,
       cursor: {
-        hover: scenario === 'cursor-studio' ? 'grab' : 'pointer',
-        pressed: scenario === 'cursor-studio' ? 'grabbing' : 'crosshair',
+        hover: _scenario === 'cursor-studio' ? 'grab' : 'pointer',
+        pressed: _scenario === 'cursor-studio' ? 'grabbing' : 'crosshair',
         dragging: 'grabbing',
       },
     })
 
-    this.on('mousemove', event => this.setPointer(event))
+    this.on('mousemove', event => this._setPointer(event))
     this.on('mouseenter', (event) => {
-      this.pointerInside = true
-      this.setPointer(event)
+      this._pointerInside = true
+      this._setPointer(event)
     })
     this.on('mouseleave', () => {
-      this.pointerInside = false
-      this.dragging = false
+      this._pointerInside = false
+      this._dragging = false
       this.dirty({ render: true })
     })
     this.on('mousedown', (event) => {
       this.capturePointer(event)
       this.focus(event, 'docs')
-      this.dragging = true
-      this.lastAction = 'capture'
+      this._dragging = true
+      this._lastAction = 'capture'
       this.dirty({ render: true })
     })
     this.on('dragmove', (_event, _dx, _dy, meta) => {
-      this.dragX = meta.totalDx
-      this.dragY = meta.totalDy
-      this.lastAction = `drag ${Math.round(meta.totalDx)}:${Math.round(meta.totalDy)}`
+      this._dragX = meta.totalDx
+      this._dragY = meta.totalDy
+      this._lastAction = `drag ${Math.round(meta.totalDx)}:${Math.round(meta.totalDy)}`
       this.dirty({ render: true })
     })
     this.on('dragend', () => {
-      this.dragging = false
-      this.lastAction = 'dragend'
+      this._dragging = false
+      this._lastAction = 'dragend'
       this.dirty({ render: true })
     })
-    this.on('click', () => this.activate())
+    this.on('click', () => this._activate())
     this.on('keydown', (event) => {
-      this.activeIndex = (this.activeIndex + 1) % 8
-      this.lastAction = `key ${event.key}`
+      this._activeIndex = (this._activeIndex + 1) % 8
+      this._lastAction = `key ${event.key}`
       this.dirty({ render: true })
     })
   }
@@ -200,21 +200,21 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
    * Обновляет значение состояния DocsScenarioNode.
    */
   setTime(value: number): void {
-    this.time = value
+    this._time = value
     this.dirty({ render: true })
   }
 
   /**
    * Выполняет внутренний шаг activate для DocsScenarioNode.
    */
-  private activate(): void {
-    this.activeIndex = (this.activeIndex + 1) % 8
-    this.lastAction = `click ${this.activeIndex}`
+  private _activate(): void {
+    this._activeIndex = (this._activeIndex + 1) % 8
+    this._lastAction = `click ${this._activeIndex}`
 
-    if (this.scenario === 'sound-mixer') {
-      const id = SOUND_DESCRIPTORS[this.activeIndex % SOUND_DESCRIPTORS.length]!.id
+    if (this._scenario === 'sound-mixer') {
+      const id = SOUND_DESCRIPTORS[this._activeIndex % SOUND_DESCRIPTORS.length]!.id
       const handle = this.nova.sound.play(id, { dedupeKey: `docs-${id}`, cooldownMs: 80 })
-      this.lastAction = handle.state === 'playing' ? `play ${id.replace('docs.pad.', '')}` : 'sound skipped'
+      this._lastAction = handle.state === 'playing' ? `play ${id.replace('docs.pad.', '')}` : 'sound skipped'
     }
 
     this.dirty({ render: true })
@@ -223,10 +223,10 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
   /**
    * Обновляет значение состояния DocsScenarioNode.
    */
-  private setPointer(event: MouseEvent): void {
-    this.pointerX = event.offsetX
-    this.pointerY = event.offsetY
-    this.pointerInside = true
+  private _setPointer(event: MouseEvent): void {
+    this._pointerX = event.offsetX
+    this._pointerY = event.offsetY
+    this._pointerInside = true
     this.dirty({ render: true })
   }
 
@@ -236,22 +236,22 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
   render(): void {
     const width = this.nova.width
     const height = this.nova.height
-    const theme = THEMES[this.scenario] ?? THEMES['dispatch-dashboard']!
+    const theme = THEMES[this._scenario] ?? THEMES['dispatch-dashboard']!
     const schema: NovaSchema = []
-    const pulse = (Math.sin(this.time / 420) + 1) / 2
+    const pulse = (Math.sin(this._time / 420) + 1) / 2
 
     addShell(
       schema,
       width,
       height,
       theme,
-      SCENARIO_TITLES[this.scenario] ?? 'Nova scenario',
-      SCENARIO_CAPTIONS[this.scenario] ?? 'canvas runtime preview',
+      SCENARIO_TITLES[this._scenario] ?? 'Nova scenario',
+      SCENARIO_CAPTIONS[this._scenario] ?? 'canvas runtime preview',
     )
 
-    switch (this.scenario) {
+    switch (this._scenario) {
       case 'radar-widget':
-        addRadar(schema, width, height, theme, this.time, this.pointerX, this.pointerY, this.pointerInside)
+        addRadar(schema, width, height, theme, this._time, this._pointerX, this._pointerY, this._pointerInside)
         break
       case 'cockpit-panel':
         addCockpit(schema, width, height, theme, pulse)
@@ -266,65 +266,65 @@ class DocsScenarioNode extends NovaNode<ScenarioEvents> {
         addTextTexture(schema, width, height, theme, pulse)
         break
       case 'node-editor':
-        addNodeEditor(schema, width, height, theme, this.activeIndex, pulse)
+        addNodeEditor(schema, width, height, theme, this._activeIndex, pulse)
         break
       case 'scene-switcher':
-        addSceneSwitcher(schema, width, height, theme, this.activeIndex)
+        addSceneSwitcher(schema, width, height, theme, this._activeIndex)
         break
       case 'seat-map':
-        addSeatMap(schema, width, height, theme, this.pointerX, this.pointerY, this.activeIndex)
+        addSeatMap(schema, width, height, theme, this._pointerX, this._pointerY, this._activeIndex)
         break
       case 'command-palette':
-        addCommandPalette(schema, width, height, theme, this.activeIndex, this.lastAction)
+        addCommandPalette(schema, width, height, theme, this._activeIndex, this._lastAction)
         break
       case 'dense-hit-map':
-        addDenseHitMap(schema, width, height, theme, this.pointerX, this.pointerY, this.pointerInside, this.time)
+        addDenseHitMap(schema, width, height, theme, this._pointerX, this._pointerY, this._pointerInside, this._time)
         break
       case 'render-pipeline':
-        addPipeline(schema, width, height, theme, this.time)
+        addPipeline(schema, width, height, theme, this._time)
         break
       case 'dirty-culling':
-        addDirtyTimeline(schema, width, height, theme, this.time)
+        addDirtyTimeline(schema, width, height, theme, this._time)
         break
       case 'hybrid-webgl':
         addAirport(schema, width, height, theme, true, pulse)
         break
       case 'metrics-dashboard':
-        addMetrics(schema, width, height, theme, this.time)
+        addMetrics(schema, width, height, theme, this._time)
         break
       case 'resizable-workspace':
-        addWorkspace(schema, width, height, theme, this.dragging, this.dragX)
+        addWorkspace(schema, width, height, theme, this._dragging, this._dragX)
         break
       case 'contracts-reference':
-        addContracts(schema, width, height, theme, this.activeIndex)
+        addContracts(schema, width, height, theme, this._activeIndex)
         break
       case 'cookbook-gallery':
-        addCookbook(schema, width, height, theme, this.activeIndex)
+        addCookbook(schema, width, height, theme, this._activeIndex)
         break
       case 'styles-engine-lab':
-        addStylesLab(schema, width, height, theme, this.activeIndex, pulse)
+        addStylesLab(schema, width, height, theme, this._activeIndex, pulse)
         break
       case 'sfc-compiler':
-        addSfcCompiler(schema, width, height, theme, this.activeIndex, pulse)
+        addSfcCompiler(schema, width, height, theme, this._activeIndex, pulse)
         break
       case 'sound-mixer':
-        addSoundMixer(schema, width, height, theme, this.activeIndex, this.lastAction, this.nova.sound.stats())
+        addSoundMixer(schema, width, height, theme, this._activeIndex, this._lastAction, this.nova.sound.stats())
         break
       case 'cursor-studio':
-        addCursorStudio(schema, width, height, theme, this.pointerX, this.pointerY, this.pointerInside, this.dragging)
+        addCursorStudio(schema, width, height, theme, this._pointerX, this._pointerY, this._pointerInside, this._dragging)
         break
       case 'renderer-policy':
-        addRendererPolicy(schema, width, height, theme, this.activeIndex)
+        addRendererPolicy(schema, width, height, theme, this._activeIndex)
         break
       case 'input-diagnostics':
-        addInputDiagnostics(schema, width, height, theme, this.lastAction, this.dragX, this.dragY)
+        addInputDiagnostics(schema, width, height, theme, this._lastAction, this._dragX, this._dragY)
         break
       case 'prime-components':
-        addPrimeComponents(schema, width, height, theme, this.activeIndex, pulse)
+        addPrimeComponents(schema, width, height, theme, this._activeIndex, pulse)
         break
       case 'dispatch-dashboard':
       default:
-        addDispatch(schema, width, height, theme, this.activeIndex, pulse)
+        addDispatch(schema, width, height, theme, this._activeIndex, pulse)
         break
     }
 
