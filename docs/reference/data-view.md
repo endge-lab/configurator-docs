@@ -11,7 +11,7 @@ DataView описывает чистую проекцию входных дан�
 | `pipeline` | Последовательные преобразования результата через `select` или обработка коллекции через `from`, `join` и `map` |
 | `projection` | Построение одного объекта из входного scope |
 | `expression` | Возврат произвольного ValueExpression |
-| `manual` | Trusted/global пользовательский код, когда декларативного API недостаточно |
+| `manual` | Зарезервирован, но временно не исполняется runtime |
 
 ## Pipeline
 
@@ -223,7 +223,7 @@ defineDataView({
 })
 ```
 
-Manual-режим содержит пользовательский код и разрешён только для trusted/global сценария. Он не поддерживается для локального DataView внутри Query или inline DataView.
+Manual-режим пока сохранён в source/compiler contract, но runtime явно завершает его запуск ошибкой. Используйте `pipeline`, `projection` или `expression` до появления capability-limited runtime для пользовательского TypeScript. Manual по-прежнему не поддерживается для локального DataView внутри Query или inline DataView.
 
 ## Граница ответственности
 
