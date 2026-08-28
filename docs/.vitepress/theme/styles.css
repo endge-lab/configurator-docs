@@ -387,6 +387,135 @@
   font-size: 12px;
 }
 
+.EndgeReadingMode_Button {
+  display: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  margin-left: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.EndgeReadingMode_Button:hover {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+}
+
+.EndgeReadingMode_Button:active {
+  transform: scale(0.94);
+}
+
+.EndgeReadingMode_Button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+.EndgeReadingMode_Button__icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.EndgeReadingMode_Button.is-floating {
+  display: grid;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 70;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin: 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vp-c-bg) 88%, transparent);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  color: var(--vp-c-text-2);
+  backdrop-filter: blur(14px);
+}
+
+.EndgeReadingMode_Button.is-floating:hover {
+  border-color: color-mix(in srgb, var(--vp-c-divider) 58%, var(--vp-c-brand-1));
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+  transform: translateY(-1px);
+}
+
+@media (min-width: 1280px) {
+  .EndgeReadingMode_Button:not(.is-floating) {
+    display: grid;
+  }
+}
+
+.EndgeDocsLayout.is-reading {
+  --endge-reading-gutter: clamp(24px, 3vw, 48px);
+  --endge-reading-top: clamp(36px, 4vw, 56px);
+}
+
+.EndgeDocsLayout.is-reading .VPNav,
+.EndgeDocsLayout.is-reading .VPLocalNav,
+.EndgeDocsLayout.is-reading .VPSidebar,
+.EndgeDocsLayout.is-reading .VPBackdrop,
+.EndgeDocsLayout.is-reading .VPDoc .aside,
+.EndgeDocsLayout.is-reading .VPDocFooter,
+.EndgeDocsLayout.is-reading .VPFooter {
+  display: none !important;
+}
+
+.EndgeDocsLayout.is-reading .VPContent,
+.EndgeDocsLayout.is-reading .VPContent.has-sidebar {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc {
+  padding:
+    var(--endge-reading-top)
+    var(--endge-reading-gutter)
+    96px;
+  width: 100%;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .container {
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .content {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .content-container {
+  width: 100%;
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .EndgeReadingMode_Button {
+    transition: none;
+  }
+}
+
 @media (max-width: 760px) {
   .endge-author-quote {
     margin: 22px 0 28px;
