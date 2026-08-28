@@ -1,6 +1,6 @@
 # 6. Генерация и проверка
 
-> Статус: целевой контракт этапа. Общая схема находится в разделе [«AI Workbench: подготовка данных»](../data-preparation.md).
+> Статус: реализовано в Workbench v0.6.0 с buffered response validation. Общая схема находится в разделе [«AI Workbench: подготовка данных»](../data-preparation.md).
 
 Итоговая AI-модель не планирует retrieval заново. Она получает готовый `ModelRequest` и формулирует связный ответ в заданных границах.
 
@@ -27,15 +27,13 @@
 
 - выбранный model profile snapshot;
 - подготовленные messages;
-- generation parameters;
-- request ID для идемпотентности;
 - limits по времени, объёму и числу попыток.
 
-Вызов возвращает streaming events `started`, `content_delta`, `completed` или `failed`. Частичный assistant response при ошибке не становится каноническим message.
+Внутренний provider stream сначала полностью собирается в ограниченный buffer. Клиент получает `content_delta` только после успешной проверки всего ответа, затем `completed`; при ошибке приходит `failed`, а частичный provider response не показывается и не становится каноническим message.
 
 ## Структура ответа
 
-Если provider поддерживает schema-constrained output, Workbench может запросить:
+Workbench запрашивает JSON следующей структуры независимо от provider adapter:
 
 ```json
 {
@@ -53,7 +51,7 @@
 }
 ```
 
-Для adapter без строгой схемы ответ остаётся текстовым, а проверяемые ссылки извлекаются из ограниченного формата.
+Если provider не гарантирует schema-constrained output, Workbench разбирает его текст как JSON и допускает одну repair-попытку.
 
 ## Детерминированная проверка
 

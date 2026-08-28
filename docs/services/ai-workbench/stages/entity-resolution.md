@@ -1,6 +1,6 @@
 # 3. Разрешение сущностей
 
-> Статус: целевой контракт этапа. Общая схема находится в разделе [«AI Workbench: подготовка данных»](../data-preparation.md).
+> Статус: реализовано в Workbench v0.6.0 для exact identity/display name, закрытого Reranker и folder scope. Общая схема находится в разделе [«AI Workbench: подготовка данных»](../data-preparation.md).
 
 Цель resolver — связать текстовое упоминание с конкретным документом из текущего `ExportLive`. Resolver не генерирует новые identity и не изменяет домен.
 
@@ -8,32 +8,27 @@
 
 ```json
 {
-  "taskId": "t1",
-  "mention": "Пример композиции Альфа",
-  "expectedTypes": ["composition"],
-  "identityLikelihood": 0.18,
-  "displayNameLikelihood": 0.91,
+  "taskId": "task-1",
+  "mention": "Объект Альфа",
+  "expectedTypes": ["compositions"],
   "scope": {
     "folderIdentity": null
   }
 }
 ```
 
-`expectedTypes` и `scope` — это ограничения поиска, а не готовый ответ. Если тип неуверенный, resolver может искать по нескольким типам, но не по всему содержимому без ограничений.
+`expectedTypes` и `scope` — это ограничения поиска, а не готовый ответ. Производный индекс строится только из текущего snapshot и не сохраняется как второй source of truth.
 
 ## Генерация кандидатов
 
-Кандидаты собираются несколькими независимыми каналами:
+В v0.6.0 кандидаты собираются детерминированно из:
 
 1. exact identity;
 2. exact normalized display name;
-3. aliases и синонимы;
-4. токены и префиксы;
-5. транслитерация и морфологическая нормализация;
-6. fuzzy-сравнение;
-7. слабое lexical-совпадение в содержимом.
+3. токенов и префиксов;
+4. слабого lexical-совпадения в содержимом.
 
-Каналы не заменяют друг друга. Один документ может получить несколько evidence signals.
+Только уникальный exact identity или exact normalized display name принимается автоматически. Остальные сигналы формируют не более пяти кандидатов для Reranker и не являются самостоятельным решением.
 
 ## Ранжирование
 
@@ -46,30 +41,25 @@
 - разницу между первым и вторым кандидами;
 - количество независимых evidence signals.
 
-Exact identity при совпадающем типе имеет приоритет над fuzzy и content match. Конкретные пороги и веса не являются постоянными: они калибруются на размеченных запросах.
+Exact identity при совпадающем типе имеет приоритет над token/content match. Reranker принимает кандидата только при настроенном пороге confidence; отдельная fuzzy-метрика в v0.6.0 отсутствует.
 
 ```json
 {
-  "candidateId": "c1",
-  "documentType": "composition",
+  "candidateId": "candidate-1",
+  "documentType": "compositions",
   "identity": "example-composition-alpha",
-  "displayName": "Пример композиции Альфа",
-  "score": 0.96,
-  "evidence": [
-    "type_match",
-    "display_name_exact"
-  ]
+  "displayName": "Объект Альфа"
 }
 ```
 
 ## Иерархический scope
 
-Запрос «композиция из папки „Пример папки“» выполняется в два шага:
+Запрос «объекты из папки „Раздел Альфа“» выполняется в два шага:
 
 1. resolver разрешает папку;
-2. resolver ищет Composition только в её scope.
+2. resolver ищет дочерние документы только по подтверждённому `folderIdentity`.
 
-Слово «папка» без указания типа не ограничивает результат Composition: запрос «что в папке» может возвращать документы разных типов.
+Запрос «что в папке» может возвращать документы разных типов.
 
 ## Semantic Reranker
 
@@ -77,10 +67,10 @@ Reranker вызывается только для ограниченного н�
 
 ```json
 {
-  "selectedCandidateId": "c1",
+  "selectedCandidateId": "candidate-1",
   "confidence": 0.89,
   "requiresClarification": false,
-  "reason": "Упоминание Альфа совпадает с displayName"
+  "reason": "Упоминание совпадает с displayName"
 }
 ```
 
@@ -90,14 +80,13 @@ Reranker вызывается только для ограниченного н�
 
 ```json
 {
-  "taskId": "t1",
+  "taskId": "task-1",
   "status": "resolved",
   "resolvedEntity": {
-    "documentType": "composition",
+    "documentType": "compositions",
     "identity": "example-composition-alpha",
     "snapshotSha256": "..."
-  },
-  "candidateMargin": 0.31
+  }
 }
 ```
 
