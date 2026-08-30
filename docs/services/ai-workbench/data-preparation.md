@@ -26,15 +26,14 @@ Workbench использует **gated hybrid workflow**:
 ## Общая схема
 
 ```mermaid
-%%{init: {"flowchart": {"nodeSpacing": 32, "rankSpacing": 36}}}%%
 flowchart TB
   subgraph PLAN["1. Планирование"]
     direction LR
-    U["Сообщение и релевантная история"] --> N["Нормализация"]
+    U[/"Сообщение и релевантная история"/] --> N["Нормализация"]
     N --> P["Первичный parser и router"]
     P --> C{"Plan однозначен?"}
     C -- "Да" --> V["Валидация плана"]
-    C -- "Нет" --> LP["LLM Planner"]
+    C -- "Нет" --> LP{{"LLM Planner"}}
     LP --> V
   end
 
@@ -42,7 +41,7 @@ flowchart TB
     direction LR
     R["Детерминированное извлечение"] --> M{"Статус цели"}
     M -- "resolved" --> READY["Цель подтверждена"]
-    M -- "ambiguous" --> RR["Semantic Reranker"]
+    M -- "ambiguous" --> RR{{"Semantic Reranker"}}
     RR --> RV{"Кандидат подтверждён?"}
     RV -- "Да" --> READY
   end
@@ -54,7 +53,7 @@ flowchart TB
 
   subgraph CLARIFICATION["Цикл уточнения"]
     direction LR
-    I["Сохранение Interaction"] --> Q["Уточнение пользователя"]
+    I[["Сохранение Interaction"]] --> Q["Уточнение пользователя"]
     Q --> CR["Классификация ответа"]
     CR --> UP["Обновление plan version"]
     UP --> RETRY["↺ Повторное извлечение"]
@@ -62,7 +61,7 @@ flowchart TB
 
   subgraph GENERATION["4. Формирование ответа"]
     direction LR
-    B["Сборка ModelRequest"] --> F["Итоговая AI-модель"]
+    B[/"Сборка ModelRequest"/] --> F{{"Итоговая AI-модель"}}
     F --> O["Проверка ответа"]
   end
 
@@ -72,6 +71,13 @@ flowchart TB
   CONTEXT -- "Данных достаточно" --> GENERATION
   CONTEXT -- "Данных недостаточно" --> CLARIFICATION
   GENERATION ~~~ CLARIFICATION
+
+  class U endgeInput
+  class N,P,V,R,A,B endgeProcess
+  class C,M,RV,S endgeDecision
+  class LP,RR,F endgeAI
+  class I,Q,CR,UP,RETRY endgeClarification
+  class READY,O endgeSuccess
 ```
 
 ## 1. Нормализация

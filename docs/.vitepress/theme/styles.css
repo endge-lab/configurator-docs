@@ -1,6 +1,10 @@
 @import 'vitepress/dist/client/theme-default/styles/vars.css';
 
 :root {
+  --endge-diagram-border: color-mix(in srgb, var(--vp-c-divider) 66%, #38bdf8);
+  --endge-diagram-grid: rgba(14, 116, 144, 0.09);
+  --endge-diagram-shadow: 0 22px 54px rgba(15, 23, 42, 0.09);
+  --endge-diagram-surface: color-mix(in srgb, var(--vp-c-bg-soft) 90%, #e0f2fe);
   --endge-quote-accent: #2563eb;
   --endge-quote-accent-soft: rgba(37, 99, 235, 0.1);
   --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 82%, #dbeafe);
@@ -14,6 +18,10 @@
 }
 
 .dark {
+  --endge-diagram-border: color-mix(in srgb, var(--vp-c-divider) 62%, #38bdf8);
+  --endge-diagram-grid: rgba(125, 211, 252, 0.075);
+  --endge-diagram-shadow: 0 24px 60px rgba(2, 6, 23, 0.34);
+  --endge-diagram-surface: color-mix(in srgb, var(--vp-c-bg-soft) 90%, #0c4a6e);
   --endge-quote-accent: #7dd3fc;
   --endge-quote-accent-soft: rgba(125, 211, 252, 0.11);
   --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 88%, #0c4a6e);
@@ -368,16 +376,37 @@
 }
 
 .nova-mermaid {
+  position: relative;
+  isolation: isolate;
   margin: 28px 0;
   overflow-x: auto;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 14px;
-  padding: 20px;
-  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--endge-diagram-border);
+  padding: clamp(20px, 3vw, 34px);
+  background:
+    radial-gradient(circle at top left, var(--endge-diagram-grid) 0, transparent 34%),
+    var(--endge-diagram-surface);
+  box-shadow: var(--endge-diagram-shadow);
   text-align: center;
 }
 
+.nova-mermaid::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--endge-diagram-grid) 0.8px, transparent 0.9px);
+  background-size: 18px 18px;
+  content: '';
+  mask-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.72), transparent 76%);
+  pointer-events: none;
+}
+
+.nova-mermaid > div {
+  min-width: max-content;
+}
+
 .nova-mermaid svg {
+  display: block;
+  margin: 0 auto;
   max-width: 100%;
   height: auto;
 }
@@ -385,6 +414,102 @@
 .nova-mermaid figcaption {
   color: var(--vp-c-danger-1);
   font-size: 12px;
+}
+
+.nova-mermaid__fullscreen-button {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--endge-diagram-border);
+  padding: 0;
+  background: color-mix(in srgb, var(--endge-diagram-surface) 88%, transparent);
+  box-shadow: 0 8px 24px rgb(15 23 42 / 14%);
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.nova-mermaid__fullscreen-button:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-brand-1);
+}
+
+.nova-mermaid__fullscreen-button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
+}
+
+.nova-mermaid__fullscreen-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.7;
+}
+
+.nova-mermaid--expanded {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: auto;
+  border: 0;
+  padding: clamp(54px, 6vw, 84px) clamp(20px, 5vw, 72px) clamp(20px, 5vw, 72px);
+  background:
+    radial-gradient(circle at top left, var(--endge-diagram-grid) 0, transparent 34%),
+    var(--endge-diagram-surface);
+  box-shadow: none;
+}
+
+.nova-mermaid--expanded > div {
+  display: grid;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  place-items: center;
+}
+
+.nova-mermaid--expanded > div > svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: calc(100vw - clamp(40px, 10vw, 144px)) !important;
+  max-height: calc(100vh - clamp(74px, 11vw, 156px)) !important;
+}
+
+.nova-mermaid--expanded .nova-mermaid__fullscreen-button {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+}
+
+@media (max-width: 640px) {
+  .nova-mermaid__fullscreen-button {
+    top: 8px;
+    right: 8px;
+  }
+
+  .nova-mermaid--expanded {
+    padding: 52px 12px 12px;
+  }
+
+  .nova-mermaid--expanded .nova-mermaid__fullscreen-button {
+    top: 10px;
+    right: 12px;
+  }
 }
 
 .EndgeReadingMode_Button {

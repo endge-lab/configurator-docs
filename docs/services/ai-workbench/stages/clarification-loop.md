@@ -36,6 +36,13 @@ stateDiagram-v2
   generating --> failed
   awaiting_clarification --> cancelled
   awaiting_clarification --> superseded: новый запрос
+
+  class planning,resolving,ready endgeProcess
+  class generating endgeAI
+  class awaiting_clarification endgeClarification
+  class completed endgeSuccess
+  class failed endgeFailure
+  class cancelled,superseded endgeTerminal
 ```
 
 В первой версии в Conversation допускается не более одного активного Interaction. Новый независимый запрос переводит предыдущий в `superseded`.
