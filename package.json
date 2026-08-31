@@ -1,7 +1,7 @@
 {
   "name": "@endge/configurator-docs",
   "type": "module",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "packageManager": "pnpm@10.23.0",
   "engines": {
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "vitepress dev docs --host 0.0.0.0 --port 5179",
-    "build": "vitepress build docs",
+    "build": "pnpm run typecheck && vitepress build docs",
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit",
     "preview": "vitepress preview docs --host 0.0.0.0",
     "docs:import-nova": "node scripts/import-nova-docs.mjs",
     "knowledge:build": "node scripts/build-knowledge-bundle.mjs",
@@ -23,8 +24,10 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "9.3.0",
+    "@types/node": "^24.13.3",
     "eslint": "10.9.1",
     "typescript": "~6.0.3",
-    "vitepress": "1.6.4"
+    "vitepress": "1.6.4",
+    "vue-tsc": "^3.3.11"
   }
 }
