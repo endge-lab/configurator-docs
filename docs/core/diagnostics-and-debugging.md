@@ -1,6 +1,6 @@
 # Диагностика и отладка
 
-`EndgeDiagnostics` — единый facade диагностики ядра Endge. Он не зависит от configurator UI и объединяет два независимо подписываемых подмодуля:
+`EndgeDiagnostics_Module` — единый facade диагностики ядра Endge. Он не зависит от configurator UI и объединяет два независимо подписываемых подмодуля:
 
 ```text
 Endge.diagnostics
@@ -30,7 +30,7 @@ Problems-подмодуль хранит актуальное состояние
 - credentials для Sentry, Grafana или другого backend;
 - управление подключёнными browser tabs.
 
-`ProgramArtifact.diagnostics` остаётся self-contained частью compiled artifact, необходимой runtime. После компиляции тот же набор атомарно публикуется в `Endge.diagnostics.problems` как централизованный индекс актуальных проблем. `EndgeRuntimeDebugger` остаётся отдельным transport/inspection tool, но передаёт нормализованные telemetry records.
+`ProgramArtifact.diagnostics` остаётся self-contained частью compiled artifact, необходимой runtime. После компиляции тот же набор атомарно публикуется в `Endge.diagnostics.problems` как централизованный индекс актуальных проблем. `EndgeRuntimeDebugger_Module` остаётся отдельным transport/inspection tool, но передаёт нормализованные telemetry records.
 
 Facade сохраняет короткие методы `info()`, `error()`, `recordException()`, `startSpan()` и другие. Они делегируют в `Endge.diagnostics.telemetry`, поэтому существующим producers не требуется более длинный вызов.
 
@@ -232,7 +232,7 @@ Endge.diagnostics.problems.replace(owner, [])
 - `clear(filter)` — очистить весь registry или выбранную фазу;
 - `snapshot(filter)` — получить revision и текущий набор problems.
 
-`REntity` больше не содержит mutable `validationErrors`. Pure entity validation возвращает данные через `getDiagnosticProblems()`, а `EndgeDomain` или compiler публикует их в problem registry. Это исключает чтение protected state через `any` и stale errors после успешной проверки.
+`REntity` больше не содержит mutable `validationErrors`. Pure entity validation возвращает данные через `getDiagnosticProblems()`, а `EndgeDomain_Module` или compiler публикует их в problem registry. Это исключает чтение protected state через `any` и stale errors после успешной проверки.
 
 Compiler problem может одновременно существовать в двух формах:
 
