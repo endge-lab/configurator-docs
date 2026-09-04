@@ -58,7 +58,7 @@ async function renderDiagram(): Promise<void> {
       flowchart: {
         curve: 'basis',
         nodeSpacing: 38,
-        padding: 18,
+        padding: 24,
         rankSpacing: 44,
       },
     })

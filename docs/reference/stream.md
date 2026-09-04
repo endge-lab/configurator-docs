@@ -178,6 +178,3 @@ unmount соединение закрывается вместе с runtime-host
 - авторизованный Stream объявил transport event, отличный от `message`;
 - `.dispatchTo(...)` ссылается не на Store data alias;
 - целевой Store не содержит Update для типа события.
-
-Общая граница событий, глобальной шины и Updates описана в разделе
-[события и обновления](/core/events-and-updates).

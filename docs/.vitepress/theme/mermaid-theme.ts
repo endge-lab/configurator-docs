@@ -146,6 +146,10 @@ function createThemeCSS(palette: MermaidPalette): string {
       font-weight: 700 !important;
     }
 
+    .node .nodeLabel p {
+      line-height: 1.5 !important;
+    }
+
     .edgeLabel rect,
     .labelBkg {
       fill: ${palette.edgeLabel} !important;

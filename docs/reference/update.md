@@ -199,6 +199,3 @@ Payload Event передаётся Update как input по умолчанию. 
 локального UI-изменения Composition также поддерживает inline `.mutate(...)`.
 Persisted Update нужен, когда рецепт переиспользуется или должен выбираться по
 типу события через `dispatchTo(...)`.
-
-Общая модель Event, occurrence, Action и глобальной transport-шины описана в
-разделе [события и обновления](/core/events-and-updates).

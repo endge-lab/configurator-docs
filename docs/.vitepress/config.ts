@@ -14,31 +14,20 @@ export default defineConfig({
 
   themeConfig: {
     nav: [
-      { text: 'Core', link: '/core/' },
-      { text: 'Federation', link: '/federation/' },
+      { text: 'Core', link: '/' },
+      { text: 'Advanced', link: '/advanced/' },
       { text: 'Nova', link: '/nova/core/intro' },
     ],
 
     sidebar: {
-      '/core/': [
-        {
-          text: 'Core',
-          items: [
-            { text: 'Обзор', link: '/core/' },
-            { text: 'Модули Core', link: '/core/modules' },
-            { text: 'События и обновления', link: '/core/events-and-updates' },
-            { text: 'Диагностика и отладка', link: '/core/diagnostics-and-debugging' },
-          ],
-        },
-      ],
-      '/federation/': [
+      '/advanced/': [
         {
           text: 'Federation',
           items: [
-            { text: 'Обзор', link: '/federation/' },
-            { text: 'Структура feature', link: '/federation/functional-structure' },
-            { text: 'Modules и submodules', link: '/federation/modules' },
-            { text: 'Определение Federation', link: '/federation/defining-federation' },
+            { text: 'Обзор', link: '/advanced/' },
+            { text: 'Структура feature', link: '/advanced/functional-structure' },
+            { text: 'Modules и submodules', link: '/advanced/modules' },
+            { text: 'Определение Federation', link: '/advanced/defining-federation' },
           ],
         },
       ],
