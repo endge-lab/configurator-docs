@@ -62,7 +62,7 @@ async function renderDiagram(): Promise<void> {
         rankSpacing: 44,
       },
     })
-    const id = `nova-mermaid-${Math.random().toString(36).slice(2)}`
+    const id = `endge-mermaid-${Math.random().toString(36).slice(2)}`
     const result = await mermaid.render(id, source)
     if (generation !== renderGeneration || !diagram.value) {
       return
@@ -94,14 +94,14 @@ onBeforeUnmount(() => {
 
 <template>
   <figure
-    class="nova-mermaid"
-    :class="{ 'nova-mermaid--expanded': isExpanded }"
+    class="endge-mermaid"
+    :class="{ 'endge-mermaid--expanded': isExpanded }"
     :aria-label="isExpanded ? 'Диаграмма в полноэкранном режиме' : undefined"
     :aria-modal="isExpanded ? 'true' : undefined"
     :role="isExpanded ? 'dialog' : undefined"
   >
     <button
-      class="nova-mermaid__fullscreen-button"
+      class="endge-mermaid__fullscreen-button"
       type="button"
       :aria-expanded="isExpanded"
       :aria-label="isExpanded ? 'Закрыть полноэкранную схему' : 'Открыть схему на весь экран'"

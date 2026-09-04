@@ -2,6 +2,10 @@
 
 Модули `Endge.*` — публичные точки доступа к подсистемам ядра. Они не совпадают с виджетами конфигуратора и сущностями домена.
 
+Эта страница описывает конкретные Modules федерации Core. Общая модель Federation,
+правила создания собственных Modules и рекомендуемая структура feature описаны в
+разделе [Federation](/federation/).
+
 ## Контекст и конфигурация
 
 | Модуль | Назначение |
@@ -24,12 +28,18 @@
 | --- | --- |
 | `Endge.compiler` | Компиляция source в program artifacts |
 | `Endge.program` | Доступ к скомпилированным контрактам |
+| `Endge.implementations` | Общий реестр executable providers и bindings |
 | `Endge.runtime` | Создание и управление живыми runtime-host |
 | `Endge.runtime.query` | Исполнение Query program |
 | `Endge.actions` | Definitions, providers, overrides и исполнение Actions |
 | `Endge.computations` | Definitions, providers, overrides и исполнение Computations |
 | `Endge.converters` | Definitions, providers, overrides и синхронное исполнение Converters |
 | `Endge.runtime.operations` | Undo/redo ближайшей активной Operation History |
+| `Endge.runtime.scopes` | Владение runtime scopes и membership запущенных hosts |
+
+`actions`, `computations`, `converters` и `implementations` являются корневыми
+stateful Modules. `query`, `dataView`, `composition` и `project` остаются
+stateless execution services Runtime, а `operations` и `scopes` — его submodules.
 
 ## Связи и коммуникация
 

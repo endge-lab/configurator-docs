@@ -1,6 +1,7 @@
-# Endge Configurator Docs
+# Endge Docs
 
-Отдельное статическое приложение документации Endge Configurator на VitePress.
+Отдельное статическое приложение документации платформы Endge, Core, Federation,
+Configurator и Nova на VitePress.
 
 ## Local development
 

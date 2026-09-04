@@ -375,7 +375,7 @@
   color: var(--vp-c-text-2);
 }
 
-.nova-mermaid {
+.endge-mermaid {
   position: relative;
   isolation: isolate;
   margin: 28px 0;
@@ -389,7 +389,7 @@
   text-align: center;
 }
 
-.nova-mermaid::before {
+.endge-mermaid::before {
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -400,23 +400,23 @@
   pointer-events: none;
 }
 
-.nova-mermaid > div {
+.endge-mermaid > div {
   min-width: max-content;
 }
 
-.nova-mermaid svg {
+.endge-mermaid svg {
   display: block;
   margin: 0 auto;
   max-width: 100%;
   height: auto;
 }
 
-.nova-mermaid figcaption {
+.endge-mermaid figcaption {
   color: var(--vp-c-danger-1);
   font-size: 12px;
 }
 
-.nova-mermaid__fullscreen-button {
+.endge-mermaid__fullscreen-button {
   position: absolute;
   z-index: 2;
   top: 12px;
@@ -438,18 +438,18 @@
     color 0.18s ease;
 }
 
-.nova-mermaid__fullscreen-button:hover {
+.endge-mermaid__fullscreen-button:hover {
   border-color: var(--vp-c-brand-1);
   background: var(--vp-c-bg);
   color: var(--vp-c-brand-1);
 }
 
-.nova-mermaid__fullscreen-button:focus-visible {
+.endge-mermaid__fullscreen-button:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;
 }
 
-.nova-mermaid__fullscreen-button svg {
+.endge-mermaid__fullscreen-button svg {
   width: 19px;
   height: 19px;
   fill: none;
@@ -459,7 +459,7 @@
   stroke-width: 1.7;
 }
 
-.nova-mermaid--expanded {
+.endge-mermaid--expanded {
   position: fixed;
   z-index: 1000;
   inset: 0;
@@ -475,7 +475,7 @@
   box-shadow: none;
 }
 
-.nova-mermaid--expanded > div {
+.endge-mermaid--expanded > div {
   display: grid;
   width: 100%;
   min-width: 100%;
@@ -483,30 +483,30 @@
   place-items: center;
 }
 
-.nova-mermaid--expanded > div > svg {
+.endge-mermaid--expanded > div > svg {
   width: 100% !important;
   height: 100% !important;
   max-width: calc(100vw - clamp(40px, 10vw, 144px)) !important;
   max-height: calc(100vh - clamp(74px, 11vw, 156px)) !important;
 }
 
-.nova-mermaid--expanded .nova-mermaid__fullscreen-button {
+.endge-mermaid--expanded .endge-mermaid__fullscreen-button {
   position: fixed;
   top: 20px;
   right: 24px;
 }
 
 @media (max-width: 640px) {
-  .nova-mermaid__fullscreen-button {
+  .endge-mermaid__fullscreen-button {
     top: 8px;
     right: 8px;
   }
 
-  .nova-mermaid--expanded {
+  .endge-mermaid--expanded {
     padding: 52px 12px 12px;
   }
 
-  .nova-mermaid--expanded .nova-mermaid__fullscreen-button {
+  .endge-mermaid--expanded .endge-mermaid__fullscreen-button {
     top: 10px;
     right: 12px;
   }

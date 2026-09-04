@@ -23,7 +23,7 @@ interface MarkdownItLike {
   renderer: MarkdownRenderer
 }
 
-export function configureNovaMarkdown(markdown: MarkdownItLike): void {
+export function configureDocsMarkdown(markdown: MarkdownItLike): void {
   markdown.core.ruler.before('block', 'nova-doc-directives', (state) => {
     state.src = replaceNovaDirectives(state.src)
   })
@@ -35,7 +35,7 @@ export function configureNovaMarkdown(markdown: MarkdownItLike): void {
     const token = tokens[index]!
 
     if (token.info.trim() === 'mermaid') {
-      return `<NovaMermaid source="${escapeAttribute(encodeURIComponent(token.content))}" />`
+      return `<EndgeMermaid source="${escapeAttribute(encodeURIComponent(token.content))}" />`
     }
 
     if (token.info.trim() === 'nova') {

@@ -14,7 +14,9 @@ const packageManifest = JSON.parse(await readFile(path.join(repositoryRoot, 'pac
 
 const includedRoots = new Set([
   'configurator',
+  'core',
   'domain',
+  'federation',
   'getting-started',
   'guides',
   'nova',

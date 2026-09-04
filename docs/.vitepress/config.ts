@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { configureNovaMarkdown } from './nova-markdown'
+import { configureDocsMarkdown } from './docs-markdown'
 import { novaSidebar } from './nova-sidebar.generated'
 
 export default defineConfig({
@@ -9,16 +9,39 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   markdown: {
-    config: configureNovaMarkdown,
+    config: configureDocsMarkdown,
   },
 
   themeConfig: {
     nav: [
-      { text: 'Endge', link: '/' },
+      { text: 'Core', link: '/core/' },
+      { text: 'Federation', link: '/federation/' },
       { text: 'Nova', link: '/nova/core/intro' },
     ],
 
     sidebar: {
+      '/core/': [
+        {
+          text: 'Core',
+          items: [
+            { text: 'Обзор', link: '/core/' },
+            { text: 'Модули Core', link: '/core/modules' },
+            { text: 'События и обновления', link: '/core/events-and-updates' },
+            { text: 'Диагностика и отладка', link: '/core/diagnostics-and-debugging' },
+          ],
+        },
+      ],
+      '/federation/': [
+        {
+          text: 'Federation',
+          items: [
+            { text: 'Обзор', link: '/federation/' },
+            { text: 'Структура feature', link: '/federation/functional-structure' },
+            { text: 'Modules и submodules', link: '/federation/modules' },
+            { text: 'Определение Federation', link: '/federation/defining-federation' },
+          ],
+        },
+      ],
       '/nova/': novaSidebar,
       '/': [
         {
@@ -170,15 +193,6 @@ export default defineConfig({
             { text: 'Темы и директивы', link: '/reference/endgecss/directives' },
             { text: 'Стили ComponentSFC', link: '/reference/endgecss/sfc' },
             { text: 'Граница DOM и Canvas', link: '/reference/endgecss/dom-and-canvas' },
-          ],
-        },
-        {
-          text: 'Модули Endge',
-          collapsed: false,
-          items: [
-            { text: 'Обзор модулей', link: '/core/modules' },
-            { text: 'События и обновления', link: '/core/events-and-updates' },
-            { text: 'Диагностика и отладка', link: '/core/diagnostics-and-debugging' },
           ],
         },
         {
