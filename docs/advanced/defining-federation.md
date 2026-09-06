@@ -1,8 +1,8 @@
 # Определение Federation
 
 Для обычной Federation используйте `EndgeFederation.define(...)`. Declaration
-описывает identity, Module factories и ordering; общий lifecycle и доступ к
-Modules предоставляет framework.
+описывает identity, Module factories, дочерние Federations и ordering; общий
+lifecycle и типизированный доступ к узлам предоставляет framework.
 
 ## Module definitions
 
@@ -63,6 +63,34 @@ await Feature.reset()
 Ручные однотипные `configureFederation()` и getters вида
 `getModule<T>('key')` для каждого Module не нужны.
 
+## Child Federation definitions
+
+Дочерняя Federation объявляется в отдельном `federations` массиве. Её key
+участвует в том же локальном ordering namespace, что и keys Modules:
+
+```ts
+const Workspace = EndgeFederation.define({
+  id: 'workspace',
+  modules: WORKSPACE_MODULES,
+})
+
+export const Application = EndgeFederation.define({
+  id: 'application',
+  modules: APPLICATION_MODULES,
+  federations: [
+    {
+      key: 'workspace',
+      federation: Workspace,
+      after: 'configuration',
+    },
+  ],
+})
+```
+
+`Application.workspace` имеет точный тип facade `Workspace`. После объявления
+parent управляет lifecycle child, поэтому приложение вызывает `boot`, `build` и
+`reset` только у `Application`.
+
 ## Federation с дополнительной логикой
 
 Если application или package владеет дополнительной orchestration, наследуйте
@@ -95,9 +123,9 @@ module graph, тип lifecycle context и базовый lifecycle не пере
 
 ```ts
 EndgeFederation.define({
-  id: 'aodb',
-  name: 'AODB',
-  modules: AODB_MODULES,
+  id: 'workspace',
+  name: 'Workspace',
+  modules: WORKSPACE_MODULES,
 })
 ```
 

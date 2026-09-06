@@ -459,6 +459,29 @@ query('search').withProps({
 })
 ```
 
+Если значение Component проходит через DataView, его runtime path уже не
+совпадает с owner path пользовательской Raph Meta. `.metaFrom(...)` явно
+сохраняет provenance без добавления служебных полей в props:
+
+```ts
+table: component('schedule-sandbox').withProps({
+  rows: fromData('schedule.sandboxFlights')
+    .dataView('schedule-local-filter', {
+      search: fromOutput('filter', 'search'),
+    })
+    .metaFrom('schedule.sandboxItems', {
+      key: 'id',
+      fields: {
+        flightCarrier: 'flightCarrier',
+      },
+    }),
+})
+```
+
+`key` задаёт identity field исходной коллекции, а `fields` — отображение путей
+видимой строки на пути owner data. Для прямого `fromData(...)` `.metaFrom(...)`
+обычно не требуется: binding path уже является provenance.
+
 | Reader | Что читает |
 | --- | --- |
 | `fromOutput(runtime)` | Объект всех outputs другой runtime-ноды: `{ [outputName]: value }` |

@@ -134,6 +134,7 @@ Configuration использует тот же Type Registry, что и оста
 | `Object` | JSON object | `{}` | Monaco JSON |
 | `Any` | любое JSON-значение | `null` | Monaco JSON |
 | `JSON` | любое JSON-значение | `{}` | Monaco JSON |
+| `TriggerActivation` | `TriggerSet` или sequence-объект | `[]` | activation editor |
 | `TriggerSet` | массив interaction triggers | `[]` | trigger-list editor |
 
 `JSON` хранится как parsed JSON value, а не как строка с JSON. Значение должно быть JSON-сериализуемым: допускаются `null`, boolean, конечные числа, строки, массивы и объекты с безопасными ключами.
@@ -316,6 +317,45 @@ Trigger может содержать:
 
 `passive: true` нельзя объединять с `prevent: true`. Браузер или операционная система могут перехватить системное сочетание до приложения.
 
+## `TriggerActivation`
+
+`TriggerActivation` — универсальный тип для одной комбинации или упорядоченной
+последовательности. Обычный режим намеренно использует тот же массив, что и
+`TriggerSet`, поэтому сохранённые значения остаются совместимыми:
+
+```ts
+defineConfig({
+  openDiagnostics: value(TriggerActivation, [{
+    event: 'keydown',
+    code: ['KeyD'],
+    modifiers: { mod: true, exact: true },
+  }]),
+})
+```
+
+Sequence хранит наборы альтернатив на каждом шаге. Интервал второго и следующих
+шагов отсчитывается от предыдущего совпавшего события:
+
+```ts
+defineConfig({
+  openDiagnostics: value(TriggerActivation, {
+    mode: 'sequence',
+    steps: [
+      { triggerSet: [{ event: 'keydown', code: ['KeyE'], modifiers: { mod: true } }] },
+      {
+        maxIntervalMs: 800,
+        triggerSet: [{ event: 'keydown', code: ['KeyR'], modifiers: { mod: true } }],
+      },
+    ],
+  }),
+})
+```
+
+В Visual editor режим выбирается переключателем. Шаги можно записать подряд:
+редактор сохраняет физические `code`, игнорирует browser key repeat и вычисляет
+интервалы по фактическим паузам с небольшим запасом. Затем шаги и интервалы можно
+изменить вручную.
+
 Один и тот же TriggerSet можно связать с неизменной reaction через `:on`:
 
 ```vue
@@ -354,7 +394,7 @@ Query. Совпадение выполняет reaction сразу и не вк�
 4. Source editor с diagnostics, completion, references и formatting;
 5. категорию настроек в редакторы Workspace, Tenant, Project и Environment.
 
-Visual editor выбирает control по Type. Для JSON используется Monaco: невалидный текст остаётся локальным draft и не заменяет последнее корректное parsed value. Для `TriggerSet` используется специализированный список триггеров. Вложенные object/record Type редактируются рекурсивно.
+Visual editor выбирает control по Type. Для JSON используется Monaco: невалидный текст остаётся локальным draft и не заменяет последнее корректное parsed value. Для `TriggerSet` используется специализированный список триггеров, а для `TriggerActivation` — переключаемый редактор комбинации или последовательности. Вложенные object/record Type редактируются рекурсивно.
 
 Изменение Visual-представления всегда патчит Source. Порядок значений, соседние поля и не затронутые части документа сохраняются.
 

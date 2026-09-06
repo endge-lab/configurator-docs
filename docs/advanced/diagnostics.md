@@ -7,18 +7,21 @@
 ## Структура модуля
 
 `EndgeDiagnostics_Module` является корневым владельцем диагностики и явно
-управляет двумя submodules:
+управляет тремя submodules и registry каналов:
 
 - `Endge.diagnostics.telemetry` хранит bounded history логов и завершённых spans,
   применяет filters и routes, создаёт runtime adapters каналов вывода;
 - `Endge.diagnostics.problems` хранит заменяемые наборы актуальных проблем. После
   исправления проблемы owner заменяет или очищает свой набор, поэтому это не
   журнал событий;
+- `Endge.diagnostics.snapshots` создаёт снимки, применяет automatic policy и
+  управляет глобальной подпиской на настроенную `TriggerActivation`;
 - `Endge.diagnostics.adapters` регистрирует типы каналов вывода. В Core доступны
   `console` и `sentry`, приложение может добавить собственную factory.
 
-Родитель проводит submodules через общий lifecycle, объединяет их уведомления и
-владеет политикой ручных и автоматических снимков.
+Родитель проводит submodules через общий lifecycle и объединяет их уведомления.
+Browser-specific подписка и сохранение файла изолированы в
+`BrowserDiagnosticsSnapshot_Adapter`.
 
 ## Записи и spans
 
@@ -113,7 +116,7 @@ Core получает каждую часть у её владельца сос�
 ### Ручной снимок
 
 ```ts
-const snapshot = Endge.diagnostics.snapshot({
+const snapshot = Endge.diagnostics.downloadSnapshot({
   includeTelemetry: true,
   includeProblems: true,
   includeConfiguration: true,
@@ -125,12 +128,94 @@ const snapshot = Endge.diagnostics.snapshot({
   includeRaphGraph: true,
 })
 
-const json = JSON.stringify(snapshot, null, 2)
+console.info(`Скачан снимок ${snapshot.generatedAt}`)
 ```
 
 Без options метод использует effective `diagnostics.snapshots.content`.
 Дополнительный `filter` ограничивает только telemetry records и не изменяет
 остальные части снимка.
+
+### Снимок по горячей клавише
+
+Shortcut использует общий встроенный тип `TriggerActivation`. Обычная комбинация
+по-прежнему хранится как legacy `TriggerSet`: элементы массива проверяются как
+альтернативы, а пустой массив отключает глобальную подписку. Поэтому существующие
+persisted значения не требуют миграции. Для последовательности используется
+объект с `mode: 'sequence'`; каждый шаг содержит свой `TriggerSet`, а
+`maxIntervalMs` задаёт максимальную паузу после предыдущего шага.
+
+В этой политике Core обрабатывает только `keydown` и `keyup`; pointer events
+намеренно не становятся глобальными командами.
+
+```ts
+const diagnostics = {
+  snapshots: {
+    // Состав ручного снимка опущен
+    content: {
+      telemetry: true,
+      problems: true,
+      configuration: false,
+    },
+    shortcut: {
+      triggerSet: [{
+        event: 'keydown',
+        code: ['KeyD'],
+        repeat: false,
+        composing: false,
+        modifiers: { mod: true, shift: true, exact: true },
+        prevent: true,
+        stop: true,
+      }],
+      content: {
+        telemetry: true,
+        problems: true,
+        configuration: true,
+        effectiveConfiguration: true,
+        domain: true,
+        program: true,
+        runtime: true,
+        raphData: true,
+        raphGraph: true,
+      },
+    },
+  },
+}
+```
+
+Та же настройка для последовательности `Command/Ctrl+E`, затем
+`Command/Ctrl+R`:
+
+```ts
+shortcut: {
+  triggerSet: {
+    mode: 'sequence',
+    steps: [
+      {
+        triggerSet: [{
+          event: 'keydown',
+          code: ['KeyE'],
+          modifiers: { mod: true, exact: true },
+          repeat: false,
+        }],
+      },
+      {
+        maxIntervalMs: 800,
+        triggerSet: [{
+          event: 'keydown',
+          code: ['KeyR'],
+          modifiers: { mod: true, exact: true },
+          repeat: false,
+        }],
+      },
+    ],
+  },
+}
+```
+
+`mod` означает `Command` на macOS и `Ctrl` на Windows/Linux. Редактор комбинации
+в Конфигураторе записывает физический `code`, поэтому раскладка клавиатуры не
+меняет shortcut. Подписка создаётся в `start()` Core и снимается в `reset()`;
+Конфигуратор только сохраняет configuration.
 
 ### Автоматический снимок
 
@@ -151,6 +236,20 @@ const diagnostics = {
       runtime: true,
       raphData: false,
       raphGraph: true,
+    },
+    shortcut: {
+      triggerSet: [],
+      content: {
+        telemetry: true,
+        problems: true,
+        configuration: false,
+        effectiveConfiguration: true,
+        domain: true,
+        program: true,
+        runtime: true,
+        raphData: false,
+        raphGraph: true,
+      },
     },
     automatic: {
       enabled: true,
@@ -177,17 +276,20 @@ Adapter должен поддерживать `acceptSnapshot`. Встроенн
 
 ## Настройка в Конфигураторе
 
-В редакторе Configuration раздел **Диагностика** содержит пять подпунктов:
+В редакторе Configuration раздел **Диагностика** содержит семь подпунктов:
 
 1. **Сбор** — включение telemetry, signals и минимальный severity.
 2. **История** — bounded limit и текущее заполнение локального store.
 3. **Каналы вывода** — console, Sentry и их options.
 4. **Маршрутизация** — filters, связывающие records с output.
-5. **Снимки** — точный состав файла, automatic policy и кнопка скачивания JSON.
+5. **Ручной снимок** — состав файла и кнопка скачивания JSON.
+6. **Хоткей снимок** — независимый состав и активация одной комбинацией либо
+   последовательностью с интервалами.
+7. **Автоматические снимки** — error policy, cooldown и канал доставки.
 
 Кнопка **Скачать JSON** снимает состояние того Core instance, в котором открыт
-Конфигуратор. Выбранный состав одновременно сохраняется в configuration и
-используется automatic policy.
+Конфигуратор. Ручной и shortcut-сценарии сохраняют независимый состав. Automatic
+policy использует состав ручного снимка и отправляет файл в выбранный output.
 
 ## Безопасность снимка
 

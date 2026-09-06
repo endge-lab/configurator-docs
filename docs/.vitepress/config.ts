@@ -18,6 +18,7 @@ export default defineConfig({
       { text: 'Advanced', link: '/advanced/' },
       { text: 'Raph', link: '/raph/' },
       { text: 'Nova', link: '/nova/core/intro' },
+      { text: 'Cookbook', link: '/cookbook/' },
     ],
 
     sidebar: {
@@ -29,6 +30,8 @@ export default defineConfig({
             { text: 'Структура feature', link: '/advanced/functional-structure' },
             { text: 'Modules и submodules', link: '/advanced/modules' },
             { text: 'Определение Federation', link: '/advanced/defining-federation' },
+            { text: 'Дочерние Federations', link: '/advanced/federation-composition' },
+            { text: 'Расширения', link: '/advanced/federation-extensions' },
           ],
         },
         {
@@ -68,6 +71,7 @@ export default defineConfig({
           text: 'Данные и маршрутизация',
           items: [
             { text: 'DataPath', link: '/raph/data/data-path' },
+            { text: 'Meta-plane', link: '/raph/data/meta' },
             { text: 'Изменения и transactions', link: '/raph/data/mutations-and-transactions' },
             { text: 'Подписки и RaphRouter', link: '/raph/data/subscriptions-and-router' },
           ],
@@ -121,6 +125,20 @@ export default defineConfig({
         },
       ],
       '/nova/': novaSidebar,
+      '/cookbook/': [
+        {
+          text: 'Cookbook',
+          items: [
+            { text: 'Обзор', link: '/cookbook/' },
+          ],
+        },
+        {
+          text: 'Данные и синхронизация',
+          items: [
+            { text: 'Оптимистичные обновления', link: '/cookbook/optimistic-updates' },
+          ],
+        },
+      ],
       '/': [
         {
           text: 'Начало',

@@ -86,6 +86,8 @@ plans, а затем применяются одной transaction.
 | `strategy` | `set`, `replace`, `merge`, `append` или `remove` |
 | `target` | Store-relative path; `$var` подставляется из `vars` |
 | `valueFrom` | Путь к значению в payload; пустая строка означает текущий payload |
+| `value` | Безопасный `ValueExpression`; альтернатива `valueFrom` |
+| `when` | Безопасное условие выполнения; объединяется с `ifExists` через AND |
 | `vars` | Соответствие `$var` и payload path |
 | `ifExists` | Store-relative guard path; mutation пропускается, если значения нет |
 | `forEach` | Payload path для разворачивания одной mutation на несколько элементов |
@@ -100,8 +102,129 @@ plans, а затем применяются одной transaction.
 | `append` | Добавляет одно значение или массив значений в массив target |
 | `remove` | Удаляет значение по target; `valueFrom` не используется |
 
-`target` должен быть безопасным относительным путём без ведущей точки и `..`.
+Строковый `target` изменяет Data. `meta(path, namespace)` изменяет отдельный
+[Raph Meta-plane](/raph/data/meta) существующего Store path:
+
+```ts
+{
+  strategy: 'set',
+  target: meta('rows[id=$id].flightCarrier', 'aodb.optimistic'),
+  value: {
+    status: 'waiting',
+    optimisticValue: input('value'),
+    previousValue: input('previousValue'),
+  },
+  vars: { id: 'id' },
+}
+```
+
+`target` должен быть безопасным относительным путём без wildcard, ведущей точки и `..`.
 Каждая переменная, использованная как `$name`, должна быть объявлена в `vars`.
+
+## Expressions и pre-update state
+
+В `value` и `when` доступны общий чистый `ValueExpression` и Update readers:
+
+| Reader | Значение |
+| --- | --- |
+| `input(path?)` | Корневой payload Update |
+| `item(path?)` | Текущий элемент `forEach`; без `forEach` равен input |
+| `parent(path?)` | Родитель текущего элемента |
+| `data(path)` | Data текущего Store |
+| `meta(path, namespace)` | Meta текущего Store |
+| `hasData(path)` | Существование Data path, включая `undefined` value |
+| `hasMeta(path, namespace)` | Существование Meta namespace |
+
+Все expressions одного вызова читают состояние до mutations. Сначала runtime
+вычисляет и проверяет все plans, затем записывает их одной transaction. Если
+mutation должна увидеть результат предыдущей, разделите алгоритм на два Updates
+и вызовите их последовательно из Action.
+
+Cross-Store reads и writes запрещены. Data target может писать только в
+`value(...)` field. Meta target может аннотировать также derived field, если
+конкретный data path существует.
+
+## Optimistic update и следующее server-событие
+
+Локальный Update может сразу изменить Data и поставить пользовательский статус:
+
+```ts
+defineUpdate({
+  handles: [],
+  mutations: [
+    {
+      strategy: 'set',
+      target: 'sandboxItems[id=$id].flightCarrier',
+      value: input('value'),
+      vars: { id: 'id' },
+    },
+    {
+      strategy: 'set',
+      target: meta(
+        'sandboxItems[id=$id].flightCarrier',
+        'aodb.optimistic',
+      ),
+      value: {
+        status: 'waiting',
+        optimisticValue: input('value'),
+        previousValue: input('previousValue'),
+      },
+      vars: { id: 'id' },
+    },
+  ],
+})
+```
+
+Server Update завершает ожидание по факту касания поля. Совпадение значения
+только классифицирует результат и не является условием подтверждения:
+
+```ts
+defineUpdate({
+  handles: ['ScheduleUpdated'],
+  mutations: [
+    {
+      strategy: 'set',
+      target: 'sandboxItems[id=$id].flightCarrier',
+      value: input('record.flightCarrier'),
+      when: input('record').has('flightCarrier'),
+      vars: { id: 'record.id' },
+    },
+    {
+      strategy: 'merge',
+      target: meta(
+        'sandboxItems[id=$id].flightCarrier',
+        'aodb.optimistic',
+      ),
+      value: {
+        status: 'synchronized',
+        serverValue: input('record.flightCarrier'),
+        result: when(
+          eq(
+            input('record.flightCarrier'),
+            meta(
+              'sandboxItems[id=$id].flightCarrier',
+              'aodb.optimistic',
+            ).get('optimisticValue'),
+          ),
+          'accepted',
+          'overridden',
+        ),
+      },
+      when: and(
+        input('record').has('flightCarrier'),
+        hasMeta(
+          'sandboxItems[id=$id].flightCarrier',
+          'aodb.optimistic',
+        ),
+      ),
+      vars: { id: 'record.id' },
+    },
+  ],
+})
+```
+
+Raph и Update не придают значения строкам `waiting`, `synchronized`, `accepted`
+или `overridden`: это полностью пользовательская политика.
 
 ## Несколько изменений
 

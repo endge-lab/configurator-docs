@@ -1,12 +1,15 @@
 # Vue reactivity
 
-Package `@endge/ui-vue` экспортирует `useContextState`. Он возвращает обычный
-Vue `Ref`, связанный с dynamic state Core.
+Пакет `@endge/ui-vue` расширяет общий facade модулем `Endge.vue`. Его метод
+`useContextState` возвращает обычный Vue `Ref`, связанный с dynamic state Core.
 
 ```ts
-import { useContextState } from '@endge/ui-vue'
+import { Endge } from '@endge/core'
+import { EndgeVuePlugin } from '@endge/ui-vue'
 
-const navigation = useContextState(
+Endge.use(EndgeVuePlugin)
+
+const navigation = Endge.vue.useContextState(
   'my-module.navigation',
   () => ({
     expanded: true,
@@ -28,7 +31,7 @@ scope. Подписки освобождаются вместе с текущи�
 Constructor или ручной codec передаётся третьим аргументом так же, как в Core:
 
 ```ts
-const panel = useContextState(
+const panel = Endge.vue.useContextState(
   'my-module.panel',
   () => new PanelState(),
   PanelState,
@@ -37,7 +40,7 @@ const panel = useContextState(
 
 ## Частые обновления
 
-`useContextState` записывает каждое наблюдаемое изменение. Для scroll position,
+`Endge.vue.useContextState` записывает каждое наблюдаемое изменение. Для scroll position,
 Monaco view state и других высокочастотных событий сначала обновляйте значение
 через debounce или сохраняйте агрегированный snapshot. Например, состояние
 редактора можно снимать после короткой паузы, а не при каждом событии прокрутки
