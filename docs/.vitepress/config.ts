@@ -16,6 +16,7 @@ export default defineConfig({
     nav: [
       { text: 'Core', link: '/' },
       { text: 'Advanced', link: '/advanced/' },
+      { text: 'Raph', link: '/raph/' },
       { text: 'Nova', link: '/nova/core/intro' },
     ],
 
@@ -28,6 +29,79 @@ export default defineConfig({
             { text: 'Структура feature', link: '/advanced/functional-structure' },
             { text: 'Modules и submodules', link: '/advanced/modules' },
             { text: 'Определение Federation', link: '/advanced/defining-federation' },
+          ],
+        },
+      ],
+      '/raph/': [
+        {
+          text: 'Начало',
+          items: [
+            { text: 'Что такое Raph', link: '/raph/' },
+            { text: 'Установка и быстрый старт', link: '/raph/getting-started' },
+            { text: 'Какой API выбрать', link: '/raph/choosing-api' },
+          ],
+        },
+        {
+          text: 'Архитектура',
+          items: [
+            { text: 'Kernel, Runtime и Node', link: '/raph/architecture/kernel-runtime-node' },
+            { text: 'Поток изменения данных', link: '/raph/architecture/data-flow' },
+            { text: 'Жизненный цикл', link: '/raph/architecture/lifecycle' },
+          ],
+        },
+        {
+          text: 'Данные и маршрутизация',
+          items: [
+            { text: 'DataPath', link: '/raph/data/data-path' },
+            { text: 'Изменения и transactions', link: '/raph/data/mutations-and-transactions' },
+            { text: 'Подписки и RaphRouter', link: '/raph/data/subscriptions-and-router' },
+          ],
+        },
+        {
+          text: 'Граф выполнения',
+          items: [
+            { text: 'Nodes и зависимости', link: '/raph/execution/nodes-and-dependencies' },
+            { text: 'Phases и traversal', link: '/raph/execution/phases-and-traversal' },
+            { text: 'Scheduler и frame loop', link: '/raph/execution/scheduler-and-frame-loop' },
+          ],
+        },
+        {
+          text: 'Производные данные',
+          items: [
+            { text: 'Обзор Derived', link: '/raph/derived/' },
+            { text: 'Стратегии материализации', link: '/raph/derived/strategies' },
+            { text: 'Lifecycle, ошибки и диагностика', link: '/raph/derived/lifecycle-and-errors' },
+          ],
+        },
+        {
+          text: 'Local Runtime',
+          items: [
+            { text: 'Обзор Local API', link: '/raph/local/' },
+            { text: 'Свойства и decorators', link: '/raph/local/properties-and-phases' },
+            { text: 'Propagation и порядок', link: '/raph/local/propagation-and-ordering' },
+          ],
+        },
+        {
+          text: 'Reactive API',
+          items: [
+            { text: 'Signals, Effects и Watch', link: '/raph/reactive' },
+          ],
+        },
+        {
+          text: 'Интеграции',
+          collapsed: true,
+          items: [
+            { text: 'Shared Kernel и runtime lanes', link: '/raph/integrations/shared-kernel' },
+            { text: 'Пользовательский DataAdapter', link: '/raph/integrations/data-adapter' },
+            { text: 'Endge Core и Nova', link: '/raph/integrations/endge-and-nova' },
+          ],
+        },
+        {
+          text: 'Справочник',
+          collapsed: true,
+          items: [
+            { text: 'Отладка и метрики', link: '/raph/debugging' },
+            { text: 'Публичный API', link: '/raph/reference' },
           ],
         },
       ],

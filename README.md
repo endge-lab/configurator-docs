@@ -1,7 +1,7 @@
 # Endge Docs
 
 Отдельное статическое приложение документации платформы Endge, Core, Federation,
-Configurator и Nova на VitePress.
+Raph, Configurator и Nova на VitePress.
 
 ## Local development
 

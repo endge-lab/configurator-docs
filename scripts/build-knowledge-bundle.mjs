@@ -19,6 +19,7 @@ const includedRoots = new Set([
   'getting-started',
   'guides',
   'nova',
+  'raph',
   'reference',
   'sfc-tables',
 ])
