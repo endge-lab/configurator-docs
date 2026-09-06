@@ -31,6 +31,21 @@ export default defineConfig({
             { text: 'Определение Federation', link: '/advanced/defining-federation' },
           ],
         },
+        {
+          text: 'Контекст и состояние',
+          items: [
+            { text: 'Контекст Endge', link: '/advanced/context-state/' },
+            { text: 'Динамическое состояние', link: '/advanced/context-state/dynamic-state' },
+            { text: 'Сериализация', link: '/advanced/context-state/serialization' },
+            { text: 'Vue reactivity', link: '/advanced/context-state/vue-reactivity' },
+          ],
+        },
+        {
+          text: 'Диагностика',
+          items: [
+            { text: 'Модуль и снимки', link: '/advanced/diagnostics' },
+          ],
+        },
       ],
       '/raph/': [
         {
