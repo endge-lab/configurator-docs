@@ -255,6 +255,52 @@ defineProps<{
 [контекстные переменные Component SFC](/sfc-tables/context-variables#метаданные-входных-данных)
 и [стили Component SFC](/reference/endgecss/sfc).
 
+### Вариант: один статус на всю строку
+
+Если один optimistic status должен обозначать изменение любого набора полей,
+пишите Meta в owner path записи:
+
+```ts
+{
+  strategy: 'set',
+  target: meta('items[id=$id]', 'ui.optimistic'),
+  value: {
+    status: 'waiting',
+    optimisticPatch: input('record'),
+    previous: input('previous'),
+  },
+  when: eq(input('invocation.kind'), 'optimistic'),
+  vars: {
+    id: 'record.id',
+  },
+}
+```
+
+Компонент читает Meta самой строки и передаёт состояние таблице:
+
+```vue
+<Table
+  :rows="items"
+  row-key="id"
+  :row-state="{
+    waiting: $data.metaOf(row, 'ui.optimistic')?.status === 'waiting',
+  }"
+>
+  <!-- columns -->
+</Table>
+
+<style scoped lang="endgecss">
+Table:state(waiting)::part(cell-content) {
+  background-color: rgba(245, 158, 11, 0.14);
+  transition: background-color 160ms ease;
+}
+</style>
+```
+
+Серверная ветка удаляет тот же namespace по `items[id=$id]`. Такой вариант
+удобен для общего `edit-fields` Action: один status сопровождает весь patch,
+поэтому перечислять Meta каждого изменяемого поля не требуется.
+
 ## 4. Применить следующее серверное событие
 
 Пусть Stream нормализует сообщение к форме:
@@ -355,17 +401,15 @@ table: component('items-table').withProps({
     })
     .metaFrom('application.items', {
       key: 'id',
-      fields: {
-        title: 'title',
-      },
     }),
 })
 ```
 
-`key` связывает преобразованную строку с исходной по устойчивому identity, а
-`fields` отображает путь видимого поля на путь owner data. Без `.metaFrom(...)`
-значения останутся обычными props, но `$data.metaOf(...)` для них вернёт
-`undefined`. Полный контракт находится в разделе
+`key` связывает преобразованную строку с исходной по устойчивому identity. Для
+Meta всей строки этого достаточно. `fields` требуется только когда DataView
+переименовал поля и SFC читает field-level Meta: оно отображает путь видимого
+поля на путь owner data. Без `.metaFrom(...)` значения останутся обычными props,
+но `$data.metaOf(...)` для них вернёт `undefined`. Полный контракт находится в разделе
 [передачи props runtime-нодам](/reference/composition#передача-props-runtime-нодам).
 
 ## Что именно подтверждает этот рецепт

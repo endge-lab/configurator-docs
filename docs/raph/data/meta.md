@@ -63,5 +63,23 @@ Component SFC не получает `Raph` и физические пути на
 </Badge>
 ```
 
+Meta может принадлежать не только полю, но и всей строке. Для этого Update пишет
+namespace в owner path записи, а SFC передаёт саму строку:
+
+```vue
+<Table
+  :rows="rows"
+  row-key="id"
+  :row-state="{
+    waiting: $data.metaOf(row, 'ui.optimistic')?.status === 'waiting',
+  }"
+>
+  <!-- columns -->
+</Table>
+```
+
+`row` и `$row.data` обозначают DataPath текущей записи; `row.field` и
+`$row.data.field` — DataPath конкретного поля.
+
 Без namespace метод возвращает объект всех namespaces exact path. Подробнее об
 области видимости и допустимых ссылках: [контекстные переменные Component SFC](/sfc-tables/context-variables#метаданные-входных-данных).

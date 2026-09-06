@@ -58,8 +58,28 @@
 ```
 
 Разрешены статические ссылки на `props.foo`, прямой prop alias `foo`,
-`row.field` и `$row.data.field`. Произвольные результаты функций и динамический
-namespace запрещены: compiler должен заранее построить Meta subscription.
+`row`, `$row.data`, `row.field` и `$row.data.field`. Ссылка на строку читает
+Meta owner path всей записи, ссылка на поле — Meta этого поля. Произвольные
+результаты функций и динамический namespace запрещены: compiler должен заранее
+построить Meta subscription.
+
+Для состояния всей строки используйте `row-state` таблицы:
+
+```vue
+<Table
+  :rows="rows"
+  row-key="id"
+  :row-state="{
+    waiting: $data.metaOf(row, 'ui.optimistic')?.status === 'waiting',
+  }"
+>
+  <!-- columns -->
+</Table>
+```
+
+Значение `row-state` может быть строкой, массивом строк или объектом
+`{ [state]: enabled }`. Активные состояния применяются ко всем содержательным
+ячейкам текущей строки и доступны в EndgeCSS через `:state(...)`.
 
 Обычные props остаются plain JavaScript values. Физический DataPath передаётся
 runtime отдельно и недоступен Source. Если Composition преобразовала коллекцию
