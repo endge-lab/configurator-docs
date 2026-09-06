@@ -9,12 +9,14 @@
 ```text
 edited
   -> Action
-     -> локальный Update: Data + Meta(status: waiting)
+     -> единый Update с invocation.kind: optimistic
+        -> Data + Meta(status: waiting)
      -> Query
 
 server event
   -> Stream
-  -> серверный Update: Data + Meta(status: synchronized)
+  -> тот же Update без optimistic-метки
+     -> Data + Meta(status: synchronized)
   -> реактивный render Component SFC
 ```
 
@@ -28,12 +30,11 @@ server event
 В Configurator создайте или выберите:
 
 1. Store с изменяемой коллекцией `items` и устойчивым ключом `id`.
-2. Update `items-local-edit`, принадлежащий этому Store.
+2. Update `items-change`, принадлежащий этому Store и обрабатывающий оба пути.
 3. Query `items-save`, отправляющий `{ id, payload }` на сервер.
 4. Action `items-edit-title`, последовательно вызывающий Update и Query.
-5. Update `items-apply-server-event` того же Store для серверного события.
-6. Stream, направленный в Store через Composition.
-7. Component SFC, получающий `items` из Composition.
+5. Stream, направленный в Store через Composition.
+6. Component SFC, получающий `items` из Composition.
 
 Если эти сущности ещё не знакомы, сначала посмотрите [работу с данными](/guides/data),
 [Query](/reference/query), [Update](/reference/update), [Action](/reference/action),
@@ -42,22 +43,27 @@ server event
 В примерах ниже `items`, `title` и все identities абстрактны. Они не являются
 зарезервированными именами.
 
-## 1. Локально изменить Data и поставить Meta
+## 1. Создать единый Update
 
-Создайте Update `items-local-edit`, выберите владельцем Store с коллекцией
-`items` и оставьте `handles: []`: этот Update будет вызываться явно из Action.
+Создайте Update `items-change` и выберите владельцем Store с коллекцией `items`.
+`handles` подключает документ к серверному событию, но не запрещает явно
+вызывать тот же Update по identity из Action.
+
+Оба пути передают `record` одинаковой формы. Только локальный вызов добавляет
+пользовательскую метку `invocation.kind: 'optimistic'`:
 
 ```ts
 defineUpdate({
-  handles: [],
+  handles: ['ItemUpdated'],
 
   mutations: [
     {
       strategy: 'set',
       target: 'items[id=$id].title',
-      value: input('value'),
+      value: input('record.title'),
+      when: input('record').has('title'),
       vars: {
-        id: 'id',
+        id: 'record.id',
       },
     },
 
@@ -69,20 +75,66 @@ defineUpdate({
       ),
       value: {
         status: 'waiting',
-        optimisticValue: input('value'),
+        optimisticValue: input('record.title'),
         previousValue: input('previousValue'),
       },
+      when: eq(
+        input('invocation.kind'),
+        'optimistic',
+      ),
       vars: {
-        id: 'id',
+        id: 'record.id',
+      },
+    },
+
+    {
+      strategy: 'merge',
+      target: meta(
+        'items[id=$id].title',
+        'ui.optimistic',
+      ),
+      value: {
+        status: 'synchronized',
+        serverValue: input('record.title'),
+        result: when(
+          eq(
+            input('record.title'),
+            meta(
+              'items[id=$id].title',
+              'ui.optimistic',
+            ).get('optimisticValue'),
+          ),
+          'accepted',
+          'overridden',
+        ),
+      },
+      when: and(
+        not(eq(
+          input('invocation.kind'),
+          'optimistic',
+        )),
+        input('record').has('title'),
+        hasMeta(
+          'items[id=$id].title',
+          'ui.optimistic',
+        ),
+      ),
+      vars: {
+        id: 'record.id',
       },
     },
   ],
 })
 ```
 
-Обе mutations сначала полностью вычисляются и проверяются, а затем применяются
+Локальный вызов выполняет общую Data mutation и ставит `waiting`. Серверный
+вызов выполняет ту же Data mutation, пропускает локальную Meta mutation и при
+наличии ожидающей Meta переводит её в `synchronized`.
+
+Все mutations сначала полностью вычисляются и проверяются, а затем применяются
 одной Raph transaction. Компонент не увидит промежуточное состояние, в котором
-Data уже изменились, а Meta ещё нет.
+Data уже изменились, а Meta ещё нет. `when` пропускает только свою mutation и
+не прерывает остальной Update. Подробнее: [условные mutations](/reference/update#условные-mutations-через-when).
 
 Meta можно записать только для существующего DataPath. Поэтому строка с нужным
 `id` и поле `title` должны существовать до запуска Update. Удаление строки или
@@ -114,10 +166,15 @@ defineAction({
 
   steps: {
     optimistic: update({
-      identity: 'items-local-edit',
+      identity: 'items-change',
       input: {
-        id: input('id'),
-        value: input('value'),
+        invocation: {
+          kind: 'optimistic',
+        },
+        record: {
+          id: input('id'),
+          title: input('value'),
+        },
         previousValue: input('previousValue'),
       },
     }),
@@ -212,63 +269,19 @@ defineProps<{
 }
 ```
 
-Создайте Update `items-apply-server-event` в том же Store:
+Отдельный Update создавать не нужно. Composition направляет событие в Store,
+Store находит уже созданный `items-change` по `handles: ['ItemUpdated']` и
+передаёт ему payload без `invocation.kind: 'optimistic'`.
 
-```ts
-defineUpdate({
-  handles: ['ItemUpdated'],
+Поэтому единый Update:
 
-  mutations: [
-    {
-      strategy: 'set',
-      target: 'items[id=$id].title',
-      value: input('record.title'),
-      when: input('record').has('title'),
-      vars: {
-        id: 'record.id',
-      },
-    },
+1. применяет общую Data mutation;
+2. пропускает mutation, устанавливающую `waiting`;
+3. выполняет server-ветку, если для пути существует ожидающая Meta.
 
-    {
-      strategy: 'merge',
-      target: meta(
-        'items[id=$id].title',
-        'ui.optimistic',
-      ),
-      value: {
-        status: 'synchronized',
-        serverValue: input('record.title'),
-        result: when(
-          eq(
-            input('record.title'),
-            meta(
-              'items[id=$id].title',
-              'ui.optimistic',
-            ).get('optimisticValue'),
-          ),
-          'accepted',
-          'overridden',
-        ),
-      },
-      when: and(
-        input('record').has('title'),
-        hasMeta(
-          'items[id=$id].title',
-          'ui.optimistic',
-        ),
-      ),
-      vars: {
-        id: 'record.id',
-      },
-    },
-  ],
-})
-```
-
-Все expressions читают pre-update state. Поэтому вторая mutation сравнивает
+Все expressions читают pre-update state. Поэтому server-ветка сравнивает
 серверное значение с `optimisticValue`, которое существовало до применения
-всего Update, даже несмотря на то, что первая mutation уже находится в том же
-плане.
+всего Update, хотя общая Data mutation находится выше в Source.
 
 Условием завершения ожидания является наличие поля `record.title`, а не
 совпадение значений:
@@ -278,8 +291,8 @@ defineUpdate({
   `result: 'overridden'`;
 - поля `title` в событии нет — ни Data, ни Meta этого поля не меняются.
 
-Если после серверного касания Meta больше не нужна, замените вторую mutation на
-удаление namespace:
+Если после серверного касания Meta больше не нужна, замените server Meta
+mutation на удаление namespace:
 
 ```ts
 {
@@ -289,6 +302,10 @@ defineUpdate({
     'ui.optimistic',
   ),
   when: and(
+    not(eq(
+      input('invocation.kind'),
+      'optimistic',
+    )),
     input('record').has('title'),
     hasMeta(
       'items[id=$id].title',

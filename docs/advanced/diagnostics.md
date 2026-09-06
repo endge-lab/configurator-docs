@@ -2,7 +2,7 @@
 
 `Endge.diagnostics` — единая точка сбора, просмотра и доставки диагностической
 информации Core. Модуль хранит историю telemetry, реестр актуальных проблем и
-создаёт переносимые JSON-снимки текущего состояния системы.
+создаёт JSON-снимки для инспекции текущего состояния системы.
 
 ## Структура модуля
 
@@ -94,8 +94,10 @@ Endge.diagnostics.problems.replace(owner, [])
 
 ## Состав снимка
 
-Снимок имеет маркеры `format: "endge-diagnostics-snapshot"` и `version: 1`.
-Каждая тяжёлая часть включается независимо:
+Обычный снимок Core имеет маркеры `format: "endge-diagnostics-snapshot"` и
+`version: 2`. Он содержит рекурсивное дерево Federation и сохраняет совместимые
+top-level поля тяжёлых Core-владельцев. Каждая тяжёлая часть включается
+независимо:
 
 | Настройка | Поле JSON | Что входит |
 | --- | --- | --- |
@@ -108,10 +110,48 @@ Endge.diagnostics.problems.replace(owner, [])
 | `runtime` | `runtime` | активные и сохранённые удалённые hosts, их context и scopes |
 | `raphData` | `raph.data` | текущее shared data tree Raph |
 | `raphGraph` | `raph.graph` | nodes, routes, tree, frame и derived metrics Raph |
+| автоматически | `federation` | всё явное дерево Modules, child Federations и trusted plugins |
 
-Core получает каждую часть у её владельца состояния. Если одна проекция не
-читается из-за повреждённого runtime state, остальные части всё равно попадают в
-файл, а ошибка записывается в `captureErrors`.
+Federation вызывает `createDiagnosticsSnapshot()` каждого зарегистрированного
+Module. По умолчанию метод делегирует в `serialize()`, а владельцы более сложного
+состояния возвращают специализированную проекцию. Domain отдаёт `toPlain()`,
+Program — summary compiled artifacts, Runtime — hosts, scopes и operation
+histories, Context — effective execution context, Auth — только безопасные
+actor/session metadata без tokens.
+
+После обхода дерева Diagnostics отдельно добавляет Raph через принадлежащую
+Runtime-модулю проекцию, чтобы существующие настройки `raphData` и `raphGraph`
+продолжали независимо управлять объёмом файла.
+
+Внешняя trusted Federation, подключённая до boot, автоматически появляется в
+этом же дереве вместе со своими Modules. Отдельный provider в Diagnostics для неё
+не нужен.
+
+```ts
+export class ExternalCache_Module extends EndgeModule {
+  public override createDiagnosticsSnapshot() {
+    return {
+      entries: this.cache.size,
+      pendingLoads: this.pendingLoads,
+    }
+  }
+}
+```
+
+Узел Module содержит `path`, `key`, `moduleName` и status. Значения Domain,
+Program, Runtime и effective Configuration физически остаются в прежних
+top-level полях, а соответствующий узел дерева получает `status: "referenced"`
+и `snapshotRef`. Поэтому тяжёлые данные не дублируются в одном JSON.
+
+Если одна проекция не читается из-за повреждённого runtime state, остальные
+узлы всё равно попадают в файл. Узел получает `status: "failed"`, а ошибка
+top-level owner дополнительно записывается в `captureErrors`.
+
+::: warning Снимок предназначен для инспекции
+Диагностический snapshot не является точкой восстановления runtime. Program и
+Raph являются производными структурами, а subscriptions, network connections,
+DOM и pending operations не могут быть перенесены в другое окружение одним JSON.
+:::
 
 ### Ручной снимок
 
@@ -290,6 +330,8 @@ Adapter должен поддерживать `acceptSnapshot`. Встроенн
 Кнопка **Скачать JSON** снимает состояние того Core instance, в котором открыт
 Конфигуратор. Ручной и shortcut-сценарии сохраняют независимый состав. Automatic
 policy использует состав ручного снимка и отправляет файл в выбранный output.
+Независимо от способа запуска дерево содержит все зарегистрированные Modules и
+child Federations; content toggles отключают тяжёлые Core-проекции до их чтения.
 
 ## Безопасность снимка
 
@@ -301,3 +343,6 @@ policy использует состав ручного снимка и отпр
 Это защита от типичных credential-полей, а не классификатор пользовательских
 данных. Business payload может содержать персональные или коммерческие сведения
 под обычными ключами, поэтому перед отправкой снимок всё равно нужно проверить.
+Module, владеющий credentials или чувствительным внешним состоянием, должен
+переопределить `createDiagnosticsSnapshot()` безопасной проекцией и не полагаться
+только на общий redactor.

@@ -76,6 +76,10 @@ handles: ['schedule.row.updated', 'edited']
 автоматическом `dispatchTo(...)` Store выбирает единственный Update, объявивший
 тип события. Дубли типов внутри одного Store отклоняются компилятором.
 
+Наличие `handles` не запрещает явный вызов того же Update по identity. Поэтому
+один документ может обрабатывать автоматическое событие Stream и применяться
+локально из Action, если оба вызова используют согласованный input-контракт.
+
 ## Mutations
 
 `mutations` — непустой массив. Все его элементы сначала превращаются в mutation
@@ -144,66 +148,94 @@ Cross-Store reads и writes запрещены. Data target может писа�
 `value(...)` field. Meta target может аннотировать также derived field, если
 конкретный data path существует.
 
-## Optimistic update и следующее server-событие
+## Условные mutations через `when`
 
-Локальный Update может сразу изменить Data и поставить пользовательский статус:
+`when` принимает безопасный `ValueExpression`. Expression вычисляется для
+каждой mutation после разрешения `vars` и, при наличии `forEach`, для каждого
+текущего элемента. Falsy-результат пропускает только эту mutation, не прерывая
+остальной Update:
+
+```ts
+{
+  strategy: 'set',
+  target: 'items[id=$id].status',
+  value: input('record.status'),
+  when: and(
+    input('record').has('status'),
+    eq(input('invocation.kind'), 'optimistic'),
+  ),
+  vars: {
+    id: 'record.id',
+  },
+}
+```
+
+`ifExists` и `when` можно использовать вместе: mutation выполняется, только
+если прошли оба условия. `ifExists` проверяет существование Store path, а
+`when` выражает произвольную пользовательскую политику через input, Data и
+Meta readers.
+
+Все `when` и `value` одного вызова читают pre-update state. Mutation не может
+использовать результат предыдущей mutation того же Update, даже если находится
+ниже в Source.
+
+## Один Update для optimistic и server-вызова
+
+`handles` и `when` позволяют не дублировать одинаковую Data mutation в двух
+документах. Следующий Update вызывается явно из Action с
+`invocation.kind: 'optimistic'`, а Stream передаёт обычное серверное событие без
+этой пользовательской метки:
 
 ```ts
 defineUpdate({
-  handles: [],
+  handles: ['ItemUpdated'],
+
   mutations: [
     {
       strategy: 'set',
-      target: 'sandboxItems[id=$id].flightCarrier',
-      value: input('value'),
-      vars: { id: 'id' },
+      target: 'items[id=$id].title',
+      value: input('record.title'),
+      when: input('record').has('title'),
+      vars: {
+        id: 'record.id',
+      },
     },
+
     {
       strategy: 'set',
       target: meta(
-        'sandboxItems[id=$id].flightCarrier',
-        'aodb.optimistic',
+        'items[id=$id].title',
+        'ui.optimistic',
       ),
       value: {
         status: 'waiting',
-        optimisticValue: input('value'),
+        optimisticValue: input('record.title'),
         previousValue: input('previousValue'),
       },
-      vars: { id: 'id' },
+      when: eq(
+        input('invocation.kind'),
+        'optimistic',
+      ),
+      vars: {
+        id: 'record.id',
+      },
     },
-  ],
-})
-```
 
-Server Update завершает ожидание по факту касания поля. Совпадение значения
-только классифицирует результат и не является условием подтверждения:
-
-```ts
-defineUpdate({
-  handles: ['ScheduleUpdated'],
-  mutations: [
-    {
-      strategy: 'set',
-      target: 'sandboxItems[id=$id].flightCarrier',
-      value: input('record.flightCarrier'),
-      when: input('record').has('flightCarrier'),
-      vars: { id: 'record.id' },
-    },
     {
       strategy: 'merge',
       target: meta(
-        'sandboxItems[id=$id].flightCarrier',
-        'aodb.optimistic',
+        'items[id=$id].title',
+        'ui.optimistic',
       ),
       value: {
         status: 'synchronized',
-        serverValue: input('record.flightCarrier'),
+        serverValue: input('record.title'),
         result: when(
           eq(
-            input('record.flightCarrier'),
+            input('record.title'),
             meta(
-              'sandboxItems[id=$id].flightCarrier',
-              'aodb.optimistic',
+              'items[id=$id].title',
+              'ui.optimistic',
             ).get('optimisticValue'),
           ),
           'accepted',
@@ -211,20 +243,37 @@ defineUpdate({
         ),
       },
       when: and(
-        input('record').has('flightCarrier'),
+        not(eq(
+          input('invocation.kind'),
+          'optimistic',
+        )),
+        input('record').has('title'),
         hasMeta(
-          'sandboxItems[id=$id].flightCarrier',
-          'aodb.optimistic',
+          'items[id=$id].title',
+          'ui.optimistic',
         ),
       ),
-      vars: { id: 'record.id' },
+      vars: {
+        id: 'record.id',
+      },
     },
   ],
 })
 ```
 
-Raph и Update не придают значения строкам `waiting`, `synchronized`, `accepted`
-или `overridden`: это полностью пользовательская политика.
+Поле `invocation` не является системным API. Его имя и значения определяет
+автор Update; отсутствие `invocation.kind: 'optimistic'` в этом примере означает
+authoritative/server-вызов. Совпадение значения только классифицирует результат,
+но не является условием завершения ожидания.
+
+Такую форму стоит использовать, когда локальный и серверный вызовы меняют один
+DataPath и могут использовать общий payload. Если их payload, validation или
+набор Data mutations существенно различаются, два отдельных Update остаются
+понятнее условного документа с большим количеством веток.
+
+Raph и Update не придают значения строкам `optimistic`, `waiting`,
+`synchronized`, `accepted` или `overridden`: это полностью пользовательская
+политика.
 
 ## Несколько изменений
 

@@ -53,6 +53,24 @@ order, а reset — в обратном.
 нельзя вызывать напрямую. Lifecycle дочерней Federation принадлежит root.
 :::
 
+## Диагностическое дерево
+
+`createDiagnosticsSnapshot()` использует тот же декларативный graph и возвращает
+рекурсивную inspectable-проекцию без запуска lifecycle:
+
+```ts
+const tree = Application.createDiagnosticsSnapshot()
+
+console.info(tree.id, tree.state)
+for (const node of tree.nodes) {
+  console.info(node.path, node.status)
+}
+```
+
+Для Module вызывается его одноимённый метод, а дочерняя Federation продолжает
+обход собственного graph. Ошибка одного узла получает статус `failed` и не
+прерывает сбор остальных ветвей.
+
 ## Что не считается child Federation
 
 Submodule остаётся внутренней частью Module. Его создаёт и сбрасывает сам Module;

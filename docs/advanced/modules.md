@@ -28,6 +28,45 @@ flowchart LR
 Module переопределяет только необходимые методы. Federation проводит корневые
 Modules через общий pipeline и учитывает их `before`/`after` ordering.
 
+## Диагностический snapshot
+
+Каждый Module наследует `createDiagnosticsSnapshot()`. По умолчанию метод
+возвращает результат `serialize()`, поэтому уже сериализуемое состояние
+автоматически попадает в общий снимок без дополнительной регистрации:
+
+```ts
+export class Feature_Module extends EndgeModule {
+  public override serialize(): FeatureState {
+    return this.state
+  }
+}
+```
+
+Если persistence-проекция недостаточна или содержит данные, которые нельзя
+передавать в поддержку, Module переопределяет именно диагностический метод:
+
+```ts
+export class Runtime_Module extends EndgeModule {
+  public override createDiagnosticsSnapshot() {
+    return {
+      hosts: this.hosts.snapshot(),
+      scopes: this.scopes.snapshot(),
+      operations: this.operations.createDiagnosticsSnapshot(),
+    }
+  }
+}
+```
+
+Root Federation рекурсивно обходит свой декларативный graph и дочерние
+Federations. Для каждого узла сохраняются federation path, key, имя Module и
+статус `captured`, `empty`, `skipped`, `failed` или `referenced`. Ошибка одного
+Module записывается в его узле и не отменяет остальные снимки.
+
+`createDiagnosticsSnapshot()` не является контрактом восстановления. Метод
+возвращает inspectable JSON-safe проекцию текущего состояния; `serialize()` и
+`deserialize()` продолжают принадлежать persistence owner и его versioned schema.
+Module с credential-данными обязан вернуть безопасную проекцию или `undefined`.
+
 ## Submodule
 
 Submodule является полноценным Module, но его owner — родительский Module, а не
@@ -39,7 +78,10 @@ Federation.
 - предоставляет доступ к ним через собственный public API;
 - вызывает их lifecycle в своих lifecycle methods;
 - выполняет cleanup в безопасном, обычно обратном, порядке;
-- включает их snapshots в собственную persistence schema, если persistence нужна.
+- включает их snapshots в собственную persistence schema, если persistence нужна;
+- включает их диагностические snapshots в собственный
+  `createDiagnosticsSnapshot()`, если состояние потомков нужно видеть в общем
+  снимке.
 
 ```ts
 export class Diagnostics_Module extends EndgeModule {
@@ -59,7 +101,8 @@ export class Diagnostics_Module extends EndgeModule {
 ```
 
 Federation не обнаруживает submodules через reflection и не обходит поля Module.
-Порядок lifecycle потомков является явным контрактом родителя.
+Порядок lifecycle и состав диагностического snapshot потомков являются явным
+контрактом родителя.
 
 ## State и persistence
 
