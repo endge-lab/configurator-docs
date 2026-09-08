@@ -14,7 +14,7 @@ export default defineConfig({
 
   themeConfig: {
     nav: [
-      { text: 'Core', link: '/' },
+      { text: 'Configurator', link: '/' },
       { text: 'Advanced', link: '/advanced/' },
       { text: 'Raph', link: '/raph/' },
       { text: 'Nova', link: '/nova/core/intro' },
