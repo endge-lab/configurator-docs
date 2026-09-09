@@ -1,4 +1,4 @@
-# Файл внешних прав: проект контракта
+# Внешние права
 
 ::: warning Не реализовано; документ для согласования
 Эта страница целиком описывает предлагаемый контракт. Backend пока не читает `endge-access.yaml` и `ACCESS_CONFIG_FILE`. Все поля YAML, ошибки и правила синхронизации ниже должны быть проверены до реализации.
@@ -39,43 +39,65 @@ ACCESS_CONFIG_FILE=/etc/endge/access.yaml /opt/endge/service-backend
 
 ## Проект: пример YAML {#yaml-example}
 
-Пример предполагает существующий workspace с identity `operations`, OIDC provider `primary` и согласованные права клиента `endge-configurator`.
+Пример содержит все четыре роли: Platform Admin, Admin, Editor и Viewer workspace. Он предполагает существующий workspace с identity `operations`, OIDC provider `primary` и согласованные права клиента `endge-configurator`.
 
+<!-- #region roles-example -->
 ```yaml
-version: 1
-adapter: oidc
-provider: primary
-displayName: Корпоративный Keycloak
-claimsSource: access_token
-rules:
-  - id: operations-viewer
+version: 1 # Версия предлагаемой схемы файла.
+adapter: oidc # Адаптер внешних прав backend, не adapterId профиля Core.
+provider: primary # Должен совпадать с AUTH_PROVIDER_ID backend.
+displayName: Корпоративный Keycloak # Название источника в диалоге прав.
+claimsSource: access_token # Claims берутся только из проверенного access token.
+rules: # Проверяются все правила; порядок не задаёт приоритет.
+  - id: platform-admin # Уникальное имя правила для диагностики.
+    when:
+      path: /resource_access/endge-configurator/roles # Массив ролей клиента.
+      contains: platform-admin # Точное наличие строки в массиве.
+    grant:
+      scope: platform # Доступ ко всей платформе и всем workspace.
+      role: admin # Platform Admin; поле workspace здесь запрещено.
+
+  - id: operations-admin # Admin только одного рабочего пространства.
+    when:
+      path: /resource_access/endge-configurator/roles
+      contains: operations-admin # Роль, настроенная у внешнего провайдера.
+    grant:
+      scope: workspace # Не даёт административных прав на всю платформу.
+      workspace: operations # Identity существующего workspace, не его название.
+      role: admin # Администрирование выбранного workspace.
+
+  - id: operations-editor # Editor: чтение и изменение конфигураций.
+    when:
+      path: /abac/configurator/workspaces/operations/edit # Пример custom claim.
+      equals: true # Boolean true; строка "true" не подходит.
+    grant:
+      scope: workspace
+      workspace: operations # Замените на identity вашего workspace.
+      role: editor # При совпадении Admin и Editor итогом будет Admin.
+
+  - id: operations-viewer # Viewer: только чтение конфигураций.
     when:
       path: /resource_access/endge-configurator/roles
       contains: operations-viewer
     grant:
       scope: workspace
       workspace: operations
-      role: viewer
-
-  - id: operations-editor
-    when:
-      path: /abac/configurator/workspaces/operations/edit
-      equals: true
-    grant:
-      scope: workspace
-      workspace: operations
-      role: editor
-
-  - id: platform-admin
-    when:
-      path: /resource_access/endge-configurator/roles
-      contains: platform-admin
-    grant:
-      scope: platform
-      role: admin
+      role: viewer # Не ограничивает Editor, Admin или Platform Admin.
 ```
+<!-- #endregion roles-example -->
 
 Имена и пути условные. Данные пользователя, credentials и токены в файл не записываются. Назначение `platform-admin` в примере относится к клиенту Endge и не совпадает автоматически с администратором realm Keycloak.
+
+Для назначения роли настройте соответствующий claim во внешней системе:
+
+| Нужный доступ | Что должно быть в access token |
+| --- | --- |
+| Platform Admin | Строка `platform-admin` в `resource_access.endge-configurator.roles` |
+| Admin workspace `operations` | Строка `operations-admin` в том же массиве |
+| Editor workspace `operations` | Boolean `true` в `abac.configurator.workspaces.operations.edit` |
+| Viewer workspace `operations` | Строка `operations-viewer` в массиве ролей клиента |
+
+Добавление правила в YAML само по себе не выдаёт доступ всем пользователям: должно совпасть его условие. Для другого workspace задайте его identity и отдельное внешнее право. При отсутствии совпадений доступ не выдаётся; при нескольких ролях одного workspace выбирается `admin > editor > viewer`.
 
 ## Проект: поля файла
 

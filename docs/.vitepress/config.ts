@@ -142,20 +142,36 @@ export default defineConfig({
       ],
       '/': [
         {
-          text: 'Начало',
+          text: 'О продукте',
           items: [
             { text: 'Что такое Endge', link: '/' },
             { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
-            { text: 'Начало работы с конфигуратором', link: '/configurator/getting-started' },
-            { text: 'Установка конфигуратора', link: '/configurator/installation' },
+          ],
+        },
+        {
+          text: 'Начало',
+          items: [
+            { text: 'Начало работы', link: '/configurator/getting-started' },
+            { text: 'Установка', link: '/configurator/installation' },
             {
-              text: 'Аутентификация и права доступа',
+              text: 'Аутентификация',
               link: '/configurator/authentication',
               collapsed: false,
               items: [
-                { text: 'OIDC: вход и внешние права', link: '/configurator/authentication/oidc' },
-                { text: 'Режим разработки', link: '/configurator/authentication/development' },
-                { text: 'Файл внешних прав: проект', link: '/configurator/authentication/access-configuration' },
+                { text: 'Профили', link: '/configurator/authentication/profiles' },
+                { text: 'OIDC', link: '/configurator/authentication/oidc' },
+                { text: 'Bearer', link: '/configurator/authentication/bearer' },
+                { text: 'Basic Auth', link: '/configurator/authentication/basic' },
+                {
+                  text: 'OAuth2',
+                  collapsed: false,
+                  items: [
+                    { text: 'Client Credentials', link: '/configurator/authentication/oauth2-client-credentials' },
+                    { text: 'Password', link: '/configurator/authentication/oauth2-password' },
+                  ],
+                },
+                { text: 'Разработка', link: '/configurator/authentication/development' },
+                { text: 'Внешние права', link: '/configurator/authentication/access-configuration' },
               ],
             },
           ],
