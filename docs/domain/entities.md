@@ -38,6 +38,7 @@
 | [ComponentSFC](/reference/component-sfc) | Исполняемый компонент с портами, шаблоном, логикой и стилями |
 | Component | Legacy-документ старого Table/DSL-представления; сам не исполняется |
 | [Composition](/reference/composition) | Связь outputs, store и потребителей в единый поток данных |
+| [Simulation](/reference/simulation) | Декларативное описание подмен Query request для дерева Composition |
 | Action | Описание последовательности действий и переходов |
 | Page и Navigation | Структура экранов и переходов приложения |
 | Integration | Настройки взаимодействия с внешней системой или API |

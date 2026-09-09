@@ -164,6 +164,7 @@ export default defineConfig({
             { text: 'Operation History', link: '/reference/operation-history' },
             { text: 'Component SFC', link: '/reference/component-sfc' },
             { text: 'Composition', link: '/reference/composition' },
+            { text: 'Simulation', link: '/reference/simulation' },
             { text: 'Справочники (Vocab)', link: '/reference/vocab' },
             { text: 'I18n Bundle', link: '/reference/i18n-bundle' },
             { text: 'Configuration', link: '/reference/configuration' },
