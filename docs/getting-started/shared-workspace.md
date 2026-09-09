@@ -102,6 +102,7 @@ flowchart TB
 
 ## Дальнейшие шаги
 
+- [Архитектура экосистемы](/getting-started/architecture) — как связаны конфигураторы, клиенты, Backend и дополнительные сервисы.
 - [Как работает Endge](/getting-started/how-endge-works) — путь от модели к исполнению.
 - [Рабочая область Runtime Preview](/configurator/runtime-preview-workspace) — запуск и исследование поддерживаемых документов.
 - [Mock data](/reference/mock) — подготовка и переиспользование тестовых данных.

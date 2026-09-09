@@ -146,6 +146,7 @@ export default defineConfig({
           items: [
             { text: 'Что такое Endge', link: '/' },
             { text: 'Единая среда работы', link: '/getting-started/shared-workspace' },
+            { text: 'Архитектура экосистемы', link: '/getting-started/architecture' },
             { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
           ],
         },

@@ -119,9 +119,15 @@ Program — summary compiled artifacts, Runtime — hosts, scopes и operation
 histories, Context — effective execution context, Auth — только безопасные
 actor/session metadata без tokens.
 
-После обхода дерева Diagnostics отдельно добавляет Raph через принадлежащую
-Runtime-модулю проекцию, чтобы существующие настройки `raphData` и `raphGraph`
+Snapshots-подмодуль напрямую вызывает `Endge.createDiagnosticsSnapshot()`.
+После обхода дерева он отдельно добавляет Raph через
+`Endge.runtime.snapshotRaph(options)`, чтобы существующие настройки `raphData` и `raphGraph`
 продолжали независимо управлять объёмом файла.
+
+`EndgeDiagnostics_Module` создаётся без provider callbacks. Его constructor
+не читает соседние Modules: обращения к владельцам происходят при сборе снимка.
+Снимок Core формируется в формате version 2; отдельный режим сборки через
+`DiagnosticsSnapshotProviders` удалён.
 
 Внешняя trusted Federation, подключённая до boot, автоматически появляется в
 этом же дереве вместе со своими Modules. Отдельный provider в Diagnostics для неё

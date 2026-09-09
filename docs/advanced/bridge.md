@@ -210,6 +210,12 @@ Domain, Program, Runtime, Raph data и Raph graph. Сохраняются redact
 Снимок отражает текущее сохранённое диагностическое состояние, а не бесконечную
 историю работы приложения.
 
+Внутри Core debug-подмодуль вызывает `Endge.domain.getSimulationByIdentity()` и
+`Endge.diagnostics.snapshot()` напрямую. Полный состав снимка задаёт
+`BRIDGE_SNAPSHOT_OPTIONS` в конфигурации Bridge. Передавать aliases или callbacks
+этих методов при создании `EndgeBridge_Module` не нужно; host задаёт только
+параметры `bridge` в `Endge.boot()`.
+
 Размер сообщения ограничен 16 MiB. Слишком большой snapshot даёт ошибку;
 модуль не обрезает его незаметно. При недоступном клиенте запрос завершится
 ошибкой, а не будет воспроизведён после reconnect.
