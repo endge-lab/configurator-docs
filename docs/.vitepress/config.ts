@@ -145,6 +145,7 @@ export default defineConfig({
           text: 'О продукте',
           items: [
             { text: 'Что такое Endge', link: '/' },
+            { text: 'Единая среда работы', link: '/getting-started/shared-workspace' },
             { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
           ],
         },
@@ -158,18 +159,8 @@ export default defineConfig({
               link: '/configurator/authentication',
               collapsed: false,
               items: [
-                { text: 'Профили', link: '/configurator/authentication/profiles' },
                 { text: 'OIDC', link: '/configurator/authentication/oidc' },
-                { text: 'Bearer', link: '/configurator/authentication/bearer' },
-                { text: 'Basic Auth', link: '/configurator/authentication/basic' },
-                {
-                  text: 'OAuth2',
-                  collapsed: false,
-                  items: [
-                    { text: 'Client Credentials', link: '/configurator/authentication/oauth2-client-credentials' },
-                    { text: 'Password', link: '/configurator/authentication/oauth2-password' },
-                  ],
-                },
+                { text: 'Bearer JWT', link: '/configurator/authentication#backend-bearer' },
                 { text: 'Разработка', link: '/configurator/authentication/development' },
                 { text: 'Внешние права', link: '/configurator/authentication/access-configuration' },
               ],
@@ -185,6 +176,24 @@ export default defineConfig({
             { text: 'DataView', link: '/reference/data-view' },
             { text: 'Type', link: '/reference/type' },
             { text: 'Mock data', link: '/reference/mock' },
+            {
+              text: 'AuthProfile',
+              link: '/reference/auth-profile',
+              collapsed: true,
+              items: [
+                { text: 'OIDC', link: '/reference/auth-profile/oidc' },
+                { text: 'Bearer', link: '/reference/auth-profile/bearer' },
+                { text: 'Basic Auth', link: '/reference/auth-profile/basic' },
+                {
+                  text: 'OAuth2',
+                  collapsed: false,
+                  items: [
+                    { text: 'Client Credentials', link: '/reference/auth-profile/oauth2-client-credentials' },
+                    { text: 'Password', link: '/reference/auth-profile/oauth2-password' },
+                  ],
+                },
+              ],
+            },
             { text: 'Query', link: '/reference/query' },
             { text: 'Stream', link: '/reference/stream' },
             { text: 'Update', link: '/reference/update' },

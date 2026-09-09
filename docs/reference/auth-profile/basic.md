@@ -20,7 +20,7 @@
 }
 ```
 
-`config` должен быть пустым объектом; `session` не указывается. Подготовьте переменные `API_USERNAME` и `API_PASSWORD`, затем выберите `api-basic` в политике авторизации запроса. Общие правила см. в разделе [Профили](./profiles).
+`config` должен быть пустым объектом; `session` не указывается. Подготовьте переменные `API_USERNAME` и `API_PASSWORD`, затем выберите `api-basic` в политике авторизации запроса. Общие правила см. в разделе [AuthProfile](../auth-profile).
 
 ## Как выполняется запрос
 
@@ -36,6 +36,6 @@ Base64 — кодирование, а не шифрование. API долже�
 
 ## Связь со входом в конфигуратор
 
-Basic Auth существует как адаптер `AuthProfile` в Core. Вход по Basic Auth в Service Backend конфигуратора не реализован. Его вход для пользователей настраивается через [OIDC](./oidc), а локальная разработка — через [dev identity](./development).
+Basic Auth существует как адаптер `AuthProfile` в Core. Вход по Basic Auth в Service Backend конфигуратора не реализован. Его вход для пользователей настраивается через [OIDC](../../configurator/authentication/oidc), а локальная разработка — через [dev identity](../../configurator/authentication/development).
 
 `client_secret_basic` в [OAuth2 Client Credentials](./oauth2-client-credentials) — другой сценарий: Basic-заголовок аутентифицирует клиента на token endpoint, после чего API получает Bearer access token.

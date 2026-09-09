@@ -39,7 +39,7 @@ ACCESS_CONFIG_FILE=/etc/endge/access.yaml /opt/endge/service-backend
 
 ## Проект: пример YAML {#yaml-example}
 
-Пример содержит все четыре роли: Platform Admin, Admin, Editor и Viewer workspace. Он предполагает существующий workspace с identity `operations`, OIDC provider `primary` и согласованные права клиента `endge-configurator`.
+Пример содержит все четыре роли: Platform Admin, Admin, Editor и Viewer workspace. Для примера используются workspace с identity `example-workspace` и OIDC provider `primary`. Поля `roles` и `permissions`, их вложенность и значения условные: пользователь задаёт собственную структуру claims и указывает её пути в правилах.
 
 <!-- #region roles-example -->
 ```yaml
@@ -51,51 +51,51 @@ claimsSource: access_token # Claims берутся только из прове�
 rules: # Проверяются все правила; порядок не задаёт приоритет.
   - id: platform-admin # Уникальное имя правила для диагностики.
     when:
-      path: /resource_access/endge-configurator/roles # Массив ролей клиента.
+      path: /roles # Пример массива строк из claims.
       contains: platform-admin # Точное наличие строки в массиве.
     grant:
       scope: platform # Доступ ко всей платформе и всем workspace.
       role: admin # Platform Admin; поле workspace здесь запрещено.
 
-  - id: operations-admin # Admin только одного рабочего пространства.
+  - id: workspace-admin # Admin только одного рабочего пространства.
     when:
-      path: /resource_access/endge-configurator/roles
-      contains: operations-admin # Роль, настроенная у внешнего провайдера.
+      path: /roles
+      contains: workspace-admin # Роль, настроенная у внешнего провайдера.
     grant:
       scope: workspace # Не даёт административных прав на всю платформу.
-      workspace: operations # Identity существующего workspace, не его название.
+      workspace: example-workspace # Identity существующего workspace, не его название.
       role: admin # Администрирование выбранного workspace.
 
-  - id: operations-editor # Editor: чтение и изменение конфигураций.
+  - id: workspace-editor # Editor: чтение и изменение конфигураций.
     when:
-      path: /abac/configurator/workspaces/operations/edit # Пример custom claim.
+      path: /permissions/workspace/edit # Пример custom claim.
       equals: true # Boolean true; строка "true" не подходит.
     grant:
       scope: workspace
-      workspace: operations # Замените на identity вашего workspace.
+      workspace: example-workspace # Замените на identity вашего workspace.
       role: editor # При совпадении Admin и Editor итогом будет Admin.
 
-  - id: operations-viewer # Viewer: только чтение конфигураций.
+  - id: workspace-viewer # Viewer: только чтение конфигураций.
     when:
-      path: /resource_access/endge-configurator/roles
-      contains: operations-viewer
+      path: /roles
+      contains: workspace-viewer
     grant:
       scope: workspace
-      workspace: operations
+      workspace: example-workspace
       role: viewer # Не ограничивает Editor, Admin или Platform Admin.
 ```
 <!-- #endregion roles-example -->
 
-Имена и пути условные. Данные пользователя, credentials и токены в файл не записываются. Назначение `platform-admin` в примере относится к клиенту Endge и не совпадает автоматически с администратором realm Keycloak.
+Имена и пути условные. Данные пользователя, credentials и токены в файл не записываются. Имя внешнего атрибута не обязано совпадать с именем роли Endge: соответствие задаётся в `grant`.
 
-Для назначения роли настройте соответствующий claim во внешней системе:
+В приведённом примере условия назначения выглядят так:
 
 | Нужный доступ | Что должно быть в access token |
 | --- | --- |
-| Platform Admin | Строка `platform-admin` в `resource_access.endge-configurator.roles` |
-| Admin workspace `operations` | Строка `operations-admin` в том же массиве |
-| Editor workspace `operations` | Boolean `true` в `abac.configurator.workspaces.operations.edit` |
-| Viewer workspace `operations` | Строка `operations-viewer` в массиве ролей клиента |
+| Platform Admin | Строка `platform-admin` в `/roles` |
+| Admin workspace `example-workspace` | Строка `workspace-admin` в том же массиве |
+| Editor workspace `example-workspace` | Boolean `true` в `/permissions/workspace/edit` |
+| Viewer workspace `example-workspace` | Строка `workspace-viewer` в массиве `/roles` |
 
 Добавление правила в YAML само по себе не выдаёт доступ всем пользователям: должно совпасть его условие. Для другого workspace задайте его identity и отдельное внешнее право. При отсутствии совпадений доступ не выдаётся; при нескольких ролях одного workspace выбирается `admin > editor > viewer`.
 
@@ -123,7 +123,7 @@ Issuer, JWKS, audience, endpoints и client secret остаются в суще�
 
 `when.path` использует [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901). Путь начинается с `/`, сегменты разделяются `/`; символы `~` и `/` внутри имени ключа записываются как `~0` и `~1`. Регистр ключей сохраняется. Автоматического раскрытия `*`, обхода дерева или нормализации названий нет.
 
-Например, `/abac/configurator/workspaces/operations/edit` читает вложенный boolean. Имена `groundHandlingOperationTypes` и `groundhandlingoperationtypes` различаются.
+Например, `/permissions/workspace/edit` читает вложенный boolean. Имена `accessLevel` и `accesslevel` различаются.
 
 `equals` сравнивает scalar того же типа: boolean, строку или число. `true` не равно строке `"true"`. `contains` проверяет точное наличие строки в массиве строк; он не ищет подстроку и не разбивает произвольную строку по пробелам. `null`, массив или объект как значение `equals` в первой версии не поддерживаются.
 

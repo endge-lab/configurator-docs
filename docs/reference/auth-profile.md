@@ -1,18 +1,18 @@
-# Профили
+# AuthProfile
 
 `AuthProfile` — документ workspace с настройками аутентификации для API, к которым обращается приложение через Endge Core. В конфигураторе выберите раздел Auth Profiles, создайте профиль и укажите адаптер. Затем выберите профиль в настройках авторизации нужного Query или другого поддерживающего его документа.
 
-Вход в сам конфигуратор настраивается отдельно на [backend](../authentication#способы-входа). Профиль не назначает пользователю Platform Admin, Admin, Editor или Viewer.
+Вход в сам конфигуратор настраивается отдельно на [backend](../configurator/authentication#способы-входа). Профиль не назначает пользователю Platform Admin, Admin, Editor или Viewer.
 
 ## Встроенные адаптеры
 
 | Адаптер | `adapterId` | Данные для доступа | Сессия |
 | --- | --- | --- | --- |
-| [OIDC](./oidc#runtime-profile) | `oidc` | Вход пользователя у провайдера | Через источник сессии приложения |
-| [Bearer](./bearer) | `bearer` | Готовый токен | Без хранения сессии адаптером |
-| [Basic Auth](./basic) | `basic` | Имя и пароль | Без хранения сессии адаптером |
-| [OAuth2 Client Credentials](./oauth2-client-credentials) | `oauth2-client-credentials` | Client ID и client secret | Получение access token |
-| [OAuth2 Password](./oauth2-password) | `oauth2-password` | Имя и пароль пользователя | Access token, refresh при наличии refresh token |
+| [OIDC](./auth-profile/oidc) | `oidc` | Вход пользователя у провайдера | Через источник сессии приложения |
+| [Bearer](./auth-profile/bearer) | `bearer` | Готовый токен | Без хранения сессии адаптером |
+| [Basic Auth](./auth-profile/basic) | `basic` | Имя и пароль | Без хранения сессии адаптером |
+| [OAuth2 Client Credentials](./auth-profile/oauth2-client-credentials) | `oauth2-client-credentials` | Client ID и client secret | Получение access token |
+| [OAuth2 Password](./auth-profile/oauth2-password) | `oauth2-password` | Имя и пароль пользователя | Access token, refresh при наличии refresh token |
 
 ## Формат профиля
 
@@ -22,7 +22,7 @@
 - `credentials` содержит ссылки на переменные с токеном, паролем или client secret.
 - `session` задаёт хранение сессии для OIDC и OAuth2; у Bearer и Basic Auth это поле отсутствует.
 
-Эти JSON-фрагменты не относятся к `endge-access.yaml`. [Файл внешних прав](./access-configuration) описывает предлагаемый маппинг ролей backend, а не настройку запросов приложения.
+Эти JSON-фрагменты не относятся к `endge-access.yaml`. [Файл внешних прав](../configurator/authentication/access-configuration) описывает предлагаемый маппинг ролей backend, а не настройку запросов приложения.
 
 ## Credentials и переменные
 
@@ -66,6 +66,6 @@ OIDC и оба OAuth2-адаптера требуют `session`:
 }
 ```
 
-Это часть документа запроса, а не полный Query. Режим `none` отключает авторизацию, `inherit` использует унаследованную политику. Место настройки и возможности транспорта описаны в [Query](../../reference/query) и [Stream](../../reference/stream).
+Это часть документа запроса, а не полный Query. Режим `none` отключает авторизацию, `inherit` использует унаследованную политику. Место настройки и возможности транспорта описаны в [Query](./query) и [Stream](./stream).
 
 Профиль задаёт способ получить данные авторизации. Получающий API проверяет их и определяет доступ. Его роли и scopes не становятся административными ролями конфигуратора автоматически.

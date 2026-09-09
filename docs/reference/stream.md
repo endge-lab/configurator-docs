@@ -178,3 +178,5 @@ unmount соединение закрывается вместе с runtime-host
 - авторизованный Stream объявил transport event, отличный от `message`;
 - `.dispatchTo(...)` ссылается не на Store data alias;
 - целевой Store не содержит Update для типа события.
+
+Настройка профилей, credentials и адаптеров описана в разделе [AuthProfile](./auth-profile).
