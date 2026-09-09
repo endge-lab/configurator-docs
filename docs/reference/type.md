@@ -37,6 +37,28 @@ defineType({
 
 Identifier в `field(TypeName)` — symbolic reference на identity примитивного или пользовательского Type. Импорты для пользовательских типов не требуются: compiler разрешает identifier через текущий Type Registry.
 
+## Дата и время
+
+Встроенный Type Registry содержит три отдельных строковых типа:
+
+| Тип | Значение | Пример |
+| --- | --- | --- |
+| `Date` | Календарная дата без времени и часового пояса | `'2026-09-09'` |
+| `Time` | Время суток без календарной даты | `'14:30:00'` |
+| `DateTime` | Дата и время | `'2026-09-09T14:30:00+03:00'` |
+
+```ts
+defineType({
+  departureDate: field(Date),
+  departureTime: field(Time),
+  updatedAt: field(DateTime),
+})
+```
+
+`Date` использует формат `YYYY-MM-DD` и не превращается в JavaScript `Date`: сохранение и чтение не добавляют время и не сдвигают дату по часовому поясу. Эти типы доступны без создания документов Type. Текущая проверка значений Configuration проверяет строковое представление, а не календарную корректность или формат; автоматически выводимый default — пустая строка.
+
+OpenAPI import отображает `string` с `format: date` в `Date`, `date-time` — в `DateTime`, `time` — в `Time`. GraphQL scalars `Date` и `LocalDate` отображаются в `Date`.
+
 ## Inline object type
 
 Одноразовую вложенную структуру можно описать прямо в поле через `objectOf({...})`. Она не получает identity и не создаёт отдельный Type document:
