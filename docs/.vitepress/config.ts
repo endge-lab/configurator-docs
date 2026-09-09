@@ -47,6 +47,7 @@ export default defineConfig({
           text: 'Диагностика',
           items: [
             { text: 'Модуль и снимки', link: '/advanced/diagnostics' },
+            { text: 'Bridge: связь и отладка', link: '/advanced/bridge' },
           ],
         },
       ],
@@ -145,6 +146,18 @@ export default defineConfig({
           items: [
             { text: 'Что такое Endge', link: '/' },
             { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
+            { text: 'Начало работы с конфигуратором', link: '/configurator/getting-started' },
+            { text: 'Установка конфигуратора', link: '/configurator/installation' },
+            {
+              text: 'Аутентификация и права доступа',
+              link: '/configurator/authentication',
+              collapsed: false,
+              items: [
+                { text: 'OIDC: вход и внешние права', link: '/configurator/authentication/oidc' },
+                { text: 'Режим разработки', link: '/configurator/authentication/development' },
+                { text: 'Файл внешних прав: проект', link: '/configurator/authentication/access-configuration' },
+              ],
+            },
           ],
         },
         {
