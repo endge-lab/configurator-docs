@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@endge/nova':
-        specifier: 0.14.0
-        version: 0.14.0
+        specifier: 0.14.1
+        version: 0.14.1
       mermaid:
         specifier: 11.14.0
         version: 11.14.0
@@ -254,14 +254,14 @@ packages:
       oxlint:
         optional: true
 
-  '@endge/nova@0.14.0':
-    resolution: {integrity: sha512-pftNiQL6UIJrz4rvhJIxugO75rWHsPiQfPB4tAxU4CN/cIZyI5DTtl75mMqt9hoU8turNTGevopEvgYjOyBjBQ==}
+  '@endge/nova@0.14.1':
+    resolution: {integrity: sha512-JZQULNI1wgXuZzbUalP+6p7fcGchIToXMG/7cYMbcEMri4v3dzCxqSHE9FDvBUuDQ5Ia7/HlUI7MWA4Hf/6chA==}
 
-  '@endge/raph@3.1.0':
-    resolution: {integrity: sha512-K4+hybcrRjtpBirjw8fyLY4RgXCtZmhZCdtfqwX2YMmCEe4SbyAmAhD9lqSj728/hnX4M4jpgOduZIUwVHjB5Q==}
+  '@endge/raph@3.3.0':
+    resolution: {integrity: sha512-1tiytJD2XYD3sdIVU6c3KittLH/bqPz7ovlHyIJVjbebC49ZKpI60cyFBteEK7eF+F4poYesfee95iiZZbFrIA==}
 
-  '@endge/utils@0.26.0':
-    resolution: {integrity: sha512-YmHQPFRsL2EWSND+Xqv7EyB49Zdixn0qmztWOTXa2bTNlFfvG2wufllCIaqJ54BI9bObjWY5k6dw/S1EyOkn0Q==}
+  '@endge/utils@0.27.0':
+    resolution: {integrity: sha512-abuCAbeV/k/Daez4dsIegw0lB8R8TIAHqRYiXYFHs6JAWm26qWsyOqO5Dji6k5oOF0dlTNpexQkPlBgvefF8wQ==}
 
   '@es-joy/jsdoccomment@0.91.0':
     resolution: {integrity: sha512-vgqlMGNNhZxwDYbUNIHj3Hskb4R28iqdXx90ufHyt/NeuTQkeqjTDslAs9I0/GCAfbxP5BpH5WsL1R1fht5Lxg==}
@@ -2723,17 +2723,17 @@ snapshots:
     optionalDependencies:
       eslint: 10.9.1
 
-  '@endge/nova@0.14.0':
+  '@endge/nova@0.14.1':
     dependencies:
-      '@endge/raph': 3.1.0
-      '@endge/utils': 0.26.0
+      '@endge/raph': 3.3.0
+      '@endge/utils': 0.27.0
       class-transformer: 0.5.1
       gl-matrix: 3.4.4
       rbush: 4.0.1
 
-  '@endge/raph@3.1.0': {}
+  '@endge/raph@3.3.0': {}
 
-  '@endge/utils@0.26.0':
+  '@endge/utils@0.27.0':
     dependencies:
       '@microsoft/fetch-event-source': 2.0.1
       class-transformer: 0.5.1
