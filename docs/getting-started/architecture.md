@@ -32,6 +32,12 @@ flowchart TB
     LLM["AI-провайдер<br/>через адаптер Workbench"]
   end
 
+  subgraph TELEMETRY["Опциональная телеметрия Backend"]
+    PROM["Prometheus<br/>сбор и хранение метрик"]
+    OS[("OpenSearch<br/>хранение логов")]
+    GRAFANA["Grafana<br/>графики и просмотр логов"]
+  end
+
   C1 -->|HTTP / SSE| B
   C2 -->|HTTP / SSE| B
   F1 -->|загрузка конфигураций| B
@@ -47,6 +53,10 @@ flowchart TB
   F1 -. Query / Stream .-> API
   F2 -. Query / Stream .-> API
   API --> APPDB
+  PROM -. опрос /metrics .-> B
+  B -. асинхронная отправка логов .-> OS
+  GRAFANA -. запрос метрик .-> PROM
+  GRAFANA -. запрос логов .-> OS
 
   class C1,C2 endgeInput
   class F1,F2 endgeSuccess
@@ -54,9 +64,13 @@ flowchart TB
   class DB,AIDB,APPDB endgeRegistry
   class IDP,VOCAB,API,MOCK endgePackage
   class AI,LLM endgeAI
+  class PROM,OS endgeRegistry
+  class GRAFANA endgeProcess
 ```
 
 Стрелка направлена от инициатора обращения к его получателю; ответы не нарисованы отдельно. Пунктиром обозначены подключения, которые нужны только при использовании соответствующей возможности. Приложения могут получать конфигурации из подготовленного bundle вместо загрузки с Backend.
+
+Телеметрия подключается отдельно: Prometheus собирает метрики Backend, OpenSearch хранит его логи, а Grafana показывает оба источника. Недоступность этих сервисов не блокирует запуск Backend и обработку запросов.
 
 Для крупной схемы используйте кнопку полноэкранного просмотра в её правом верхнем углу.
 
