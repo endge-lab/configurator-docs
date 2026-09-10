@@ -2,7 +2,7 @@
 
 `Endge.bridge` соединяет экземпляры Core через backend. Модуль позволяет
 конфигуратору запросить отладочную сессию конечного приложения, получить его
-полный диагностический снимок и отправить команду симуляции. Он также получает
+полный диагностический снимок, синхронизировать контекст и отправить команду симуляции. Он также получает
 список подключённых конфигураторов и уникальных пользователей рабочего пространства.
 
 Модуль заменяет прежний `Endge.runtimeDebugger`, работавший через
@@ -144,22 +144,23 @@ await Endge.boot({
 снимка и общую центральную область со Smart Tabs. Документы
 открываются в общих редакторах Configurator, включая их внутренние вкладки,
 в режиме просмотра. Изменение поля, Source или сохранение вызывает предупреждение.
-Footer показывает workspace, tenant, project, environment, user и настройки
-контекста клиента. Эти значения не переключают авторизацию разработчика.
+Footer показывает tenant, project, environment, язык, тему и часовой пояс клиента.
+После первичной синхронизации переключатели отправляют команды клиенту; новый
+результат отображается после его события. Кнопка mock также управляет режимом
+данных клиента. Эти операции не переключают авторизацию разработчика.
 
 При выборе другого клиента предыдущие документы и вкладки очищаются. Поздний
 ответ старого клиента не заменяет новый снимок. Если приложение отключилось,
 последний снимок остаётся доступным с явным статусом отключения; новое подключение
 требует нового согласия. **Завершить сеанс** освобождает Bridge и закрывает вкладку.
 
-В этой версии интерфейс не содержит Runtime Tree, управления симуляциями или
-других команд Bridge. Приложение в обычной вкладке продолжает работать отдельно.
+В этой версии интерфейс не содержит Runtime Tree и управления симуляциями. Приложение в обычной вкладке продолжает работать отдельно.
 
 ### Режим Core для inspection
 
 `Endge.mode` возвращает `application` либо `debugger`; режим задаётся один раз
-в boot context. Debugger запускает только владельцев Context, Workspace, Domain,
-DomainRepository и Bridge. Внешний data provider не передаётся; compiler, Program,
+в boot context. Debugger запускает Events, Context, Commands, Workspace,
+Configuration, UI, Domain, DomainRepository и Bridge. Внешний data provider не передаётся; compiler, Program,
 runtime, renderer, integrations и дочерние Federations не активируются.
 
 `Endge.replaceDebuggerSnapshot(snapshot)` принимает diagnostics snapshot v2,
@@ -167,7 +168,10 @@ runtime, renderer, integrations и дочерние Federations не актив�
 все коллекции заменяются целиком: это не merge с предыдущим приложением.
 Вложенные entities, Maps и editor drafts защищены от записи; repository и
 runtime entrypoints также проверяют режим. Context снимка и личное состояние
-интерфейса debugger остаются в памяти вкладки.
+интерфейса debugger остаются в памяти вкладки. Snapshot напрямую применяет
+Domain, Workspace, effective Configuration и Context, не вызывает Commands
+и не публикует первоначальные изменения. Входящие события также применяются
+через Context.applyEvent. Поэтому импорт не запускает обратные команды клиенту.
 
 В AODB настройка client Bridge уже подключена к общему boot для Vite mode
 `development`. Задайте `VITE_ENDGE_BRIDGE_ALLOWED_SERVERS`; в остальных modes
@@ -303,6 +307,9 @@ debug client не получает roster с именами пользовате
 | `bridge.debug.getSimulationHash(identity)` | Получить hash локального source |
 | `bridge.debug.runSimulation(sessionId, { identity, expectedHash })` | Проверить и залогировать mock на клиенте |
 | `bridge.debug.getSnapshot(sessionId)` | Получить полный snapshot |
+| `bridge.debug.startContextSync(sessionId)` | Начать поток событий и получить snapshot с sequence |
+| `bridge.debug.activateContextSync(sessionId, sequence)` | После импорта snapshot применить накопленные события |
+| `bridge.debug.executeCommand(sessionId, command)` | Выполнить типизированную команду на подключённом клиенте |
 | `bridge.configurator.connections` | Вкладки конфигураторов workspace |
 | `bridge.configurator.participants` | Уникальные пользователи по каждому backend |
 
@@ -338,3 +345,30 @@ Close, ошибка, timeout и shutdown освобождают sockets, gorouti
 ручному `runtimeDebugger.reset()`. Передайте optional `bridge` в существующий
 boot, используйте API выше и оставьте lifecycle корневому Core. Старый
 `BroadcastChannel` и определение роли через `/admin` больше не используются.
+
+## Команды контекста
+
+Пользовательские действия вызывают единую точку входа:
+
+```ts
+await Endge.commands.execute({
+  type: 'context:set-locale',
+  payload: { locale: 'en' },
+})
+```
+
+В обычном приложении команда находит локальный обработчик. В debugger она
+уходит выбранному клиенту через Bridge и backend; локальный Context debugger
+изменяется только после события клиента. Реестр также поддерживает workspace,
+tenant, project, environment, user, theme, timezone и data-mode.
+
+Host может привязать команды к своим штатным операциям через
+`createContextCommandExecutor(target)` и `commands.local` в boot options.
+Configurator использует это для переключения tenant/project/environment с
+reset/boot и перезапуска Runtime Preview после смены режима данных. Такой reset
+может прервать отладочную сессию; автоматическое восстановление согласия
+и повтор команд не выполняются.
+
+События публикует только клиентская роль Bridge. До импорта snapshot debugger
+буферизует их, затем применяет события новее sequence снимка. Дубликаты
+пропускаются; разрыв последовательности завершает синхронизацию.
