@@ -2,6 +2,11 @@
 
 Query — source-first описание получения данных. Он объявляет входные props, транспортный контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем. Поддерживаются два варианта: `kind: 'rest'` и `kind: 'graphql'`.
 
+Пользовательская metadata Query задаётся статическим корневым полем
+`metadata: { ... }` внутри `defineQuery`, остаётся в Source и попадает в
+`ProgramArtifact.metadata.self`. Общий JSON-контракт и UI описаны в разделе
+[Metadata](/reference/metadata).
+
 В `request.body`, `request.variables` и выражениях `output().from(...)` доступен [общий API функциональных выражений](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. Специальные readers Query — `prop(path)`, `response(path?)` для REST и `data(path?)` для GraphQL.
 
 ## Полный пример

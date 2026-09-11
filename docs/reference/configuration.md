@@ -36,6 +36,10 @@ $context.config.groundHandling
 
 Source является единственным источником истины. Visual editor читает этот Source и применяет к нему локальные AST/source-патчи; отдельная visual-модель документа не сохраняется.
 
+Metadata документа объявляется отдельным `defineMetadata({...})` перед или после
+`defineConfig`. Разрешена ровно одна статическая JSON-compatible декларация; её
+не следует смешивать со значениями Configuration. Подробнее: [Metadata](/reference/metadata).
+
 ## Полный пример
 
 ```ts
@@ -80,7 +84,10 @@ defineConfig({
 })
 ```
 
-Документ должен содержать ровно один expression statement с `defineConfig(...)`. Аргументом служит один object literal, а каждое его поле объявляет одну настройку.
+Документ должен содержать ровно один `defineConfig(...)` и может содержать один
+`defineMetadata({...})`; оба являются top-level expression statements.
+Аргументом `defineConfig` служит один object literal, а каждое его поле объявляет
+одну настройку.
 
 ## `value(Type, default?)`
 

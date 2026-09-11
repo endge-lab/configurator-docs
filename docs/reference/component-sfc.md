@@ -2,6 +2,11 @@
 
 Component SFC — основной исполняемый документ интерфейса. Он объединяет публичные порты, renderer-neutral template, локальные вычислительные ресурсы и EndgeCSS в одном source-документе.
 
+Metadata всего документа объявляется одним статическим `defineMetadata({...})`
+в `<script setup>` и компилируется в `ProgramArtifact.metadata.self`. Она
+отличается от `:metadata` внутренних узлов, которые попадают в
+`ProgramArtifact.metadata.nodes`. Подробнее: [Metadata](/reference/metadata).
+
 ## Функции runtime-контекста
 
 Платформенные значения отличаются префиксом `$`: глобальные `$context` и

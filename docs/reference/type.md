@@ -10,6 +10,11 @@ Type Source — компактное source-first описание доменн�
 
 Visual editor reads the compiled semantic document and writes changes back as deterministic Type Source. JSON Schema generation пока не является persisted source of truth и может быть добавлена как derived representation позднее.
 
+Metadata документа объявляется отдельным `defineMetadata({...})` перед или после
+`defineType`. Разрешена ровно одна статическая JSON-compatible декларация; она
+компилируется в `ProgramArtifact.metadata.self`. Общий UI и ограничения описаны
+в разделе [Metadata](/reference/metadata).
+
 ## Object type
 
 Для object type поля передаются прямо в `defineType`. Дополнительная вложенность `fields: { ... }` не нужна:

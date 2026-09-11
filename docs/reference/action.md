@@ -11,6 +11,11 @@ await Endge.actions.execute('schedule-edit-flight-carrier', {
 
 ## Source syntax
 
+Пользовательская metadata Action задаётся статическим корневым полем
+`metadata: { ... }` внутри `defineAction`. Она остаётся в Source и компилируется
+в `ProgramArtifact.metadata.self`; общий контракт описан в разделе
+[Metadata](/reference/metadata).
+
 ```ts
 defineAction({
   contract: {
