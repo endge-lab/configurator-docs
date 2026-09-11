@@ -136,7 +136,7 @@ namespace должен содержать целочисленный `version`; 
 | --- | --- |
 | Поддержаны через Source | `action`, `computation`, `store`, `stream`, `simulation`, `update`, `query-rest`, `query-gql`, `query-custom`, `data-view`, `default-filter`, `composition`, `project`, `vocabs`, `component-sfc`, `type`, `configuration` |
 | Поддержаны через `meta.user` | `style`, `mock`, `converter`, `environment`, `tenant`, `auth-profile`, `i18n-bundles`, `navigation`, `workspace` |
-| Не входят в функцию | `component-dsl`, `component-table`, `default-parameter`, `integration`, `page-template`, `page`, `policy`, built-in `primitive` |
+| Не входят в функцию | `component-dsl`, `component-table`, `integration`, `page-template`, `page`, `policy`, built-in `primitive` |
 
 Наличие Domain class само по себе не расширяет backend persistence. Исключённые
 типы остаются вне функции, пока их persistence и authoring contracts не будут
