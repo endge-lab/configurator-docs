@@ -4,14 +4,14 @@
 
 Она нужна для ручного сценария без постоянного демона:
 
-1. ты запускаешь listener
-2. расширение находит открытую вкладку платформы
-3. по кнопке `Сгенерировать` расширение отправляет bundle в listener
-4. listener создает или обновляет `src/gen`
+1. пользователь запускает listener;
+2. расширение находит открытую вкладку платформы;
+3. по кнопке `Сгенерировать` расширение отправляет bundle в listener;
+4. listener создаёт или обновляет `src/gen`.
 
 ## Запуск
 
-Из корня проекта:
+Из корня frontend workspace:
 
 ```bash
 pnpm codegen:listen
@@ -25,75 +25,39 @@ pnpm codegen:listen
 [endge-codegen] Connection not established yet. Retrying in 5 seconds...
 ```
 
-Когда вкладка найдена и heartbeat пошел, listener пишет подключение к вкладке.
+Когда вкладка найдена и heartbeat пошёл, listener пишет подключение к вкладке.
 
 ## Что генерируется
 
-В целевом проекте создается каталог:
+В целевом приложении создаётся каталог `src/gen`:
 
-```text
-src/gen
-```
+- `domain.json` — переданный readonly bundle;
+- `domain.meta.ts` — версия, время, URL и текущая map выбранных фасетов;
+- `catalog.ts` — runtime-каталоги основных сущностей;
+- `identifiers.ts` — часто используемые identity-константы;
+- `types.ts` — `EndgeGen` с типами фасетов, их документов и обычных коллекций;
+- `index.ts` — единая точка экспорта.
 
-Сейчас туда пишутся:
-
-- `domain.json`
-- `domain.meta.ts`
-- `catalog.ts`
-- `identifiers.ts`
-- `types.ts`
-- `index.ts`
-
-## Что будет внутри
-
-Пример `types.ts`:
+Пример generated API для фактических фасетов Workspace:
 
 ```ts
 import { EndgeGen } from '@/gen'
 
-type ProjectId = EndgeGen.ProjectId
-type EnvId = EndgeGen.EnvId
+const facet = EndgeGen.FacetId.region
+const region = EndgeGen.FacetDocumentId.region.north_west
+
+type CompositionId = EndgeGen.CompositionId
 ```
 
-Пример `index.ts`:
-
-```ts
-export * from './catalog'
-export * from './domain.meta'
-export * from './identifiers'
-export * from './types'
-```
-
-## Примеры на текущих identity
-
-По текущему проекту полезно ожидать такие generated-конструкции:
-
-```ts
-EndgeGen.ProjectId.configurator
-EndgeGen.EnvId.dev
-EndgeGen.SettingsId.general
-EndgeGen.ActionId.configurator_init
-EndgeGen.ComponentId.text
-```
-
-И затем использовать их в коде:
-
-```ts
-import { EndgeGen } from '@/gen'
-
-interface ShellProps {
-  project: EndgeGen.ProjectId
-  env: EndgeGen.EnvId
-}
-```
-
-Если в текущем snapshot конкретная сущность отсутствует, generated type для нее откатывается к базовому типу из `@endge/core`, а не ломает сборку.
+Список фасетов не встроен в утилиту. Codegen строит `FacetId` из
+`domain.facets`, а вложенные `FacetDocumentId` — из `domain.facetDocuments`.
 
 ## Что нужно для корректной работы
 
-- расширение Chrome установлено и обновлено
-- открыта поддерживаемая вкладка платформы
-- listener запущен локально
-- в popup указан абсолютный путь до целевого проекта
+- расширение Chrome установлено и обновлено;
+- открыта поддерживаемая вкладка платформы;
+- listener запущен локально;
+- в popup указан абсолютный путь до целевого приложения.
 
-После этого генерация должна обновить `src/gen`, а IDE подхватит новые типы и константы.
+После генерации IDE подхватывает новые типы и константы. Если структура Domain
+изменилась, codegen нужно запустить повторно.

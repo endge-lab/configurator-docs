@@ -12,15 +12,15 @@ import { EndgeFederation } from '@endge/core'
 
 const FEATURE_MODULES = [
   {
-    key: 'projectRuntime',
-    create: () => new ProjectRuntime_Module(),
+    key: 'dataRuntime',
+    create: () => new DataRuntime_Module(),
   },
   {
     key: 'schedule',
     create: ({ getModule }) => new Schedule_Module(
-      getModule<ProjectRuntime_Module>('projectRuntime'),
+      getModule<DataRuntime_Module>('dataRuntime'),
     ),
-    after: 'projectRuntime',
+    after: 'dataRuntime',
   },
 ] as const satisfies readonly EndgeModuleDefinition[]
 ```
@@ -48,7 +48,7 @@ export const Feature = EndgeFederation.define({
 Literal keys и return types factories формируют типизированные readonly accessors:
 
 ```ts
-Feature.projectRuntime
+Feature.dataRuntime
 Feature.schedule
 
 await Feature.boot(context)

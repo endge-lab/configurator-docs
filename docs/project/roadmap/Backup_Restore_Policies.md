@@ -11,7 +11,10 @@
 
 ## Текущее состояние
 
-- В приложении есть **Backup/Restore** для домена: экспорт в файл (bundle/plain), импорт с выбором сущностей (BackupRestore_Singleton, backup-restore.ts). Поддерживаются сущности: settings, project, type, query, component, action, parameter, filter, converter, integration, environment, tenant, bindings, policy, style, vocabs, page-template, page, navigation.
+- Backend поддерживает **Backup/Restore** полного Workspace snapshot schema `9`:
+  Workspace profile, `facets`, `facet-documents` и все согласованные document
+  collections. Import выполняется через plan/confirmation и создаёт обратимые
+  revisions/commit; frontend не собирает и не мигрирует snapshot самостоятельно.
 - Это ручной «сохранить/загрузить снимок»; нет зафиксированных политик: как часто делать бэкапы, где хранить, сколько хранить, кто и когда проверяет восстановление.
 - Нет автоматического расписания бэкапов на бэкенде; нет разделения «бэкап конфигурации домена» и «бэкап данных приложения» (если они в разных хранилищах).
 - Нет документированных RPO/RTO и процедур «восстановление из бэкапа за вчера» для операторов.

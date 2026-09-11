@@ -10,23 +10,30 @@
 Полный persistence scope состоит из:
 
 - workspace;
-- tenant;
-- project;
-- environment;
+- упорядоченного набора выбранных документов активных фасетов;
 - текущего пользователя.
 
-Приложение задаёт workspace и структурные координаты при boot. В течение одного
-boot lifecycle tenant, project и environment неизменяемы: для переключения
-контекста приложение выполняет reset и новый boot.
+Приложение задаёт workspace и при необходимости явную map выбора фасетов при boot.
+Состав и порядок фасетов загружаются из Domain. В течение одного boot lifecycle
+структурный контекст неизменяем: для переключения приложение выполняет reset и
+новый boot.
+
+При обычном повторном boot сохранённый выбор сверяется с актуальным Domain. Если
+фасет удалён, его coordinate исчезает; если выбранный документ удалён или
+деактивирован, Endge выбирает первый активный документ в стабильном порядке
+identity. Фасет без активных документов остаётся без выбора. Явно переданные
+приложением или обязательные session coordinates строже: неизвестный фасет или
+документ останавливает boot, потому что такой контракт нельзя незаметно заменить.
 
 ```ts
 await Endge.boot({
   dataProvider: 'default',
   scope: { workspaceIdentity: 'example-workspace' },
   context: {
-    tenantIdentity: 'example-tenant',
-    projectIdentity: 'example-project',
-    environmentIdentity: 'development',
+    facets: {
+      customer: 'example-customer',
+      region: 'north-west',
+    },
   },
   vars: {},
   domainProvider,
@@ -34,9 +41,9 @@ await Endge.boot({
 ```
 
 Текущие координаты доступны через `getCurrentWorkspace()`,
-`getCurrentTenant()`, `getCurrentProject()`, `getCurrentEnvironment()` и
-`getCurrentUser()`. Метод `getExecutionContext()` возвращает структурную часть
-одним snapshot.
+`getFacetSelections()`, `getFacetSelection(facetIdentity)` и `getCurrentUser()`.
+Метод `getExecutionContext()` возвращает структурную часть одним snapshot в поле
+`facets`.
 
 ## Пользователь сессии
 

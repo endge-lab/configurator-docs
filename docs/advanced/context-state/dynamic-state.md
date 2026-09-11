@@ -34,15 +34,15 @@ unsubscribe()
 ## Изоляция
 
 Потребитель передаёт только стабильный namespaced key. Core сам добавляет
-workspace, tenant, project, environment и пользователя. Поэтому одинаковый ключ
-можно безопасно использовать в разных проектах и сессиях:
+Workspace, упорядоченную map выбранных документов фасетов и пользователя. Поэтому
+одинаковый ключ можно безопасно использовать в разных контекстах и сессиях:
 
 ```ts
 Endge.context.setState('editor.smart-tabs', tabs)
 Endge.context.setState('navigation.sidebar', navigation)
 ```
 
-Не добавляйте `userId`, workspace или environment в собственный ключ. Не
+Не добавляйте `userId`, Workspace или facet selections в собственный ключ. Не
 генерируйте ключ случайно: после reload потребитель должен вычислить ту же строку.
 
 ## Граница применения

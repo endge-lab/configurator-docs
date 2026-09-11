@@ -1,6 +1,9 @@
 # Configuration
 
-`Configuration` — source-документ рабочего пространства, который объявляет типизированную категорию пользовательских настроек. Он нужен для значений, которые должны отличаться между Workspace, Tenant, Project и Environment, но не должны изменяться во время работы приложения.
+`Configuration` — source-документ рабочего пространства, который объявляет
+типизированную категорию пользовательских настроек. Он нужен для значений, которые
+могут уточняться выбранными документами динамических фасетов, но не должны
+изменяться во время одного boot lifecycle приложения.
 
 Например, через Configuration можно задавать:
 
@@ -26,7 +29,9 @@ Configuration не предназначена для запросов, дейс�
 | Source version | `1` |
 | Корневой DSL-вызов | `defineConfig(...)` |
 
-`identity` документа становится ключом первого уровня в `$context.config`. `displayName` отображается как название категории в редакторах Workspace, Tenant, Project и Environment.
+`identity` документа становится ключом первого уровня в `$context.config`.
+`displayName` отображается как название категории в редакторе Workspace и в
+configuration contribution любого документа фасета.
 
 Например, документ с `identity: 'groundHandling'` и `displayName: 'Наземное обслуживание'` публикуется как:
 
@@ -382,7 +387,7 @@ defineConfig({
 </Cell>
 ```
 
-При смене Tenant, Project или Environment меняется effective TriggerSet, но не
+При смене выбранного документа фасета меняется effective TriggerSet, но не
 Query. Совпадение выполняет reaction сразу и не включает режим редактирования.
 Подробности: [сложные события через `:on`](/domain/components/interactions#triggerset-из-effective-configuration).
 
@@ -399,7 +404,7 @@ Query. Совпадение выполняет reaction сразу и не вк�
 2. Main editor для identity, displayName и description;
 3. Visual editor со строкой на каждое значение;
 4. Source editor с diagnostics, completion, references и formatting;
-5. категорию настроек в редакторы Workspace, Tenant, Project и Environment.
+5. категорию настроек в редактор Workspace и общий редактор contribution документов фасетов.
 
 Visual editor выбирает control по Type. Для JSON используется Monaco: невалидный текст остаётся локальным draft и не заменяет последнее корректное parsed value. Для `TriggerSet` используется специализированный список триггеров, а для `TriggerActivation` — переключаемый редактор комбинации или последовательности. Вложенные object/record Type редактируются рекурсивно.
 
@@ -430,7 +435,8 @@ Defaults принадлежат Source-документу. Пользовате�
 
 Здесь `groundHandling` — identity Configuration-документа, а `actualTimeTriggers` и `rowHeight` — keys его значений. Namespace `values` является внутренним storage-контрактом и не публикуется в SFC.
 
-Tenant, Project и Environment хранят field-level операции:
+Каждый документ динамического фасета хранит field-level операции в своём
+`configuration` contribution:
 
 ```json
 {
@@ -455,7 +461,7 @@ Tenant, Project и Environment хранят field-level операции:
 Для каждого boot/build Endge вычисляет один итоговый snapshot:
 
 ```text
-Source defaults → Workspace → Tenant → Project → Environment
+Source defaults → Workspace → Facet(position 0) → Facet(position 1) → ...
 ```
 
 Более правый слой имеет больший приоритет. Например:
@@ -464,11 +470,13 @@ Source defaults → Workspace → Tenant → Project → Environment
 |---|---:|
 | Source default | `32` |
 | Workspace | `36` |
-| Tenant | наследуется |
-| Project | `40` |
-| Environment | `44` |
+| Заказчик | наследуется |
+| Регион | `40` |
+| Стадия | `44` |
 
-Effective value будет равно `44`. Если удалить Environment override, результатом станет `40`. Если удалить также Project override, вернётся Workspace value `36`.
+Effective value будет равно `44`. Если удалить override документа фасета
+«Стадия», результатом станет `40`. Если удалить также override документа фасета
+«Регион», вернётся Workspace value `36`.
 
 ### `inherit` и `replace`
 
@@ -526,15 +534,19 @@ Snapshot глубоко заморожен. Он не сохраняется в 
 
 ## Import, export и hash
 
-Новые Workspace snapshots всегда содержат `documents.configurations`, включая пустой массив. Snapshot schemaVersion 1 без этой коллекции импортируется как `configurations: []`.
+Workspace snapshots schema `9` всегда содержат `documents.configurations`,
+включая пустой массив. Backend принимает только snapshot с текущей точной версией
+workspace schema и не мигрирует старый файл во время import.
 
-Глобальный bundle `schemaVersion` остаётся равным `1`. Версия самого Configuration-документа задаётся обязательным `sourceVersion: 1`; отсутствующая, неположительная или неизвестная версия отклоняется.
+Версия самого Configuration-документа задаётся обязательным `sourceVersion: 1`;
+отсутствующая, неположительная или неизвестная версия отклоняется независимо от
+версии полного Workspace snapshot.
 
 Domain hash изменяется при изменении:
 
 - identity или Source Configuration-документа;
 - Type или default значения;
-- Workspace/Tenant/Project/Environment values;
+- Workspace values или contribution любого документа фасета;
 - soft-delete или restore активного документа.
 
 Порядок документов и порядок JSON keys не должны влиять на hash.

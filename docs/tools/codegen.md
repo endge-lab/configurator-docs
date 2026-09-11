@@ -2,110 +2,68 @@
 
 Кодогенерация в Endge разделена на два слоя:
 
-1. Базовые типы в ядре.
-2. Сгенерированные типы и реестры в пользовательском проекте.
+1. Базовые строковые типы в `@endge/core`.
+2. Сгенерированные union-типы и реестры по фактически открытому Domain.
 
-## Базовые типы в ядре
+## Базовые типы в Core
 
-В `@endge/core` есть fallback-типы:
-
-```ts
-type EndgeProjectId = string
-type EndgeEnvId = string
-type EndgeComponentId = string
-type EndgeActionId = string
-```
-
-Они нужны, чтобы библиотечные компоненты можно было писать даже до первой генерации.
-
-Пример:
+До первой генерации consumer может использовать широкие fallback-типы:
 
 ```ts
-import type { EndgeEnvId, EndgeProjectId } from '@endge/core'
+import type {
+  EndgeComponentId,
+  EndgeFacetDocumentId,
+  EndgeFacetId,
+} from '@endge/core'
 
-interface Props {
-  project: EndgeProjectId
-  env: EndgeEnvId
+interface Selection {
+  facet: EndgeFacetId
+  document: EndgeFacetDocumentId
+  component: EndgeComponentId
 }
 ```
 
-## Сгенерированные типы в проекте
+Core не объявляет известные имена или количество фасетов. Их определения и
+документы принадлежат текущему Workspace.
 
-После запуска codegen в целевом проекте появляется `src/gen/types.ts` с namespace `EndgeGen`.
+## Сгенерированные типы
 
-Пример:
+После запуска codegen в целевом приложении появляется `src/gen/types.ts` с
+namespace `EndgeGen`. Определения фасетов читаются из `domain.facets`, а документы
+группируются по `facetIdentity` из `domain.facetDocuments`:
 
 ```ts
 import { EndgeGen } from '@/gen'
 
-interface Props {
-  project: EndgeGen.ProjectId
-  env: EndgeGen.EnvId
-}
+const facet = EndgeGen.FacetId.region
+const document = EndgeGen.FacetDocumentId.region.north_west
+
+type FacetId = EndgeGen.FacetId
+type FacetDocumentId = EndgeGen.FacetDocumentId
 ```
 
-Это уже не просто `string`, а узкий union по текущему домену.
+Если автор добавляет или переименовывает фасет, следующий запуск codegen меняет
+generated API по данным Domain. В утилите нет списка специальных фасетов.
 
-## Что именно генерируется
-
-Для каждой коллекции домена генерируются:
-
-- `EndgeGen.ProjectId`
-- `EndgeGen.EnvId`
-- `EndgeGen.PageId`
-- `EndgeGen.ComponentId`
-- `EndgeGen.QueryId`
-- `EndgeGen.ActionId`
-- `EndgeGen.SettingsId`
-
-и аналогичные типы для остальных сущностей.
-
-Также создаются:
-
-- объект-константа с identity
-- type alias по значениям
-- массив `all...Ids`
-
-## Примеры по текущему проекту
-
-В текущем дереве уже встречаются такие identity:
-
-- проект: `configurator`
-- среда: `dev`
-- settings: `general`
-- action: `configurator-init`
-- component: `text`
-
-Это значит, что после генерации вы ожидаете примерно такой контракт:
+Для обычных коллекций также генерируются узкие identity-типы, например:
 
 ```ts
-import { EndgeGen } from '@/gen'
-
-type ProjectId = EndgeGen.ProjectId
-type EnvId = EndgeGen.EnvId
-type SettingsId = EndgeGen.SettingsId
-type ActionId = EndgeGen.ActionId
-type ComponentId = EndgeGen.ComponentId
-```
-
-и примерно такие значения:
-
-```ts
-EndgeGen.ProjectId.configurator
-EndgeGen.EnvId.dev
-EndgeGen.SettingsId.general
-EndgeGen.ActionId.configurator_init
+EndgeGen.CompositionId.main
+EndgeGen.QueryId.flight_list
 EndgeGen.ComponentId.text
+EndgeGen.ActionId.refresh
 ```
 
-Обрати внимание: ключи в объекте нормализуются для TypeScript. Например, `workplaces-init` превращается в ключ `workplaces_init`, но значение остается исходной identity-строкой.
+Для каждого типа доступны объект-константа, type alias и массив `all...Ids`.
+Для фасетов дополнительно доступны `allFacetIds` и `allFacetDocumentIds`.
+Ключи объектов нормализуются для TypeScript: identity `north-west` становится
+ключом `north_west`, но значением остаётся исходная строка `north-west`.
 
-## Где это уже используется
+Если в snapshot нет сущностей нужной коллекции, generated type откатывается к
+соответствующему строковому типу из `@endge/core`.
 
-Сейчас базовые `Endge*Id` уже протянуты в:
+## Граница ответственности
 
-- `EndgeShell`
-- `EndgeView`
-- `useEndgeView(identity)`
-
-То есть библиотека работает сразу, а generated-слой просто усиливает типизацию поверх нее.
+Generated-слой отражает снимок открытого Domain и помогает ловить опечатки в
+consumer-коде. Он не выбирает контекст, не изменяет документы и не заменяет
+runtime-проверку доступности identity после смены Workspace.

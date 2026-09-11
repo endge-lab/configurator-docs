@@ -56,7 +56,8 @@ child:  schedule:columns.status  - compile error
 child:  details:columns.status   - допустимо
 ```
 
-Это правило не является override-механизмом. Specific override pattern для tenant-specific документов добавляется отдельным этапом.
+Это правило не является override-механизмом. Контекстные различия задаются
+configuration contribution выбранных документов динамических фасетов.
 
 ## Реактивность locale
 

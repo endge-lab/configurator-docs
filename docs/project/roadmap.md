@@ -21,7 +21,7 @@ Roadmap фиксирует направления развития, их зав�
 | [Backup и restore](./roadmap/Backup_Restore_Policies) | Частично реализовано | Manual backup/restore API и retention есть; расписание, RPO/RTO и operational runbook отсутствуют |
 | [Версионирование](./roadmap/Versioning_And_Updates) | Частично реализовано | API v1, schema versions, migrations и отображение версий есть; compatibility policy и customer update process не завершены |
 | [Виртуализация](./roadmap/Virtualization_Of_Lists_And_Tables) | Частично реализовано | Таблицы используют RevoGrid; общий virtual list и порог применения для остальных списков отсутствуют |
-| [Оптимизация bundle](./roadmap/Bundle_Optimization_And_Tenant_Isolation) | Частично реализовано | Routes, widgets и editors загружаются лениво; artifact audit и формальная tenant isolation policy отсутствуют |
+| [Оптимизация bundle](./roadmap/Bundle_Optimization_And_Context_Isolation) | Частично реализовано | Routes, widgets и editors загружаются лениво; artifact audit и формальная isolation policy для динамического контекста отсутствуют |
 | [Доступность](./roadmap/Accessibility_A11y) | Частично реализовано | В компонентах есть focus/ARIA-практики; единый WCAG contract, CI gate и полный keyboard/screen-reader audit отсутствуют |
 
 ## Как читать roadmap

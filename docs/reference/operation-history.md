@@ -45,7 +45,7 @@ defineComposition({
 - в одном Composition scope разрешена максимум одна History независимо от alias;
 - Operation выбирает ближайшую активную History по runtime ancestry;
 - вложенная History перекрывает родительскую;
-- project/root History является общей для дочернего runtime tree;
+- History корневой Composition является общей для её дочернего runtime tree;
 - pause сохраняет entries, но блокирует запись и shortcuts;
 - resume возвращает History;
 - deactivate/dispose очищает entries и listeners;

@@ -100,7 +100,7 @@ defineComposition({
 - `dataMode: 'live'` принудительно включает live-mode, даже если глобально выбран mock;
 - отсутствие `dataMode` наследует ближайшую родительскую Composition, а затем effective Workspace/Configurator mode.
 
-Ближайший Composition override имеет приоритет. Поэтому вложенная Composition может вернуть собственное поддерево в `live` внутри mock-родителя или, наоборот, включить mock только для одной ветки проекта.
+Ближайший Composition override имеет приоритет. Поэтому вложенная Composition может вернуть собственное поддерево в `live` внутри mock-родителя или, наоборот, включить mock только для одной ветки runtime-графа.
 
 Режим не меняет persisted Mock, Query source или Store source. В `mock` режиме Store materialize существующие `value(mock(identity))` при создании runtime, а Query сохраняет обычное поведение mock-mode и не выполняет transport request. Query-local `mock.enabled` остаётся отдельным контрактом конкретного Query.
 
@@ -176,7 +176,7 @@ lifecycle scopes и вложенным Composition; ближайший Vocab ali
 `t()` и `vocab()` не являются частью `defineProps`. Их общий контракт описан в
 [Component SFC: функции runtime-контекста](/reference/component-sfc#функции-runtime-контекста).
 
-`store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри project tree, и самостоятельно в preview.
+`store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри startup-графа Workspace, и самостоятельно в preview.
 
 ```ts
 data: {
@@ -317,7 +317,9 @@ runtimes: {
 
 ### Ключи и область хранения
 
-Ключ должен быть непустым и стабильным. Durable address дополнительно включает текущие `workspace`, `tenant`, `project`, `environment` и пользователя, поэтому одинаковый ключ в разных runtime-контекстах не смешивает состояние.
+Ключ должен быть непустым и стабильным. Durable address дополнительно включает
+текущие Workspace, упорядоченную map выбранных документов фасетов и пользователя,
+поэтому одинаковый ключ в разных runtime-контекстах не смешивает состояние.
 
 Для независимого состояния используйте разные ключи:
 
@@ -438,7 +440,7 @@ Compiler проверяет имена props, индексирует RMock depen
 definePreviewProps - ProgramArtifact.previewProps - Runtime Preview - mount({ props })
 ```
 
-Обычный `Endge.runtime.composition.mount()`, запуск через Project и вложенная `composition(...).withProps(...)` не читают preview fixtures автоматически.
+Обычный `Endge.runtime.composition.mount()`, `Endge.runtime.mountStartup()` и вложенная `composition(...).withProps(...)` не читают preview fixtures автоматически.
 
 ## Передача props runtime-нодам
 

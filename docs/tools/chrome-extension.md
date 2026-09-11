@@ -63,8 +63,7 @@ v0.1.1
 
 Расширение передает bundle с:
 
-- `projectId`
-- `environment`
+- `facets` — map текущих выборов вида `facetIdentity -> documentIdentity`
 - `sourceUrl`
 - `exportedAt`
 - `domain`

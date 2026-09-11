@@ -35,9 +35,9 @@ Core выбирает backing по `DomainDocumentDescriptor.capabilities.metada
 
 | Backing | Где хранится | Типы документов |
 | --- | --- | --- |
-| `definition-property` | Корневое поле `metadata` основного DSL-вызова | Action, Computation, Store, Stream, Simulation, Update, все Query, DataView, Default Filter, Composition, Project, Vocab |
+| `definition-property` | Корневое поле `metadata` основного DSL-вызова | Action, Computation, Store, Stream, Simulation, Update, все Query, DataView, Default Filter, Composition, Vocab |
 | `definition-declaration` | Отдельный `defineMetadata({...})` | Component SFC, Type, Configuration |
-| `entity-meta` | Только `REntity.meta.user` | Style, Mock, Converter, Environment, Tenant, Auth Profile, I18n Bundles, Navigation, Workspace |
+| `entity-meta` | Только `REntity.meta.user` | Facet, Facet Document, Style, Mock, Converter, Auth Profile, I18n Bundles, Navigation, Workspace |
 
 Source-first metadata хранится только в Source и не копируется в `meta.user`.
 Entity-backed metadata меняет только `meta.user`; любые соседние системные
@@ -134,8 +134,8 @@ namespace должен содержать целочисленный `version`; 
 
 | Группа | Типы |
 | --- | --- |
-| Поддержаны через Source | `action`, `computation`, `store`, `stream`, `simulation`, `update`, `query-rest`, `query-gql`, `query-custom`, `data-view`, `default-filter`, `composition`, `project`, `vocabs`, `component-sfc`, `type`, `configuration` |
-| Поддержаны через `meta.user` | `style`, `mock`, `converter`, `environment`, `tenant`, `auth-profile`, `i18n-bundles`, `navigation`, `workspace` |
+| Поддержаны через Source | `action`, `computation`, `store`, `stream`, `simulation`, `update`, `query-rest`, `query-gql`, `query-custom`, `data-view`, `default-filter`, `composition`, `vocabs`, `component-sfc`, `type`, `configuration` |
+| Поддержаны через `meta.user` | `facet`, `facet-document`, `style`, `mock`, `converter`, `auth-profile`, `i18n-bundles`, `navigation`, `workspace` |
 | Не входят в функцию | `component-dsl`, `component-table`, `integration`, `page-template`, `page`, `policy`, built-in `primitive` |
 
 Наличие Domain class само по себе не расширяет backend persistence. Исключённые

@@ -102,7 +102,7 @@ defineComposition({
 
 Compiler сохраняет `{ kind: 'mock', identity }` в `ProgramArtifact.previewProps`, добавляет dependency с ролью `composition-preview:<prop>` и проверяет binding status. Configurator Runtime Preview разрешает Mock и передаёт полученное значение через обычный `mount({ props })`.
 
-Preview fixture не используется при production mount, запуске Project или вызове вложенной Composition. Подробный contract: [Composition](/reference/composition#preview-props).
+Preview fixture не используется при production mount startup Composition или вызове вложенной Composition. Подробный contract: [Composition](/reference/composition#preview-props).
 
 ## Store initializer
 
