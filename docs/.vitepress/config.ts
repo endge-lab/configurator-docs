@@ -144,15 +144,6 @@ export default defineConfig({
         {
           text: 'О продукте',
           items: [
-            { text: 'Что такое Endge', link: '/' },
-            { text: 'Единая среда работы', link: '/getting-started/shared-workspace' },
-            { text: 'Архитектура экосистемы', link: '/getting-started/architecture' },
-            { text: 'Как работает Endge', link: '/getting-started/how-endge-works' },
-          ],
-        },
-        {
-          text: 'О продукте 2',
-          items: [
             { text: 'Что такое Endge', link: '/product-v2/' },
             { text: 'Метамодель приложения', link: '/product-v2/metamodel' },
             { text: 'Контекст и варианты приложений', link: '/product-v2/context' },
