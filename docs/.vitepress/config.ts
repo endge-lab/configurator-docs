@@ -341,9 +341,6 @@ export default defineConfig({
           text: 'Инструменты разработчика',
           collapsed: true,
           items: [
-            { text: 'Codegen', link: '/tools/codegen' },
-            { text: 'Расширение Chrome', link: '/tools/chrome-extension' },
-            { text: 'Утилита Codegen', link: '/tools/codegen-utility' },
             { text: 'DSL Playground (legacy)', link: '/tools/dsl-playground' },
           ],
         },
