@@ -5,7 +5,11 @@ import { novaSidebar } from './nova-sidebar.generated'
 export default defineConfig({
   lang: 'ru-RU',
   title: 'Endge',
+  titleTemplate: 'Endge | :title',
   description: 'Документация платформы Endge и конфигуратора',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+  ],
   cleanUrls: true,
   lastUpdated: true,
   markdown: {
