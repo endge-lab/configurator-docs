@@ -31,6 +31,8 @@ import { Raph, RaphApp, RaphNode } from '@endge/raph'
 
 `RouterNode`, `ControlFlowRegistry` и `ControlFlowQueue` также экспортируются, но являются низкоуровневыми building blocks. Для обычной подписки используйте `runtime.subscribe` или `Raph.watch`.
 
+Параметры встроенного adapter и его индекс `[key=value]` описаны в разделах [Пользовательский DataAdapter](/raph/integrations/data-adapter) и [Индексация коллекций](/raph/data/indexing).
+
 ## Derived
 
 | Export | Назначение |
@@ -80,4 +82,3 @@ import { Raph, RaphApp, RaphNode } from '@endge/raph'
 ## Стабильность
 
 Физический export означает доступность символа из package entrypoint, но не одинаковый уровень абстракции. Для application code предпочитайте `Raph`, `RaphApp`, `RaphKernel`, `RaphRuntime`, `RaphNode`, `DataPath`, documented strategies и lifecycle handles. Низкоуровневые registries и runtime descriptors используйте только при создании собственного integration layer.
-

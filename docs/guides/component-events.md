@@ -171,7 +171,7 @@ Pointer payload дополнительно содержит `x`, `y`, `button`, 
 содержит `value` и, когда применимо, `checked`.
 
 DOM Event и DOM element не входят в публичный payload. Поэтому один контракт
-одинаково работает в native/RevoGrid, shadcn/TanStack и будущих renderer-ах.
+одинаково работает в native/TanStack, shadcn/TanStack и будущих renderer-ах.
 
 ## Локальная реакция на событие тега
 

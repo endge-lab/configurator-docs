@@ -40,6 +40,8 @@ const app = new RaphApp()
 app.options({ adapter })
 ```
 
+Без пользовательского adapter `RaphApp` использует `DefaultDataAdapter` с включённой индексацией и стратегией `eager-all-keys`. Подробное описание cold/warm lookup, стратегий, invalidation и требований к selector keys находится на странице [Индексация коллекций](/raph/data/indexing).
+
 ## Adapter wrapper
 
 Новый adapter нужен только при другой модели хранения. Для instrumentation или policy часто достаточно wrapper над default implementation:
@@ -86,6 +88,8 @@ class LoggingAdapter implements DataAdapter {
 - не публиковать Raph events самостоятельно.
 
 Kernel публикует mutation после вызова adapter. Adapter отвечает за данные, а Raph — за routing, derived stabilization и execution.
+
+Если пользовательский adapter поддерживает `[key=value]`, способ индексации, уникальность selector и invalidation являются частью его собственного контракта. Индексы `DefaultDataAdapter` не оборачивают стороннюю реализацию автоматически.
 
 ::: warning Shared ownership
 Adapter принадлежит kernel. `runtime.options({ adapter })` заменяет adapter всего shared kernel, а не только одного runtime lane.

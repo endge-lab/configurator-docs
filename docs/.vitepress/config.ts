@@ -76,6 +76,7 @@ export default defineConfig({
           text: 'Данные и маршрутизация',
           items: [
             { text: 'DataPath', link: '/raph/data/data-path' },
+            { text: 'Индексация коллекций', link: '/raph/data/indexing' },
             { text: 'Meta-plane', link: '/raph/data/meta' },
             { text: 'Изменения и transactions', link: '/raph/data/mutations-and-transactions' },
             { text: 'Подписки и RaphRouter', link: '/raph/data/subscriptions-and-router' },

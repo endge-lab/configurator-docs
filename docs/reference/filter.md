@@ -62,7 +62,7 @@ aircrafts: field('String')
   .default([])
 ```
 
-Правило одинаково для `vue-native` и `vue-shadcn`:
+Правило для `vue-native`:
 
 - `searchable: true` принудительно включает поиск;
 - `searchable: false` принудительно скрывает поиск;

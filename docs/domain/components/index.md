@@ -11,10 +11,9 @@ adapter материализует их во Vue, Native DOM или другой
 состояние интерфейса. Они не определяют способ сохранения изменённого значения.
 
 Visual primitives входят в базовый renderer-adapter contract. Shell-owned
-`Tooltip` дополнительно входит в Vue adapter contract. Поддерживаемые adapters:
+`Tooltip` дополнительно входит в Vue adapter contract. Поддерживаемый adapter:
 
-- `vue-native` из `@endge/ui-vue`;
-- `vue-shadcn` из `@endge/ui-vue-shadcn`.
+- `vue-native` из `@endge/ui-vue`.
 
 ## Компоненты компоновки
 

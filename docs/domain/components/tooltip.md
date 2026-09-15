@@ -1,8 +1,7 @@
 # Tooltip
 
 `Tooltip` показывает дополнительное содержимое при наведении мышью или получении
-фокуса. Все варианты renderer-neutral и одинаково поддерживаются адаптерами
-`vue-native` и `vue-shadcn`.
+фокуса. Все варианты renderer-neutral и поддерживаются адаптером `vue-native`.
 
 ## Короткая запись: обычный текст
 
@@ -134,7 +133,7 @@ Workspace через выбранные документы активных фа
 Единственный overlay получает следующие hooks:
 
 - `.endge-tooltip`, `.endge-tooltip--text`, `--markdown`, `--rich`;
-- `.endge-tooltip--vue-native` или `.endge-tooltip--vue-shadcn`;
+- `.endge-tooltip--vue-native`;
 - `[data-endge-tooltip-adapter]`, `[data-endge-tooltip-id]`, `[data-side]`,
   `[data-align]`;
 - `class`, `id` и `part` из `<Tooltip>`; authored `id` доступен как
@@ -158,9 +157,9 @@ Workspace через выбранные документы активных фа
   --endge-tooltip-padding: 4px 6px;
 }
 
-.endge-tooltip--vue-shadcn.flight-status-tooltip {
-  --endge-tooltip-background: hsl(var(--popover));
-  --endge-tooltip-color: hsl(var(--popover-foreground));
+.endge-tooltip--vue-native.flight-status-tooltip {
+  --endge-tooltip-background: #172033;
+  --endge-tooltip-color: #f8fafc;
 }
 ```
 
