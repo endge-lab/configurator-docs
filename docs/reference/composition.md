@@ -1,0 +1,770 @@
+# Composition
+
+Composition собирает доменные документы в исполняемый runtime-граф: создаёт runtime-ноды, связывает их props и outputs, управляет запуском и публикует результаты в Store. Она описывает оркестрацию, но не layout и не способ визуализации компонентов.
+
+Значения в `.withProps({...})` поддерживают [общие функциональные выражения](/reference/value-expressions), включая типы, числа, строки, коллекции, DateTime и Duration. Специальные readers Composition перечислены ниже. Операции преобразуют значения связи, но не запускают runtime-ноды и не заменяют hooks.
+
+## Полный пример
+
+```ts
+defineComposition({
+  activateOn: startup(),
+
+  data: {
+    application: store('application-data'),
+    categories: vocab('item-categories').policy({
+      strategy: 'cache-first',
+      maxAgeMs: 300_000,
+      onError: 'use-cache',
+    }),
+  },
+
+  resources: {
+    theme: style('application-theme'),
+    common: i18n('application-common-default'),
+  },
+
+  runtimes: {
+    filters: filter('items-filter')
+      .persist({ key: 'items-filter-state' }),
+
+    filterPanel: filterView('items-filter')
+      .fields(['from', 'to'])
+      .component('items-filter-panel'),
+
+    request: query('items-query')
+      .withProps({
+        filter: fromOutput('filters', 'request'),
+      })
+      .storeTo(data('application'), {
+        rows: output('rows'),
+      }),
+
+    table: component('items-table')
+      .persist({ key: 'items-table-state' })
+      .withProps({
+        rows: fromData('application.rows'),
+      }),
+  },
+
+  hooks: [
+    onMount().run('request'),
+    onChange('filters.request').debounce(200).run('request'),
+  ],
+
+  outputs: {
+    table: output().fromRuntime('table'),
+    rows: output().fromRuntime('request').select('rows'),
+  },
+})
+```
+
+## Активация
+
+`activateOn` задаётся для всей Composition, scope или отдельной runtime-ноды:
+
+```ts
+activateOn: startup()
+query('items-query').activateOn(manual())
+```
+
+- `startup()` активирует узел вместе с родительским scope;
+- `manual()` оставляет его неактивным до явной активации;
+- локальный `.activateOn(...)` переопределяет унаследованный режим.
+
+`onMount().run(...)` нельзя направить на runtime с ручной активацией.
+
+## Режим данных
+
+По умолчанию Composition наследует effective data mode рабочего пространства. Локальный override задаётся статическим корневым полем:
+
+```ts
+defineComposition({
+  dataMode: 'mock',
+
+  data: {
+    telegraphy: store('telegraphy').isolated(),
+  },
+
+  runtimes: {
+    content: component('telegraphy'),
+    request: query('telegraphy-request'),
+    nested: composition('telegraphy-details'),
+  },
+})
+```
+
+Допустимые значения:
+
+- `dataMode: 'mock'` принудительно включает mock-mode для Composition и её runtime-поддерева;
+- `dataMode: 'live'` принудительно включает live-mode, даже если глобально выбран mock;
+- отсутствие `dataMode` наследует ближайшую родительскую Composition, а затем effective Workspace/Configurator mode.
+
+Ближайший Composition override имеет приоритет. Поэтому вложенная Composition может вернуть собственное поддерево в `live` внутри mock-родителя или, наоборот, включить mock только для одной ветки runtime-графа.
+
+Режим не меняет persisted Mock, Query source или Store source. В `mock` режиме Store materialize существующие `value(mock(identity))` при создании runtime, а Query сохраняет обычное поведение mock-mode и не выполняет transport request. Query-local `mock.enabled` остаётся отдельным контрактом конкретного Query.
+
+Contextual или injected Store может принадлежать родительской Composition. Такой borrowed Store не переинициализируется локальным `dataMode`, потому что один runtime instance сохраняет state своего provider-а. Если ветке нужен независимый mock-state, объявите Store через `.isolated()`.
+
+## Data и resources
+
+```ts
+data: {
+  application: store('application-data'),
+  categories: vocab('item-categories'),
+},
+resources: {
+  tableTheme: style('items-table-theme'),
+  common: i18n('application-common-default'),
+  schedule: i18n('schedule-default'),
+}
+```
+
+В `data` доступны `store(identity)` и `vocab(identity)`. `store` задаёт state provider, а `vocab` — декларативную зависимость от внешнего справочника. Значения Vocab загружаются через `Endge.vocabs` и остаются в общем Raph-кеше `vocabs.<collectionSlug>`.
+
+```ts
+data: {
+  airlines: vocab('airlines'),
+  aircrafts: vocab('aircrafts').policy({
+    strategy: 'cache-first',
+    maxAgeMs: 86_400_000,
+  }),
+  stations: vocab('stations').policy({
+    strategy: 'stale-while-revalidate',
+    maxAgeMs: 300_000,
+    onError: 'use-cache',
+  }),
+  flightServiceTypes: vocab('flight-service-types').policy({
+    strategy: 'network-first',
+    onError: 'fail',
+  }),
+}
+```
+
+Без `.policy(...)` используется `cache-first`, `maxAgeMs: null`, `onError: 'fail'`. Полный контракт стратегий, ручных built-in Actions и хранения в Raph описан в разделе [Справочники (Vocab)](/reference/vocab).
+
+В `resources` доступны `style(identity)` и `i18n(identity)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
+
+```vue
+<Text>{{ t('schedule:columns.status') }}</Text>
+<Text>{{ t('schedule:empty', 'Нет данных') }}</Text>
+```
+
+Translation resources накапливаются по lifecycle scope и при входе во вложенную Composition. Compiler запрещает повтор одного полного ключа `alias:key.path` ниже по иерархии: такая коллизия создаёт error diagnostic и Composition не запускается. Одинаковый `key.path` в разных aliases допустим.
+
+Подмена словаря по specific override pattern в этот контракт пока не входит. Она будет отдельным этапом и не должна обходить compiler/linker.
+
+Имя поля Vocab в `data` аналогично становится публичным alias, но SFC читает
+его отдельной функцией `vocab()`:
+
+```vue
+<Select
+  :value="flight.flightCarrier"
+  :options="vocab('airlines', {
+    valuePath: 'code',
+    labelPath: 'description',
+  })"
+/>
+```
+
+Composition передаёт дочернему runtime не копию массива и не физическую Vocab
+identity, а effective catalog `alias - Raph path`. Catalog наследуется по
+lifecycle scopes и вложенным Composition; ближайший Vocab alias перекрывает
+одноимённый alias предка. Component host подписывается на использованный path,
+поэтому refresh справочника повторно рендерит SFC без обновления component props.
+
+`t()` и `vocab()` не являются частью `defineProps`. Их общий контракт описан в
+[Component SFC: функции runtime-контекста](/reference/component-sfc#функции-runtime-контекста).
+
+`store(identity)` по умолчанию contextual: использует explicit binding, затем ближайший Store provider с той же identity, а без provider создаёт локальный fallback. Это позволяет одной Composition работать и внутри startup-графа Workspace, и самостоятельно в preview.
+
+```ts
+data: {
+  shared: store('schedule'),
+  draft: store('schedule').isolated(),
+  session: store('user-session').injected(),
+  primaryForm: store('flight-form').slot('primary'),
+}
+```
+
+- `.isolated()` всегда создаёт локальный Store instance;
+- `.injected()` требует explicit или ancestor provider и не создаёт fallback;
+- `.slot(name)` различает несколько providers одной Store identity;
+- alias (`shared`) локален для `fromData`, provider matching выполняется по Store identity и slot;
+- sibling compositions не заимствуют fallback друг у друга.
+
+Вложенной Composition можно явно передать Store, переименовав alias или выбрав конкретный instance:
+
+```ts
+composition('flight-board').withData({
+  schedule: data('shared'),
+})
+```
+
+## Runtime-ноды
+
+| Конструктор | Назначение | Поддерживаемые modifiers |
+| --- | --- | --- |
+| `filter(identity)` | Filter runtime | `activateOn`, `persist` |
+| `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
+| `component(identity)` | Component SFC runtime | `activateOn`, `persist`, `withProps` |
+| `composition(identity)` | Вложенная Composition | `activateOn`, `withProps`, `withData`, `storeTo` |
+| `filterView(identity)` | Представление Filter | `activateOn`, `fields`, `controls`, `component`, `withProps` |
+
+Вложенная Composition принимает значения своего публичного props-контракта через `.withProps(...)`. Соответствие обязательным и объявленным props проверяется после linking с compiled artifact вызываемой Composition.
+
+### FilterView
+
+```ts
+filterView('items-filter')
+  .fields(['from', 'direction'])
+  .controls({
+    from: control('Input'),
+    direction: control('Select'),
+  })
+
+filterView('items-filter')
+  .fields(['from', 'direction'])
+  .component('items-filter-panel')
+```
+
+Типы controls: `Input`, `Textarea`, `Checkbox`, `Select`. Методы `.fields`, `.controls` и `.component` доступны только у `filterView`.
+
+`.controls(...)` настраивает встроенный generator, а `.component(...)` выбирает пользовательский renderer. Эти варианты взаимоисключающие.
+
+Типы полей, варианты и presentation metadata объявляются в самом Filter:
+[Filter](/reference/filter). FilterView только выбирает поля, labels и controls.
+
+Filter state меняется через Actions, а не через commands. Runtime host предоставляет
+четыре стандартных Action handles:
+
+```ts
+await filter.action('set').run({ key: 'search', value: 'SU' })
+await filter.action('patch').run({ search: 'SU', direction: 'departure' })
+await filter.action('reset').run()
+await filter.action('clear').run()
+```
+
+`set` и `patch` валидируют значения по compiled Filter fields. `reset` возвращает
+defaults, `clear` создаёт пустой state. После изменения Filter публикует Events
+`state:change` и, только для действительно изменившихся outputs, `output:change`.
+
+## Persistence runtime-состояния
+
+`.persist({ key })` включает локальное сохранение состояния конкретной runtime-ноды. Modifier не применяется ко всей Composition и не распространяется на соседние ноды:
+
+```ts
+defineComposition({
+  runtimes: {
+    filters: filter('schedule')
+      .persist({ key: 'schedule-sandbox-filter' }),
+
+    filterPanel: filterView('schedule')
+      .fields(['search', 'season', 'airlines']),
+
+    table: component('schedule-sandbox')
+      .persist({ key: 'schedule-sandbox-table' }),
+  },
+})
+```
+
+В текущем контракте `.persist(...)` поддерживают только `filter(...)` и `component(...)`. У `filterView(...)` собственного persisted state нет: несколько FilterView читают и изменяют один Filter runtime, поэтому persistence задаётся на исходном `filter(...)`.
+
+### Filter
+
+Filter сохраняет значения своих полей и восстанавливает их при следующем mount в том же runtime-контексте:
+
+```ts
+runtimes: {
+  filter: filter('schedule')
+    .persist({ key: 'schedule-published-filter' }),
+
+  searchFilter: filterView('schedule').fields(['search']),
+  seasonFilter: filterView('schedule').fields(['season']),
+  filterPanel: filterView('schedule').fields([
+    'from',
+    'to',
+    'airlines',
+  ]),
+}
+```
+
+Все три FilterView используют восстановленное состояние одного Filter. Открытое или закрытое состояние визуальной панели к Filter state не относится и таким `persist` не сохраняется.
+
+### Component и Table
+
+Для Component modifier предоставляет renderer-у state controller. Renderer сохраняет собственные секции состояния; например, Table хранит сортировку, pagination, порядок, видимость, закрепление и размеры колонок.
+
+```ts
+runtimes: {
+  table: component('schedule-published')
+    .persist({ key: 'schedule-published-table' }),
+}
+```
+
+В source самого Component SFC каждому сохраняемому экземпляру Table нужен стабильный `id`:
+
+```vue
+<Table
+  id="schedule-published"
+  :rows="rows"
+>
+  <!-- columns -->
+</Table>
+```
+
+Без стабильного `id` Component runtime может иметь state controller, но renderer не сможет надёжно связать сохранённые секции с новым экземпляром Table после перезагрузки. Полный список табличных секций и правила authored defaults описаны в разделе [Состояние таблицы](/sfc-tables/state).
+
+### Ключи и область хранения
+
+Ключ должен быть непустым и стабильным. Durable address дополнительно включает
+текущие Workspace, упорядоченную map выбранных документов фасетов и пользователя,
+поэтому одинаковый ключ в разных runtime-контекстах не смешивает состояние.
+
+Для независимого состояния используйте разные ключи:
+
+```ts
+// Sandbox и Published восстанавливаются независимо.
+filter('schedule').persist({ key: 'schedule-sandbox-filter' })
+filter('schedule').persist({ key: 'schedule-published-filter' })
+```
+
+Одинаковый ключ используйте только намеренно, когда два поочерёдно монтируемых runtime должны разделять одно состояние:
+
+```ts
+// Обе страницы используют общие значения Filter.
+filter('schedule').persist({ key: 'schedule-filter' })
+```
+
+Повтор одного `persist` key у разных runtime-нод внутри одной Composition является compiler error.
+
+Persistence хранит только runtime-owned state. Он не сохраняет rows, Query outputs, Store data, изменения доменных документов или Component SFC source. Такие данные должны записываться через соответствующие Store/Update/Query/backend-контракты.
+
+## Публичные props Composition
+
+Composition использует тот же author-facing vocabulary, что Query и Component: объявляет контракт через `props: defineProps({...})`, читает значения через `prop(path)`, а caller передаёт их через `.withProps({...})`.
+
+```ts
+defineComposition({
+  props: defineProps({
+    requirements: field('Object'),
+  }),
+
+  runtimes: {
+    attributes: query('attributes-leg-select').withProps({
+      names: prop('requirements.arrival.attributes'),
+    }),
+  },
+})
+```
+
+Caller может передать literal, обычный Composition binding или namespace compiled metadata компонента:
+
+```ts
+defineComposition({
+  runtimes: {
+    requests: composition('orders-default').withProps({
+      requirements: metadataOf('table'),
+    }),
+    table: component('orders-table'),
+  },
+})
+```
+
+`metadataOf(runtime)` разрешает документ через runtime alias и читает весь `ProgramArtifact.metadata.self`. `metadataOf(runtime, namespace)` сохраняет старый точный контракт и возвращает `ProgramArtifact.metadata.self[namespace]`. Source SFC и renderer state во время выполнения не анализируются. При самостоятельном запуске те же значения передаются как `{ props }` в `Endge.runtime.composition.mount(...)`.
+
+Обе формы доступны внутри ValueExpression, поэтому metadata можно передать целиком, выбрать namespace или собрать объект вручную:
+
+```ts
+requirements: metadataOf('table')
+
+requirements: metadataOf(
+  'table',
+  'orders.query',
+)
+
+requirements: {
+  list: metadataOf(
+    'table',
+    'orders.list',
+  ),
+  summary: metadataOf(
+    'table',
+    'orders.summary',
+  ),
+}
+```
+
+Одноаргументная форма не извлекает автоматически единственный namespace. Если `metadata.self` имеет вид `{ 'orders.query': value }`, результат сохранит эту обёртку.
+
+## Preview props
+
+`previewProps: definePreviewProps({...})` задаёт fixtures для самостоятельного запуска Composition из Runtime Preview. Ключи соответствуют публичному контракту `props`, а значения можно записать прямо в source:
+
+```ts
+defineComposition({
+  props: defineProps({
+    requirements: field('OrderQueryRequirements'),
+    region: field('String'),
+  }),
+
+  previewProps: definePreviewProps({
+    requirements: {
+      statuses: ['new', 'in-progress'],
+      fields: ['id', 'number', 'status'],
+      minimumPriority: 1,
+    },
+    region: 'north',
+  }),
+
+  runtimes: {},
+})
+```
+
+Большой или переиспользуемый fixture можно вынести в [Mock data](/reference/mock):
+
+```ts
+previewProps: definePreviewProps({
+  requirements: mock('order-query-requirements'),
+  region: 'north',
+}),
+```
+
+`mock(identity)` относится к одному prop, поэтому inline values и несколько Mock-документов можно смешивать в одном `definePreviewProps`. Содержимое Mock должно соответствовать типу именно этого prop, а не быть объектом всех preview props.
+
+Compiler проверяет имена props, индексирует RMock dependency и сверяет inline fixtures с доступным RType artifact. Проблемы preview остаются warnings: они видимы в Problems и Runtime Preview, но не делают production Composition неисполняемой.
+
+`definePreviewProps` не задаёт runtime defaults. Значения применяются только Configurator preview launcher-ом:
+
+```text
+definePreviewProps - ProgramArtifact.previewProps - Runtime Preview - mount({ props })
+```
+
+Обычный `Endge.runtime.composition.mount()`, `Endge.runtime.mountStartup()` и вложенная `composition(...).withProps(...)` не читают preview fixtures автоматически.
+
+## Передача props runtime-нодам
+
+`.withProps({...})` доступен для Query, Component, вложенной Composition и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
+
+```ts
+query('search').withProps({
+  filterOutputs: fromOutput('filters'),
+  ids: fromOutput('filters', 'request')
+    .getOr('rows', [])
+    .where(match({ active: true }))
+    .map(get('id')),
+  rows: fromData('application.rows'),
+  locale: fromStore('preferences.locale'),
+  columns: metadata('component-sfc', 'items-table')
+    .getOr('columns', []),
+  model: fromFilter('filters').fields(['from', 'to']),
+})
+```
+
+Если значение Component проходит через DataView, его runtime path уже не
+совпадает с owner path пользовательской Raph Meta. `.metaFrom(...)` явно
+сохраняет provenance без добавления служебных полей в props:
+
+```ts
+table: component('schedule-sandbox').withProps({
+  rows: fromData('schedule.sandboxFlights')
+    .dataView('schedule-local-filter', {
+      search: fromOutput('filter', 'search'),
+    })
+    .metaFrom('schedule.sandboxItems', {
+      key: 'id',
+      fields: {
+        flightCarrier: 'flightCarrier',
+      },
+    }),
+})
+```
+
+`key` задаёт identity field исходной коллекции, а `fields` — отображение путей
+видимой строки на пути owner data. Для прямого `fromData(...)` `.metaFrom(...)`
+обычно не требуется: binding path уже является provenance.
+
+| Reader | Что читает |
+| --- | --- |
+| `fromOutput(runtime)` | Объект всех outputs другой runtime-ноды: `{ [outputName]: value }` |
+| `fromOutput(runtime, output)` | Явно выбранный именованный output другой runtime-ноды |
+| `fromData('alias.path')` | Путь внутри объявленного `data` alias |
+| `fromStore(key)` | Значение общего Store по ключу |
+| `fromFilter(runtime).fields([...])` | Типизированный срез полей Filter runtime |
+| `metadata(entityType, identity)` | Скомпилированные metadata документа |
+| `prop(path)` | Значение публичного prop текущей Composition |
+| `metadataOf(runtime)` | Весь `ProgramArtifact.metadata.self` документа, указанного runtime alias-ом |
+| `metadataOf(runtime, namespace)` | Один namespace из `ProgramArtifact.metadata.self` |
+
+Зависимости между `.withProps` компилируются в граф. Циклическая связь runtime-нод считается ошибкой.
+
+Форма `fromOutput('filters')` собирает все outputs runtime-ноды в один объект. Compiler фиксирует их публичные имена в ProgramArtifact, а runtime реактивно пересчитывает объект при изменении любого output. Количество outputs не меняет форму результата: один output `request` также возвращается как `{ request: value }`, а отсутствие outputs даёт `{}`.
+
+Выбрать один output или собрать объект вручную по-прежнему можно явно. Пустая строка не является именем output:
+
+```ts
+// Автоматическая сборка:
+// { arrival: value, departure: value }
+filter: fromOutput('filters')
+
+// Один output без внешней обёртки.
+active: fromOutput('filters', 'active')
+
+// Ручная сборка с собственными именами и структурой.
+filter: {
+  active: fromOutput('filters', 'active'),
+  archived: fromOutput('filters', 'archived'),
+}
+```
+
+## Публикация в Store
+
+Query и вложенная Composition могут публиковать outputs в объявленный Store:
+
+```ts
+query('items-query').storeTo(data('application'), {
+  'raw.items': output('raw'),
+  rows: output('rows'),
+})
+```
+
+Ключ объекта — путь назначения в Store, `output(name)` — output исходной runtime-ноды. Query сам не выбирает место хранения результата: этот контракт принадлежит Composition.
+
+## Hooks
+
+`hooks` описывает control dependencies: когда именно нужно выполнить Query. Передача значений через `.withProps(...)` относится к data dependencies и не запускает Query сама по себе.
+
+### Поддерживаемые hooks
+
+```ts
+hooks: [
+  onMount().run('request'),
+  onChange('filters.request').run('request'),
+  onChange('filters.request').debounce(300).run('request'),
+  onChange(prop('filter.active')).debounce(200).run('activeOrders'),
+  onSuccess('request').run('requestDetails'),
+]
+```
+
+| Hook | Когда срабатывает | Что можно запускать |
+| --- | --- | --- |
+| `onMount().run(query)` | Один раз после монтирования runtime-графа | Query текущей Composition |
+| `onChange('runtime.output').run(query)` | После структурного изменения named output runtime-ноды | Query текущей Composition |
+| `onChange(prop('path')).run(query)` | После структурного изменения public prop или его вложенного пути | Query текущей Composition |
+| `onSuccess(query).run(query)` | После успешного завершения исходной Query | Query текущей Composition |
+
+Цель `.run(...)` всегда должна быть Query текущей Composition. Нельзя направить hook на Filter, Component, FilterView, scope или вложенную Composition.
+
+`onChange('runtime.output')` может наблюдать output Filter, Query или вложенной Composition, если этот output существует в compiled contract. `onChange(prop('path'))` наблюдает public prop текущей Composition, объявленный через `defineProps`. Произвольное выражение в качестве источника hook не поддерживается:
+
+```ts
+// Поддерживается.
+onChange('filters.request').run('request')
+onChange(prop('filter.active')).run('activeOrders')
+
+// Не поддерживается.
+onChange(fromOutput('filters', 'request')).run('request')
+onChange(fromData('application.rows')).run('request')
+```
+
+### Debounce и повторные изменения
+
+`.debounce(ms)` доступен только для `onChange` и принимает целое значение от `0` до `60000`:
+
+```ts
+onChange('filters.request')
+  .debounce(300)
+  .run('request')
+```
+
+Если `.debounce(...)` не указан, runtime неявно использует `200` мс. Пользователь может изменить задержку или указать `0`, чтобы запускать Query без задержки.
+
+Runtime также неявно сравнивает значение источника структурно. Если результат Filter output или выбранный `prop(path)` не изменился по структуре, повторного запуска не будет. Этот `structural distinct` включён всегда и пока не имеет отдельной настройки в source.
+
+Если новый запуск той же Query начинается до завершения предыдущего, `QueryRuntimeHost` применяет latest-wins: отменяет предыдущий transport через `AbortController` и сохраняет результат только актуального запуска. Это встроенное поведение Query runtime, а не отдельный hook modifier; управлять этой политикой через `hooks` сейчас нельзя.
+
+### Public props вложенной Composition
+
+Caller реактивно передаёт Filter output во вложенную Composition:
+
+```ts
+requests: composition('orders-query-general')
+  .withProps({
+    filter: {
+      active: fromOutput('filters', 'active'),
+      archived: fromOutput('filters', 'archived'),
+    },
+  })
+```
+
+Внутри `orders-query-general` значение `prop('filter.active')` обновляется автоматически. Для повторного выполнения запроса child Composition явно объявляет control dependency:
+
+```ts
+defineComposition({
+  props: defineProps({
+    filter: field('Object'),
+  }),
+
+  runtimes: {
+    activeOrders: query('orders-filter-active')
+      .withProps({
+        filter: prop('filter.active'),
+      }),
+
+    archivedOrders: query('orders-filter-archived')
+      .withProps({
+        filter: prop('filter.archived'),
+      }),
+  },
+
+  hooks: [
+    onMount().run('activeOrders'),
+    onMount().run('archivedOrders'),
+
+    onChange(prop('filter.active'))
+      .debounce(200)
+      .run('activeOrders'),
+
+    onChange(prop('filter.archived'))
+      .debounce(200)
+      .run('archivedOrders'),
+  ],
+})
+```
+
+Изменение `active` запускает только ветку активных записей, а изменение
+`archived` — только архивную ветку. Вложенная Composition не перезапускается и
+не монтируется заново: остаются прежние runtime instances, Store bindings и
+lifecycle.
+
+### Последовательность и параллельность
+
+Hooks одного готового уровня выполняются параллельно. Порядок строк в `hooks` не задаёт последовательность. Последовательность появляется только из явно объявленной зависимости.
+
+```ts
+hooks: [
+  // Оба root-запроса стартуют параллельно.
+  onMount().run('activeOrders'),
+  onMount().run('archivedOrders'),
+
+  // После activeOrders оба targets стартуют параллельно.
+  onSuccess('activeOrders').run('activeDetails'),
+  onSuccess('activeOrders').run('activeSummary'),
+
+  // Эта ветка не зависит от active и стартует после archivedOrders.
+  onSuccess('archivedOrders').run('archivedDetails'),
+  onSuccess('archivedOrders').run('archivedSummary'),
+]
+```
+
+Исполняемый граф для этого примера имеет два независимых branches:
+
+```text
+activeOrders   ──success──> [activeDetails || activeSummary]
+archivedOrders ──success──> [archivedDetails || archivedSummary]
+```
+
+Если `activeOrders` завершится раньше, два его target начнутся раньше target
+архивной ветки. Если обе root Query завершатся одновременно, все четыре
+дочерние Query смогут выполняться одновременно.
+
+Чтобы получить строгую последовательность, следующий hook должен зависеть от предыдущей Query, а не от общего parent:
+
+```ts
+hooks: [
+  onMount().run('activeOrders'),
+  onSuccess('activeOrders').run('activeDetails'),
+  onSuccess('activeDetails').run('activeSummary'),
+]
+```
+
+При initial mount Composition ожидает завершения всей цепочки, начатой через `onMount` и продолженной через `onSuccess`. При последующих запусках, например через `onChange`, success-chain выполняется реактивно без повторного mount Composition.
+
+Ошибка исходной Query не запускает её `onSuccess` targets. Hooks `onError`, `onFinally`, `onUnmount` и условный `.run(...)` текущим контрактом не поддерживаются.
+
+Props дочерней Query разрешаются непосредственно перед её запуском. Поэтому результат parent Query можно преобразовать через ValueExpression и передать в дочерний request:
+
+```ts
+runtimes: {
+  activeOrders: query('orders-filter-active'),
+
+  activeDetails: query('orders-details').withProps({
+    orderIds: fromOutput('activeOrders', 'raw')
+      .map(get('id'))
+      .compact()
+      .uniq(),
+  }),
+},
+
+hooks: [
+  onMount().run('activeOrders'),
+  onSuccess('activeOrders').run('activeDetails'),
+]
+```
+
+Здесь data dependency задаётся через `fromOutput(...)`, а control dependency — через `onSuccess(...)`. Это разные части одного compiled runtime graph: binding передаёт значение, hook определяет момент запуска.
+
+### Что происходит неявно
+
+| Поведение | Нужен hook | Может ли пользователь управлять |
+| --- | --- | --- |
+| Передача нового значения через `fromOutput`, `fromData`, `fromStore`, `fromFilter` или `prop` | Нет | Выбирает binding и путь в `.withProps(...)` |
+| Первый запуск Query | Да, `onMount` | Да: можно не объявлять hook или выбрать нужные root Query |
+| Повторный запуск после изменения output/prop | Да, `onChange` | Да: выбирает источник, target и debounce |
+| Запуск зависимой Query после успеха | Да, `onSuccess` | Да: явно строит success-chain |
+| Structural distinct для `onChange` | Нет, применяется автоматически | Нет, сейчас всегда включён |
+| Debounce `200` мс без `.debounce(...)` | Нет, применяется автоматически | Да: `.debounce(0..60000)` |
+| Latest-wins и отмена предыдущего запроса | Нет, поведение Query runtime | Нет через hooks |
+| Реактивная публикация output через `.storeTo(...)` | Нет | Да: пользователь явно задаёт mapping публикации |
+| Перезапуск всей вложенной Composition при изменении prop | Не происходит | Пользователь управляет отдельными Query через `onChange(prop(...))` |
+
+Compiler запрещает циклы, созданные bindings, `onChange` и `onSuccess`. Эти проверки выполняются автоматически и не отключаются source-настройкой.
+
+## Scopes
+
+Scope группирует Vocab data, resources, runtime-ноды и вложенные scopes, а также задаёт собственную активацию:
+
+```ts
+runtimes: {
+  pages: scope({
+    data: {
+      pageTypes: vocab('page-types').policy({
+        strategy: 'cache-first',
+        maxAgeMs: 300_000,
+      }),
+    },
+    resources: {
+      theme: style('application-page-theme'),
+    },
+    runtimes: {
+      content: composition('application-page'),
+    },
+  }).activateOn(manual()),
+}
+```
+
+Vocab-зависимости scope начинают разрешаться параллельно при его активации и до создания его runtime-нод. Поэтому `manual()` scope не загружает свои справочники заранее. Root `data` принадлежит implicit `scope_default`.
+
+Корневые data aliases доступны дочерним scopes. Alias scope доступен только этому scope и его потомкам; shadowing inherited alias запрещён. Сейчас Store объявляется только в корневом `data`, а вложенный `scope.data` предназначен для Vocab.
+
+Деактивация scope не очищает общий Raph-кеш: для этого существует явная операция `built-in-vocabs-invalidate`.
+
+Публичный handle scope можно экспортировать через `output().fromScope(path)`.
+
+## Outputs
+
+```ts
+outputs: {
+  rows: output().fromRuntime('request').select('rows'),
+  table: output().fromRuntime('table'),
+  pages: output().fromScope('pages'),
+}
+```
+
+- `.fromRuntime(name)` экспортирует runtime handle;
+- `.select(output)` выбирает конкретный output runtime-ноды;
+- `.fromScope(path)` экспортирует управляемый scope handle.
+
+## Границы ответственности
+
+Composition отвечает за runtime-граф, активацию, реактивные connections и публикацию данных. Она не описывает DOM, Canvas, layout или визуальные теги. Представление остаётся ответственностью [Component SFC](/reference/component-sfc), а преобразование данных — [DataView](/reference/data-view), [Computation](/reference/computation) и [общих функциональных выражений](/reference/value-expressions).

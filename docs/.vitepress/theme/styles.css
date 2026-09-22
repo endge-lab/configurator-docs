@@ -1,0 +1,692 @@
+@import 'vitepress/dist/client/theme-default/styles/vars.css';
+
+:root {
+  --endge-diagram-border: color-mix(in srgb, var(--vp-c-divider) 66%, #38bdf8);
+  --endge-diagram-grid: rgba(14, 116, 144, 0.09);
+  --endge-diagram-shadow: 0 22px 54px rgba(15, 23, 42, 0.09);
+  --endge-diagram-surface: color-mix(in srgb, var(--vp-c-bg-soft) 90%, #e0f2fe);
+  --endge-quote-accent: #2563eb;
+  --endge-quote-accent-soft: rgba(37, 99, 235, 0.1);
+  --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 82%, #dbeafe);
+  --nova-accent: #0f766e;
+  --nova-accent-soft: rgba(15, 118, 110, 0.12);
+  --nova-panel: #071a2f;
+  --nova-panel-raised: #0d2745;
+  --nova-panel-line: #275274;
+  --nova-panel-text: #e8f5ff;
+  --nova-panel-muted: #9bbbd4;
+}
+
+.dark {
+  --endge-diagram-border: color-mix(in srgb, var(--vp-c-divider) 62%, #38bdf8);
+  --endge-diagram-grid: rgba(125, 211, 252, 0.075);
+  --endge-diagram-shadow: 0 24px 60px rgba(2, 6, 23, 0.34);
+  --endge-diagram-surface: color-mix(in srgb, var(--vp-c-bg-soft) 90%, #0c4a6e);
+  --endge-quote-accent: #7dd3fc;
+  --endge-quote-accent-soft: rgba(125, 211, 252, 0.11);
+  --endge-quote-surface: color-mix(in srgb, var(--vp-c-bg-soft) 88%, #0c4a6e);
+  --nova-accent: #5eead4;
+  --nova-accent-soft: rgba(94, 234, 212, 0.12);
+}
+
+.endge-author-quote {
+  position: relative;
+  margin: 28px 0 34px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 62%, var(--endge-quote-accent));
+  border-left: 4px solid var(--endge-quote-accent);
+  border-radius: 4px 18px 18px 4px;
+  padding: 28px 30px 24px;
+  background:
+    radial-gradient(circle at 100% 0, var(--endge-quote-accent-soft), transparent 42%),
+    var(--endge-quote-surface);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07);
+}
+
+.endge-author-quote::before {
+  position: absolute;
+  top: 6px;
+  right: 22px;
+  color: var(--endge-quote-accent-soft);
+  content: '“';
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 108px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.endge-author-quote blockquote {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  color: var(--vp-c-text-1);
+  font-size: clamp(15px, 1.4vw, 17px);
+  font-weight: 560;
+  letter-spacing: -0.005em;
+  line-height: 1.65;
+}
+
+.endge-author-quote figcaption {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 20px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.endge-author-quote figcaption strong {
+  color: var(--endge-quote-accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.endge-author-quote figcaption span::before {
+  margin-right: 9px;
+  color: var(--vp-c-divider);
+  content: '—';
+}
+
+.endge-principle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin: 22px 0;
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 60%, #2563eb);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 84%, #dbeafe);
+}
+
+.endge-principle__title {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.endge-principle p {
+  margin: 0 !important;
+  color: var(--vp-c-text-1);
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.dark .endge-principle {
+  border-color: color-mix(in srgb, var(--vp-c-divider) 55%, #7dd3fc);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 84%, #0c4a6e);
+}
+
+.dark .endge-principle__title {
+  background: #38bdf8;
+  color: #082f49;
+}
+
+.nova-example {
+  margin: 28px 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 72%, var(--nova-accent));
+  border-radius: 14px;
+  background: var(--vp-c-bg-soft);
+  box-shadow: 0 18px 50px rgba(7, 26, 47, 0.08);
+}
+
+.nova-example__header {
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background:
+    linear-gradient(110deg, var(--nova-accent-soft), transparent 42%),
+    var(--vp-c-bg);
+}
+
+.nova-example__header > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.nova-example__header span {
+  color: var(--nova-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.nova-example__header strong {
+  color: var(--vp-c-text-1);
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.nova-example__header small {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.nova-example__tabs {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 9px;
+  background: var(--vp-c-bg-soft);
+}
+
+.nova-example__tabs button,
+.nova-contract__raw-button {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  font: inherit;
+}
+
+.nova-example__tabs button {
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.nova-example__tabs button.is-active {
+  background: var(--vp-c-bg);
+  color: var(--nova-accent);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+}
+
+.nova-example__body,
+.nova-example__split {
+  min-height: min(var(--nova-example-height), 80vh);
+}
+
+.nova-example__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.nova-example__canvas-host {
+  position: relative;
+  width: 100%;
+  height: var(--nova-example-height);
+  min-height: 300px;
+  overflow: hidden;
+  background: var(--nova-panel);
+}
+
+.nova-example__canvas-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.nova-example__code {
+  height: var(--nova-example-height);
+  min-height: 300px;
+  margin: 0 !important;
+  overflow: auto;
+  border-radius: 0 !important;
+  padding: 20px !important;
+  background: #0a1220 !important;
+  color: #d9e9f5;
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+.nova-example__error {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  margin: 0;
+  border: 1px solid rgba(251, 113, 133, 0.45);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(76, 5, 25, 0.88);
+  color: #fecdd3;
+  font-size: 12px;
+}
+
+.nova-contract {
+  margin: 28px 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  padding: 18px;
+  background: var(--vp-c-bg-soft);
+}
+
+.nova-contract > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 14px;
+}
+
+.nova-contract > header span {
+  color: var(--nova-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nova-contract > header h3 {
+  margin: 4px 0 !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+.nova-contract > header p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.nova-contract > header > code {
+  max-width: 420px;
+  overflow: auto;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--vp-c-bg);
+  color: var(--nova-accent);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.nova-contract details {
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.nova-contract summary {
+  display: grid;
+  gap: 2px;
+  padding: 12px 2px;
+  color: var(--vp-c-text-1);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nova-contract summary small {
+  color: var(--vp-c-text-3);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.nova-contract__table-wrap {
+  overflow-x: auto;
+}
+
+.nova-contract table {
+  display: table;
+  width: 100%;
+  margin: 0 0 14px;
+  font-size: 12px;
+}
+
+.nova-contract td:first-child {
+  min-width: 150px;
+}
+
+.nova-contract td b {
+  display: inline-block;
+  margin-left: 6px;
+  color: #e11d48;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nova-contract td small {
+  display: block;
+  margin-top: 4px;
+  color: var(--vp-c-text-3);
+}
+
+.nova-contract__raw-button {
+  padding: 7px 10px;
+  background: var(--nova-accent-soft);
+  color: var(--nova-accent);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.nova-contract--missing {
+  border-style: dashed;
+  color: var(--vp-c-text-2);
+}
+
+.endge-mermaid {
+  position: relative;
+  isolation: isolate;
+  margin: 28px 0;
+  overflow-x: auto;
+  border: 1px solid var(--endge-diagram-border);
+  padding: clamp(20px, 3vw, 34px);
+  background:
+    radial-gradient(circle at top left, var(--endge-diagram-grid) 0, transparent 34%),
+    var(--endge-diagram-surface);
+  box-shadow: var(--endge-diagram-shadow);
+  text-align: center;
+}
+
+.endge-mermaid::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--endge-diagram-grid) 0.8px, transparent 0.9px);
+  background-size: 18px 18px;
+  content: '';
+  mask-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.72), transparent 76%);
+  pointer-events: none;
+}
+
+.endge-mermaid > div {
+  min-width: max-content;
+}
+
+.endge-mermaid svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.endge-mermaid figcaption {
+  color: var(--vp-c-danger-1);
+  font-size: 12px;
+}
+
+.endge-mermaid__fullscreen-button {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--endge-diagram-border);
+  padding: 0;
+  background: color-mix(in srgb, var(--endge-diagram-surface) 88%, transparent);
+  box-shadow: 0 8px 24px rgb(15 23 42 / 14%);
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.endge-mermaid__fullscreen-button:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-brand-1);
+}
+
+.endge-mermaid__fullscreen-button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
+}
+
+.endge-mermaid__fullscreen-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.7;
+}
+
+.endge-mermaid--expanded {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: auto;
+  border: 0;
+  padding: clamp(54px, 6vw, 84px) clamp(20px, 5vw, 72px) clamp(20px, 5vw, 72px);
+  background:
+    radial-gradient(circle at top left, var(--endge-diagram-grid) 0, transparent 34%),
+    var(--endge-diagram-surface);
+  box-shadow: none;
+}
+
+.endge-mermaid--expanded > div {
+  display: grid;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  place-items: center;
+}
+
+.endge-mermaid--expanded > div > svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: calc(100vw - clamp(40px, 10vw, 144px)) !important;
+  max-height: calc(100vh - clamp(74px, 11vw, 156px)) !important;
+}
+
+.endge-mermaid--expanded .endge-mermaid__fullscreen-button {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+}
+
+@media (max-width: 640px) {
+  .endge-mermaid__fullscreen-button {
+    top: 8px;
+    right: 8px;
+  }
+
+  .endge-mermaid--expanded {
+    padding: 52px 12px 12px;
+  }
+
+  .endge-mermaid--expanded .endge-mermaid__fullscreen-button {
+    top: 10px;
+    right: 12px;
+  }
+}
+
+.EndgeReadingMode_Button {
+  display: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  margin-left: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.EndgeReadingMode_Button:hover {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+}
+
+.EndgeReadingMode_Button:active {
+  transform: scale(0.94);
+}
+
+.EndgeReadingMode_Button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+.EndgeReadingMode_Button__icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.EndgeReadingMode_Button.is-floating {
+  display: grid;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 70;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin: 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vp-c-bg) 88%, transparent);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  color: var(--vp-c-text-2);
+  backdrop-filter: blur(14px);
+}
+
+.EndgeReadingMode_Button.is-floating:hover {
+  border-color: color-mix(in srgb, var(--vp-c-divider) 58%, var(--vp-c-brand-1));
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+  transform: translateY(-1px);
+}
+
+@media (min-width: 1280px) {
+  .EndgeReadingMode_Button:not(.is-floating) {
+    display: grid;
+  }
+}
+
+.EndgeDocsLayout.is-reading {
+  --endge-reading-gutter: clamp(24px, 3vw, 48px);
+  --endge-reading-top: clamp(36px, 4vw, 56px);
+}
+
+.EndgeDocsLayout.is-reading .VPNav,
+.EndgeDocsLayout.is-reading .VPLocalNav,
+.EndgeDocsLayout.is-reading .VPSidebar,
+.EndgeDocsLayout.is-reading .VPBackdrop,
+.EndgeDocsLayout.is-reading .VPDoc .aside,
+.EndgeDocsLayout.is-reading .VPDocFooter,
+.EndgeDocsLayout.is-reading .VPFooter {
+  display: none !important;
+}
+
+.EndgeDocsLayout.is-reading .VPContent,
+.EndgeDocsLayout.is-reading .VPContent.has-sidebar {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc {
+  padding:
+    var(--endge-reading-top)
+    var(--endge-reading-gutter)
+    96px;
+  width: 100%;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .container {
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .content {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.EndgeDocsLayout.is-reading .VPDoc .content-container {
+  width: 100%;
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .EndgeReadingMode_Button {
+    transition: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .endge-author-quote {
+    margin: 22px 0 28px;
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 20px 20px;
+  }
+
+  .endge-author-quote::before {
+    right: 12px;
+    font-size: 82px;
+  }
+
+  .endge-author-quote figcaption {
+    display: grid;
+    gap: 2px;
+  }
+
+  .endge-author-quote figcaption span::before {
+    content: none;
+  }
+
+  .endge-principle {
+    gap: 10px;
+    padding: 14px 15px;
+  }
+
+  .nova-example__header,
+  .nova-contract > header {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .nova-example__header {
+    flex-direction: column;
+  }
+
+  .nova-example__tabs {
+    align-self: flex-start;
+  }
+
+  .nova-example__split {
+    grid-template-columns: 1fr;
+  }
+
+  .nova-example__canvas-host,
+  .nova-example__code {
+    height: min(var(--nova-example-height), 65vh);
+  }
+}
