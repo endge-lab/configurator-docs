@@ -3,17 +3,17 @@
 ## Установка
 
 ```bash
-npm install @endge/raph
+npm install @raphy-js/raph
 ```
 
-Пакет публикуется как `@endge/raph` и предоставляет ESM, CommonJS и TypeScript declarations через корневой export.
+Пакет публикуется как `@raphy-js/raph` и предоставляет ESM, CommonJS и TypeScript declarations через корневой export.
 
 ## Shared data и watch
 
 Для одного общего runtime используйте static API `Raph`:
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 const stop = Raph.watch('user.*', ({ events }) => {
   for (const event of events) {
@@ -34,7 +34,7 @@ stop()
 ## Signals и effects
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 const count = Raph.signal(0)
 const doubled = Raph.signal(() => count.value * 2)
@@ -59,7 +59,7 @@ import {
   RaphNode,
   SchedulerType,
   type PhaseName,
-} from '@endge/raph'
+} from '@raphy-js/raph'
 
 const app = new RaphApp({
   scheduler: SchedulerType.Sync,

@@ -5,7 +5,7 @@ Reactive API — удобный слой над default `RaphApp`. Он подх
 ## Writable signal
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 const count = Raph.signal(0)
 

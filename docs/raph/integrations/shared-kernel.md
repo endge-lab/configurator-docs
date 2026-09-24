@@ -3,7 +3,7 @@
 Один `RaphKernel` позволяет нескольким runtime разделять data-store и derived graph, сохраняя независимые execution pipelines.
 
 ```ts
-import { RaphKernel, SchedulerType } from '@endge/raph'
+import { RaphKernel, SchedulerType } from '@raphy-js/raph'
 
 const kernel = new RaphKernel({ id: 'workspace' })
 

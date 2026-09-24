@@ -10,7 +10,7 @@ import {
   RaphNode,
   RaphPropagation,
   RaphProperty,
-} from '@endge/raph'
+} from '@raphy-js/raph'
 
 interface NodeProperties {
   visible: boolean
@@ -81,7 +81,7 @@ get right(): number {
 ## Phase
 
 ```ts
-import { Raph, RaphLocalPhase } from '@endge/raph'
+import { Raph, RaphLocalPhase } from '@raphy-js/raph'
 
 class ViewRuntime {
   @RaphLocalPhase({ name: 'layout', priority: 10 })
@@ -105,7 +105,7 @@ class ViewRuntime {
 `Raph.configureLocal` читает metadata с экземпляров runtime и ноды, создаёт `RaphApp`, phases и property descriptors. Инициализация остаётся явной:
 
 ```ts
-import { Raph, RaphSchedulerType } from '@endge/raph'
+import { Raph, RaphSchedulerType } from '@raphy-js/raph'
 
 const runtime = new ViewRuntime()
 const { app, phases, props } = Raph.configureLocal<
@@ -130,7 +130,7 @@ node.x = 10
 ## After-hook ноды
 
 ```ts
-import { RaphAfter } from '@endge/raph'
+import { RaphAfter } from '@raphy-js/raph'
 
 class ViewNode extends RaphNode<NodeProperties> {
   @RaphAfter({ phase: 'layout' })
@@ -155,7 +155,7 @@ import {
   RaphNode,
   RaphPropagation,
   RaphSchedulerType,
-} from '@endge/raph'
+} from '@raphy-js/raph'
 
 interface LocalProperties {
   x: number

@@ -5,7 +5,7 @@ Shared data принадлежит `RaphKernel`. `Raph`, `RaphApp` и `RaphRunti
 ## CRUD
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 Raph.set('user', { id: 1, name: 'Ada' })
 Raph.set('user.name', 'Grace')
