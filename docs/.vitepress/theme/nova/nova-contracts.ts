@@ -6,7 +6,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'app',
     title: 'NovaAppCreateOptions',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/base.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/base.types.ts',
     summary: 'Контракт создания NovaApp: canvas target, размер, input, renderer, scheduler и debug-настройки.',
     signature: 'interface NovaAppCreateOptions<E extends EventList = Record<string, any>>',
     groups: [
@@ -137,7 +137,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'schema',
     title: 'NovaSchemaItem',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/renderer.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/renderer.types.ts',
     summary: 'Дискриминированный union всех primitives, которые renderer умеет отрисовывать через schema.',
     signature: 'type NovaSchemaItem = { type: \'rect\' | \'border\' | \'text\' | \'line\' | \'circle\' | \'arc\' | \'icon\' | \'polygon\' }',
     groups: [
@@ -201,7 +201,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'node',
     title: 'NovaNode',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/runtime/tree/NovaNode.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/runtime/tree/NovaNode.ts',
     summary: 'Базовый runtime-объект scene graph: transform, lifecycle, render, dirty flags и input handlers.',
     signature: 'class NovaNode<E extends EventList> extends RaphNode<NovaNodeProperties>',
     groups: [
@@ -251,7 +251,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'event',
     title: 'NovaDragEventMeta',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/events.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/events.types.ts',
     summary: 'Payload drag handlers: текущая позиция pointer, delta текущего шага и общий delta от dragstart.',
     signature: 'interface NovaDragEventMeta',
     groups: [
@@ -294,7 +294,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'surface',
     title: 'NovaSurface',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/runtime/tree/NovaSurface.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/runtime/tree/NovaSurface.ts',
     summary: 'Logical render boundary: хранит node graph, retained frame, culling stats и composition order. Физическим canvas/backend владеет NovaApp.',
     signature: 'class NovaSurface<E extends EventList> extends NovaNode<E>',
     groups: [
@@ -337,7 +337,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'scene',
     title: 'NovaScene',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/runtime/scene/NovaScene.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/runtime/scene/NovaScene.ts',
     summary: 'Lifecycle container for root nodes: mount, pause, resume, unmount and destroy.',
     signature: 'class NovaScene<E extends EventList>',
     groups: [
@@ -375,7 +375,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'renderer',
     title: 'NovaRenderContext',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/renderer.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/renderer.types.ts',
     summary: 'Recorder/context API для node render phase. Backend instance не является public root API.',
     signature: 'interface NovaRenderContext',
     groups: [
@@ -423,7 +423,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'interface',
     title: 'NovaSpatialIndex',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/runtime/interaction/NovaSpatialIndex.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/runtime/interaction/NovaSpatialIndex.ts',
     summary: 'Grid-based index for hit-test candidates in dense interactive scenes.',
     signature: 'class NovaSpatialIndex<E extends EventList>',
     groups: [
@@ -457,7 +457,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'ui-kit',
     title: 'LazyResizer',
     packageName: '@endge/nova-ui-kit',
-    sourcePath: 'packages/@endge-nova-ui-kit/src/components/LazyResizer/LazyResizer.ts',
+    sourcePath: 'packages/@nova/@endge-nova-ui-kit/src/components/LazyResizer/LazyResizer.ts',
     summary: 'Reusable Nova node for panel resizing with wider hit bounds than visual line.',
     signature: 'class LazyResizer<E extends EventList> extends NovaNode<E>',
     groups: [
@@ -496,7 +496,7 @@ export const DOCS_CONTRACTS: Record<string, DocsContractDefinition> = {
     kind: 'interface',
     title: 'NovaMotionEngine',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/motion/NovaMotionEngine.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/motion/NovaMotionEngine.ts',
     summary: 'Runtime motion engine для tween, timeline, sequence, stagger и component transitions.',
     signature: 'class NovaMotionEngine',
     groups: [
@@ -576,7 +576,7 @@ app.motion.pattern(cells, 'gridWave', { columns: 12 })`,
     kind: 'interface',
     title: 'NovaSoundEngine',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/model/sound/NovaSoundEngine.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/model/sound/NovaSoundEngine.ts',
     summary: 'App-level сервис для загрузки, кеширования и воспроизведения коротких UI/game sounds.',
     signature: 'class NovaSoundEngine',
     groups: [
@@ -620,7 +620,7 @@ scope.play('ambient.loop', { loop: true })`,
     kind: 'interface',
     title: 'NovaSoundDescriptor',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/sound.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/sound.types.ts',
     summary: 'Описание sound asset: id, source fallback, category, volume и ограничения playback.',
     signature: 'interface NovaSoundDescriptor',
     groups: [
@@ -662,7 +662,7 @@ scope.play('ambient.loop', { loop: true })`,
     kind: 'interface',
     title: 'NovaSoundPlayOptions',
     packageName: '@endge/nova',
-    sourcePath: 'packages/@endge-nova/src/domain/types/sound.types.ts',
+    sourcePath: 'packages/@nova/@endge-nova/src/domain/types/sound.types.ts',
     summary: 'Runtime overrides одного playback: mix, rate, pan, loop, dedupe и limits.',
     signature: 'interface NovaSoundPlayOptions',
     groups: [

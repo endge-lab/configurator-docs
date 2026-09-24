@@ -17,7 +17,7 @@
 Обычный `RaphApp` создаёт `DefaultDataAdapter`, у которого индексация включена:
 
 ```ts
-import { RaphApp } from '@endge/raph'
+import { RaphApp } from '@raphy-js/raph'
 
 const app = new RaphApp()
 
@@ -67,7 +67,7 @@ Runtime defaults:
 ## Настройка adapter
 
 ```ts
-import { DefaultDataAdapter, RaphApp } from '@endge/raph'
+import { DefaultDataAdapter, RaphApp } from '@raphy-js/raph'
 
 const adapter = new DefaultDataAdapter(
   {

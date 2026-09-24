@@ -5,7 +5,7 @@ Scheduler определяет, когда runtime выполняет накоп
 ## Режимы
 
 ```ts
-import { SchedulerType } from '@endge/raph'
+import { SchedulerType } from '@raphy-js/raph'
 
 app.options({
   scheduler: SchedulerType.Microtask,

@@ -48,7 +48,7 @@ Runtime регистрируется в kernel при создании. `destroy
 `RaphApp` наследует `RaphRuntime` и по умолчанию создаёт собственный `RaphKernel`. Это совместимый самостоятельный runtime:
 
 ```ts
-import { RaphApp } from '@endge/raph'
+import { RaphApp } from '@raphy-js/raph'
 
 const app = new RaphApp({ id: 'preview' })
 ```

@@ -3,7 +3,7 @@
 Phase описывает, какие ноды и в каком контексте должны выполниться при изменении данных.
 
 ```ts
-import type { PhaseName, RaphPhase } from '@endge/raph'
+import type { PhaseName, RaphPhase } from '@raphy-js/raph'
 
 const renderPhase: RaphPhase = {
   name: 'render' as PhaseName,

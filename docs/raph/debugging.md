@@ -5,7 +5,7 @@ Raph предоставляет read-only snapshots для инспекции gr
 ## Default runtime debug
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 Raph.options({ debug: true })
 

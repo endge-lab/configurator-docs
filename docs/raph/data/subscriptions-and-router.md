@@ -54,7 +54,7 @@ Callback получает batch событий после выполнения r
 ## Standalone RaphRouter
 
 ```ts
-import { RaphRouter } from '@endge/raph'
+import { RaphRouter } from '@raphy-js/raph'
 
 const router = new RaphRouter<string>()
 

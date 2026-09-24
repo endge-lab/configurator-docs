@@ -3,7 +3,7 @@
 Пакет экспортирует API через корневой entrypoint:
 
 ```ts
-import { Raph, RaphApp, RaphNode } from '@endge/raph'
+import { Raph, RaphApp, RaphNode } from '@raphy-js/raph'
 ```
 
 Не используйте deep imports из `src` или `dist`.

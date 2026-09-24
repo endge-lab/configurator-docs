@@ -7,7 +7,7 @@ Raph предоставляет несколько уровней API. Выби�
 Static facade подходит, когда приложению достаточно одного общего runtime:
 
 ```ts
-import { Raph } from '@endge/raph'
+import { Raph } from '@raphy-js/raph'
 
 Raph.set('session.userId', 42)
 const userId = Raph.get('session.userId')
@@ -20,7 +20,7 @@ const userId = Raph.get('session.userId')
 Используйте `RaphApp`, если нужен отдельный store и независимый execution lifecycle:
 
 ```ts
-import { RaphApp, SchedulerType } from '@endge/raph'
+import { RaphApp, SchedulerType } from '@raphy-js/raph'
 
 const preview = new RaphApp({
   scheduler: SchedulerType.Microtask,
@@ -34,7 +34,7 @@ const preview = new RaphApp({
 Если несколько runtime должны видеть одни данные, но владеть разными нодами, фазами и scheduler, создайте общий kernel:
 
 ```ts
-import { RaphKernel, SchedulerType } from '@endge/raph'
+import { RaphKernel, SchedulerType } from '@raphy-js/raph'
 
 const kernel = new RaphKernel({ id: 'workspace' })
 

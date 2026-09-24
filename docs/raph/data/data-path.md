@@ -20,7 +20,7 @@
 ## Создание и сериализация
 
 ```ts
-import { DataPath } from '@endge/raph'
+import { DataPath } from '@raphy-js/raph'
 
 const path = DataPath.fromString(
   'orders[id=$orderId].items[id=$itemId].price',

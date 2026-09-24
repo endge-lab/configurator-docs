@@ -24,7 +24,7 @@ interface DataAdapter {
 - `splice` или `unset` при удалении array element.
 
 ```ts
-import { DefaultDataAdapter, RaphApp } from '@endge/raph'
+import { DefaultDataAdapter, RaphApp } from '@raphy-js/raph'
 
 const adapter = new DefaultDataAdapter(
   { orders: [] },
@@ -51,7 +51,7 @@ import {
   DefaultDataAdapter,
   type DataAdapter,
   type DataPathDef,
-} from '@endge/raph'
+} from '@raphy-js/raph'
 
 class LoggingAdapter implements DataAdapter {
   private readonly base = new DefaultDataAdapter()

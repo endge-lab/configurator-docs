@@ -5,7 +5,7 @@
 ## `full()`
 
 ```ts
-import { full, Raph } from '@endge/raph'
+import { full, Raph } from '@raphy-js/raph'
 
 Raph.derive({
   from: 'orders',
@@ -31,7 +31,7 @@ Raph.derive({
 ## `collectionByKey(key)`
 
 ```ts
-import { collectionByKey, Raph } from '@endge/raph'
+import { collectionByKey, Raph } from '@raphy-js/raph'
 
 Raph.derive({
   from: 'orders',
@@ -59,7 +59,7 @@ Root replacement, reorder, numeric index mutation, изменение key и н�
 ## `filterByKey(key)`
 
 ```ts
-import { filterByKey, Raph } from '@endge/raph'
+import { filterByKey, Raph } from '@raphy-js/raph'
 
 Raph.derive({
   from: 'orders',
