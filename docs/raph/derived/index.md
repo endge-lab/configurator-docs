@@ -3,7 +3,7 @@
 Derived API создаёт синхронную материализованную зависимость между двумя ветками shared store.
 
 ```ts
-import { collectionByKey, Raph } from '@endge/raph'
+import { collectionByKey, Raph } from '@raphy-js/raph'
 
 const handle = Raph.derive({
   id: 'schedule-table',

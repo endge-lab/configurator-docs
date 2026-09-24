@@ -5,7 +5,7 @@
 ## Создание
 
 ```ts
-import { RaphNode } from '@endge/raph'
+import { RaphNode } from '@raphy-js/raph'
 
 const source = new RaphNode(app, {
   id: 'source',

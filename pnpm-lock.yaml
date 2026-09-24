@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@endge/nova':
-        specifier: 0.14.2
-        version: 0.14.2
+        specifier: 1.0.0-dev
+        version: 1.0.0-dev
       mermaid:
         specifier: 11.14.0
         version: 11.14.0
@@ -254,14 +254,11 @@ packages:
       oxlint:
         optional: true
 
-  '@endge/nova@0.14.2':
-    resolution: {integrity: sha512-zx1MLVkH7tDtZkj/z0Q0lE6iSDQQQoT5wsQZxZEk39JH3TkNmxsMZRhJMientI3a+ie1ots1j0HA5Af0bBiSBw==}
+  '@endge/nova@1.0.0-dev':
+    resolution: {integrity: sha512-7RpscIaSRNA8VttuTK5NKLjwqPut8RFB/on3S9n08gnq7zBCsjUmsWcyghKNfI4elR/EABJI81vq+Ak1Fy+PEA==}
 
-  '@endge/raph@3.3.0':
-    resolution: {integrity: sha512-1tiytJD2XYD3sdIVU6c3KittLH/bqPz7ovlHyIJVjbebC49ZKpI60cyFBteEK7eF+F4poYesfee95iiZZbFrIA==}
-
-  '@endge/utils@0.27.0':
-    resolution: {integrity: sha512-abuCAbeV/k/Daez4dsIegw0lB8R8TIAHqRYiXYFHs6JAWm26qWsyOqO5Dji6k5oOF0dlTNpexQkPlBgvefF8wQ==}
+  '@endge/utils@1.0.0-dev':
+    resolution: {integrity: sha512-4ZxT6jLyKT+YJp4m083CNLDcbC81svJXFv0hBuDGsLUPG0WqtM58DR9dhzC41Tsn+ofgiTIH+VgJuQ/UoEqcog==}
 
   '@es-joy/jsdoccomment@0.91.0':
     resolution: {integrity: sha512-vgqlMGNNhZxwDYbUNIHj3Hskb4R28iqdXx90ufHyt/NeuTQkeqjTDslAs9I0/GCAfbxP5BpH5WsL1R1fht5Lxg==}
@@ -515,6 +512,9 @@ packages:
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  '@raphy-js/raph@1.0.0-dev.2':
+    resolution: {integrity: sha512-Bg6IgOypTJiMZyc/IiJpQt2jlnrPm0r+tDgDAbVCGQETL9GpIDkrjYpxIc5v6fcw+pDytlwbSjb/vpl+vN9Jsg==}
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
     resolution: {integrity: sha512-6o7ZLZK+BeenkZCFNDXqpbjw9bD6nuWonvS/lwQJp7NoVVxm6p3qE7qQ5jGuBjiFsgvqjD8mZAU5oWxTmbOeOg==}
@@ -2723,17 +2723,15 @@ snapshots:
     optionalDependencies:
       eslint: 10.9.1
 
-  '@endge/nova@0.14.2':
+  '@endge/nova@1.0.0-dev':
     dependencies:
-      '@endge/raph': 3.3.0
-      '@endge/utils': 0.27.0
+      '@endge/utils': 1.0.0-dev
+      '@raphy-js/raph': 1.0.0-dev.2
       class-transformer: 0.5.1
       gl-matrix: 3.4.4
       rbush: 4.0.1
 
-  '@endge/raph@3.3.0': {}
-
-  '@endge/utils@0.27.0':
+  '@endge/utils@1.0.0-dev':
     dependencies:
       '@microsoft/fetch-event-source': 2.0.1
       class-transformer: 0.5.1
@@ -2938,6 +2936,8 @@ snapshots:
   '@ota-meshi/ast-token-store@0.3.0': {}
 
   '@pkgr/core@0.3.6': {}
+
+  '@raphy-js/raph@1.0.0-dev.2': {}
 
   '@rollup/rollup-android-arm-eabi@4.62.2':
     optional: true
