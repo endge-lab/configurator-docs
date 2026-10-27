@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { configureDocsMarkdown } from './docs-markdown'
+import { withFileBase } from './site-base'
 
 export default defineConfig({
   lang: 'ru-RU',
@@ -187,8 +188,8 @@ export default defineConfig({
             {
               text: 'Файлы для агента',
               items: [
-                { text: 'llms.txt — обзор и оглавление', link: '/llms.txt', target: '_blank', rel: 'noopener' },
-                { text: 'llms-full.txt — вся документация', link: '/llms-full.txt', target: '_blank', rel: 'noopener' },
+                { text: 'llms.txt — обзор и оглавление', link: withFileBase('/llms.txt'), target: '_blank', rel: 'noopener' },
+                { text: 'llms-full.txt — вся документация', link: withFileBase('/llms-full.txt'), target: '_blank', rel: 'noopener' },
               ],
             },
           ],

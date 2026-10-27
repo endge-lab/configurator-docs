@@ -166,6 +166,11 @@ function rewriteLinks(markdown, relativePath) {
     const absolute = pathPart.startsWith('/') ? pathPart : path.posix.normalize(path.posix.join(directory, pathPart))
     const markdownPath = resolvePagePath(absolute)
     if (!markdownPath) {
+      // Файлы из docs/public (примеры JSON и т. п.) тоже получают адрес сайта.
+      const publicFile = absolute.replace(/^\/+/, '')
+      if (publicFile && existsSync(path.join(documentsRoot, 'public', publicFile))) {
+        return `[${label}](${url(publicFile)}${fragment ? `#${fragment}` : ''}${title})`
+      }
       return match
     }
     return `[${label}](${url(markdownPath)}${fragment ? `#${fragment}` : ''}${title})`
