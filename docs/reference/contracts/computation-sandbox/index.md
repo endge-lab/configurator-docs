@@ -1,10 +1,10 @@
 ---
-description: "Публичные TypeScript-контракты @endge/computation-sandbox 1.0.0-dev.7: точки входа, группы деклараций и полный список exports."
+description: "Публичные TypeScript-контракты @endge/computation-sandbox 1.0.0-dev.8: точки входа, группы деклараций и полный список exports."
 ---
 
 # @endge/computation-sandbox: публичные контракты
 
-Source version: **1.0.0-dev.7**. [Repository](https://github.com/endge-lab/computation-sandbox). [Общий каталог](/reference/contracts/).
+Source version: **1.0.0-dev.8**. [Repository](https://github.com/endge-lab/computation-sandbox). [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 

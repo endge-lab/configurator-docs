@@ -1,5 +1,9 @@
 # Kernel, Runtime, Scope и Node
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 ## RaphKernel
 
 Kernel — source of truth path/meta data. Он владеет:

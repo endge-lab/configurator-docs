@@ -32,7 +32,7 @@ description: "Где искать точный контракт: истина п
 
 | Компонент | Canonical repository | Где проверять контракт |
 | --- | --- | --- |
-| Raph (`@raphy-js/raph`) | `gitlab.com/raphyjs/raphy-js-raph` — закрыт | [Контракты Raph](/raph/contracts/), [раздел Raph](/raph/), `.d.ts` в `https://unpkg.com/@raphy-js/raph@<версия>/` |
+| Raph (`@raphy-js/raph`) | `gitlab.com/raphyjs/raphy-js-raph` — закрыт | [Контракты Raph](/raph/contracts/), [Raph в Endge](/reference/raph), `.d.ts` в `https://unpkg.com/@raphy-js/raph@<версия>/` |
 | TypedWorks Federation (`@typedworks/federation`) | `gitlab.com/typedworks/typedworks-federation` — закрыт | [Контракты Federation](/reference/contracts/federation/), `.d.ts` в `https://unpkg.com/@typedworks/federation@<версия>/` |
 | Mock Generator | закрыт, публичной копии нет | HTTP API backend `/api/v1/mock-data/*` ([Mock data](/services/mock-data)) |
 

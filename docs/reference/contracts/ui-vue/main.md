@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.10, группа main; исходных модулей: 1."
+description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.11, группа main; исходных модулей: 1."
 ---
 
 # @endge/ui-vue: main
 
-Версия source: 1.0.0-dev.10. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
+Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
 
 ## src/main.ts
 

@@ -1,5 +1,9 @@
 # Индексация коллекций
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 `DefaultDataAdapter` ускоряет selectors вида `orders[id=42]`. Индекс принадлежит
 adapter, а не `DataPath`, `RaphRouter` или Runtime.
 

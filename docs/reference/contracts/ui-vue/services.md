@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.10, группа services; исходных модулей: 8."
+description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.11, группа services; исходных модулей: 8."
 ---
 
 # @endge/ui-vue: services
 
-Версия source: 1.0.0-dev.10. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
+Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
 
 ## src/services/debug/vue-console.ts
 

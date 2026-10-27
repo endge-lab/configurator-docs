@@ -1,10 +1,10 @@
 ---
-description: "Публичные TypeScript-контракты @endge/ui-vue 1.0.0-dev.10: точки входа, группы деклараций и полный список exports."
+description: "Публичные TypeScript-контракты @endge/ui-vue 1.0.0-dev.11: точки входа, группы деклараций и полный список exports."
 ---
 
 # @endge/ui-vue: публичные контракты
 
-Source version: **1.0.0-dev.10**. [Repository](https://github.com/endge-lab/ui-vue). [Общий каталог](/reference/contracts/).
+Source version: **1.0.0-dev.11**. [Repository](https://github.com/endge-lab/ui-vue). [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 
