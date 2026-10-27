@@ -1,9 +1,9 @@
 # Simulation
 
 Simulation сохраняет описание подмен запросов для одной [Composition](/reference/composition).
-Документ доступен в разделе **Инфраструктура → Симуляции**. Сейчас можно редактировать,
-проверять и переносить это описание; выполнение симуляций и генерация mock-данных
-не подключены.
+Документ доступен в разделе **Инфраструктура → Симуляции**. Сохранённую Simulation
+запускает контекстное меню документа, черновик — кнопка Preview редактора;
+значения генерирует mock-сервис.
 
 ## Source
 
@@ -33,7 +33,8 @@ defineSimulation({
 уже объявленные в её дереве `runtimes`. Вложенность повторяет Composition и scopes.
 Simulation не создаёт новые runtime-узлы и не меняет props, activation, Store или Stream.
 
-`request: mockRequest(...)` допустим только у Query. `seed` — необязательная строка.
+`request: mockRequest(...)` допустим только у Query, `stream: mockStream(...)` —
+только у Stream. `seed` — необязательная строка.
 `arrays` — необязательный объект: ключ обозначает массив в корневом ответе Query,
 значение — неотрицательное целое количество элементов. Например, `items: 50`,
 `'items[].children': 3`; для корневого массива используется `''`.
@@ -56,6 +57,86 @@ outputs: {
 Редактор не подставляет предполагаемый тип. Динамические ключи record не предлагаются
 как статические пути.
 
+### GraphQL Query
+
+Для GraphQL Query корневой ответ — объект `data` операции. Если есть корневой
+`output().from(data()).contract(field(Type))` без преобразований, используется он,
+как у REST. Иначе объект `data` собирается из outputs вида
+`output().from(data('a.b')).contract(field(Type))` без выражений и преобразований:
+вложенные объекты строятся по статическим путям, все поля обязательные.
+
+```ts
+// Query orders:
+outputs: {
+  orders: output().from(data('orders')).contract(field(Order).array()),
+  total: output().from(data('meta.total')).contract(field(Number)),
+}
+
+// Simulation:
+request: mockRequest({ arrays: { orders: 20 } })
+```
+
+Пути `arrays` относятся к собранному объекту: `orders`, `orders[].items`.
+Диагностика отклоняет разные контракты одного пути, путь вместе с вложенным в
+него (`data('a')` и `data('a.b')`), индексы массивов (`data('items.0')`) и Query
+без единого output с контрактом. Outputs с выражением или преобразованиями
+контракт не задают.
+
+GraphQL errors в Simulation задаёт `errors` в `mockRequest`:
+
+```ts
+orders: { request: mockRequest({ errors: [{ message: 'Denied', path: ['orders'] }] }) }
+```
+
+Элемент — `{ message, path?, extensions? }`. Errors проходят тот же `errorPolicy`
+Query, что [`mock.errors`](/reference/query#mock-preview-и-runtime): `throw` —
+`GraphQLQueryError` и статус `error`, `all` — `errors()` и warning, `ignore` —
+пусто. Неверная форма — `simulation-request-errors`, цель не GraphQL Query —
+`simulation-request-errors-transport`.
+
+## Подмена Stream
+
+```ts
+stream: mockStream({
+  type: PortfolioQuote,
+  event: 'quote.updated',
+  seed: 'portfolio-demo',
+  intervalMs: 1000,
+  itemsPerMessage: 5,
+  fields: {
+    symbol: { enum: ['BTC/USD', 'ETH/USD'] },
+    lastPrice: { minimum: 0.01, maximum: 100000 },
+  },
+})
+```
+
+`type` — существующий Type payload, `event` — нормализованный тип события,
+который ожидает Update. `fields` ограничивает значения по статическим путям:
+`enum`, `minimum`, `maximum`. По умолчанию `intervalMs` — 1000 (100…60000),
+`itemsPerMessage` — 1 (1…100).
+
+### GraphQL-подписка
+
+Для Stream с `graphqlSse(...)` `type` описывает `data` события `next`, а `event`
+не указывается: тип события задаёт `events.next` Stream (иначе
+`simulation-stream-event-graphql`).
+
+```ts
+// Type OrderUpdatedData = defineType({ orderUpdated: field(Order) })
+stream: mockStream({
+  type: OrderUpdatedData,
+  intervalMs: 1000,
+  errors: [{ message: 'Status is stale', path: ['orderUpdated', 'status'] }],
+})
+```
+
+Сгенерированные `data` проходят тот же путь, что ответ сервера: `events.next`,
+`errorPolicy` Stream, `meta.graphQLErrors` и warning при `all`, `transport:error`
+без публикации события при `throw`. Необязательный `errors` — непустой статический
+JSON-массив GraphQL errors, который добавляется к каждому событию `next`; он
+разрешён только для `graphqlSse` (`simulation-stream-errors-transport`). Для `sse`
+и `websocket` `event` обязателен (`simulation-stream-contract`).
+
 ## Редактирование и хранение
 
 Новый документ содержит пустой target и пустые overrides. Source можно сохранить
@@ -75,4 +156,4 @@ Query и Type. Изменение зависимостей обновляет д
 после обновления исходного backend.
 
 Открытие и компиляция Simulation не выполняют Query и не вызывают Mock-сервис.
-В редакторе нет кнопки запуска.
+Выполнение начинается только при явном запуске.

@@ -1,55 +1,47 @@
 # Raph
 
-Raph — низкоуровневый TypeScript runtime для приложений, в которых изменения данных должны проходить через явную маршрутизацию, граф зависимостей и управляемые фазы выполнения.
+Raph — TypeScript-библиотека с двумя явно разделёнными контурами:
 
-Библиотека объединяет несколько механизмов:
+- standalone reactivity для дешёвых синхронных `signal/computed/effect/watch`;
+- Runtime для owner lifecycle, фаз, path/meta sources, гранулярности и управляемого scheduler.
 
-- общее хранилище данных с адресацией через `DataPath`;
-- подписки на точные пути и маски;
-- граф runtime-нод и зависимостей между ними;
-- многофазное выполнение с настраиваемым scheduler;
-- синхронные материализованные зависимости между ветками данных;
-- быстрые local-свойства, принадлежащие конкретным нодам.
+Runtime не имеет dirty-node queue. Единица исполнения — persistent binding
+`phase + effect + consumer owner`. Producer добавляет cause в уже существующую
+binding и ставит её в очередь максимум один раз.
 
-Raph используется как инфраструктурная основа runtime в Endge Core и Nova, но не зависит от Vue, DOM или Canvas и может применяться отдельно.
-
-::: warning Статус API
-Библиотека пригодна для использования, но её API пока считается экспериментальным. При обновлении версии проверяйте release notes и TypeScript-контракты.
-:::
-
-## Когда подходит Raph
-
-Raph полезен, когда приложению нужны:
-
-- обновления по структурированным путям вроде `orders[id=10].status`;
-- явный порядок вычисления зависимых runtime-объектов;
-- несколько фаз, например `update`, `layout` и `render`;
-- общий data-store для нескольких изолированных execution-контуров;
-- инкрементальная материализация больших коллекций по устойчивому ключу;
-- управляемый lifecycle нод, подписок, циклов и derived-вычислений.
-
-Для обычной формы, небольшого Vue-компонента или простого глобального состояния Raph чаще всего избыточен. В таких случаях проще использовать локальное состояние framework или специализированный state manager.
-
-## Основная модель
+## Основные сущности
 
 | Сущность | Ответственность |
 | --- | --- |
-| `Raph` | Static facade над default `RaphApp` |
-| `RaphKernel` | Shared data-store, transactions, derived graph и доставка data events |
-| `RaphRuntime` | Ноды, фазы, scheduler и execution lifecycle одного runtime lane |
-| `RaphApp` | Самостоятельный runtime с собственным kernel |
-| `RaphNode` | Единица dependency graph и local tree |
-| `DataPath` | Разбор и каноническое представление путей и масок |
-| `RaphRouter` | Сопоставление путей с зарегистрированными payload |
+| `RaphReactivity` | Изолированный синхронный reactive graph |
+| `RaphKernel` | Path/meta data, transactions и materialized derived |
+| `RaphRuntime` | Owners, phases, scheduler и phase bindings |
+| `RaphScope` | Lifecycle-владелец ресурсов без позиции в дереве |
+| `RaphNode` | Scope с parent/children ownership |
+| `PathHandle` | Ленивый reactive source одного data path |
+| `RaphAggregate` | Immutable объединение нескольких Runtime sources |
+| `Raph` | Явно конфигурируемый facade одного режима |
 
-Начните с [установки и быстрого старта](/raph/getting-started), затем выберите подходящий [уровень API](/raph/choosing-api).
+## Когда подходит Runtime
 
-## Два контура данных
+Runtime полезен, когда важны:
 
-Raph поддерживает два совместимых, но разных контура:
+- детерминированный порядок фаз;
+- lifecycle ресурсов вместе с owner;
+- сортировка задач по consumer или source hierarchy;
+- self/subtree/runtime granularity;
+- path/meta события и причины выполнения;
+- custom `process(batch)`, `defer` и `cancel`;
+- animation-frame или microtask scheduling.
 
-1. **Data-path контур** хранит общие данные в `RaphKernel`. Операции `get`, `set`, `merge` и `delete` адресуют значения через пути и публикуют события.
-2. **Local runtime** хранит быстрые свойства непосредственно на `RaphNode`. Эти значения не проходят через `DataPath` и используются для node-local состояния, например layout-флагов или состояния представления.
+Для небольшого локального reactive graph используйте standalone
+`RaphReactivity` или `Raph.configure({ mode: 'reactivity' })`.
 
-Не смешивайте их без необходимости: shared business data принадлежит kernel, а local-состояние — конкретной runtime-ноде.
+## Следующие страницы
+
+- [Быстрый старт](/raph/getting-started)
+- [Какой API выбрать](/raph/choosing-api)
+- [Kernel, Runtime и Node](/raph/architecture/kernel-runtime-node)
+- [Phases, process и ordering](/raph/execution/phases-and-traversal)
+- [Signals, Effects и Watch](/raph/reactive)
 

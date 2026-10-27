@@ -1,81 +1,65 @@
 # Какой API выбрать
 
-Raph предоставляет несколько уровней API. Выбирайте самый высокий уровень, который покрывает текущую задачу.
+## `RaphReactivity`
 
-## `Raph`: один default runtime
-
-Static facade подходит, когда приложению достаточно одного общего runtime:
+Используйте для независимого синхронного графа без phases и ownership tree:
 
 ```ts
-import { Raph } from '@raphy-js/raph'
-
-Raph.set('session.userId', 42)
-const userId = Raph.get('session.userId')
+import { RaphReactivity } from '@raphy-js/raph/reactivity'
+const reactive = new RaphReactivity()
 ```
 
-Через `Raph` доступны shared data, signals, effects, watch, nodes, phases, subscriptions, transactions и derived data.
+## `RaphRuntime`
 
-## `RaphApp`: самостоятельный instance
-
-Используйте `RaphApp`, если нужен отдельный store и независимый execution lifecycle:
+Основной API для application/runtime integration:
 
 ```ts
-import { RaphApp, SchedulerType } from '@raphy-js/raph'
+import { RaphRuntime } from '@raphy-js/raph/runtime'
 
-const preview = new RaphApp({
-  scheduler: SchedulerType.Microtask,
+const runtime = new RaphRuntime({ id: 'canvas' })
+```
+
+Runtime автоматически создаёт собственный `RaphKernel`, `rootScope`, `root` и
+`frameTick`. Передайте `kernel` явно, если несколько execution lanes должны
+разделять path data.
+
+## `RaphKernel`
+
+Используйте отдельно, если нужны только path/meta data, transactions и derived:
+
+```ts
+import { RaphKernel } from '@raphy-js/raph/path'
+const kernel = new RaphKernel({ initial: { rows: [] } })
+```
+
+## `RaphScope` и `RaphNode`
+
+- scope владеет signals, computed, effects, watches и aggregates;
+- node добавляет parent/children hierarchy, structure causes и granules;
+- plain scope подходит service/module owner;
+- node подходит DOM, Canvas, scene graph и уничтожаемому subtree.
+
+## `Raph` facade
+
+Facade нужно сначала сконфигурировать ровно в один режим:
+
+```ts
+Raph.configure({ mode: 'reactivity' })
+// или
+Raph.configure({
+  mode: 'runtime',
+  phases: [{ name: 'update' }, { name: 'render' }],
 })
 ```
 
-Это удобная граница для sandbox, preview, editor instance или другого автономного контура.
+`Raph.reset()` освобождает принадлежащую facade runtime-сессию.
 
-## `RaphKernel` и `RaphRuntime`: shared data, разные execution lanes
-
-Если несколько runtime должны видеть одни данные, но владеть разными нодами, фазами и scheduler, создайте общий kernel:
-
-```ts
-import { RaphKernel, SchedulerType } from '@raphy-js/raph'
-
-const kernel = new RaphKernel({ id: 'workspace' })
-
-const ui = kernel.createRuntime({
-  id: 'ui',
-  scheduler: SchedulerType.AnimationFrame,
-})
-
-const computations = kernel.createRuntime({
-  id: 'computations',
-  scheduler: SchedulerType.Microtask,
-})
-```
-
-`RaphKernel` остаётся владельцем данных и transactions. Каждый `RaphRuntime` самостоятельно владеет execution graph и lifecycle.
-
-## `RaphNode`: собственные runtime-объекты
-
-Наследуйте `RaphNode`, когда объект должен:
-
-- участвовать в dependency graph;
-- подписываться на data paths;
-- выполняться в фазах;
-- иметь parent/children и local properties;
-- освобождать свои подписки вместе с lifecycle.
-
-## `DataPath` и `RaphRouter`: инфраструктура без runtime
-
-Эти классы можно использовать отдельно:
-
-- `DataPath` — для разбора и нормализации путей;
-- `RaphRouter<T>` — для сопоставления путей и масок с произвольным payload.
-
-## Выбор по сценарию
-
-| Нужно | Выбор |
+| Задача | API |
 | --- | --- |
-| Простая общая реактивность | `Raph` |
-| Полностью изолированный runtime | `RaphApp` |
-| Общие данные и несколько execution-контуров | `RaphKernel` + `RaphRuntime` |
-| Пользовательские графовые сущности | `RaphNode` |
-| Только path matching | `DataPath` + `RaphRouter` |
-| Быстрые свойства дерева нод | [Local Runtime](/raph/local/) |
+| Синхронные signals | `RaphReactivity` |
+| Фазы и scheduler | `RaphRuntime` |
+| Shared path store | `RaphKernel` |
+| Ресурсы без tree position | `RaphScope` |
+| Ownership hierarchy | `RaphNode` |
+| Process-wide facade | `Raph.configure(...)` |
 

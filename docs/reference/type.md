@@ -182,6 +182,51 @@ defineType({
 
 В текущей версии `recordOf` является только вложенным type expression и не используется как корень `defineType(...)`.
 
+## contextSwitch и extends
+
+### Наследование: `extends`
+
+`defineType({ extends, fields })` берёт поля базового Type и добавляет свои:
+
+```ts
+defineType({
+  extends: type('Flight'),
+  fields: {
+    stand: field(String),
+    handlingAgent: field(String),
+  },
+})
+```
+
+- Форма распознаётся, если у корневого объекта есть `extends` и его значение не `field(...)`: поле с именем `extends: field(String)` остаётся обычным полем.
+- Допустимы только свойства `extends` и `fields`. `extends` — `type('X')`, identity или `contextSwitch` таких ссылок. У `objectOf({...})` наследования нет.
+- Сначала идут поля базовой цепочки, затем собственные. Поле с тем же именем заменяет унаследованное на его месте, если совместимо: тот же структурный тип и `array`; optional можно сделать required; description, examples, min и max меняются свободно.
+- Artifact Type хранит развёрнутое определение, поэтому каталог типов, Simulation и Component SFC видят унаследованные поля. Source сохраняет авторскую форму: `extends` и только собственные поля.
+
+| Код | Когда |
+| --- | --- |
+| `type-source-extends-property` | свойство кроме `extends`/`fields` или повтор |
+| `type-source-extends-fields-shape` | `fields` не object literal |
+| `type-source-extends-shape` | `extends` не ссылка на Type и не `contextSwitch` ссылок |
+| `type-extends-cycle` | цикл наследования, в том числе на себя |
+| `type-extends-not-object` | база — не object Type |
+| `type-extends-field-incompatible` | несовместимое переопределение поля или required → optional |
+
+### Ссылка по контексту
+
+`contextSwitch` выбирает Type по фасетам сборки в любой позиции type expression (`field`, `arrayOf`, `unionOf`, `recordOf`, `extends`) и в контрактах Source (`defineProps`, `output().contract`, `.contract` Store, поля Filter, props Composition):
+
+```ts
+flight: output().from(response('flight')).contract(field(contextSwitch({
+  default: type('Flight'),
+  cases: [{ when: { tenant: 'kzn' }, use: type('FlightKzn') }],
+}))),
+```
+
+Ветка — `'Identity'`, `Identity` или `type('X')`; там, где разрешены inline-типы, — `objectOf`/`recordOf`. Все ветки проверяются (`type-reference-missing`) и становятся зависимостями программы, в artifact попадает выбранная.
+
+Визуальный редактор Type в Configurator сохраняет `extends`. Type с `contextSwitch` визуальный редактор не открывает (`type-visual-context-switch`): такой Type редактируется в режиме Source, иначе невыбранные варианты потерялись бы.
+
 ## Ограничения синтаксиса
 
 Type Source похож на TypeScript, но не является произвольной программой. Документ содержит ровно один `defineType(...)` и использует только поддержанные static declarations.
@@ -207,9 +252,55 @@ Compiler creates one Type Program artifact for each Type document before compili
 - `Any` is valid and produces `type-any-usage` warning on the entity that uses it.
 - An artifact with warnings remains available to editor tooling and runtime orchestration.
 
-OpenAPI and GraphQL importers generate canonical Type Source directly.
+OpenAPI and GraphQL importers generate canonical Type Source directly. Правила GraphQL описаны в разделе [Импорт из GraphQL](#импорт-из-graphql).
 
 System `Ref*` types remain registry entries with `entityReference.target` and `entityReference.storage`. Они не разворачиваются в object schema: their purpose is to connect a typed value with a concrete domain entity selector.
+
+## Импорт из GraphQL
+
+Диалог импорта Type принимает GraphQL SDL (`.graphql`, `.gql`, `.graphqls`) и
+JSON результата introspection (`.json`) в формах `{ data: { __schema } }` и
+`{ __schema }`. Introspection превращается в схему и импортируется тем же путём,
+что SDL. В редакторе Query и Stream схему можно загрузить с endpoint и сразу
+импортировать типы: [Запуск Query и схема GraphQL](/configurator/query-run-and-graphql-schema).
+
+| GraphQL | Type Source |
+| --- | --- |
+| `type X { ... }` | `defineType({ ... })`; при `implements` — metadata `graphql: { kind: 'object', interfaces: [...] }` |
+| `interface X { ... }` | Object type с полями interface; metadata `graphql: { kind: 'interface', implementations: [...] }` |
+| `input X { ... }` | Object type; metadata `graphql: { kind: 'input' }`, default values — в `graphql.defaults`, поле с default необязательное |
+| `union X = A \| B` | `defineType(unionOf(A, B))`; metadata `graphql: { kind: 'union' }` |
+| `enum X` | `defineType(enumOf([...]))` без metadata |
+| `scalar X` | Нормализуется в primitive; `Date` и `LocalDate` — в `Date` |
+| `T` / `T!` | `.optional()` / обязательное поле |
+| `[T]` | `.array()` |
+| `[[T]]` | `field(arrayOf(T)).array()` |
+
+Metadata записывается отдельной декларацией `defineMetadata({...})` перед
+`defineType`:
+
+```ts
+defineMetadata({
+  "graphql": {
+    "kind": "input",
+    "defaults": { "limit": 10 }
+  }
+})
+
+defineType({
+  status: field(String),
+  limit: field(Number).optional(),
+})
+```
+
+В пропущенные элементы с причиной попадают union из одного типа (`unionOf`
+требует двух вариантов), корни operations (`Query`, `Mutation`, `Subscription`,
+`schema { ... }`) и `extend type`. Аргументы полей Type Source не выражает: поле
+импортируется, а кандидат получает info-диагностику
+`document-import-graphql-field-arguments`. Nullability элементов вложенных
+списков не сохраняется. Ошибки introspection JSON возвращаются диагностиками
+`document-import-graphql-introspection-json` и
+`document-import-graphql-introspection-invalid`.
 
 ## Persisted representation
 

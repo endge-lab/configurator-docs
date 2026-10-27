@@ -41,8 +41,8 @@ runtime создаст нормализованное событие с типо
 
 ## Transport
 
-Stream поддерживает `sse(...)` и `websocket(...)`. Выбор transport не меняет
-маршрутизацию событий в Composition.
+Stream поддерживает `sse(...)`, `websocket(...)` и `graphqlSse(...)`. Выбор
+transport не меняет маршрутизацию событий в Composition.
 
 ### SSE
 
@@ -50,7 +50,7 @@ Stream поддерживает `sse(...)` и `websocket(...)`. Выбор trans
 
 | Поле | Назначение |
 | --- | --- |
-| `url` | Статическая строка или `env('VARIABLE_NAME')` |
+| `url` | Статическая строка, `env('VARIABLE_NAME')` или выражение над props: `prop('endpoint')`, шаблонная строка |
 | `withCredentials` | Передавать cookies в native `EventSource` при `auth: 'none'` |
 | `auth` | Правило авторизации: Workspace default profile, именованный AuthProfile или соединение без авторизации |
 
@@ -125,6 +125,128 @@ Core не добавляет Bearer headers и не разрешает AuthProfi
 Этот пример использует публичный поток без API-ключа; не помещайте credentials
 в persisted Source.
 
+### GraphQL-подписка через SSE
+
+`graphqlSse(...)` подключает GraphQL `subscription` по протоколу graphql-sse в
+режиме distinct connections: одно HTTP-соединение на подписку, события `next` и
+`complete`. Query и mutation выполняются через [Query](/reference/query#graphql-вариант).
+
+```ts
+defineStream({
+  props: defineProps({
+    orderId: field('ID'),
+    tenant: field('String').default('ou'),
+  }),
+
+  transport: graphqlSse({
+    url: env('GRAPHQL_SSE_URL'),
+    method: 'POST',
+    document: gql`
+      subscription OrderUpdated($id: ID!) {
+        orderUpdated(id: $id) { id status }
+      }
+    `,
+    variables: variables(({ prop }) => ({ id: prop('orderId') })),
+    headers: { 'X-Tenant': prop('tenant'), 'X-Region': env('REGION') },
+    auth: 'inherit',
+    errorPolicy: 'throw',
+    reconnectDelay: 3000,
+  }),
+
+  events: {
+    next: event({ type: 'order.updated', payloadFrom: 'orderUpdated' }),
+    complete: event('order.subscription-completed'),
+  },
+})
+```
+
+| Поле | Назначение |
+| --- | --- |
+| `url` | Статическая строка или `env('VARIABLE_NAME')` |
+| `method` | `'POST'` по умолчанию или `'GET'` |
+| `document` | Статический `gql` с operation `subscription` |
+| `fragments` | Фрагменты GraphQL, в том числе по контексту — как у [Query](/reference/query#фрагменты-по-контексту) |
+| `operationName` | Имя operation; обязательно, если document содержит несколько operations |
+| `variables` | `variables(({ prop }) => ({ ... }))`; читает только объявленные props и `env(...)` |
+| `headers` | Object literal; значения могут читать `prop('key')` и `env('NAME')` |
+| `extensions` | Object literal для поля `extensions` запроса; значения могут читать `prop('key')` и `env('NAME')` |
+| `auth` | `'inherit'` по умолчанию, `'none'` или `{ mode: 'profile', profile: 'identity' }` — как у [SSE](#авторизация-sse) |
+| `withCredentials` | `true` или `false`; передавать cookies |
+| `errorPolicy` | `'throw'` по умолчанию, `'ignore'` или `'all'` |
+| `reconnectDelay` | Задержка переподключения в миллисекундах, по умолчанию `3000` |
+
+`POST` отправляет JSON-тело `{ query, operationName?, variables }`. `GET`
+добавляет параметры `query`, `operationName` и `variables` (JSON) к URL,
+сохраняя его query string и hash. Если задано `extensions`, `POST` добавляет его в
+тело, а `GET` — параметром `extensions` (JSON); пустой объект не отправляется.
+`extensions` не object literal — `stream-graphql-sse-extensions`; `url`,
+`extensions` или `headers`, читающие необъявленный prop, —
+`stream-transport-prop-missing`.
+
+`url`-выражение вычисляется при каждом подключении, затем в нём подставляются
+переменные workspace (`{VAR}`). Смена prop, от которого зависит адрес,
+переоткрывает подписку на новом URL:
+
+```ts
+transport: graphqlSse({
+  url: prop('endpoint'),
+  document: gql`subscription { tick }`,
+  extensions: { persistedQuery: { version: 1 }, trace: prop('trace'), region: env('REGION') },
+}),
+```
+
+Компилятор отклоняет operation `query` и `mutation`
+(`stream-graphql-operation-unsupported`) и сверяет `variables(...)` с
+объявлениями переменных документа так же, как [Query](/reference/query#проверка-variables)
+(коды `stream-graphql-variable-unknown` и `stream-graphql-variable-missing`).
+
+`events` допускает только `next` (обязательно) и `complete`. Формы `event(...)`
+— `type`, `typeFrom`, `payloadFrom`, `match`, `eachFrom` — работают над `data`
+результата `next`. `complete` публикует событие с `payload: null`, если оно
+объявлено, и закрывает подписку без переподключения.
+
+Переподключение зависит от причины ошибки. Каждая ошибка публикует `transport:error`.
+
+| Причина | Поведение |
+| --- | --- |
+| Обрыв без `complete`, сетевая ошибка, HTTP 5xx, HTTP 408 и 429 | Переподключение через `reconnectDelay` с теми же variables |
+| HTTP 401 при `auth: 'inherit'` или профиле | Один повтор с принудительным обновлением token AuthProfile; второй 401 подряд останавливает подписку. Счётчик сбрасывается после успешного открытия |
+| HTTP 401 без auth, остальные 4xx (включая 403) | Подписка останавливается, ошибка — `GraphQLSseHttpError` со `status` и `url` (класс экспортируется из `@endge/core`), статус runtime `error` |
+
+`errorPolicy` применяется к каждому `next`, содержащему `errors`:
+
+| `errorPolicy` | Результат |
+| --- | --- |
+| `throw` | Событие не публикуется; `transport:error` получает `GraphQLQueryError` с `errors` и частичными `data`; статус runtime `error`, следующий успешный `next` возвращает `success`. Подписка продолжается |
+| `ignore` | Публикуется `data`, если оно не `null`; errors скрыты |
+| `all` | Публикуется `data`, если оно не `null`, с `meta.graphQLErrors`; warning `endge.stream.graphql-errors` пишется в diagnostics, в том числе при `data: null` |
+
+Некорректный результат `next` (не объект, нет `data` и `errors`, `errors` не
+массив) публикует `transport:error` с `GraphQLResponseFormatError`.
+
+### Props Stream
+
+`props: defineProps({...})` объявляет входы Stream с тем же контрактом поля, что
+у [Query](/reference/query#props). Props допустимы только с `graphqlSse`
+(`stream-props-transport`), default — только literal: `.from(filter(...))`
+отклоняется (`stream-prop-default-source`). URL из props не вычисляется: он
+остаётся строкой или `env(...)`.
+
+Значения передаются из Composition:
+
+```ts
+runtimes: {
+  feed: stream('order-updates')
+    .withProps({ orderId: fromData('db.selectedOrder'), tenant: 'ops' })
+    .dispatchTo(data('db')),
+}
+```
+
+Runtime вычисляет variables и headers перед открытием соединения. При изменении
+связанных данных подписка переоткрывается, только если изменился итоговый запрос.
+Необъявленный prop не останавливает Stream: runtime пишет warning
+`endge.stream.prop-unknown`.
+
 ### Lifecycle WebSocket
 
 После закрытия соединения транспорт повторяет попытку через 1 секунду, увеличивая
@@ -179,10 +301,11 @@ transport: sse({
 профиля. Это не переключает Stream на другой AuthProfile: issuer, audience и
 roles нового token всё равно должны соответствовать SSE endpoint.
 
-Авторизованный transport поддерживает только стандартное SSE-событие `message`.
-Именованные transport events доступны при `auth: 'none'` через native
-`EventSource`. В этом режиме `withCredentials: true` разрешает браузеру
-передавать cookies; Bearer token не добавляется.
+Авторизованный transport сохраняет имена SSE-событий, поэтому в `events` можно
+объявлять именованные transport events так же, как при `auth: 'none'`.
+`withCredentials: true` разрешает браузеру передавать cookies в обоих режимах.
+При `auth: 'none'` используется native `EventSource`, Bearer token не добавляется.
+Данные, которые не являются JSON, доставляются строкой.
 
 ## Нормализация событий
 
@@ -285,7 +408,8 @@ unmount соединение закрывается вместе с runtime-host
 - `eachFrom` не указывает на массив;
 - WebSocket URL имеет неподдерживаемую схему или сервер присылает не JSON text;
 - WebSocket содержит SSE-настройки, именованные события или не-JSON `onOpen`;
-- авторизованный Stream объявил transport event, отличный от `message`;
+- `graphqlSse` содержит не `subscription`, объявляет события кроме `next` и `complete` или читает необъявленный prop;
+- `next` подписки пришёл с `errors` при `errorPolicy: 'throw'`;
 - `.dispatchTo(...)` ссылается не на Store data alias;
 - целевой Store не содержит Update для типа события.
 
