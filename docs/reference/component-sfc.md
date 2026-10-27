@@ -457,6 +457,16 @@ Query port вызывается только как reaction на Event и по�
 
 В artifact сохраняется ссылка на port, а не зафиксированная Query identity. Runtime выбирает provider из flat binding конкретного экземпляра или использует `default`.
 
+### Порт по контексту
+
+Flat binding required-порта может выбирать provider по фасетам сборки:
+
+```html
+<Leg.Editor :update="contextSwitch({ default: query('update-afl'), cases: [{ when: { tenant: 'kzn' }, use: query('update-kzn') }] })" />
+```
+
+Каждая ветка — `kind('identity')` того же kind, что порт (`action`, `component`, `computation`, `query`). Наличие, kind, активность и contract Query-порта проверяются для каждой ветки: ошибка в любой ветке отклоняет привязку. В IR попадает выбранная ветка, зависимостями компонента становятся все. Правила `contextSwitch` — в [Контексте сборки](/reference/value-expressions#контекст-сборки).
+
 ## `forward`: повторная публикация портов локальных компонентов
 
 `forward` — отдельное поле `definePorts`, которое выводит публичные порты

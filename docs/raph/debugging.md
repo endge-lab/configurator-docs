@@ -1,78 +1,39 @@
 # Отладка и метрики
 
-Raph предоставляет read-only snapshots для инспекции graph, routes и derived lifecycle.
-
-## Default runtime debug
+Runtime предоставляет immutable snapshots без отдельного debug mode.
 
 ```ts
-import { Raph } from '@raphy-js/raph'
-
-Raph.options({ debug: true })
-
-const flat = Raph.debug.getFlat()
-const tree = Raph.debug.getTree()
+const snapshot = runtime.debug.snapshot()
+const tree = runtime.debug.getTree()
 ```
 
-`getFlat()` возвращает для каждой ноды:
+`snapshot()` содержит:
 
-- `id` и `type`;
-- parent и child ids dependency graph;
-- tracked routes.
+- runtime id, disposed и pending;
+- transaction depths;
+- количество owners и активных path handles;
+- root scope, plain scopes и node tree;
+- состояние frame loop: running, manual, leases.
 
-`getTree()` возвращает иерархию нод с children и routes для визуального инспектора.
+Owner snapshot сообщает `kind`, `disposed`, число resources/sources и children.
 
-## Debug lease
-
-Временный inspector может удерживать сбор debug state через lease:
-
-```ts
-const lease = Raph.debug.acquire()
-
-try {
-  inspect(Raph.debug.getFlat())
-}
-finally {
-  lease.release()
-}
-```
-
-Debugger остаётся включённым, пока действует manual `debug: true` или существует хотя бы один lease.
-
-## Derived snapshots
-
-```ts
-const registration = handle.snapshot()
-const manager = runtime.getDerivedSnapshot()
-```
-
-Проверяйте:
-
-- `status`, `stale` и `lastError`;
-- количество full и incremental computes;
-- число target writes;
-- размеры derived graph;
-- pending keys и errors;
-- отсутствие registrations после cleanup.
-
-## Runtime counters
+## Derived
 
 ```ts
 console.log({
-  ups: runtime.ups,
-  eps: runtime.eps,
-  nps: runtime.nps,
-  frame: runtime.frame,
+  status: handle.status,
+  lastError: handle.lastError,
+  manager: runtime.getDerivedSnapshot(),
 })
 ```
 
-Counters помогают увидеть активность live runtime, но не заменяют профилирование. На них влияют scheduler, частота входных событий, browser throttling и активность loop.
+Manager snapshot показывает registrations, errors, pending и stabilization.
 
-## Что проверять при утечке
+## Проверка утечек
 
-1. Освобождены ли watch/effect/subscription disposers.
-2. Вызван ли `dispose()` у derived handles.
+1. Освобождены ли effect/watch disposers.
+2. Уничтожены ли owners и Runtime lanes.
 3. Освобождены ли loop leases.
-4. Уничтожены ли runtime lanes, которые больше не используются.
-5. Не удерживает ли application disposed nodes внешними ссылками.
-6. Обнулился ли derived manager snapshot для уничтоженного scope.
+4. Не удерживает ли application disposed node внешней ссылкой.
+5. Вернулись ли owner resources/sources и pathHandles к ожидаемому уровню.
 

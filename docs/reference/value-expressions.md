@@ -93,6 +93,36 @@ prop('profile')
   .omit(['token'])
 ```
 
+### Синтаксис путей
+
+Пути чтения понимают грамматику путей Raph. Это касается readers (`prop`, `value`, `row`, `response`, `data`, `errors`, `store`, `path`), второго аргумента `get`, `getOr`, `has` и `pick`, путей в `match`, `leftJoin`/`fullJoin ... by`, `lookupOne`/`lookupMany ... by`, outputs Query `response('...')`/`data('...')`, а также `path()`, `.pick()` и шаблонов `{...}` DataView.
+
+| Путь | Что читается |
+| --- | --- |
+| `''` | сам источник |
+| `legs.1.gate`, `title.length` | точечный путь, как раньше: числовой сегмент — индекс, у примитивов читаются свойства |
+| `legs[1].gate` | индекс массива; у не-массива (`title[0]`) — `undefined` |
+| `legs[id="L2"].gate`, `legs[id='L1']` | первый элемент-объект, у которого собственное поле `id` строго равно значению |
+| `legs[id=3]`, `[active=true]`, `[active=null]` | значение без кавычек — число, булево или `null`; `[id=3]` не совпадает с `"3"` |
+| `legs[id="L2"].crew[1].name` | сегменты комбинируются в любом порядке |
+| `legs[id=$leg]`, `legs[$i]`, `legs[0].$field` | `$имя` — переменная из props выражения |
+
+В DataView переменными путей служат props DataView: `path('leg.$field')`, `path('input.statuses[legId=$legId].value')`, `template('{leg.$field}')`.
+
+Литеральный путь проверяется при компиляции: ошибка синтаксиса даёт `source-expression-path-invalid`, а `*` или `[*]` — `source-expression-path-wildcard` (wildcard допустим только в масках подписки Raph, но не в чтении). Если путь вычисляется выражением, ошибка проявляется только при вычислении: результат `undefined` (`has` — `false`) и предупреждение `value-path-invalid`, `value-path-wildcard` или `value-path-variable`, если переменная в `[$i]` или `[k=$v]` не задана. Исключение наружу не выходит.
+
+### Путь из выражения
+
+Второй аргумент `get`, `getOr` и `has` может быть выражением. Так поле читается по пути, который хранится в настройке или в props:
+
+```ts
+get(row(''), prop('fieldPath'))
+getOr(row(''), prop('fieldPath'), '—')
+row('legs').map(get(prop('fieldPath')))
+// DataView: значение поля по пути из схемы инспектора
+get(path(''), get('path'))
+```
+
 ## Коллекции
 
 | API | Результат |
@@ -350,7 +380,73 @@ rows.enrich('details', {
 
 Поля вычисляются в контексте выбранной ветки и затем глубоко объединяются с ней.
 
+## Контекст сборки
+
+Фасеты и Configuration фиксируются при запуске Endge, поэтому четыре функции контекста вычисляются при компиляции и попадают в программу константами. Смена фасета или значения Configuration меняет `contextHash` сборки: прежние artifacts становятся устаревшими (`program-artifact-stale`) и пересобираются.
+
+| Функция | Результат при компиляции |
+| --- | --- |
+| `facet('tenant')` | identity выбранного документа фасета или `null`, если фасет не выбран |
+| `config('inspector.page')` | значение Configuration по пути (синтаксис путей выше); нет значения — `undefined` |
+| `context({ tenant: 'kzn', stage: 'prod' })` | `true`, если совпали все перечисленные фасеты; не перечисленный фасет может быть любым |
+| `contextSwitch({ default, cases: [{ when, use }] })` | `use` совпавшего case с наибольшим числом условий, иначе `default` |
+
+`config(...)` читает ту же проекцию, что `$context.config` в Component SFC: системные поля (`defaultLocale`, `themes` и другие) и значения документов Configuration по их identity.
+
+Правила `contextSwitch`:
+
+- `default` обязателен, `when` не может быть пустым;
+- cases одинаковой специфичности, которые могут совпасть одновременно, — ошибка независимо от порядка;
+- компилируются и проверяются все ветки, включая невыбранные: ошибка в любой ветке — ошибка сборки;
+- `use` и `default` — любые выражения, включая readers и вложенный `contextSwitch`; модификаторы пишутся после вызова: `contextSwitch({...}).trim()`.
+
+Функции доступны везде, где выражение проходит общий компилятор Source: request, body, variables и outputs Query, output, `map`, `select` и `filter` DataView, Computation, Action, Update, headers и variables Stream, outputs Filter, значения Composition, defaults полей `defineProps`.
+
+```ts
+defineQuery({
+  kind: 'rest',
+  request: {
+    endpoint: 'https://ops.example.test',
+    path: config('inspector.endpoint'),
+    method: 'POST',
+    headers: {
+      'X-Tenant': facet('tenant'),
+      'X-Page': toString(config('inspector.page')),
+      'X-Mode': contextSwitch({ default: 'read', cases: [{ when: { tenant: 'kzn' }, use: 'legacy' }] }),
+    },
+  },
+  outputs: { raw: output().from(response()) },
+})
+```
+
+Аргумент reader остаётся литеральной строкой: `response(contextSwitch(...))` даёт `source-expression-read-path`. Выбирайте reader целиком:
+
+```ts
+place: output().from(contextSwitch({
+  default: response('flight.gate'),
+  cases: [{ when: { tenant: 'kzn' }, use: response('flight.stand') }],
+})),
+```
+
+Вне сборки — в редакторе без контекста или в изолированной компиляции — `facet` даёт `null`, `config` — `undefined`, `context` — `false`, `contextSwitch` — `default`, и документ получает одну информационную диагностику `source-expression-context-unbound`. Редактор Configurator проверяет Source в контексте текущего запуска (`Endge.source.currentSourceContext()`), поэтому видит выбранный тенант.
+
+| Код | Severity | Когда |
+| --- | --- | --- |
+| `source-expression-context-unbound` | info | функция вызвана вне контекста сборки |
+| `source-expression-facet-unknown` | warning | фасета нет среди активных фасетов домена (`facet()`, ключи `context()`, `when`, `enabledWhen`) |
+| `source-expression-facet-argument`, `source-expression-config-argument` | error | аргумент не одна непустая строка |
+| `source-expression-context-shape`, `-empty`, `-entry`, `-duplicate` | error | `context(...)` не с object literal, пустой, неверная пара или повтор ключа |
+| `source-expression-context-switch-*` | error | форма `contextSwitch`: нет `default` или `use`, лишнее свойство, неверный `cases`/`when`, пересечение cases (`-ambiguous`) |
+
+`contextSwitch` выбирает также ссылки и структуру документов: runtime Composition, фрагменты GraphQL, ссылки на Type и DataView, привязки портов SFC. Эти формы описаны на страницах [Composition](/reference/composition#contextswitch), [Query](/reference/query#фрагменты-по-контексту), [Type](/reference/type#contextswitch-и-extends), [DataView](/reference/data-view#ссылка-по-контексту) и [Component SFC](/reference/component-sfc#порт-по-контексту). Выбор тенанта при запуске — на странице [Выбор тенанта](/configurator/tenant-selection).
+
 ## Ограничения языка
+
+Пути и переменные:
+
+- неизвестная `$имя` в позиции ключа читается буквально — так работают ключи вида `$type`; опечатка в имени переменной поэтому даёт `undefined` без предупреждения;
+- ключи с точкой или `[` недоступны: экранирования ключей нет, кавычки работают только в значении селектора;
+- пути записи (`set`, `unset`, `rename`, `enrich`), readers обновлений Store и пути маршрутизации Stream остаются точечными: селекторы, индексы `[n]` и `$имя` в них не поддерживаются.
 
 ValueExpression намеренно не поддерживает:
 

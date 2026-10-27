@@ -1,51 +1,37 @@
 # Raph в Endge Core и Nova
 
-Endge Core и Nova используют разные стороны Raph. Интеграции показывают назначение библиотеки, но не меняют её framework-neutral contract.
+Raph остаётся framework-neutral; consumers задают собственную phase semantics.
 
 ## Endge Core
 
-Core использует Raph как runtime infrastructure:
+Core использует:
 
-- runtime hosts представлены графовыми нодами;
-- Store, Query и DataView публикуют данные через path-based store;
-- transactions группируют согласованные изменения;
-- derived strategies материализуют Query/Store/DataView outputs;
-- phases упорядочивают runtime updates;
-- Vue bridges подписываются на уже принадлежащий Core runtime state.
+- `RaphKernel` как path/meta data plane;
+- Runtime nodes как owners lifecycle;
+- persistent PathHandle watches для runtime hosts;
+- `process(batch)` для boundary/node update ordering;
+- `task.causes` для точного определения изменившихся paths;
+- transactions и derived materializations.
 
-Пользователь Endge обычно работает через декларации Core — Store, Query, DataView, Filter, Update и Composition. Прямые mutations через `Raph` обходят ownership и validation этих сущностей, поэтому не являются публичным способом изменить Endge document.
+UI bridge подписывается на принадлежащие component-node sources, а не сканирует
+общий dirty graph.
 
 ## Nova
 
-Nova использует Local Runtime для node-based rendering:
+`NovaNode` является RaphNode. Nova выражает:
 
-- `NovaNode` наследует `RaphNode`;
-- decorators описывают local properties и phases;
-- propagation распространяет visibility/layout state по дереву;
-- frame context используется motion и rendering lifecycle;
-- loop leases удерживают непрерывный execution только пока он нужен;
-- Nova application может получить внешний `RaphKernel` для синхронизации data-store с другим runtime lane.
+- reactive state через owner-owned `signal/computed`;
+- business dependencies через `runtime.path` + `node.watch`;
+- редкое нерективное изменение через `node.touch`;
+- горячие phase requests через owner-owned pulses;
+- continuous work через `frameTick`;
+- propagation semantics внутри Nova phase `process(batch)`.
 
-Raph при этом не знает о canvas, renderer, hit testing или Nova components. Эти responsibilities остаются в Nova.
+Raph не знает о Canvas, renderer, hit testing или Nova components.
 
-## Общая схема
+## Shared Kernel
 
-```mermaid
-flowchart LR
-  Kernel[RaphKernel<br/>shared data]
-  Core[Endge Core runtime<br/>business data-flow]
-  Nova[Nova runtime<br/>local render tree]
-
-  Kernel --> Core
-  Kernel --> Nova
-```
-
-Shared kernel допустим только при реальной потребности в общем data contract. Независимая Nova-сцена может и должна использовать собственный kernel.
-
-## Граница интеграции
-
-- Raph владеет transport-neutral store, routing и execution primitives;
-- Core владеет доменными сущностями, validation и document runtime;
-- Nova владеет rendering, input, scene lifecycle и visual state;
-- application composition решает, должны ли эти owners разделять kernel.
+Core и Nova могут разделить Kernel только при реальном общем data contract.
+Их owners, phases, scheduler и pending work остаются разными Runtime lanes.
+Cross-runtime reactive edge не создаётся: связь проходит через path/meta data.
 

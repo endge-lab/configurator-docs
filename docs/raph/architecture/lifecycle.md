@@ -1,56 +1,42 @@
 # Жизненный цикл
 
-Raph управляет нодами, observers, derived registrations, scheduled work и непрерывными loops. Владелец runtime должен явно завершать их lifecycle.
+## Runtime
 
-## Создание
+`runtime.dispose()`:
 
-При создании `RaphRuntime`:
+- останавливает frame loop;
+- отменяет phase bindings;
+- рекурсивно уничтожает root subtree;
+- освобождает scopes, path handles и aggregates;
+- отсоединяет Runtime от Kernel;
+- агрегирует cleanup errors вместо потери последующих cleanup.
 
-- создаётся root node `__root__`;
-- runtime регистрируется в переданном `RaphKernel`;
-- при наличии параметра `scheduler` настраивается способ запуска;
-- пользовательские ноды, phases и observers добавляются отдельно.
+Kernel, переданный снаружи, не уничтожается Runtime автоматически.
 
-`RaphApp` выполняет ту же роль, но может самостоятельно создать kernel.
+## Owners
 
-## Инициализация local runtime
-
-`init()` регистрирует root node, финализирует local phases, пересобирает phase router и помечает default local properties dirty. Повторный вызов пропускается.
-
-Для runtime без local-конфигурации обычно достаточно определить фазы и зарегистрировать ноды; data-path операции не требуют отдельного local bootstrap.
-
-## Lifecycle отдельных ресурсов
-
-| Ресурс | Освобождение |
+| Ресурс | Владелец и cleanup |
 | --- | --- |
-| `Raph.watch(...)` | disposer, возвращённый `watch` |
-| `Raph.effect(...)` | disposer, возвращённый `effect` |
-| `runtime.subscribe(...)` | disposer либо `unsubscribe` |
-| `runtime.observeData(...)` | disposer |
-| Derived registration | `handle.dispose()` |
-| Loop lease | `lease.release()` |
-| `RaphNode` | `node.dispose()` |
+| `owner.signal/computed` | owner dispose |
+| `owner.effect/watch` | disposer или owner dispose |
+| `owner.aggregate` | owner dispose |
+| `runtime.path` | runtime dispose; backend subscription ленив |
+| `runtime.metaSource` | runtime root scope |
+| `RaphNode` | `node.dispose()`, включая subtree |
+| frame loop lease | `lease.release()` |
 
-`RaphEffect.stop()` перед удалением вызывает cleanup предыдущего запуска. Удаление node снимает принадлежащие ей control-flow subscriptions и data observers.
+Explicit watch регистрирует cleanup links со стороны consumer и source.
+Disposal consumer отменяет pending delivery. Disposal source доставляет
+финальный structural cause, отсоединяет edge и не удерживает consumer.
 
-## Reset и destroy
+## Pause/resume
 
-`runtime.reset()`:
+Effect scopes могут приостанавливать bindings. Resume выполняет не более одного
+catch-up запуска с накопленными причинами.
 
-- останавливает manual loop и освобождает loop leases;
-- очищает frame state;
-- рекурсивно освобождает дочерние ноды root;
-- удаляет routes, observers, subscriptions и dirty queues;
-- освобождает derived registrations этого runtime;
-- оставляет runtime зарегистрированным в kernel и допускает повторную настройку.
+## Ошибки cleanup
 
-`runtime.destroy()` дополнительно снимает runtime с kernel и помечает instance уничтоженным. После `destroy()` создавайте новый runtime instance.
-
-## Shared kernel
-
-Уничтожение одного runtime не уничтожает данные kernel и другие runtime lanes. Общий kernel должен жить не меньше всех использующих его runtime. Для очистки shared data вызывайте `kernel.clear()` только на уровне владельца всего kernel.
-
-## Derived target
-
-По умолчанию `handle.dispose()` сохраняет последнее target value. Для scoped данных укажите `disposeTarget: 'delete'`, если target должен исчезнуть вместе с registration.
+Cleanup пользовательского effect, disposer и structural delivery могут
+ошибаться. Runtime завершает остальные обязательные освобождения и выбрасывает
+исходную ошибку либо `AggregateError`.
 

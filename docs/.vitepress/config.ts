@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitepress'
 import { configureDocsMarkdown } from './docs-markdown'
-import { novaSidebar } from './nova-sidebar.generated'
 
 export default defineConfig({
   lang: 'ru-RU',
@@ -21,7 +20,6 @@ export default defineConfig({
       { text: 'Configurator', link: '/' },
       { text: 'Advanced', link: '/advanced/' },
       { text: 'Raph', link: '/raph/' },
-      { text: 'Nova', link: '/nova/core/intro' },
       { text: 'Cookbook', link: '/cookbook/' },
     ],
 
@@ -86,7 +84,7 @@ export default defineConfig({
           text: 'Граф выполнения',
           items: [
             { text: 'Nodes и зависимости', link: '/raph/execution/nodes-and-dependencies' },
-            { text: 'Phases и traversal', link: '/raph/execution/phases-and-traversal' },
+            { text: 'Phases, process и ordering', link: '/raph/execution/phases-and-traversal' },
             { text: 'Scheduler и frame loop', link: '/raph/execution/scheduler-and-frame-loop' },
           ],
         },
@@ -99,11 +97,11 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Local Runtime',
+          text: 'Ownership и granularity',
           items: [
-            { text: 'Обзор Local API', link: '/raph/local/' },
-            { text: 'Свойства и decorators', link: '/raph/local/properties-and-phases' },
-            { text: 'Propagation и порядок', link: '/raph/local/propagation-and-ordering' },
+            { text: 'Owner-local state', link: '/raph/local/' },
+            { text: 'Signals и phase bindings', link: '/raph/local/properties-and-phases' },
+            { text: 'Granularity и ordering', link: '/raph/local/propagation-and-ordering' },
           ],
         },
         {
@@ -130,7 +128,6 @@ export default defineConfig({
           ],
         },
       ],
-      '/nova/': novaSidebar,
       '/cookbook/': [
         {
           text: 'Cookbook',
@@ -142,6 +139,12 @@ export default defineConfig({
           text: 'Данные и синхронизация',
           items: [
             { text: 'Оптимистичные обновления', link: '/cookbook/optimistic-updates' },
+          ],
+        },
+        {
+          text: 'Контекст и тенанты',
+          items: [
+            { text: 'Инспектор по тенантам АФЛ/КЗН', link: '/cookbook/tenant-inspector' },
           ],
         },
       ],
@@ -171,6 +174,21 @@ export default defineConfig({
                 { text: 'Bearer JWT', link: '/configurator/authentication#backend-bearer' },
                 { text: 'Разработка', link: '/configurator/authentication/development' },
                 { text: 'Внешние права', link: '/configurator/authentication/access-configuration' },
+              ],
+            },
+          ],
+        },
+        {
+          text: 'ИИ-агентам',
+          items: [
+            { text: 'Работа с Endge через API', link: '/agents/' },
+            { text: 'Персональные токены', link: '/agents/tokens' },
+            { text: 'MCP-сервер backend', link: '/agents/mcp' },
+            {
+              text: 'Файлы для агента',
+              items: [
+                { text: 'llms.txt — обзор и оглавление', link: '/llms.txt', target: '_blank', rel: 'noopener' },
+                { text: 'llms-full.txt — вся документация', link: '/llms-full.txt', target: '_blank', rel: 'noopener' },
               ],
             },
           ],
@@ -310,6 +328,9 @@ export default defineConfig({
             { text: 'Основной рабочий процесс', link: '/configurator/workflow' },
             { text: 'Рабочая область Runtime Preview', link: '/configurator/runtime-preview-workspace' },
             { text: 'Рабочая область Problems', link: '/configurator/problems-workspace' },
+            { text: 'Запуск Query и схема GraphQL', link: '/configurator/query-run-and-graphql-schema' },
+            { text: 'Выбор тенанта', link: '/configurator/tenant-selection' },
+            { text: 'Доступ для агента и история', link: '/configurator/agent-access' },
             { text: 'Горячие клавиши редактора', link: '/configurator/editor-hotkeys' },
           ],
         },
@@ -318,11 +339,13 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Работа с данными', link: '/guides/data' },
+            { text: 'GraphQL', link: '/guides/graphql' },
             { text: 'Преобразование данных', link: '/guides/transformations' },
             { text: 'Вычисления', link: '/guides/computations' },
             { text: 'Представление таблиц', link: '/guides/table-presentation-computations' },
             { text: 'Создание интерфейса', link: '/guides/components' },
             { text: 'События Component SFC', link: '/guides/component-events' },
+            { text: 'JSON UI endge-ui/v1', link: '/guides/json-ui' },
             { text: 'Стилизация', link: '/guides/styling' },
           ],
         },

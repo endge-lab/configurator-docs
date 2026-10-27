@@ -1,62 +1,36 @@
-# Propagation и порядок выполнения
+# Granularity и ordering
 
-Propagation определяет, какие ноды local tree становятся dirty вместе с исходной нодой.
-
-## Режимы
-
-| Значение | Поведение |
-| --- | --- |
-| `RaphPropagation.None` | Только текущая нода |
-| `RaphPropagation.Down` | Текущая нода и descendants |
-| `RaphPropagation.Up` | Текущая нода и ancestors |
-
-Пример inherited visibility:
+Runtime поддерживает несколько source granules одним `watch` API.
 
 ```ts
-@RaphProperty({
-  phase: 'layout',
-  default: true,
-  propagation: RaphPropagation.Down,
-})
-visible!: boolean
+renderer.watch(shape.x, 'matrix', updateMatrix)
+renderer.watch(shape, 'render', renderShape)
+renderer.watch(scene, 'render', renderScene, { include: 'subtree' })
+renderer.watch(runtime, 'render', renderApplication)
+renderer.watch(runtime.frameTick, 'render', renderFrame)
 ```
 
-Изменение visibility родителя помечает layout descendants dirty. Default compute для `Down` объединяет локальное значение с вычисленным значением parent.
+- node source по умолчанию означает `self`;
+- `include: 'subtree'` реагирует на self и descendants;
+- runtime source реагирует на изменения Runtime, кроме frameTick;
+- subtree notification проходит вверх по ancestors, не сканируя descendants;
+- indexes создаются лениво при первой подписке.
 
-## Направление одной phase
+## Aggregate
 
-Runtime выводит traversal local phase из её properties:
+```ts
+const viewportChanges = renderer.aggregate([
+  camera.zoom,
+  { source: scene, include: 'subtree' },
+  theme,
+])
 
-1. `mode: 'all'` → `all`;
-2. хотя бы один `Down` → `dirty-and-down`;
-3. иначе хотя бы один `Up` → `dirty-and-up`;
-4. иначе → `dirty-only`.
+renderer.watch(viewportChanges, 'render', renderViewport)
+```
 
-Не смешивайте `Down` и `Up` properties в одной phase: текущий выбор отдаёт приоритет downward traversal. Разделите их на разные phases с явным назначением.
+Aggregate immutable, принадлежит создавшему owner и принимает только sources
+того же Runtime. Одна причина дедуплицируется независимо от числа путей до неё.
 
-## Дедупликация
-
-Несколько записей в одну пару `node + phase` до `run()` создают одну dirty entry. Связанные events могут накапливаться, а processor получает актуальные local values на момент выполнения.
-
-## Priority strategies
-
-Обычный runtime использует `depth-weight-desc`:
-
-- меньшая graph depth выполняется раньше;
-- внутри одной depth больший `weight` выполняется раньше.
-
-`Raph.configureLocal` переключает runtime на `legacy-depth-weight-asc`:
-
-- меньшая depth выполняется раньше;
-- внутри одной depth меньший `weight` выполняется раньше.
-
-Legacy strategy сохраняет порядок старого instant runtime. Не используйте знак `weight` как переносимый контракт между разными priority strategies.
-
-## Порядок phases и properties
-
-- decorated local phases сортируются по `priority` по возрастанию;
-- properties внутри phase сортируются по `dependsOn`;
-- ноды внутри phase сортируются согласно выбранной runtime priority strategy.
-
-Если порядок выражает реальную dependency, фиксируйте её через `dependsOn`, graph edge или отдельную phase, а не только через случайно подобранный `weight`.
+Granularity выбирает, какая binding активируется. Порядок её выполнения отдельно
+задаётся phase `process`.
 

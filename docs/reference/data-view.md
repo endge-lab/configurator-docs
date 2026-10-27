@@ -109,7 +109,7 @@ join('attributes').by({
 })
 ```
 
-Для новых преобразований, составных ключей и сохранения кардинальности используйте общие [`leftJoin`, `fullJoin`, `lookupOne` и `lookupMany`](/reference/value-expressions#объединение-коллекций).
+Для новых преобразований, составных ключей и сохранения кардинальности используйте общие [`leftJoin`, `fullJoin`, `lookupOne` и `lookupMany`](/reference/value-expressions#объединение-коллекции).
 
 #### `map({...})` и `spread(alias)`
 
@@ -224,6 +224,21 @@ defineDataView({
 ```
 
 Manual-режим пока сохранён в source/compiler contract, но runtime явно завершает его запуск ошибкой. Используйте `pipeline`, `projection` или `expression` до появления capability-limited runtime для пользовательского TypeScript. Manual по-прежнему не поддерживается для локального DataView внутри Query или inline DataView.
+
+## Ссылка по контексту
+
+Ссылка на DataView в `.dataView(...)` Query, Store, DataView и Vocab может выбираться по фасетам сборки:
+
+```ts
+outputs: {
+  rows: output().from(response('rows')).dataView(contextSwitch({
+    default: 'rows-afl',
+    cases: [{ when: { tenant: 'kzn' }, use: dataView('rows-kzn') }],
+  })),
+}
+```
+
+Ветка — `'identity'`, `dataView('identity')` или `defineDataView({...})`; другая форма — `source-reference-context-switch-branch`. Невыбранные внешние ветки становятся зависимостями программы, невыбранные inline-ветки компилируются ради диагностик; в artifact попадает выбранная. Значения внутри DataView по фасетам выбирают функции [контекста сборки](/reference/value-expressions#контекст-сборки): `facet`, `config`, `context`, `contextSwitch`.
 
 ## Граница ответственности
 

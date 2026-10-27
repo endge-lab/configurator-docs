@@ -1,7 +1,7 @@
 # Endge Docs
 
 Отдельное статическое приложение документации платформы Endge, Core, Federation,
-Raph, Configurator и Nova на VitePress.
+Raph и Configurator на VitePress.
 
 ## Local development
 
@@ -20,6 +20,21 @@ pnpm preview
 ```
 
 Production output создаётся в `docs/.vitepress/dist`.
+
+## Документация для языковых моделей
+
+`pnpm build` после VitePress запускает `scripts/build-llms.mjs`; отдельно —
+`pnpm llms:build`. В `docs/.vitepress/dist` появляются:
+
+- `llms.txt` — оглавление со ссылками на Markdown-версии страниц;
+- `llms-full.txt` — руководство для агентов, вся документация и полный HTTP API;
+- `llms-full/<раздел>.txt` и `llms-full/api.txt` — те же данные по частям;
+- `<страница>.md` — Markdown-версия каждой страницы.
+
+Справочник API генерируется из OpenAPI Service Backend. Скрипт берёт
+`ENDGE_OPENAPI_PATH`, затем файл backend в монорепозитории, затем
+`ENDGE_OPENAPI_URL` или публичную копию на GitHub. `ENDGE_DOCS_URL` делает ссылки
+абсолютными. Раздел `project` не включается.
 
 ## Knowledge Bundle для AI Workbench
 

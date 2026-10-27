@@ -1,94 +1,85 @@
 # Установка и быстрый старт
 
-## Установка
-
 ```bash
-npm install @raphy-js/raph
+pnpm add @raphy-js/raph
 ```
 
-Пакет публикуется как `@raphy-js/raph` и предоставляет ESM, CommonJS и TypeScript declarations через корневой export.
-
-## Shared data и watch
-
-Для одного общего runtime используйте static API `Raph`:
+## Standalone reactivity
 
 ```ts
-import { Raph } from '@raphy-js/raph'
+import { RaphReactivity } from '@raphy-js/raph/reactivity'
 
-const stop = Raph.watch('user.*', ({ events }) => {
-  for (const event of events) {
-    console.log('Изменился путь:', event.canonical)
-  }
+const reactive = new RaphReactivity()
+const count = reactive.signal(0)
+const doubled = reactive.computed(() => count.get() * 2)
+
+const stop = reactive.effect(() => {
+  console.log(count.get(), doubled.get())
 })
 
-Raph.set('user.name', 'Ada')
-Raph.merge('user', { role: 'admin' })
-
-console.log(Raph.get('user.name'))
-
+count.set(1)
 stop()
 ```
 
-`watch` возвращает disposer. Вызывайте его, когда подписка больше не нужна.
+Этот контур синхронный, ownerless и не создаёт Runtime, phases или path indexes.
 
-## Signals и effects
-
-```ts
-import { Raph } from '@raphy-js/raph'
-
-const count = Raph.signal(0)
-const doubled = Raph.signal(() => count.value * 2)
-
-const stopEffect = Raph.effect(() => {
-  console.log({ count: count.value, doubled: doubled.value })
-})
-
-count.value = 1
-stopEffect()
-```
-
-Значение сигнала читается и записывается через `.value`. Computed signal доступен только для чтения.
-
-## Изолированный runtime
-
-Если static singleton не подходит, создайте `RaphApp`:
+## Runtime
 
 ```ts
 import {
-  RaphApp,
-  RaphNode,
-  SchedulerType,
-  type PhaseName,
-} from '@raphy-js/raph'
+  orderPhaseTasks,
+  RaphRuntime,
+  RaphSchedulerType,
+} from '@raphy-js/raph/runtime'
 
-const app = new RaphApp({
-  scheduler: SchedulerType.Sync,
+const runtime = new RaphRuntime({
+  id: 'preview',
+  scheduler: RaphSchedulerType.Microtask,
 })
 
-app.definePhases([
+runtime.definePhases([
+  { name: 'update' },
   {
-    name: 'render' as PhaseName,
-    traversal: 'dirty-only',
-    routes: ['ui.*'],
-    each: ({ node, events }) => {
-      console.log('render', node.id, events)
+    name: 'render',
+    process(batch) {
+      const tasks = orderPhaseTasks(batch.tasks, {
+        node: task => task.consumerOwner.node,
+        direction: 'parents-first',
+      })
+      for (const task of tasks) task.run()
     },
   },
 ])
 
-const screen = new RaphNode(app, { id: 'screen' })
-app.addNode(screen)
-app.track(screen, 'ui.dashboard.*')
+const screen = runtime.node({ id: 'screen' }, (node) => {
+  const count = node.signal(0)
 
-app.set('ui.dashboard.title', 'Overview')
+  node.watch(count, 'render', (task) => {
+    console.log(count.get(), task.causes)
+  })
+
+  return { count }
+})
+
+screen.api.count.set(1)
+await runtime.afterFlush()
+runtime.dispose()
 ```
 
-В этом примере изменение пути попадает в phase router, помечает подписанную ноду dirty и запускает фазу `render`.
+`node.watch` создаёт persistent phase binding. Повторные записи одного source до
+flush коалесцируются в одну delivery с cause metadata.
 
-## Куда двигаться дальше
+## Path source
 
-- [Какой API выбрать](/raph/choosing-api)
-- [DataPath](/raph/data/data-path)
-- [Phases и traversal](/raph/execution/phases-and-traversal)
-- [Производные данные](/raph/derived/)
+```ts
+const status = runtime.path<string>('orders[id=42].status')
+
+screen.watch(status, 'update', task => {
+  console.log(status.get(), task.causes)
+}, { initial: 'none' })
+
+runtime.set('orders[id=42].status', 'ready')
+```
+
+Дальше: [granularity и ordering](/raph/local/propagation-and-ordering).
 

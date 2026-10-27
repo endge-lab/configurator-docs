@@ -1,82 +1,38 @@
 # Scheduler и frame loop
 
-Scheduler определяет, когда runtime выполняет накопленные dirty phases после invalidation.
+`RaphSchedulerType` определяет момент обработки уже поставленной work:
 
-## Режимы
-
-```ts
-import { SchedulerType } from '@raphy-js/raph'
-
-app.options({
-  scheduler: SchedulerType.Microtask,
-  maxUps: 120,
-})
-```
-
-| Режим | Планирование |
+| Режим | Поведение |
 | --- | --- |
-| `SchedulerType.Sync` | Callback вызывается синхронно |
-| `SchedulerType.Microtask` | Через `queueMicrotask` |
-| `SchedulerType.AnimationFrame` | Через `requestAnimationFrame` |
+| `Sync` | flush на завершении mutation boundary |
+| `Microtask` | один coalesced microtask |
+| `AnimationFrame` | ближайший animation frame |
 
-Повторные invalidations коалесцируются. `maxUps` ограничивает частоту фактических `run()` и определяет минимальный интервал между обновлениями.
+`runtime.flush()` синхронно дренирует текущую очередь. `afterFlush()` ждёт
+обычные, nested и явно deferred deliveries.
 
-## Frame context
+## Passes
 
-Каждый `run()` создаёт `RaphFrameContext`:
+Новая work для будущей phase может войти в текущий pass. Work для текущей или
+пройденной phase начинает следующий pass. Повторные defer/nested writes
+ограничены диагностируемым максимальным числом passes.
 
-```ts
-interface RaphFrameContext {
-  now: number
-  delta: number
-  elapsed: number
-  frame: number
-}
-```
+## Frame tick
 
-- `now` — время текущего запуска;
-- `delta` — интервал от предыдущего frame, ограниченный диапазоном `0..100` мс;
-- `elapsed` — время с начала текущей последовательности frames;
-- `frame` — последовательный номер запуска.
-
-Контекст передаётся каждому phase callback и доступен через `runtime.frame`.
-
-## Автоматическая invalidation
-
-Обычная mutation вызывает `invalidate()`, если есть затронутые ноды или subscriptions. Runtime планирует один запуск согласно scheduler.
-
-При `invalidate: false` автоматический запуск не планируется. Owner может позднее вызвать `run()` или `invalidate()` самостоятельно.
-
-## Непрерывный loop
-
-Для animation, motion и других непрерывных контуров доступны:
+Постоянная кадровая работа выражается source, а не always-phase:
 
 ```ts
-runtime.startLoop()
-runtime.stopLoop()
-```
+node.watch(runtime.frameTick, 'render', renderFrame, {
+  initial: 'none',
+})
 
-Предпочтительный owner-based вариант — lease:
-
-```ts
-const lease = runtime.acquireLoop('timeline-motion')
-
-// Когда owner завершил работу
+const lease = runtime.acquireLoop('animation')
 lease.release()
 ```
 
-Loop остаётся активным, пока включён manual mode или существует хотя бы один lease. Это не заставляет каждую phase выполнять полезную работу: phase без dirty nodes пропускается, если у неё нет `always: true`.
+`runtime` source намеренно не включает `frameTick`. Поэтому global changes и
+continuous animation остаются разными контрактами.
 
-## Runtime-метрики
-
-Runtime публикует read-only значения:
-
-- `ups` — updates в секунду;
-- `eps` — data events в секунду;
-- `nps` — затронутые nodes в секунду;
-- `loopEnabled`;
-- `frame`;
-- `maxUps` и `minUpdateInterval`.
-
-Эти counters предназначены для live-диагностики, а не для воспроизводимого benchmark. Для сравнения производительности используйте отдельный benchmark scenario с фиксированными входными данными.
+`startLoop()` удерживает clock вручную; `stopLoop()` снимает manual hold.
+FrameTick активирует только его subscribers, пустые phases не запускаются.
 

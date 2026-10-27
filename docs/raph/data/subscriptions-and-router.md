@@ -1,81 +1,39 @@
-# Подписки и RaphRouter
+# Подписки, PathHandle и RaphRouter
 
-Raph предоставляет несколько механизмов реакции на data paths. Они решают разные задачи и выполняются в разные моменты.
-
-## Сравнение механизмов
-
-| API | Для чего | Когда выполняется |
-| --- | --- | --- |
-| `track(node, mask)` | Связать data path с обычным phase pipeline | В фазе, выбранной по `routes` |
-| `observeData(node, mask, options)` | Направить path сразу в заданную фазу runtime | В указанной фазе |
-| `subscribe(owner, mask, callback)` | Выполнить внешний control-flow callback | После фаз текущего тика |
-| `Raph.watch(mask, callback)` | Упрощённая реактивная подписка default app | В системной watch-фазе |
-| `RaphRouter<T>` | Независимый path matcher | При явном вызове `match` |
-
-## Track
+## Runtime path source
 
 ```ts
-app.track(node, 'orders[id=$orderId].status')
+const orders = runtime.path('orders.*')
+
+const stop = node.watch(orders, 'update', task => {
+  const pathEvents = task.causes.flatMap(cause => cause.events ?? [])
+  consume(pathEvents)
+}, { initial: 'none' })
 ```
 
-`track` регистрирует node в node router. При mutation runtime сначала определяет подходящие phases по их `routes`, затем расширяет набор затронутых нод согласно `traversal` каждой фазы.
+`runtime.path` возвращает lifecycle-aware `PathHandle`. Handle можно читать через
+`get/peek` и использовать как source. Backend watch создаётся лениво.
 
-`untrack(node)` снимает все masks ноды, а `untrack(node, mask)` — одну маску.
-
-## Direct data observer
+## Meta source
 
 ```ts
-const dispose = runtime.observeData(node, 'orders.*', {
-  phase: 'render',
-  traversal: 'dirty-and-down',
+const validation = runtime.metaSource('orders.*', {
+  namespace: 'validation',
 })
 
-dispose()
+node.watch(validation, 'update', handleValidation, { initial: 'none' })
 ```
 
-Observer явно задаёт target phase и не полагается на phase routes. Он принадлежит runtime и node и удаляется вместе с ними.
+Path/meta event batches сохраняют event-stream semantics. Обычные signal effects
+коалесцируют состояние и не являются журналом всех промежуточных событий.
 
-## Control-flow subscription
+## Kernel watch
 
-```ts
-const dispose = runtime.subscribe(
-  owner,
-  'orders[id=$orderId].status',
-  ({ events, params, matches }) => {
-    console.log(events, params?.orderId, matches)
-  },
-)
-
-dispose()
-```
-
-Callback получает batch событий после выполнения runtime phases. `params` содержит первый набор captures, а `matches` — все совпадения и их параметры.
+`kernel.watch(mask, callback)` — низкоуровневая синхронная path subscription без
+Runtime phase. Используйте её в storage/integration слоях.
 
 ## Standalone RaphRouter
 
-```ts
-import { RaphRouter } from '@raphy-js/raph'
-
-const router = new RaphRouter<string>()
-
-router.add('orders[id=$orderId].status', 'status-handler')
-router.add('orders.*', 'orders-handler')
-
-const matches = router.matchWithParams('orders[id=10].status')
-```
-
-Основные методы:
-
-- `add(mask, payload)`;
-- `remove(mask, payload?)`;
-- `removePayload(payload)`;
-- `removeAll()`;
-- `match(path)`;
-- `matchWithParams(path)`;
-- `matchIncludingPrefix(path)`;
-- `matchIncludingPrefixWithParams(path)`;
-- `collectByPrefix(prefix)`;
-- `masksFor(payload)`.
-
-Обычный `match` возвращает уникальные payload. Вариант `matchWithParams` возвращает отдельные совпадения с captures динамических сегментов.
+`RaphRouter<T>` — независимый matcher масок с пользовательским payload. Он не
+создаёт owners, phases или scheduler и не заменяет Runtime watch.
 
