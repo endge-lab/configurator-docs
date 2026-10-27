@@ -40,14 +40,18 @@ Source, внутренний Program payload и HTTP DTO — три разных
 | Update | `updates` | `1` | `defineUpdate({...})`; owner `storeIdentity` вне Source |
 | Filter | `filters` | `1` | `defineFilter({...})` |
 | DataView | `data-views` | `1` | `defineDataView({...})` |
-| Computation | `computations` | `1` | `defineComputation({...})` |
+| Computation | `computations` | `1`, плюс обязательное `contractVersion: 1` | `defineComputation({...})` |
 | Action | `actions` | `1` | `defineAction({...})` |
 | Composition | `compositions` | `1` | `defineComposition({...})` |
 | Simulation | `simulations` | `1` | `defineSimulation({...})` |
 | Vocab | `vocabs` | `1` | `defineVocab({...})` |
-| Component SFC | `components` | См. DTO и текущий документ | SFC с `<script setup lang="ts">`, `<template>`, optional `<style>` |
-| Style | `styles` | См. DTO и текущий документ | EndgeCSS |
-| Mock, Converter, AuthProfile, I18n Bundle, Navigation | Соответствующая коллекция | Не выводится по аналогии | Специализированный JSON/text contract |
+| Component SFC | `components` | `modelVersion: 1` (не `sourceVersion`) | SFC с `<script setup lang="ts">`, `<template>`, optional `<style>` |
+| Style | `styles` | `1` | EndgeCSS |
+| Mock, Converter, AuthProfile, I18n Bundle, Navigation | Соответствующая коллекция | Поля версии нет | Специализированный JSON/text contract |
+
+Значения в таблице — текущие версии языков: их пишет Configurator и принимает компилятор. Сервер у части коллекций принимает и другое положительное число, но передавайте ровно эти. Проверенное тело создания каждой коллекции — на странице [примеров документов](/agents/document-examples).
+
+AuthProfile создаёт и меняет только пользователь с ролью Admin workspace. Персональный токен получает `403 access_token_admin_forbidden`: укажите в Query и Stream `auth: { mode: 'inherit' }` или попросите пользователя создать профиль в Configurator ([подробнее](/agents/mcp#профили-авторизации)).
 
 Версия полного workspace snapshot не равна `sourceVersion`. Точные версии libraries и их source fingerprints: [manifest](/contracts-manifest.json). Публичные entrypoints, сигнатуры и overloads: [каталог контрактов](/reference/contracts/). Для существующего документа сохраняйте его контракт и выполняйте явную миграцию только когда она нужна.
 
@@ -70,6 +74,8 @@ Source, внутренний Program payload и HTTP DTO — три разных
 5. Проверьте syntax и доступные registry contracts до записи. При наличии локального Core используйте `Endge.source.validate(...)`; затем полную компиляцию контекста для междокументных зависимостей.
 6. Выполните минимальный PATCH с актуальным `If-Match`. При конфликте перечитайте документ, сопоставьте изменения и пересоберите правку.
 7. Перечитайте сохранённый документ. Отдельно сообщите, что подтверждено: синтаксис, linking, preview или только запись. Успешный HTTP ответ не доказывает исполнимость Source.
+
+Для задачи из нескольких связанных документов (Query, Store, компоненты, несколько Composition, различия тенантов) сначала прочитайте [вертикальный срез](/agents/vertical-slice): там порядок создания, таблица «когда нужно / когда не нужно» и коды ошибок каждой связи.
 
 ## Локальная проверка без исполнения сценария
 
@@ -100,6 +106,8 @@ if (!validation.ok) {
 | `program-artifact-stale` | Пересобрать для актуального контекста, не применять старый payload |
 | Пустое представление | Проверить outputs, binding, activation и входной prop |
 | Ввод возвращается к старому значению | Проверить путь Event → Action/Update → Store; editor не мутирует row |
+| `composition-filter-fields-source-missing` | В `filterView('…')` передан не ключ Filter runtime этой Composition (часто — identity документа Filter). Объявите `filters: filter('<identity>')` и передайте `filterView('filters')`: [FilterView](/reference/composition#filterview) |
+| `access_token_admin_forbidden` при записи `auth-profiles` | Профиль создаёт пользователь в Configurator; до этого — `auth: { mode: 'inherit' }` |
 | `401` / `403` | Сообщить код и операцию; использовать разрешённый пользователем способ авторизации |
 | `409` | Перечитать revision/head и пересмотреть правку |
 

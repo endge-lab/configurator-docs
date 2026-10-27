@@ -6,7 +6,7 @@ description: "Все 267 кодов ошибок Service Backend: формат �
 
 # Коды ошибок Service Backend
 
-Справочник собран из каталога ошибок backend 0.17.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `b3e24b109d07`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
+Справочник собран из каталога ошибок backend 0.17.1 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `fe79d889b7fd`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
 ## Как читать ответ ошибки
 
@@ -84,7 +84,7 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 
 | Код | HTTP | Смысл | Действие |
 | --- | --- | --- | --- |
-| <a id="access_token_admin_forbidden"></a>`access_token_admin_forbidden` | 403 | Операция требует роли Admin workspace и недоступна персональному токену. | Не повторяйте с этим токеном. Покажите пользователю, что нужно сделать, и попросите выполнить операцию в Configurator или выпустить токен с нужными флагами («Для агента» в Configurator). |
+| <a id="access_token_admin_forbidden"></a>`access_token_admin_forbidden` | 403 | Операция требует роли Admin workspace и недоступна персональному токену. Так защищены изменения профилей авторизации (auth-profiles). | Не повторяйте с этим токеном. Для профиля авторизации: укажите в Query и Stream auth: { mode: 'inherit' } или попросите пользователя создать профиль в Configurator и сошлитесь на его identity (auth: { mode: 'profile', profile: '&lt;identity&gt;' }). Другие операции попросите выполнить пользователя в Configurator. |
 | <a id="access_token_commit_forbidden"></a>`access_token_commit_forbidden` | 403 | Токен выпущен без флага commit; коммиты и релизы токеном запрещены. | Не повторяйте. Покажите пользователю план коммита (POST /api/v1/commits/plan, MCP endge_commit_plan) и попросите закоммитить в Configurator или выпустить токен с флагом commit. |
 | <a id="access_token_delete_forbidden"></a>`access_token_delete_forbidden` | 403 | Токен выпущен без флага delete; удаление документов запрещено. | Не повторяйте с этим токеном. Покажите пользователю, что нужно сделать, и попросите выполнить операцию в Configurator или выпустить токен с нужными флагами («Для агента» в Configurator). |
 | <a id="access_token_description_invalid"></a>`access_token_description_invalid` | 400 | description токена длиннее 1000 символов. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |

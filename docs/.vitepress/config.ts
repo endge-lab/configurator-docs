@@ -198,6 +198,8 @@ export default defineConfig({
           items: [
             { text: 'Работа с Endge через API', link: '/agents/' },
             { text: 'Авторинг Source и SFC', link: '/agents/authoring' },
+            { text: 'Примеры документов всех типов', link: '/agents/document-examples' },
+            { text: 'Вертикальный срез', link: '/agents/vertical-slice' },
             { text: 'Репозитории и source map', link: '/agents/repositories' },
             { text: 'Персональные токены', link: '/agents/tokens' },
             { text: 'MCP-сервер backend', link: '/agents/mcp' },

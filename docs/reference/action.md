@@ -63,6 +63,71 @@ defineAction({
 Converter, Operation и чистый `typescript(...)`. Sandbox TypeScript не получает
 DOM, сеть, timers или `Endge`; side effects остаются в Query, Update и Action.
 
+## Шаги `typescript` и `update`
+
+```ts
+defineAction({
+  contract: {
+    input: field('Object'),
+    output: field('Object'),
+  },
+  steps: {
+    quantity: typescript({
+      inputs: { requested: input('quantity'), available: input('available') },
+      compute({ requested, available }) {
+        if (requested > available) {
+          throw new Error('Недостаточно остатка')
+        }
+        return requested
+      },
+    }),
+    save: query({
+      identity: 'example-reserve',
+      input: { id: input('id'), quantity: output('quantity') },
+    }),
+    local: update({
+      identity: 'example-stock-reserve',
+      input: { id: input('id'), quantity: output('quantity') },
+    }),
+  },
+  output: {
+    reserved: output('quantity'),
+  },
+})
+```
+
+**`typescript({ inputs, compute })`** — синхронная функция в sandbox, как
+[TypeScript-узел Computation](/reference/computation#typescript-узел). `inputs` —
+выражения Action (`input(...)`, `output(...)`), результат `compute` становится
+значением шага.
+
+**Как прервать Action ошибкой.** Отдельного шага `fail` или `assert` нет:
+бросьте исключение в `compute` (`throw new Error('…')`). Шаг завершается ошибкой
+с этим сообщением, следующие шаги (здесь `save` и `local`) не выполняются, вызов
+Action отклоняется. Ошибку получает вызывающий: реакция SFC или
+`Endge.actions.execute(...)`. Для Operation неудачный `run` не создаёт запись
+History.
+
+**`update({ identity, input })`** применяет Update к экземпляру Store и
+возвращает свой `input`. Экземпляр ищется так:
+
+1. от runtime, который вызвал Action (обычно компонент, в template которого
+   реакция), вверх до **ближайшей** Composition;
+2. в её `data` берётся Store с identity владельца Update (`storeIdentity`).
+
+Поэтому ближайшая Composition должна объявить `store('<storeIdentity>')`. Во
+вложенной Composition `store(...)` по умолчанию contextual: он берёт экземпляр
+родительской страницы, и изменение видят оба уровня. Компилятор эти условия не
+проверяет, ошибки возникают при выполнении:
+
+| Ошибка | Причина |
+| --- | --- |
+| `Store "…" is not mounted for Update "…"` | В ближайшей Composition нет `store(...)` с identity владельца Update |
+| `Action Update requires a Composition runtime` | Action вызван вне Composition, например `Endge.actions.execute(...)` без `context.parentRuntimeId` |
+
+Шаг `update` меняет только локальный Store, сервер он не вызывает: запись на
+сервер — отдельный шаг `query`.
+
 ## Operation
 
 Operation — отменяемый шаг. `undo` обязателен, иначе нужно использовать обычный

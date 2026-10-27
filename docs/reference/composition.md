@@ -32,7 +32,7 @@ defineComposition({
     filters: filter('items-filter')
       .persist({ key: 'items-filter-state' }),
 
-    filterPanel: filterView('items-filter')
+    filterPanel: filterView('filters')
       .fields(['from', 'to'])
       .component('items-filter-panel'),
 
@@ -174,7 +174,7 @@ defineComposition({
 
 Ближайший Composition override имеет приоритет. Поэтому вложенная Composition может вернуть собственное поддерево в `live` внутри mock-родителя или, наоборот, включить mock только для одной ветки runtime-графа.
 
-Режим не меняет persisted Mock, Query source или Store source. В `mock` режиме Store materialize существующие `value(mock(identity))` при создании runtime, а Query сохраняет обычное поведение mock-mode и не выполняет transport request. Query-local `mock.enabled` остаётся отдельным контрактом конкретного Query.
+Режим не меняет persisted Mock, Query source или Store source. В `mock` режиме Store materialize существующие `value(mock(identity))` при создании runtime, а Query не выполняется вовсе: нет ни transport request, ни inline `mock.data`, outputs остаются пустыми, если ответ не подменяет Simulation. Query-local `mock.enabled` действует только в режиме `live` ([таблица](/reference/query#mock-preview-и-runtime)).
 
 Contextual или injected Store может принадлежать родительской Composition. Такой borrowed Store не переинициализируется локальным `dataMode`, потому что один runtime instance сохраняет state своего provider-а. Если ветке нужен независимый mock-state, объявите Store через `.isolated()`.
 
@@ -281,24 +281,43 @@ composition('item-board').withData({
 | `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
 | `component(identity)` | Component SFC runtime | `activateOn`, `persist`, `withProps` |
 | `composition(identity)` | Вложенная Composition | `activateOn`, `withProps`, `withData`, `storeTo` |
-| `filterView(identity)` | Представление Filter | `activateOn`, `fields`, `controls`, `component`, `withProps` |
+| `filterView(runtime)` | Представление Filter runtime из этой же Composition; аргумент — имя runtime, а не identity документа | `activateOn`, `fields`, `controls`, `component`, `withProps` |
 
 Вложенная Composition принимает значения своего публичного props-контракта через `.withProps(...)`. Соответствие обязательным и объявленным props проверяется после linking с compiled artifact вызываемой Composition.
 
 ### FilterView
 
-```ts
-filterView('items-filter')
-  .fields(['from', 'direction'])
-  .controls({
-    from: control('Input'),
-    direction: control('Select'),
-  })
+`filterView(...)` не создаёт состояние, а показывает Filter runtime, объявленный в той же Composition. Поэтому аргумент `filterView` — **имя runtime** (ключ в `runtimes`), а не identity документа Filter. Identity документа передаётся только в `filter(...)`:
 
-filterView('items-filter')
-  .fields(['from', 'direction'])
-  .component('items-filter-panel')
+```ts
+runtimes: {
+  // filter('<identity документа Filter>') создаёт runtime с именем filters
+  filters: filter('items-filter'),
+
+  // filterView('<имя Filter runtime>') — ключ filters из этого же объекта runtimes
+  quickFilters: filterView('filters')
+    .fields(['from', 'direction'])
+    .controls({
+      from: control('Input'),
+      direction: control('Select'),
+    }),
+
+  filterPanel: filterView('filters')
+    .fields(['from', 'direction'])
+    .component('items-filter-panel'),
+}
 ```
+
+Ошибки компилятора:
+
+| Код | Причина | Исправление |
+| --- | --- | --- |
+| `composition-filter-fields-source-missing` | В `runtimes` этой Composition нет runtime с именем из `filterView('…')`. Частая причина — передан identity документа Filter (`filterView('items-filter')`), а runtime назван иначе (`filters: filter('items-filter')`). | Объявите `filter('<identity>')` в той же Composition и передайте в `filterView` его имя. |
+| `composition-filter-fields-source-kind` | Runtime с таким именем есть, но это не `filter(...)` (например, `query(...)`). | Укажите имя runtime, созданного `filter(...)`. |
+| `composition-filter-view-field-missing`, `composition-filter-view-control-field-missing` | Поля из `.fields([...])` или ключа `.controls({...})` нет в документе Filter. | Используйте ключи `fields` из `defineFilter`. |
+| `composition-filter-view-component-missing` | Нет Component SFC из `.component('…')`. | Создайте компонент или исправьте identity. |
+
+Filter из другой Composition через `filterView` не показать: передайте его output через props (`fromOutput('filters', 'request')`) или объявите `filter(...)` в этой Composition.
 
 Типы controls: `Input`, `Textarea`, `Checkbox`, `Select`. Методы `.fields`, `.controls` и `.component` доступны только у `filterView`.
 
@@ -331,7 +350,7 @@ defineComposition({
     filters: filter('schedule')
       .persist({ key: 'schedule-sandbox-filter' }),
 
-    filterPanel: filterView('schedule')
+    filterPanel: filterView('filters')
       .fields(['search', 'season', 'categories']),
 
     table: component('schedule-sandbox')
@@ -351,9 +370,9 @@ runtimes: {
   filter: filter('schedule')
     .persist({ key: 'schedule-published-filter' }),
 
-  searchFilter: filterView('schedule').fields(['search']),
-  seasonFilter: filterView('schedule').fields(['season']),
-  filterPanel: filterView('schedule').fields([
+  searchFilter: filterView('filter').fields(['search']),
+  seasonFilter: filterView('filter').fields(['season']),
+  filterPanel: filterView('filter').fields([
     'from',
     'to',
     'categories',
