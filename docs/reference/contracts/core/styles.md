@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа styles; исходных модулей: 4."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа styles; исходных модулей: 4."
 ---
 
 # @endge/core: styles
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/styles/domain/types/style.types.ts
 

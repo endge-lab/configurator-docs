@@ -9,12 +9,25 @@ export const EXCLUDED_ROOTS = Object.freeze(['project'])
 /** Ориентир длины описания: столько показывают поисковики и помещается в строку оглавления llms.txt. */
 export const DESCRIPTION_LIMIT = 160
 
-/** Страница публикуется в Markdown, если она не служебная и не во внутреннем корне. */
+/**
+ * Страницы, которые сайт хранит ради старых адресов, но не обновляет. Их нет в llms,
+ * Knowledge Bundle и Markdown-версиях: старое руководство Raph заменено страницей
+ * `reference/raph.md`, сгенерированные контракты `raph/contracts/` остаются.
+ */
+export const ARCHIVED_PAGE_PATTERNS = Object.freeze([/^raph\/(?!contracts\/)/])
+
+/** Страница сохранена по старому адресу, но не обновляется. */
+export function isArchivedDocumentationPage(relativePath) {
+  return ARCHIVED_PAGE_PATTERNS.some(pattern => pattern.test(relativePath))
+}
+
+/** Страница публикуется в Markdown, если она не служебная, не во внутреннем корне и не в архиве. */
 export function isPublicDocumentationPage(relativePath) {
   if (!relativePath || !relativePath.endsWith('.md') || relativePath === '404.md') {
     return false
   }
-  return !relativePath.split('/').some(part => part.startsWith('.') || EXCLUDED_ROOTS.includes(part))
+  return !isArchivedDocumentationPage(relativePath)
+    && !relativePath.split('/').some(part => part.startsWith('.') || EXCLUDED_ROOTS.includes(part))
 }
 
 /** Отделяет YAML frontmatter от текста страницы без его разбора. */

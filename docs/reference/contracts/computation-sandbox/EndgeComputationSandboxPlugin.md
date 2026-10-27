@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/computation-sandbox 1.0.0-dev.7, группа EndgeComputationSandboxPlugin; исходных модулей: 1."
+description: "TypeScript-декларации @endge/computation-sandbox 1.0.0-dev.8, группа EndgeComputationSandboxPlugin; исходных модулей: 1."
 ---
 
 # @endge/computation-sandbox: EndgeComputationSandboxPlugin
 
-Версия source: 1.0.0-dev.7. [Каталог package](./). [Repository](https://github.com/endge-lab/computation-sandbox).
+Версия source: 1.0.0-dev.8. [Каталог package](./). [Repository](https://github.com/endge-lab/computation-sandbox).
 
 ## src/EndgeComputationSandboxPlugin.ts
 

@@ -58,7 +58,7 @@ const SECTIONS = [
   { id: 'services', title: 'Сервисы', roots: ['services'], summary: 'Mock Generator, справочники и AI Workbench' },
   { id: 'tools', title: 'Инструменты', roots: ['tools'], summary: 'инструменты разработчика' },
   { id: 'advanced', title: 'Архитектура, Federation и Core', roots: ['advanced', 'federation', 'core', 'architecture'], optional: true, summary: 'встраивание Core, Federation, модули, контекст и состояние, диагностика и Bridge' },
-  { id: 'raph', title: 'Raph', roots: ['raph'], optional: true, summary: 'библиотека реактивных данных Raph: архитектура, данные, граф выполнения, API и контракты' },
+  { id: 'raph', title: 'Контракты Raph', roots: ['raph'], optional: true, summary: 'сгенерированные TypeScript-контракты библиотеки реактивных данных Raph; применение Raph в Endge — reference/raph' },
 ]
 /** Тяжёлые и внутренние страницы обязательных разделов: агенту API/MCP они обычно не нужны. */
 const OPTIONAL_PAGES = [/^reference\/contracts\//, /^services\/ai-workbench\//]

@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа configuration; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа configuration; исходных модулей: 6."
 ---
 
 # @endge/core: configuration
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/configuration/domain/configuration-value.ts
 

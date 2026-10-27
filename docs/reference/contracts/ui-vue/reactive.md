@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.10, группа reactive; исходных модулей: 6."
+description: "TypeScript-декларации @endge/ui-vue 1.0.0-dev.11, группа reactive; исходных модулей: 6."
 ---
 
 # @endge/ui-vue: reactive
 
-Версия source: 1.0.0-dev.10. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
+Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
 
 ## src/reactive/use-current-facet.ts
 

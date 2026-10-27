@@ -111,7 +111,7 @@ plans, а затем применяются одной transaction.
 | `remove` | Удаляет значение по target; `valueFrom` не используется |
 
 Строковый `target` изменяет Data. `meta(path, namespace)` изменяет отдельный
-[Raph Meta-plane](/raph/data/meta) существующего Store path:
+слой Meta существующего Store path ([Raph в Endge](/reference/raph#владение-данными)):
 
 ```ts
 {

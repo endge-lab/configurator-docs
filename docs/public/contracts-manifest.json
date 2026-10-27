@@ -3,10 +3,10 @@
   "packages": [
     {
       "name": "@endge/core",
-      "version": "1.0.0-dev.11",
+      "version": "1.0.0-dev.12",
       "repository": "https://github.com/endge-lab/core",
-      "revision": "c383b6d0997d3d2e875f2ffe13056c9a39e68230",
-      "sourceSha256": "270519b7c9fd46e38d2eb87138f0f169d4145ab6acd40883351676219c84c8f9",
+      "revision": "3d1bc812feb1b1912b024cd37cda9c37694b47f0",
+      "sourceSha256": "26c9973c5367bd597b6c0cfa761ebe402083dafe3c543f9a50b914b2773301d7",
       "entrypoints": [
         {
           "import": "@endge/core",
@@ -57,10 +57,10 @@
     },
     {
       "name": "@endge/ui-vue",
-      "version": "1.0.0-dev.10",
+      "version": "1.0.0-dev.11",
       "repository": "https://github.com/endge-lab/ui-vue",
-      "revision": "069e3e656761ecd0f95b00cf11fcd04b76ccc0fc",
-      "sourceSha256": "d1d55e8cb5a2b0e0b806b18bf6a01d819398524c98859df3d71e2a4c8d07a102",
+      "revision": "817553403186b9f47664f1b7bf0237bb61bc633c",
+      "sourceSha256": "6d4f83c983c493fb99c28d6462e7b1d1ad2b58eaec110a2e18865decb2fa9731",
       "entrypoints": [
         {
           "import": "@endge/ui-vue",
@@ -71,7 +71,7 @@
       "declarationModuleCount": 47,
       "exportPatterns": {},
       "peerDependencies": {
-        "@endge/core": "1.0.0-dev.4 || 1.0.0-dev.5 || 1.0.0-dev.8 || 1.0.0-dev.9 || 1.0.0-dev.10 || 1.0.0-dev.11",
+        "@endge/core": "1.0.0-dev.4 || 1.0.0-dev.5 || 1.0.0-dev.8 || 1.0.0-dev.9 || 1.0.0-dev.10 || 1.0.0-dev.11 || 1.0.0-dev.12",
         "@endge/utils": "1.0.0-dev || 1.0.0-dev.4 || 1.0.0-dev.5 || 1.0.0-dev.6",
         "@raphy-js/raph": "1.0.0-dev.18 || 1.0.1-dev.25 || 1.0.1-dev.26 || 1.0.1-dev.54",
         "vue": "^3.3.0"
@@ -118,10 +118,10 @@
     },
     {
       "name": "@endge/computation-sandbox",
-      "version": "1.0.0-dev.7",
+      "version": "1.0.0-dev.8",
       "repository": "https://github.com/endge-lab/computation-sandbox",
-      "revision": "07d21368f19e91b80230e8da1d3a6cfa5664e2fc",
-      "sourceSha256": "b29f9cff47c2aea84936e6641ab386190f6fb998f8d989ad59c3cfe3017cd8e3",
+      "revision": "a294df32dfee5382b32c880319bc6cb600a712c7",
+      "sourceSha256": "558c4f0689585d415f205c947e84da8868fc440470b1d1a276475c6ffa1b035b",
       "entrypoints": [
         {
           "import": "@endge/computation-sandbox",
@@ -132,7 +132,7 @@
       "declarationModuleCount": 3,
       "exportPatterns": {},
       "peerDependencies": {
-        "@endge/core": "1.0.0-dev.4 || 1.0.0-dev.5 || 1.0.0-dev.8 || 1.0.0-dev.9 || 1.0.0-dev.10 || 1.0.0-dev.11"
+        "@endge/core": "1.0.0-dev.4 || 1.0.0-dev.5 || 1.0.0-dev.8 || 1.0.0-dev.9 || 1.0.0-dev.10 || 1.0.0-dev.11 || 1.0.0-dev.12"
       },
       "pages": [
         "reference/contracts/computation-sandbox/EndgeComputationSandboxPlugin.md",

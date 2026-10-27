@@ -1,5 +1,9 @@
 # Подписки, PathHandle и RaphRouter
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 ## Runtime path source
 
 ```ts
