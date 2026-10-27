@@ -1,58 +1,50 @@
 # Поток изменения данных
 
-Изменение shared data проходит через kernel до того, как runtime-фазы и внешние callbacks увидят событие.
+## Producer → binding
 
-```mermaid
-flowchart LR
-  Mutation[set / merge / delete / notify]
-  Kernel[RaphKernel]
-  Derived[Derived stabilization]
-  Routing[Path routing]
-  Dirty[Dirty queues]
-  Phases[Runtime phases]
-  Subscribers[Control-flow callbacks]
-
-  Mutation --> Kernel --> Derived --> Routing --> Dirty --> Phases --> Subscribers
+```txt
+signal/path/node/touch/frame source
+  -> cause coalescing
+  -> persistent phase binding
+  -> phase queue
+  -> process(batch)
+  -> task.run() | task.defer() | task.cancel()
 ```
 
-## 1. Mutation
+Producer не создаёт отдельный task object на каждую запись. Binding хранит
+стабильную identity effect + consumer owner; новая запись только обновляет
+причины и pending state.
 
-`set`, `merge` и `delete` сначала изменяют данные через текущий `DataAdapter`. `notify` не изменяет значение, а публикует факт изменения пути.
+## Causes
 
-Kernel формирует mutation record с исходным и разобранным путём. Внутри `transaction` записи накапливаются; вне transaction обработка начинается сразу.
+`RaphWorkCause` сообщает:
 
-## 2. Derived stabilization
+- `kind`: producer, structure, path, frame или touch;
+- logical `source` и `sourceOwner`;
+- revision, previous/value;
+- path/meta events;
+- net structural snapshot;
+- touch metadata.
 
-Если зарегистрированы materialized dependencies, kernel передаёт batch в derived manager. Тот:
+Один logical source встречается в delivery один раз в порядке первого появления.
 
-- определяет затронутые derived nodes;
-- выполняет их в топологическом порядке;
-- применяет incremental strategy либо full fallback;
-- записывает новые target values;
-- добавляет target mutations в итоговый batch.
+## Path mutation
 
-Обычные observers ещё не вызываются. Поэтому они видят уже стабилизированное состояние source и target.
+```txt
+runtime.set(...)
+  -> Kernel mutation
+  -> derived stabilization
+  -> active PathHandle / MetaSource
+  -> subscribed bindings нужных Runtime lanes
+  -> scheduler
+```
 
-## 3. Доставка событий
+PathHandle ленив: Kernel subscription появляется при первом consumer и снимается
+после последнего.
 
-Kernel доставляет каждый стабилизированный event:
+## Nested writes
 
-- прямым data observers, зарегистрированным через `observeData`;
-- каждому runtime lane, чей phase router, node router или control-flow router совпал с путём.
-
-Один shared mutation может пометить dirty ноды сразу в нескольких runtime одного kernel.
-
-## 4. Выполнение фаз
-
-Runtime складывает ноды и их события в dirty queues. Scheduler коалесцирует invalidations и вызывает `run()`. Фазы выполняются в порядке объявления, а ноды внутри фазы — согласно priority strategy.
-
-## 5. Control-flow callbacks
-
-Подписки `subscribe` выполняются после фаз текущего runtime. Callback получает:
-
-- batch `events`;
-- первый набор захваченных `params` как sugar;
-- полный список `matches`, чтобы не потерять параметры нескольких совпадений.
-
-Такой порядок отделяет стабилизацию data-flow от внешних реакций на её результат.
+Новая задача для ещё не пройденной фазы может выполниться в текущем pass.
+Инвалидация текущей или уже пройденной фазы начинает следующий pass с первой
+фазы. `afterFlush()` завершается после обычных и явно deferred deliveries.
 

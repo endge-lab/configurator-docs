@@ -1,74 +1,43 @@
 # Nodes и зависимости
 
-`RaphNode` — единица runtime graph. Нода может быть самостоятельной, участвовать в произвольных dependency edges и одновременно входить в parent/children дерево local runtime.
+`RaphNode` одновременно является lifecycle owner и позицией в parent/children
+tree. Producers могут принадлежать любой scope; effect принадлежит consumer
+owner.
 
-## Создание
+## Reactive edges
 
 ```ts
-import { RaphNode } from '@raphy-js/raph'
+const source = parent.signal(0)
 
-const source = new RaphNode(app, {
-  id: 'source',
-  type: 'data-source',
-  weight: 10,
-  meta: { feature: 'schedule' },
+child.effect('update', () => {
+  consume(source.get())
 })
-
-app.addNode(source)
 ```
 
-Идентификаторы должны быть уникальны внутри runtime graph. `type` используется для фильтрации нод в фазах, `weight` влияет на порядок, а `meta` доступна инспекторам и пользовательскому коду.
-
-## Dependency graph
+Implicit read разрешён для source того же owner, ancestor или runtime root.
+Sibling/descendant dependency должна быть явной:
 
 ```ts
-const transform = new RaphNode(app, { id: 'transform' })
-const render = new RaphNode(app, { id: 'render' })
-
-app.addNode(transform)
-app.addNode(render)
-
-app.addDependency(source, transform)
-app.addDependency(transform, render)
+sibling.watch(source, 'update', task => {
+  consume(task.causes)
+})
 ```
 
-Ребро `parent → child` означает направление распространения для `dirty-and-down` и обратное направление для `dirty-and-up`. `DepGraph` отклоняет self-reference, отсутствующие ноды и edges, которые создают цикл.
+Cross-runtime source отклоняется.
 
-Полезные операции graph:
+## Structure
 
-- `addDependency(parent, child)`;
-- `removeDependency(parent, child)`;
-- `graph.parentsOf(node)`;
-- `graph.childrenOf(node)`;
-- `graph.roots()`;
-- `graph.getDepth(node)`;
-- `graph.topoOrder()`.
+`addChild`, `reorderChildren`, создание и disposal node публикуют structure
+causes. Цепочка изменений одной node коалесцируется до net old → new snapshot.
 
-## Parent/children tree
+## Нерективное состояние
 
 ```ts
-root.addChild(child)
+node.cache = nextCache
+node.touch({ reason: 'cache-rebuilt' })
 ```
 
-`addChild` выполняет сразу несколько действий:
-
-- перепривязывает child к runtime родителя;
-- регистрирует child и его существующее поддерево;
-- добавляет dependency edge `root → child`;
-- помечает default local phases новой ноды dirty.
-
-Tree нужен local runtime для наследования, propagation и структурного обхода. Произвольный dependency graph может иметь несколько родителей и не обязан совпадать с tree.
-
-## Dirty state
-
-```ts
-node.dirty('render')
-node.dirty(['layout', 'render'])
-```
-
-Dirty state хранится отдельно для каждой фазы. Повторные invalidations одной пары `node + phase` дедуплицируются, а связанные events накапливаются до выполнения.
-
-## Cleanup
-
-`node.dispose()` рекурсивно освобождает descendants ноды, очищает local values и снимает runtime-регистрацию. Если owner удаляет одиночную ноду из готового tree, используйте управляемый lifecycle runtime и не сохраняйте внешние сильные ссылки на disposed node.
+`touch` активирует self/subtree/runtime granules, но не создаёт скрытую
+универсальную dirty phase. Частые phase requests лучше выражать отдельным
+owner-owned pulse signal.
 

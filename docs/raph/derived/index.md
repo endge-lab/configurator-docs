@@ -1,11 +1,13 @@
 # Производные данные
 
-Derived API создаёт синхронную материализованную зависимость между двумя ветками shared store.
+Derived создаёт синхронную materialized dependency между двумя path branches.
 
 ```ts
-import { collectionByKey, Raph } from '@raphy-js/raph'
+import { collectionByKey, RaphKernel } from '@raphy-js/raph'
 
-const handle = Raph.derive({
+const kernel = new RaphKernel({ initial: { schedule: { raw: [] } } })
+
+const handle = kernel.derive({
   id: 'schedule-table',
   from: 'schedule.raw',
   to: 'schedule.table',
@@ -17,54 +19,13 @@ const handle = Raph.derive({
 })
 ```
 
-Raph создаёт системную `RaphDerivedNode`, выполняет initial recompute и поддерживает target при последующих source mutations.
+Source и target должны быть concrete и не пересекаться. Один target имеет
+одного active writer; внешняя запись в него отклоняется. Compute синхронный и не
+мутирует Kernel.
 
-## Контракт
+Target одного derived может быть source другого. Kernel стабилизирует DAG в
+топологическом порядке до публикации path events.
 
-```ts
-interface RaphDerivedOptions<TSource, TTarget> {
-  id?: string
-  from: DataPathDef
-  to: DataPathDef
-  strategy?: RaphDerivedStrategy
-  compute: (source: TSource) => TTarget
-  immediate?: boolean
-  disposeTarget?: 'keep' | 'delete'
-}
-```
-
-- `from` и `to` должны быть concrete paths без wildcard и неразрешённых variables;
-- source и target не могут пересекаться;
-- один target может иметь только одного активного writer;
-- `compute` должен быть синхронным и не должен изменять store;
-- target read-only, пока registration активна;
-- одинаковые публичные `id` нельзя регистрировать повторно в одном kernel.
-
-Если `strategy` не указана, используется полный пересчёт.
-
-## Derived graph
-
-Target одного derived может быть source другого:
-
-```text
-schedule.raw
-    ↓
-schedule.visible
-    ↓
-schedule.rows
-```
-
-Kernel строит отдельный dependency graph materializations и стабилизирует его в топологическом порядке. Циклические цепочки отклоняются при регистрации.
-
-## Согласованность observers
-
-При mutation kernel сначала доводит derived graph до стабильного состояния и только потом публикует source и target events обычным observers. Поэтому callback не должен видеть старый target рядом с уже обновлённым source.
-
-## Где создаётся derived
-
-- `Raph.derive(options)` — в default app;
-- `runtime.derive(options)` — registration принадлежит конкретному runtime;
-- фактический manager и data-store принадлежат shared kernel.
-
-Уничтожение runtime освобождает созданные им registrations, но не затрагивает derived других runtime того же kernel.
+`runtime.derive(options)` создаёт registration в Kernel и привязывает её cleanup
+к root scope Runtime. `kernel.derive(options)` требует явного `handle.dispose()`.
 

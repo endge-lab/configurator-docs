@@ -1,74 +1,58 @@
 # Signals, Effects и Watch
 
-Reactive API — удобный слой над default `RaphApp`. Он подходит для небольших реактивных контуров, которым не требуется вручную создавать nodes и phases.
-
-## Writable signal
+Standalone reactive core не знает о Runtime phases и ownership metadata.
 
 ```ts
-import { Raph } from '@raphy-js/raph'
+import { RaphReactivity } from '@raphy-js/raph/reactivity'
 
-const count = Raph.signal(0)
+const r = new RaphReactivity()
+const count = r.signal(0)
+const doubled = r.computed(() => count.get() * 2)
 
-console.log(count.value)
-count.value = 1
-```
-
-Signal хранит значение во внутреннем path default app и является `RaphNode`.
-
-## Computed signal
-
-```ts
-const count = Raph.signal(1)
-const doubled = Raph.signal(() => count.value * 2)
-
-console.log(doubled.value)
-```
-
-При вычислении Raph отслеживает чтения других signals, создаёт dependency edges и обновляет подписки. Computed signal нельзя изменить через `.value`.
-
-## Effect
-
-```ts
-const stop = Raph.effect(() => {
-  console.log('count:', count.value)
-
-  return () => {
-    console.log('cleanup')
-  }
+const stopEffect = r.effect(() => {
+  console.log(doubled.get())
 })
 
-count.value = 2
-stop()
+const stopWatch = r.watch(count, (value, previous) => {
+  console.log({ value, previous })
+}, { immediate: true })
+
+count.set(2)
+console.log(count.peek())
+
+stopWatch()
+stopEffect()
 ```
 
-Перед повторным запуском effect:
+- `get()` читает и отслеживает;
+- `peek()` читает без dependency edge;
+- `set(value)` записывает;
+- computed ленив и пересчитывается при чтении;
+- `batch()` объединяет несколько writes;
+- effect cleanup выполняется перед повторным запуском и при stop;
+- scope освобождает созданные внутри ресурсы вместе.
 
-- снимает предыдущие tracked paths;
-- вызывает cleanup предыдущего выполнения;
-- заново собирает dependencies во время чтения signals.
+## Runtime reactivity
 
-По умолчанию effect выполняется сразу. Опция `immediate: false` ставит первый запуск в системную effect-phase.
-
-## Watch
+Runtime producers всегда имеют owner. Effects и watches всегда привязаны к
+ровно одной фазе:
 
 ```ts
-const stop = Raph.watch(
-  ['user.*', 'settings.locale'],
-  ({ events }) => {
-    for (const event of events) {
-      console.log(event.original, event.canonical)
-    }
-  },
-)
+const source = node.signal(0)
 
-stop()
+node.effect('update', () => {
+  console.log(source.get())
+})
+
+renderer.watch(source, 'render', task => {
+  console.log(task.causes)
+}, { initial: 'none' })
 ```
 
-Watch реагирует на paths и masks, а не на сравнение возвращаемого значения. Callback получает batch `PhaseEvent` текущего запуска.
+Implicit dependencies внутри `effect` разрешены только для producers того же
+owner, ancestors и runtime root. Связь с sibling/descendant оформляйте явно
+через `watch(source, phase, callback)`.
 
-## Граница API
-
-Signals, effects и watch используют global default app и static computation context `Raph.currentNode`. Для независимо уничтожаемых приложений и нескольких execution lanes используйте явные `RaphApp`/`RaphRuntime` и node-based API.
-
-Reactive API, как и остальная библиотека, пока имеет экспериментальный статус.
+Coarse-watch на computed реагирует на invalidation и не заставляет computed
+eagerly вычисляться.
 

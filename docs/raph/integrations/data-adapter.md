@@ -1,31 +1,22 @@
 # Пользовательский DataAdapter
 
-`DataAdapter` отделяет runtime от физического представления shared data.
+`DataAdapter` задаёт storage boundary Kernel:
 
 ```ts
 interface DataAdapter {
-  root: () => Record<string | number, unknown>
+  root: () => Record<string, unknown> | unknown[]
+  has?: (path, options?) => boolean
   get: (path, options?) => unknown
   set: (path, value, options?) => void
   delete: (path, options?) => void
   merge: (path, value, options?) => void
-  indexOf: (path, options?) => number
+  indexOf?: (path, options?) => number
 }
 ```
 
 ## DefaultDataAdapter
 
-Встроенный adapter хранит данные в памяти и поддерживает:
-
-- object keys и array indexes;
-- поиск элементов массива через `[key=value]`;
-- автоматическое создание промежуточных containers;
-- индексы параметризованных коллекций;
-- `splice` или `unset` при удалении array element.
-
 ```ts
-import { DefaultDataAdapter, RaphApp } from '@raphy-js/raph'
-
 const adapter = new DefaultDataAdapter(
   { orders: [] },
   {
@@ -36,61 +27,13 @@ const adapter = new DefaultDataAdapter(
   },
 )
 
-const app = new RaphApp()
-app.options({ adapter })
+const kernel = new RaphKernel({ adapter })
+const runtime = new RaphRuntime({ kernel })
 ```
 
-Без пользовательского adapter `RaphApp` использует `DefaultDataAdapter` с включённой индексацией и стратегией `eager-all-keys`. Подробное описание cold/warm lookup, стратегий, invalidation и требований к selector keys находится на странице [Индексация коллекций](/raph/data/indexing).
+Kernel без `adapter` использует встроенный `PathStore`. `DefaultDataAdapter`
+включается явно, когда нужны configurable selector indexes или adapter contract.
 
-## Adapter wrapper
-
-Новый adapter нужен только при другой модели хранения. Для instrumentation или policy часто достаточно wrapper над default implementation:
-
-```ts
-import {
-  DefaultDataAdapter,
-  type DataAdapter,
-  type DataPathDef,
-} from '@raphy-js/raph'
-
-class LoggingAdapter implements DataAdapter {
-  private readonly base = new DefaultDataAdapter()
-
-  root = () => this.base.root()
-  get = (path: DataPathDef, options?: { vars?: Record<string, any> }) =>
-    this.base.get(path, options)
-
-  set = (path: DataPathDef, value: unknown, options?: { vars?: Record<string, any> }) => {
-    console.log('set', path)
-    this.base.set(path, value, options)
-  }
-
-  delete = (path: DataPathDef, options?: { vars?: Record<string, any> }) =>
-    this.base.delete(path, options)
-
-  merge = (path: DataPathDef, value: unknown, options?: { vars?: Record<string, any> }) =>
-    this.base.merge(path, value, options)
-
-  indexOf = (path: DataPathDef, options?: { vars?: Record<string, any> }) =>
-    this.base.indexOf(path, options)
-}
-```
-
-## Invariants adapter
-
-Пользовательская реализация должна:
-
-- одинаково интерпретировать path во всех CRUD operations;
-- поддерживать `vars` согласно выбранному контракту;
-- возвращать единый mutable root из `root()`;
-- синхронно применять mutations;
-- обеспечивать `indexOf` для параметризованных коллекций;
-- не публиковать Raph events самостоятельно.
-
-Kernel публикует mutation после вызова adapter. Adapter отвечает за данные, а Raph — за routing, derived stabilization и execution.
-
-Если пользовательский adapter поддерживает `[key=value]`, способ индексации, уникальность selector и invalidation являются частью его собственного контракта. Индексы `DefaultDataAdapter` не оборачивают стороннюю реализацию автоматически.
-
-::: warning Shared ownership
-Adapter принадлежит kernel. `runtime.options({ adapter })` заменяет adapter всего shared kernel, а не только одного runtime lane.
-:::
+Пользовательский adapter должен синхронно применять mutations, одинаково
+интерпретировать paths и не публиковать Raph events самостоятельно. Kernel
+отвечает за event batches, derived stabilization и Runtime delivery.

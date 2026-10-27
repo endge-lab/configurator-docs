@@ -74,6 +74,74 @@ query('items-query').activateOn(manual())
 
 `onMount().run(...)` нельзя направить на runtime с ручной активацией.
 
+### `activateWhen`: активация по данным
+
+`.activateWhen(выражение)` включает и выключает runtime или scope во время работы, когда меняется значение условия:
+
+```ts
+runtimes: {
+  details: query('details-query').activateWhen(fromStore('flags.details')),
+  panel: scope({
+    runtimes: { rows: query('rows-query') },
+  }).activateWhen(fromStore('flags.panel')),
+}
+```
+
+- Аргумент — одно выражение, как значение `.withProps(...)`: `fromData`, `fromStore`, `fromOutput`, `prop` и выражения над ними. `dataView`, `fromFilter` и `metadataOf` не поддерживаются (`composition-activate-when-binding`), литерал даёт warning `composition-activate-when-static`.
+- При старте scope элемент не создаётся. Истинное значение активирует runtime или scope, ложное — деактивирует. Частые переключения сходятся к последнему значению; после mount граф согласован с данными.
+- Содержимое scope с `activateWhen` стартует, когда условие включило сам scope.
+- `.activateOn(...)` и `.activateWhen(...)` на одном элементе — ошибка `composition-activate-when-conflict`.
+- `onMount().run(...)` не может запускать runtime с `activateWhen` (`composition-hook-manual-target`) и runtime внутри scope с `activateWhen` (`composition-activate-when-mount-hook`).
+- Ручной `activate()`/`deactivate()` handle работает, но следующее изменение данных вернёт состояние условия.
+
+Ошибка перехода публикуется в diagnostics как `endge.composition.activate-when.error`.
+
+## contextSwitch
+
+`contextSwitch` выбирает runtime по фасетам текущей сборки. Все ветки проверяются, в artifact попадает выбранная:
+
+```ts
+inspector: contextSwitch({
+  default: query('flight'),
+  cases: [{ when: { tenant: 'kzn' }, use: query('flight-kzn') }],
+}).withProps({
+  tenant: facet('tenant'),
+  page: contextSwitch({ default: 10, cases: [{ when: { tenant: 'kzn' }, use: config('inspector.page') }] }),
+}),
+```
+
+- `default` обязателен; ветки — ссылки одного kind (`composition-context-switch-kind-mismatch`);
+- modifiers (`withProps`, `activateOn`, `enabledWhen`, `activateWhen` и другие) пишутся после `contextSwitch(...)`, а не внутри ветки (`composition-context-switch-branch-modifier`);
+- выбирается case с наибольшим числом совпавших условий; пересечение cases одинаковой специфичности — `composition-context-switch-ambiguous`;
+- в значениях `withProps` работает `contextSwitch` значений и функции `facet`, `config`, `context` — см. [Контекст сборки](/reference/value-expressions#контекст-сборки).
+
+### `enabledWhen`: элемент только для фасета
+
+`.enabledWhen(context({...}))` включает runtime или scope в artifact, только если фасеты сборки совпали с условием:
+
+```ts
+defineComposition({
+  runtimes: {
+    flight: query('flight').withProps({ id: 'SU1402' }),
+    inspector: component('flight-inspector').withProps({ model: fromOutput('flight', 'inspector') }),
+    handling: component('kzn-handling')
+      .enabledWhen(context({ tenant: 'kzn' }))
+      .withProps({ flight: fromOutput('flight', 'flight') }),
+  },
+  hooks: [onMount().run('flight')],
+})
+```
+
+- Аргумент — только `context({ фасет: 'документ' })`.
+- Условие элемента складывается с условиями scope-предков. Противоречие (`tenant: 'kzn'` внутри scope `tenant: 'afl'`) — warning `composition-enabled-when-never`.
+- При несовпадении элемент целиком исключается из artifact: нет host, scope, data и resources исключённого scope, связей графа. Hooks, у которых источник или цель исключены, удаляются.
+- Ошибки не зависят от выбранного фасета: исключённые элементы проходят те же проверки.
+- Читать runtime с `enabledWhen` (`fromOutput`, `metadataOf`, выражения, `activateWhen`) можно только элементу, чьё условие включает условие источника, иначе `composition-enabled-when-reference`.
+- Public `outputs` не могут ссылаться на элемент с `enabledWhen` (`composition-enabled-when-output`): контракт Composition не зависит от фасетов. Для выбора runtime используйте `contextSwitch`.
+- Вне сборки (редактор, компиляция без контекста) ничего не исключается и выдаётся info `composition-enabled-when-unbound`.
+
+`enabledWhen` и `activateWhen` сочетаются: сборка решает, есть ли элемент, а данные — активен ли он. Ошибки формы: `composition-enabled-when-shape`, `-empty`, `-entry`, `-duplicate`, `-repeated`; `composition-activate-when-shape`, `-repeated`.
+
 ## Режим данных
 
 По умолчанию Composition наследует effective data mode рабочего пространства. Локальный override задаётся статическим корневым полем:

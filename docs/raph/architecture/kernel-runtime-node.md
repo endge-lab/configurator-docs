@@ -1,74 +1,55 @@
-# Kernel, Runtime и Node
-
-Архитектура Raph разделяет владение данными и владение выполнением.
-
-```mermaid
-flowchart TD
-  Kernel[RaphKernel<br/>shared data и derived graph]
-  RuntimeA[RaphRuntime A<br/>phases и scheduler]
-  RuntimeB[RaphRuntime B<br/>phases и scheduler]
-  NodeA[RaphNode]
-  NodeB[RaphNode]
-
-  Kernel --> RuntimeA
-  Kernel --> RuntimeB
-  RuntimeA --> NodeA
-  RuntimeB --> NodeB
-```
+# Kernel, Runtime, Scope и Node
 
 ## RaphKernel
 
-`RaphKernel` — source of truth для общих данных. Он владеет:
+Kernel — source of truth path/meta data. Он владеет:
 
-- `DataAdapter`;
-- data observers;
-- списком подключённых runtime lanes;
-- transaction buffer;
-- registry и графом derived dependencies;
-- доставкой стабилизированного набора событий в runtime.
+- storage и `DataPath` mutations;
+- transaction boundary;
+- path/meta event batches;
+- materialized derived registrations;
+- подключёнными Runtime lanes.
 
-Несколько runtime одного kernel читают и изменяют одно хранилище, но не разделяют свои ноды, phases и dirty queues.
+Kernel не владеет phases, scheduler или node tree.
 
 ## RaphRuntime
 
-`RaphRuntime` — один execution lane. Он владеет:
+Runtime — execution lane. Он владеет:
 
-- dependency graph нод;
-- parent/children деревом local runtime;
-- фазами и phase router;
-- scheduler и frame context;
-- dirty queues;
-- control-flow subscriptions;
-- runtime-specific derived registrations и data observers.
+- `rootScope` и `root`;
+- owner-owned producers;
+- persistent phase bindings;
+- phase order и `process(batch)`;
+- scheduler, `afterFlush()` и frame loop;
+- lazy path/meta/node/subtree/runtime indexes.
 
-Runtime регистрируется в kernel при создании. `destroy()` снимает его observers и derived registrations, останавливает loop и освобождает ноды.
+`new RaphRuntime()` создаёт собственный kernel. Несколько Runtime могут получить
+один явно переданный kernel, но их owners и task queues остаются изолированными.
 
-## RaphApp
+## RaphScope
 
-`RaphApp` наследует `RaphRuntime` и по умолчанию создаёт собственный `RaphKernel`. Это совместимый самостоятельный runtime:
+Scope — lifecycle owner без tree position:
 
 ```ts
-import { RaphApp } from '@raphy-js/raph'
-
-const app = new RaphApp({ id: 'preview' })
+const service = runtime.scope('search-service')
+const query = service.signal('')
+service.effect('update', () => consume(query.get()))
 ```
 
-При необходимости `RaphApp` можно подключить к уже существующему kernel через параметр `kernel`.
+Disposal scope отменяет pending work, снимает edges и освобождает owned sources.
 
 ## RaphNode
 
-`RaphNode` является единицей выполнения. Нода имеет:
+Node расширяет scope parent/children hierarchy:
 
-- стабильный `id` внутри графа;
-- `type`, `weight` и `meta`;
-- зависимости в `DepGraph`;
-- подписки на data paths;
-- parent и children для local runtime;
-- local values и dirty state по фазам.
+```ts
+const page = runtime.node({ id: 'page' })
+const button = runtime.node({ id: 'button', parent: page })
+```
 
-Связь `parent → child`, создаваемая через `addChild`, одновременно добавляет dependency edge. Но произвольная dependency через `addDependency` не обязана означать иерархическое владение.
+Hierarchy отвечает за ownership, structure causes, subtree granularity и
+ordering helper. Она не задаёт один обязательный глобальный порядок эффектов.
 
-## Static facade
-
-`Raph` лениво создаёт default `RaphApp` и делегирует ему операции. Static API удобен, но остаётся глобальным process-wide контуром. Для preview, нескольких документов или независимо уничтожаемых runtime предпочтительнее явные instances.
+Node поддерживает `addChild`, `reorderChildren`, `options`, `touch` и `dispose`.
+Disposal node рекурсивно освобождает subtree и отменяет его pending deliveries.
 
