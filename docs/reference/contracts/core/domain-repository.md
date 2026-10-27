@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа domain-repository; исходных модулей: 1."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа domain-repository; исходных модулей: 1."
 ---
 
 # @endge/core: domain-repository
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts
 

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { EXCLUDED_ROOTS as EXCLUDED_ROOT_LIST } from './documentation-pages.mjs'
+import { EXCLUDED_ROOTS as EXCLUDED_ROOT_LIST, isArchivedDocumentationPage } from './documentation-pages.mjs'
 
 /** Один публичный состав для llms, Knowledge Bundle и Markdown-версий страниц. */
 export const EXCLUDED_ROOTS = new Set(EXCLUDED_ROOT_LIST)
@@ -13,14 +13,19 @@ export function documentationRoute(file) {
 }
 
 export async function publicMarkdownFiles(root) {
+  const files = await markdownFiles(root)
+  return files.filter(file => !isArchivedDocumentationPage(path.relative(root, file).split(path.sep).join('/')))
+}
+
+async function markdownFiles(directory) {
   const result = []
-  for (const entry of await readdir(root, { withFileTypes: true })) {
-    const target = path.join(root, entry.name)
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const target = path.join(directory, entry.name)
     if (entry.name.startsWith('.') || entry.name === 'public' || EXCLUDED_ROOTS.has(entry.name)) {
       continue
     }
     if (entry.isDirectory()) {
-      result.push(...await publicMarkdownFiles(target))
+      result.push(...await markdownFiles(target))
     }
     else if (entry.isFile() && entry.name.endsWith('.md')) {
       result.push(target)

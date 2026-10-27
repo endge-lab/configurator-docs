@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа diagnostics; исходных модулей: 16."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа diagnostics; исходных модулей: 16."
 ---
 
 # @endge/core: diagnostics
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts
 

@@ -1,5 +1,9 @@
 # State machines
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 `@raphy-js/raph/machine` разделяет declarative model, чистое вычисление перехода и runtime instance. Machine API — TypeScript библиотеки; это не Endge Source DSL. [Полные contracts](/raph/contracts/machine) содержат все generics, options и bindings.
 
 ## Минимальная модель

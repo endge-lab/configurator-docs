@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа document-import; исходных модулей: 2."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа document-import; исходных модулей: 2."
 ---
 
 # @endge/core: document-import
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/document-import/domain/types/document-import.type.ts
 

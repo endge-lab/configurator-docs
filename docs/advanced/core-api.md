@@ -57,7 +57,7 @@ await Endge.boot({
 
 ## Lifecycle и ресурсы
 
-Provider загружает Domain, compiler создаёт Program artifacts, runtime создаёт hosts. Writable data принадлежит Store; binding передаёт ссылки/значения согласно контракту и не делает consumer владельцем Store. Child host и borrowed resource освобождаются их owner; scope не должен самостоятельно удалять чужой экземпляр.
+Provider загружает Domain, compiler создаёт Program artifacts, runtime создаёт hosts. Writable data принадлежит Store; binding передаёт ссылки/значения согласно контракту и не делает consumer владельцем Store. Данные runtime хранятся в библиотеке реактивных данных Raph: как устроены пути данных, когда пересчитываются производные поля Store и какая версия Raph нужна — на странице [«Raph в Endge»](/reference/raph) в справочнике. Child host и borrowed resource освобождаются их owner; scope не должен самостоятельно удалять чужой экземпляр.
 
 На смене контекста учитывайте пересборку зависимых artifacts и remount дерева. Подписки diagnostics, events, Bridge и reactive consumers имеют unsubscribe/dispose; удерживайте их рядом с lifecycle owner. `pause` не эквивалентен `dispose`: pause может сохранять данные, но останавливать side effects. Конкретные правила ресурса описаны на его странице и в RuntimeHost contracts.
 

@@ -489,3 +489,27 @@
 .EndgeDocsLayout.is-reading .EndgeMarkdownActions {
   display: none;
 }
+
+/*
+ * Шапка из восьми разделов помещается в строку только на широком экране.
+ * Уже 1280px меню разделов уходит в «гамбургер», как на планшете, чтобы пункты не обрезались.
+ */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .VPNavBar .VPNavBarMenu {
+    display: none !important;
+  }
+
+  .VPNavBar .VPNavBarHamburger {
+    display: flex !important;
+  }
+
+  .VPNavScreen {
+    display: block !important;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .VPNavBarMenu .VPNavBarMenuLink {
+    padding: 0 9px;
+  }
+}

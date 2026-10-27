@@ -1,5 +1,9 @@
 # Signals, Effects и Watch
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 Standalone reactive core не знает о Runtime phases и ownership metadata.
 
 ```ts

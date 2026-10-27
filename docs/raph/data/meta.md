@@ -1,5 +1,9 @@
 # Raph Meta
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 Meta-plane хранит metadata отдельно от обычных path data и derived graph.
 Metadata может принадлежать только существующему data path.
 

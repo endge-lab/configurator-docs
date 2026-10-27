@@ -1,5 +1,9 @@
 # Raph: маршрут агента
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 Этот раздел относится к Raph в составе документации Endge. Точные сигнатуры всех явных package entrypoints, overloads и типов собраны в [source snapshot](/raph/contracts/). Версия snapshot не означает опубликованную npm-версию: сверьте [manifest](/contracts-manifest.json) с установленным package.
 
 ## Выбор поверхности

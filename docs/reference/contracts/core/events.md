@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа events; исходных модулей: 2."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа events; исходных модулей: 2."
 ---
 
 # @endge/core: events
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/events/domain/events.types.ts
 

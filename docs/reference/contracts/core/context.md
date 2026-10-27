@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.11, группа context; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа context; исходных модулей: 9."
 ---
 
 # @endge/core: context
 
-Версия source: 1.0.0-dev.11. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/context/domain/context-events.types.ts
 

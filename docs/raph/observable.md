@@ -1,5 +1,9 @@
 # Observable objects, classes и buffers
 
+::: warning Страница не обновляется
+Актуальная документация Raph — на сайте Raphy; публичный адрес сайта появится позже. Что из Raph нужно для работы с Endge — на странице [«Raph в Endge»](/reference/raph). Точные типы — в [контрактах Raph](/raph/contracts/).
+:::
+
 `@raphy-js/raph/observable` связывает привычные object/class mutations с конкретным RaphRuntime. Это отдельная API-поверхность; она не превращает произвольный объект в Endge Store и не создаёт persisted document.
 
 ## Object и class
