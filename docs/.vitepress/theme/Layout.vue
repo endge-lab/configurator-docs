@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
 import { onMounted } from 'vue'
+import { MarkdownActions } from './markdown-actions'
 import { useReadingMode } from './reading-mode'
 import ReadingMode_Button from './reading-mode/ReadingMode_Button.vue'
 
@@ -19,6 +20,10 @@ onMounted(() => readingMode.start())
     <Layout>
       <template #nav-bar-content-after>
         <ReadingMode_Button />
+      </template>
+
+      <template #doc-before>
+        <MarkdownActions />
       </template>
 
       <template #layout-bottom>

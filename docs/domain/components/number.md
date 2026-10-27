@@ -5,8 +5,8 @@
 
 ```vue
 <Flex row gap="2">
-  <Number :value="flight.delayMinutes" suffix=" min" />
-  <Number :value="flight.loadFactor" decimals="1" suffix="%" />
+  <Number :value="item.delayMinutes" suffix=" min" />
+  <Number :value="item.loadFactor" decimals="1" suffix="%" />
   <Number :value="price" minFractionDigits="2" prefix="€ " />
 </Flex>
 ```

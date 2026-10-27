@@ -1,3 +1,7 @@
+---
+description: "Главная страница для ИИ-агента: вход по токену, workspace, чтение и изменение документов, коммиты, ошибки, лимиты и порядок работы через HTTP API."
+---
+
 # Endge для ИИ-агентов
 
 Эта страница написана для языковой модели или агента, которому пользователь дал
@@ -9,6 +13,9 @@
 пользователь выпускает в Configurator кнопкой «Для агента» вместе с готовым
 промптом. Если у агента есть MCP-клиент, подключите [MCP-сервер backend](/agents/mcp)
 `/mcp` с тем же токеном. Без MCP достаточно этой страницы и [справочника API](#справочник-api).
+
+Полные последовательности запросов с ответами — в [сквозных сценариях](/agents/scenarios),
+все коды ошибок с действиями — в [справочнике ошибок](/agents/errors).
 
 ## Что такое Endge в терминах API
 
@@ -95,7 +102,7 @@ curl -s "$ISSUER/.well-known/openid-configuration"
 Клиент Configurator (`endge-configurator`) обычно конфиденциальный: он требует
 секрет, которого у агента нет. Поэтому для агентов администратор создаёт
 отдельный публичный клиент. Настройка описана в разделе
-[Подготовка провайдера администратором](#подготовка-провайдера-администратором).
+[Подготовка провайдера администратором](#provider-setup).
 
 ### Шаг 3. Получить access token
 
@@ -310,6 +317,9 @@ JSON
 - `identity` уникален в коллекции, до 160 символов.
 - `sourceVersion` берите из существующего документа того же типа. Для новых
   документов Query актуальна версия `2`, для остальных source-документов — `1`.
+- У Component номер формата — `modelVersion` (`1`), поля `sourceVersion` у него
+  нет: сервер ответит `400 validation_error` с `details.reason` о неизвестном поле.
+  Неизвестные поля отклоняются у всех DTO.
 - Пишите `source` по формату из справочника типа и сверяйтесь с примерами.
   Перед созданием прочитайте 1–2 существующих документа того же типа.
 - **Сервер не проверяет `source`**: он хранит его как текст и примет даже
@@ -372,21 +382,117 @@ curl -s -X PATCH "$ENDGE_URL/api/v1/queries/orders" \
 Ошибки возвращаются в одном формате:
 
 ```json
-{ "code": "validation_error", "message": "Запрос не прошёл валидацию", "details": { "fields": { "identity": "..." } } }
+{ "code": "validation_error", "message": "Некорректные поля запроса", "details": { "fields": { "modelVersion": "required field" } } }
 ```
+
+Решение принимайте по `code`, а не по `message`. [Справочник ошибок](/agents/errors)
+содержит каждый код backend с HTTP-статусом, смыслом и действием агента, а также
+общие правила по статусам. Чаще всего встречаются:
 
 | Код HTTP | Значение |
 | --- | --- |
-| `400` | `validation_error`: смотрите `details.fields`. `workspace_required`: нет заголовка `X-Endge-Workspace` |
+| `400` | `validation_error`: смотрите `details.fields` или `details.reason`. `workspace_required`: нет заголовка `X-Endge-Workspace` |
 | `401` | Нет действующего токена; для персонального токена — `access_token_invalid`, `access_token_revoked`, `access_token_expired` |
 | `403` | Нет роли или права управляются внешним провайдером (`access_managed_externally`); для персонального токена — коды `access_token_*` ([список](/agents/tokens#ошибки)) |
 | `404` | Документ не найден или `workspace_not_found` |
-| `409` | Конфликт: `identity_conflict`, `revision_conflict` или `head_sequence_conflict` |
+| `409` | Конфликт: `identity_conflict`, `revision_conflict`, `head_sequence_conflict`, `nothing_to_commit` |
+| `412` | `precondition_failed`: `If-Match` импорта не совпал с состоянием workspace |
 | `428` | `precondition_required`: нет заголовка `If-Match` |
+
+## Лимиты, повторы и идемпотентность {#limits}
+
+Сведения ниже соответствуют коду Service Backend 0.16.1.
+
+### Лимиты
+
+- **Частота запросов не ограничивается**: rate limiting у `/api/v1/*`, `/mcp` и
+  `/auth/*` нет, заголовка `Retry-After` сервер не отдаёт. `429` бывает только у
+  потоков Mock Generator. Всё равно не отправляйте изменения параллельно: каждое
+  требует актуальной revision, и параллельные правки одного документа дадут `409`.
+- **Тело запроса** — до 16 МиБ, у `/mcp` — до 4 МиБ. Превышение даёт `413` с
+  текстом `Request Entity Too Large`, без JSON. Заголовки — до 32 КиБ (иначе `431`).
+- **Поля**: `source` — до 8 МиБ (`source_too_large`), `identity` — до 160 символов
+  (`identity_too_long`), `displayName` — до 255, сообщение коммита — до 1000.
+  Перенос `POST /api/v1/domain/documents/move` — до 500 документов за запрос,
+  `POST /api/v1/facets/reorder` — до 1000.
+- **Таймаутов HTTP-сервера нет**: долгий запрос не обрывается сервером. Вызовы
+  ИИ-ассистента ограничены 2 минутами (`ai.workbench_timeout`), Mock Generator — 10 секундами
+  (`mock.timeout`), подключение к PostgreSQL — 5 секундами.
+
+### Пагинация
+
+| Запрос | `limit` по умолчанию | Максимум | Вне диапазона |
+| --- | --- | --- | --- |
+| `GET /api/v1/<коллекция>`, фасеты и документы фасета | 100 | 500 | `400 limit_invalid`; `offset < 0` — `offset_invalid` |
+| `GET …/revisions` | без `limit` — вся история | 500 | `400 limit_invalid` |
+| `GET /api/v1/domain/backups` | 100 | 500 | `400 limit_invalid` |
+| `GET /api/v1/domain/archive` (`limit`, `cursor`) | 100 | 200 | `400 archive_limit_invalid` |
+| `GET /api/v1/commits`, `GET /api/v1/releases` | пагинации нет — весь список | — | — |
+| Поиск пользователей, назначения доступа | 20 и 50 | 50 и 100 | значение обрезается до максимума |
+| MCP `endge_list_documents` / `endge_document_revisions` / `endge_list_commits` | 100 / 20 / 20 | 500 | ошибка инструмента |
+
+Нечисловой `limit` у документных списков молча заменяется значением по умолчанию.
+Ответ списка содержит `items`, `limit`, `offset` и `total`. У списков документов
+`total` — число элементов **на этой странице**, а не во всей коллекции: если
+`total` равен `limit`, запросите следующую страницу (`offset += limit`). У истории
+revisions `total` — общее число revisions.
+
+### Оптимистичная блокировка
+
+- `PATCH`, `DELETE`, `restore` документов, папок, фасетов, документов фасетов,
+  workspace, интеграций и профилей сборки, а также откат revision требуют `If-Match`.
+- `ETag` документа — его revision в кавычках: `"3"`. В `If-Match` принимаются `"3"`,
+  `W/"3"` и `3`; `*` и списки — нет.
+- Нет заголовка — `428 precondition_required`; не число — `400 if_match_invalid`;
+  revision устарела — `409 revision_conflict`.
+- Коммит, восстановление коммита и релиза сверяются по `expectedHeadSequence` в
+  теле (`409 head_sequence_conflict`), перенос и порядок фасетов — по
+  `expectedRevision` каждого элемента.
+- Импорт: `If-Match` равен `targetETag` плана, формат `"<generation>:<headSequence>"`
+  (как `ETag` у `GET /api/v1/domain`). Несовпадение — `412 precondition_failed`.
+
+### Повторы
+
+Заголовка `Idempotency-Key` нет. Перед повтором изменения после обрыва связи
+сначала перечитайте состояние.
+
+| Операция | Повтор того же запроса | Как понять, что первый прошёл |
+| --- | --- | --- |
+| `GET`, планы коммита и восстановления | безопасен | — |
+| `POST` создания | `409 identity_conflict` | `GET` документа по identity |
+| `PATCH` с тем же `If-Match` | `409 revision_conflict` | revision выросла, поля уже изменены |
+| `PATCH` с актуальной revision и теми же данными | `200` без новой revision | — |
+| `DELETE`, `restore` документа | со старым `If-Match` — `409`; с актуальным — `200` без изменений | `deletedAt` у документа (`includeDeleted=true`) |
+| `POST /api/v1/commits` | `409 nothing_to_commit` или `head_sequence_conflict` | `GET /api/v1/domain/status`: `commitId`, `state` |
+| `DELETE /api/v1/access-tokens/{id}` | `204` | — |
+| `POST /api/v1/domain/import` | `409 import_plan_applied` | — |
+
+Ошибки `500` повторяйте не более одного раза, `502`–`504` — до 3 раз с паузой.
+`400`, `401`, `403`, `404` без изменения запроса не повторяйте.
+
+### Планы и потоки
+
+- **План коммита** (`POST /api/v1/commits/plan`) и планы восстановления
+  (`…/restore/plan`) нигде не хранятся: это предпросмотр, а применение сверяет
+  `expectedHeadSequence`. Срока жизни у них нет.
+- **План импорта** хранится на сервере 30 минут (`expiresAt` в ответе), доступен
+  только создавшему его пользователю в том же workspace. Просроченный —
+  `409 import_plan_expired`, применённый — `409 import_plan_applied`. Импорт требует
+  workspace без незафиксированных правок (`409 import_requires_clean_commit`) и
+  роли Admin; перед применением сервер делает страховочный backup (хранится 7 дней).
+- **Потоки Mock Generator** (SSE `GET /api/v1/mock-data/streams/{id}/events`):
+  комментарий `: heartbeat` каждые 15 секунд; подписаться нужно в течение
+  30 секунд после создания; без `POST …/keepalive` поток закрывается через
+  180 секунд простоя. Одновременно — до 5 потоков на пользователя и 32 на сервер
+  (`429 stream.limit_exceeded`). Повторное подключение с `Last-Event-ID` не
+  поддерживается (`409 stream.replay_unsupported`).
+- **Поток ИИ-ассистента** (`POST /api/v1/ai/conversations/{id}/runs`, SSE) не
+  отправляет heartbeat; ошибка приходит событием `failed`.
+- **MCP** `/mcp` работает без сессий и SSE: каждый `POST` независим.
 
 ## Порядок работы агента
 
-1. Проверьте `GET /health`, определите режим входа и получите токен.
+1. Проверьте `GET /health` и `GET /version`, определите режим входа и получите токен.
 2. Прочитайте `GET /api/session/me` и выберите workspace вместе с пользователем.
 3. Прочитайте затронутые документы и 1–2 похожих документа того же типа.
 4. Сформулируйте изменение и для заметных правок покажите его пользователю до записи.
@@ -395,7 +501,7 @@ curl -s -X PATCH "$ENDGE_URL/api/v1/queries/orders" \
    выполняйте только по явной просьбе пользователя.
 7. После записи перечитайте документ и сообщите пользователю итог: identity, новую revision.
 
-## Подготовка провайдера администратором
+## Подготовка провайдера администратором {#provider-setup}
 
 Чтобы агенты входили от имени пользователей, администратор Keycloak один раз
 создаёт клиент, например `endge-agent`:
@@ -416,29 +522,50 @@ issuer с подходящим audience.
 ## MCP-сервер
 
 Backend отвечает как MCP-сервер на `{HTTP_BASE_PATH}/mcp` (Streamable HTTP) и
-принимает персональные токены и JWT. Инструменты, подключение клиентов и
-ограничения описаны на странице [MCP-сервер backend](/agents/mcp). Там же —
-отдельный Node-пакет `@endge/mcp` со входом через device flow.
+принимает персональные токены и JWT. Инструменты покрывают документы, фасеты и
+документы фасетов, историю и откат к ревизии, коммиты с diff и план коммита с
+перечнем документов; ресурсы отдают текст этой документации — первым читайте
+ресурс `llms-agent`. Инструменты, подключение клиентов и ограничения описаны на
+странице [MCP-сервер backend](/agents/mcp). Там же — отдельный Node-пакет
+`@endge/mcp` со входом через device flow.
 
 ## Справочник API
 
-- Полный справочник всех операций и схем в Markdown — в файле
-  `llms-full/api.txt` рядом с `llms.txt` этого сайта. Он генерируется из
-  спецификации OpenAPI при сборке документации.
+- Все операции одним списком (метод, путь, summary) — в
+  [llms-agent.txt](/llms-agent.txt) и в оглавлении API
+  [llms-full/api.txt](/llms-full/api.txt). Параметры, тела, ответы и схемы
+  каждой группы OpenAPI — в отдельном файле `llms-full/api/<группа>.txt`
+  (ссылка у группы в оглавлении). Файлы генерируются из спецификации OpenAPI
+  при сборке документации; всё API одним файлом входит в `llms-full.txt`.
 - Машиночитаемая спецификация OpenAPI 3:
   <https://github.com/endge-lab/service-backend/blob/main/docs/openapi3.yaml>.
 - Сервер вне production отдаёт её по адресу `/swagger/openapi3.yaml`, а
   интерактивную документацию — по `/swagger`.
 
-## Исходный код
+## Исходники и версии {#sources-and-versions}
 
-Публичные репозитории Endge, в которых можно проверить поведение:
+Если документация расходится с поведением сервера, **истина — исходники той
+версии, что развёрнута**:
 
-- Service Backend (Go): <https://github.com/endge-lab/service-backend>
-- Configurator (Vue): <https://github.com/endge-lab/configurator>
-- `@endge/core` — домен, компиляторы Source, runtime: <https://github.com/endge-lab/core>
-- `@endge/ui-vue`: <https://github.com/endge-lab/ui-vue>
-- `@endge/utils`: <https://github.com/endge-lab/utils>
-- `@endge/computation-sandbox`: <https://github.com/endge-lab/computation-sandbox>
-- Общая библиотека Go-сервисов: <https://github.com/endge-lab/service-kit-go>
-- Эта документация: <https://github.com/endge-lab/configurator-docs>
+1. Версия backend — `GET /version` (поле `version`); версия Configurator — в его
+   интерфейсе.
+2. Исходники этой версии — тег `v<версия>` в публичном GitHub:
+   [`endge-lab/service-backend`](https://github.com/endge-lab/service-backend),
+   [`endge-lab/configurator`](https://github.com/endge-lab/configurator),
+   [`endge-lab/configurator-docs`](https://github.com/endge-lab/configurator-docs).
+   У npm-пакетов `@endge/*` теги тоже есть: [Core](https://github.com/endge-lab/core),
+   [UI Vue](https://github.com/endge-lab/ui-vue), [Utils](https://github.com/endge-lab/utils),
+   [Computation Sandbox](https://github.com/endge-lab/computation-sandbox).
+   Общая библиотека Go-сервисов — [service-kit-go](https://github.com/endge-lab/service-kit-go).
+3. Тега нет — смотрите `main` и скажите пользователю, что `main` может быть новее
+   развёрнутой версии.
+4. Raph и TypedWorks Federation — публичных исходников нет. Точные контракты — на
+   этом сайте ([Raph](/raph/contracts/), [Federation](/reference/contracts/federation/))
+   и в `.d.ts` опубликованного npm-пакета: `https://unpkg.com/<пакет>@<версия>/`.
+   Исходники Mock Generator тоже закрыты: с ним работают только через HTTP API backend.
+
+Маршрут по исходникам и таблица repositories — на странице [Репозитории](/agents/repositories).
+
+## Авторинг конфигураций
+
+[Маршрут автора](/agents/authoring) разделяет HTTP DTO, Source, SFC и runtime API. [Матрица возможностей](/reference/capabilities) показывает, какие документы сохраняются и исполняются. [Репозитории](/agents/repositories) и [точные контракты](/reference/contracts/) помогают проверить сигнатуры по source.

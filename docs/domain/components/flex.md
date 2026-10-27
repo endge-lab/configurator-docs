@@ -10,8 +10,8 @@
 </Flex>
 
 <Flex row gap="4" align="center" justify="space-between">
-  <Text>{{ flight.number }}</Text>
-  <Badge :tone="flight.statusTone">{{ flight.status }}</Badge>
+  <Text>{{ item.number }}</Text>
+  <Badge :tone="item.statusTone">{{ item.status }}</Badge>
 </Flex>
 ```
 

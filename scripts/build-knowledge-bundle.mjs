@@ -1,8 +1,11 @@
 import { createHash } from 'node:crypto'
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { documentationFingerprint, documentationRoute, markdownSections, publicMarkdownFiles, readDocumentation } from './documentation-catalog.mjs'
+import { loadOpenApi, OPENAPI_PUBLIC_URL } from './load-openapi.mjs'
+import { openApiMarkdown } from './openapi-markdown.mjs'
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = path.resolve(scriptDirectory, '..')
@@ -12,37 +15,35 @@ const outputRoot = path.resolve(
 )
 const packageManifest = JSON.parse(await readFile(path.join(repositoryRoot, 'package.json'), 'utf8'))
 
-const includedRoots = new Set([
-  'configurator',
-  'domain',
-  'advanced',
-  'getting-started',
-  'guides',
-  'raph',
-  'reference',
-  'sfc-tables',
-])
 const maximumChunkCharacters = 6_000
-
-const documentPaths = (await collectMarkdownFiles(documentsRoot))
-  .filter(isPublicDocument)
-  .sort((left, right) => left.localeCompare(right))
+const documentPaths = await publicMarkdownFiles(documentsRoot)
 
 const chunks = []
 for (const documentPath of documentPaths) {
-  const source = await readFile(documentPath, 'utf8')
+  const source = await readDocumentation(documentPath, documentsRoot)
   const relativePath = normalizePath(path.relative(documentsRoot, documentPath))
   chunks.push(...chunkDocument(relativePath, source))
 }
 
+const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi(repositoryRoot)
+chunks.push(...chunkDocument('generated/service-backend-api.md', openApiMarkdown(spec, { specUrl: OPENAPI_PUBLIC_URL }))
+  .map(chunk => ({ ...chunk, documentPath: '/llms-full/api.txt' })))
+
 const documentsJSONL = `${chunks.map(chunk => JSON.stringify(chunk)).join('\n')}\n`
 const documentsChecksum = createHash('sha256').update(documentsJSONL).digest('hex')
 const bundleId = `endge-docs-${packageManifest.version}`
+const contractManifest = await readFile(path.join(documentsRoot, 'public/contracts-manifest.json'), 'utf8')
 const manifest = {
   schemaVersion: 'endge-knowledge/v1',
   bundleId,
   version: packageManifest.version,
   sourceCommit: process.env.CI_COMMIT_SHA ?? 'local',
+  documentationSha256: await documentationFingerprint(documentPaths, documentsRoot),
+  contractManifest: 'contracts-manifest.json',
+  contractsSha256: createHash('sha256').update(contractManifest).digest('hex'),
+  markdownDocumentCount: documentPaths.length,
+  openApiOrigin,
+  openApiSha256,
   documentCount: new Set(chunks.map(chunk => chunk.documentPath)).size,
   chunkCount: chunks.length,
   documentsFile: 'documents.jsonl',
@@ -53,67 +54,16 @@ await mkdir(outputRoot, { recursive: true })
 await writeFile(path.join(outputRoot, 'documents.jsonl'), documentsJSONL, 'utf8')
 await writeFile(path.join(outputRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
 
+await writeFile(path.join(outputRoot, 'contracts-manifest.json'), contractManifest, 'utf8')
+
 console.log(`Knowledge bundle ${bundleId}: ${manifest.documentCount} documents, ${manifest.chunkCount} chunks`)
 console.log(outputRoot)
 
-async function collectMarkdownFiles(root) {
-  const result = []
-  const entries = await readdir(root, { withFileTypes: true })
-  for (const entry of entries) {
-    const entryPath = path.join(root, entry.name)
-    if (entry.isDirectory()) {
-      if (entry.name !== '.vitepress') {
-        result.push(...await collectMarkdownFiles(entryPath))
-      }
-    }
-    else if (entry.isFile() && entry.name.endsWith('.md')) {
-      result.push(entryPath)
-    }
-  }
-  return result
-}
-
-function isPublicDocument(documentPath) {
-  const relativePath = normalizePath(path.relative(documentsRoot, documentPath))
-  if (relativePath === 'index.md') {
-    return true
-  }
-  return includedRoots.has(relativePath.split('/')[0])
-}
-
 function chunkDocument(relativePath, source) {
-  const lines = stripFrontmatter(source).split(/\r?\n/)
-  const sections = []
-  let title = relativePath.replace(/\.md$/, '')
-  let headingPath = []
-  let content = []
+  const sections = markdownSections(stripFrontmatter(source))
+  const title = sections.find(section => section.headingPath.length)?.headingPath[0] ?? relativePath.replace(/\.md$/, '')
 
-  const flush = () => {
-    const body = content.join('\n').trim()
-    if (body !== '') {
-      sections.push({ headingPath: [...headingPath], body })
-    }
-    content = []
-  }
-
-  for (const line of lines) {
-    const heading = line.match(/^(#{1,6})[ \t]+(\S.*)$/)
-    if (!heading) {
-      content.push(line)
-      continue
-    }
-
-    flush()
-    const level = heading[1].length
-    const value = stripInlineMarkdown(heading[2])
-    if (level === 1) {
-      title = value
-    }
-    headingPath = [...headingPath.slice(0, Math.max(0, level - 1)), value]
-  }
-  flush()
-
-  const documentPath = `/${relativePath.replace(/(?:\/index)?\.md$/, '')}`
+  const documentPath = documentationRoute(relativePath)
   const result = []
   let ordinal = 0
   for (const section of sections) {
@@ -164,9 +114,14 @@ function markdownBlocks(content) {
   let current = []
   let fence = null
   for (const line of content.split(/\r?\n/)) {
-    const fenceMatch = line.match(/^\s*(```|~~~)/)
+    const fenceMatch = /^ {0,3}(`{3,}|~{3,})/.exec(line)
     if (fenceMatch) {
-      fence = fence === null ? fenceMatch[1] : null
+      if (!fence) {
+        fence = { character: fenceMatch[1][0], length: fenceMatch[1].length }
+      }
+      else if (fenceMatch[1][0] === fence.character && fenceMatch[1].length >= fence.length && !line.slice(fenceMatch[0].length).trim()) {
+        fence = null
+      }
     }
     if (line.trim() === '' && fence === null) {
       if (current.length > 0) {
@@ -188,13 +143,6 @@ function stripFrontmatter(source) {
     return source
   }
   return source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
-}
-
-function stripInlineMarkdown(value) {
-  return value
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .trim()
 }
 
 function normalizePath(value) {

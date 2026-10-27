@@ -37,3 +37,7 @@ import { orderPhaseTasks, RaphNode, RaphScope } from '@raphy-js/raph/runtime'
 
 Снятые `RaphApp`, local decorators, dirty-node API, phase routes/traversal и
 unphased Runtime effects не входят в public API.
+
+## Полный source snapshot
+
+Эта страница — маршрут по основным API. Полный перечень явных entrypoints/exports, declarations, overloads и option types: [контрактный справочник](/raph/contracts/). Дополнительные поверхности: [Observable](/raph/observable), [Machines](/raph/machines), [маршрут агента](/raph/agent-guide).

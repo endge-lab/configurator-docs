@@ -6,58 +6,170 @@
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete']
 
+const UNTAGGED = 'Без группы'
+/** Имена файлов для тегов, у которых общий префикс путей неточен или пуст. */
+const TAG_SLUG_OVERRIDES = {
+  'Сессия': 'session',
+  'Управление доступом': 'access-grants',
+  'Ревизии': 'revisions',
+  'Перенос домена': 'domain-transfer',
+  'Участники рабочего пространства': 'workspace-members',
+  'Сервис': 'service',
+}
+
 export function openApiMarkdown(spec, { specUrl } = {}) {
-  const schemas = spec.components?.schemas ?? {}
-  const lines = []
+  const operations = openApiOperations(spec)
+  const tags = openApiTags(operations)
+  const lines = [openApiHeaderMarkdown(spec, { specUrl })]
+  lines.push('## Оглавление операций')
+  lines.push(tags.map((tag) => {
+    const items = operations.filter(entry => entry.tag === tag)
+    return `- ${tag}: ${items.map(entry => `\`${entry.method.toUpperCase()} ${entry.path}\``).join(', ')}`
+  }).join('\n'))
+
+  for (const tag of tags) {
+    lines.push(`## ${tag}`)
+    for (const entry of operations.filter(value => value.tag === tag)) {
+      lines.push(operationMarkdown(entry, spec))
+    }
+  }
+  lines.push(schemasMarkdown(spec, Object.keys(spec.components?.schemas ?? {})))
+  return `${lines.join('\n\n')}\n`
+}
+
+/** Заголовок справочника: название, версия, общее описание API и ссылка на спецификацию. */
+export function openApiHeaderMarkdown(spec, { specUrl } = {}) {
   const info = spec.info ?? {}
-  lines.push(`# ${info.title ?? 'API'} ${info.version ?? ''}`.trim())
+  const lines = [`# ${info.title ?? 'API'} ${info.version ?? ''}`.trim()]
   if (info.description) {
     lines.push(clean(info.description))
   }
   if (specUrl) {
     lines.push(`Машиночитаемая спецификация OpenAPI 3: ${specUrl}`)
   }
+  return lines.join('\n\n')
+}
 
+/** Все операции в порядке спецификации; группа — первый тег операции. */
+export function openApiOperations(spec) {
   const operations = []
   for (const [path, item] of Object.entries(spec.paths ?? {})) {
     for (const method of METHODS) {
       if (item[method]) {
-        operations.push({ path, method, operation: item[method], shared: item.parameters ?? [] })
+        operations.push({ path, method, operation: item[method], shared: item.parameters ?? [], tag: item[method].tags?.[0] ?? UNTAGGED })
       }
     }
   }
-  const tags = []
-  for (const { operation } of operations) {
-    for (const tag of operation.tags?.length ? operation.tags : ['Без группы']) {
-      if (!tags.includes(tag)) {
-        tags.push(tag)
-      }
+  return operations
+}
+
+export function openApiTags(operations) {
+  return [...new Set(operations.map(entry => entry.tag))]
+}
+
+/**
+ * Имя файла группы: явное имя из TAG_SLUG_OVERRIDES, латинский тег как есть, иначе
+ * общий префикс путей операций (`/api/v1/domain/backups` → `domain-backups`).
+ * Новый тег backend всегда получает имя: при совпадении добавляется номер.
+ */
+export function openApiTagSlugs(operations) {
+  const slugs = new Map()
+  for (const tag of openApiTags(operations)) {
+    const base = TAG_SLUG_OVERRIDES[tag]
+      ?? (/^[\w\s.-]+$/.test(tag) ? slugify(tag) : pathSlug(operations.filter(entry => entry.tag === tag).map(entry => entry.path)))
+      ?? ''
+    let slug = base || 'group'
+    for (let index = 2; [...slugs.values()].includes(slug); index++) {
+      slug = `${base || 'group'}-${index}`
     }
+    slugs.set(tag, slug)
   }
+  return slugs
+}
 
-  lines.push('## Оглавление операций')
-  lines.push(tags.map((tag) => {
-    const items = operations.filter(entry => (entry.operation.tags?.[0] ?? 'Без группы') === tag)
-    return `- ${tag}: ${items.map(entry => `\`${entry.method.toUpperCase()} ${entry.path}\``).join(', ')}`
-  }).join('\n'))
+/** Операции одной группы и все схемы, на которые они ссылаются (транзитивно). */
+export function openApiTagMarkdown(spec, tag, operations) {
+  const entries = operations.filter(entry => entry.tag === tag)
+  const names = new Set()
+  for (const entry of entries) {
+    collectSchemaRefs([entry.shared, entry.operation.parameters, entry.operation.requestBody, entry.operation.responses], spec, names)
+  }
+  return [
+    `## ${tag}`,
+    ...entries.map(entry => operationMarkdown(entry, spec)),
+    schemasMarkdown(spec, [...names]),
+  ].join('\n\n')
+}
 
-  for (const tag of tags) {
-    lines.push(`## ${tag}`)
-    for (const entry of operations.filter(value => (value.operation.tags?.[0] ?? 'Без группы') === tag)) {
-      lines.push(operationMarkdown(entry, spec))
+/** Компактный список операций: метод, путь и summary, без схем. */
+export function openApiOperationIndex(operations, { tagLink } = {}) {
+  return openApiTags(operations).map((tag) => {
+    const items = operations.filter(entry => entry.tag === tag)
+    const link = tagLink?.(tag)
+    return [
+      `### ${tag}${link ? ` — [полностью](${link})` : ''}`,
+      items.map(entry => `- \`${entry.method.toUpperCase()} ${entry.path}\`${entry.operation.summary ? ` — ${clean(entry.operation.summary)}` : ''}`).join('\n'),
+    ].join('\n\n')
+  }).join('\n\n')
+}
+
+function schemasMarkdown(spec, names) {
+  const schemas = spec.components?.schemas ?? {}
+  const lines = ['## Схемы данных', 'Типы записаны в TypeScript-подобной нотации. `?` — необязательное поле, в комментарии — описание, формат, ограничения и пример из спецификации.']
+  for (const name of [...names].sort((left, right) => left.localeCompare(right))) {
+    const schema = schemas[name]
+    if (!schema) {
+      continue
     }
-  }
-
-  lines.push('## Схемы данных')
-  lines.push('Типы записаны в TypeScript-подобной нотации. `?` — необязательное поле, в комментарии — описание, формат, ограничения и пример из спецификации.')
-  for (const [name, schema] of Object.entries(schemas).sort(([left], [right]) => left.localeCompare(right))) {
     lines.push(`### ${name}`)
     if (schema.description) {
       lines.push(clean(schema.description))
     }
     lines.push(fence(typeText(schema, 0, true)))
   }
-  return `${lines.join('\n\n')}\n`
+  return lines.join('\n\n')
+}
+
+function collectSchemaRefs(value, spec, names, seen = new Set()) {
+  if (!value || typeof value !== 'object' || seen.has(value)) {
+    return
+  }
+  seen.add(value)
+  if (typeof value.$ref === 'string') {
+    const name = refName(value.$ref)
+    if (value.$ref.startsWith('#/components/schemas/')) {
+      if (names.has(name)) {
+        return
+      }
+      names.add(name)
+    }
+    collectSchemaRefs(resolve(value, spec), spec, names, seen)
+    return
+  }
+  for (const item of Array.isArray(value) ? value : Object.values(value)) {
+    collectSchemaRefs(item, spec, names, seen)
+  }
+}
+
+function slugify(value) {
+  return value.toLowerCase().replace(/[^a-z\d]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
+/** Общий префикс путей; если его нет — самый частый первый сегмент после `/api/v1`. */
+function pathSlug(paths) {
+  const split = paths.map(value => value.split('/').filter(part => part && !/^\{.*\}$/.test(part) && part !== 'api' && !/^v\d+$/.test(part)))
+  const common = []
+  for (let index = 0; split.every(parts => index < parts.length && parts[index] === split[0][index]); index++) {
+    common.push(split[0][index])
+  }
+  if (common.length) {
+    return slugify(common.join('-'))
+  }
+  const counts = new Map()
+  for (const parts of split.filter(value => value.length)) {
+    counts.set(parts[0], (counts.get(parts[0]) ?? 0) + 1)
+  }
+  return slugify([...counts].sort((left, right) => right[1] - left[1])[0]?.[0] ?? '')
 }
 
 function operationMarkdown({ path, method, operation, shared }, spec) {
@@ -184,7 +296,7 @@ function typeText(schema, depth, expand) {
     const required = new Set(schema.required ?? [])
     const indent = '  '.repeat(depth + 1)
     const fields = properties.map(([name, property]) => {
-      const comment = describe(property)
+      const comment = describe(property, name)
       const key = /^[A-Z_$][\w$]*$/i.test(name) ? name : JSON.stringify(name)
       return `${indent}${key}${required.has(name) ? '' : '?'}: ${typeText(property, depth + 1, expand)}${comment ? ` // ${comment}` : ''}`
     })
@@ -198,7 +310,7 @@ function wrap(type) {
   return type.includes(' ') ? `(${type})` : type
 }
 
-function describe(value) {
+function describe(value, propertyName = value.name) {
   const schema = value.schema ?? value
   const notes = []
   if (value.description) {
@@ -215,7 +327,10 @@ function describe(value) {
   if (schema.default !== undefined) {
     notes.push(`по умолчанию ${JSON.stringify(schema.default)}`)
   }
-  const example = value.example ?? schema.example
+  const rawExample = value.example ?? schema.example
+  const example = /^(?:workspace|tenant)(?:Identity|Id|Name|DisplayName)?$/i.test(propertyName ?? '')
+    ? /(?:DisplayName|Name)$/i.test(propertyName) ? 'Example Workspace' : 'example-workspace'
+    : rawExample
   if (example !== undefined && typeof example !== 'object') {
     notes.push(`пример ${JSON.stringify(example instanceof Date ? example.toISOString() : example)}`)
   }

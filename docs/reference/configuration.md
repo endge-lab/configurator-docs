@@ -1,3 +1,7 @@
+---
+description: "Configuration — типизированные пользовательские настройки workspace: value(Type, default), типы значений, auto-default, TriggerSet и хранение."
+---
+
 # Configuration
 
 `Configuration` — source-документ рабочего пространства, который объявляет
@@ -33,10 +37,10 @@ Configuration не предназначена для запросов, дейс�
 `displayName` отображается как название категории в редакторе Workspace и в
 configuration contribution любого документа фасета.
 
-Например, документ с `identity: 'groundHandling'` и `displayName: 'Наземное обслуживание'` публикуется как:
+Например, документ с `identity: 'itemEditing'` и `displayName: 'Редактирование записей'` публикуется как:
 
 ```ts
-$context.config.groundHandling
+$context.config.itemEditing
 ```
 
 Source является единственным источником истины. Visual editor читает этот Source и применяет к нему локальные AST/source-патчи; отдельная visual-модель документа не сохраняется.
@@ -84,7 +88,7 @@ defineConfig({
 
   integrationOptions: value(JSON, {
     compact: true,
-    visibleColumns: ['flight', 'actualTime'],
+    visibleColumns: ['item', 'actualTime'],
   }).label('Дополнительные параметры'),
 })
 ```
@@ -161,11 +165,11 @@ Configuration использует тот же Type Registry, что и оста
 defineConfig({
   density: value(enumOf(['compact', 'normal', 'comfortable']), 'normal'),
 
-  visibleColumns: value(arrayOf(String), ['flight', 'actualTime']),
+  visibleColumns: value(arrayOf(String), ['item', 'actualTime']),
 
   labels: value(recordOf(String), {
-    arrival: 'Прибытие',
-    departure: 'Вылет',
+    incoming: 'Прибытие',
+    outgoing: 'Вылет',
   }),
 
   refreshPolicy: value(
@@ -198,7 +202,7 @@ defineConfig({
 
 ```ts
 defineConfig({
-  processAppearance: value(GroundHandlingAppearance, {
+  processAppearance: value(ItemAppearance, {
     criticality: 'half-critical',
     targetVisible: true,
     actualVisible: true,
@@ -210,7 +214,7 @@ defineConfig({
 
 ```ts
 defineConfig({
-  processAppearance: value(type('GroundHandlingAppearance'), {
+  processAppearance: value(type('ItemAppearance'), {
     criticality: 'half-critical',
     targetVisible: true,
     actualVisible: true,
@@ -375,17 +379,17 @@ defineConfig({
 ```vue
 <Cell
   :on="{
-    triggers: $context.config.groundHandling.actualTimeTriggers,
+    triggers: $context.config.itemEditing.actualTimeTriggers,
     reaction: query({
-      identity: 'groundHandling.actualTime.update',
+      identity: 'itemEditing.actualTime.update',
       input: {
-        legId: row.arrivalLeg.id,
+        itemId: row.item.id,
         value: now(),
       },
     }),
   }"
 >
-  <GroundHandlingProcess :process="row.arrivalLeg.groundHandling[code = 'Bridge On']" />
+  <ItemState :process="row.item.states[code = 'Bridge On']" />
 </Cell>
 ```
 
@@ -420,7 +424,7 @@ Defaults принадлежат Source-документу. Пользовате�
 {
   "configuration": {
     "values": {
-      "groundHandling": {
+      "itemEditing": {
         "actualTimeTriggers": [
           {
             "event": "contextmenu",
@@ -435,7 +439,7 @@ Defaults принадлежат Source-документу. Пользовате�
 }
 ```
 
-Здесь `groundHandling` — identity Configuration-документа, а `actualTimeTriggers` и `rowHeight` — keys его значений. Namespace `values` является внутренним storage-контрактом и не публикуется в SFC.
+Здесь `itemEditing` — identity Configuration-документа, а `actualTimeTriggers` и `rowHeight` — keys его значений. Namespace `values` является внутренним storage-контрактом и не публикуется в SFC.
 
 Каждый документ динамического фасета хранит field-level операции в своём
 `configuration` contribution:
@@ -445,7 +449,7 @@ Defaults принадлежат Source-документу. Пользовате�
   "mode": "inherit",
   "patch": {
     "values": {
-      "groundHandling": {
+      "itemEditing": {
         "rowHeight": {
           "op": "set",
           "value": 40
@@ -468,7 +472,7 @@ Source defaults → Workspace → Facet(position 0) → Facet(position 1) → ..
 
 Более правый слой имеет больший приоритет. Например:
 
-| Слой | `groundHandling.rowHeight` |
+| Слой | `itemEditing.rowHeight` |
 |---|---:|
 | Source default | `32` |
 | Workspace | `36` |
@@ -506,7 +510,7 @@ Effective values доступны в любом Component SFC через immutab
 ```html
 <DateTime
   editable
-  :edit-on="$context.config.groundHandling.actualTimeTriggers"
+  :edit-on="$context.config.itemEditing.actualTimeTriggers"
 />
 ```
 
@@ -518,8 +522,8 @@ $context.config.defaultLocale
 $context.config.defaultTimezone
 $context.config.sfcEditing
 $context.config.tooltips
-$context.config.groundHandling.actualTimeTriggers
-$context.config.groundHandling.rowHeight
+$context.config.itemEditing.actualTimeTriggers
+$context.config.itemEditing.rowHeight
 ```
 
 Системные публичные поля находятся непосредственно в `$context.config`. Identity каждого Configuration-документа добавляется на тот же первый уровень. Поэтому identity, совпадающие с системными ключами, а также `__proto__`, `prototype` и `constructor`, запрещены.

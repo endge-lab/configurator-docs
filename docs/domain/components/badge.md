@@ -4,7 +4,7 @@
 
 ```vue
 <Badge tone="success">On time</Badge>
-<Badge :tone="flight.statusTone">{{ flight.status }}</Badge>
+<Badge :tone="item.statusTone">{{ item.status }}</Badge>
 ```
 
 | Атрибут | Тип | Назначение |

@@ -4,7 +4,7 @@
 
 ```vue
 <Textarea
-  :value="flight.comment"
+  :value="item.comment"
   rows="4"
   placeholder="No comment"
   readonly

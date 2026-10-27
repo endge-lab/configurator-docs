@@ -5,7 +5,7 @@ layout children: для flow используйте [Flex](./flex), для track
 
 ```vue
 <Box p="4" bg="surface" borderWidth="1" borderColor="muted" r="4">
-  <Text weight="600">{{ flight.number }}</Text>
+  <Text weight="600">{{ item.number }}</Text>
 </Box>
 ```
 

@@ -1,3 +1,7 @@
+---
+description: "Composition собирает документы в исполняемый runtime-граф: активация, contextSwitch, режим данных, runtime-ноды, props, outputs и persistence."
+---
+
 # Composition
 
 Composition собирает доменные документы в исполняемый runtime-граф: создаёт runtime-ноды, связывает их props и outputs, управляет запуском и публикует результаты в Store. Она описывает оркестрацию, но не layout и не способ визуализации компонентов.
@@ -102,11 +106,11 @@ runtimes: {
 
 ```ts
 inspector: contextSwitch({
-  default: query('flight'),
-  cases: [{ when: { tenant: 'kzn' }, use: query('flight-kzn') }],
+  default: query('item'),
+  cases: [{ when: { tenant: 'variant-b' }, use: query('item-variant-b') }],
 }).withProps({
   tenant: facet('tenant'),
-  page: contextSwitch({ default: 10, cases: [{ when: { tenant: 'kzn' }, use: config('inspector.page') }] }),
+  page: contextSwitch({ default: 10, cases: [{ when: { tenant: 'variant-b' }, use: config('inspector.page') }] }),
 }),
 ```
 
@@ -122,18 +126,18 @@ inspector: contextSwitch({
 ```ts
 defineComposition({
   runtimes: {
-    flight: query('flight').withProps({ id: 'SU1402' }),
-    inspector: component('flight-inspector').withProps({ model: fromOutput('flight', 'inspector') }),
-    handling: component('kzn-handling')
-      .enabledWhen(context({ tenant: 'kzn' }))
-      .withProps({ flight: fromOutput('flight', 'flight') }),
+    item: query('item').withProps({ id: 'item-42' }),
+    inspector: component('item-inspector').withProps({ model: fromOutput('item', 'inspector') }),
+    handling: component('variant-b-handling')
+      .enabledWhen(context({ tenant: 'variant-b' }))
+      .withProps({ item: fromOutput('item', 'item') }),
   },
-  hooks: [onMount().run('flight')],
+  hooks: [onMount().run('item')],
 })
 ```
 
 - Аргумент — только `context({ фасет: 'документ' })`.
-- Условие элемента складывается с условиями scope-предков. Противоречие (`tenant: 'kzn'` внутри scope `tenant: 'afl'`) — warning `composition-enabled-when-never`.
+- Условие элемента складывается с условиями scope-предков. Противоречие (`tenant: 'variant-b'` внутри scope `tenant: 'variant-a'`) — warning `composition-enabled-when-never`.
 - При несовпадении элемент целиком исключается из artifact: нет host, scope, data и resources исключённого scope, связей графа. Hooks, у которых источник или цель исключены, удаляются.
 - Ошибки не зависят от выбранного фасета: исключённые элементы проходят те же проверки.
 - Читать runtime с `enabledWhen` (`fromOutput`, `metadataOf`, выражения, `activateWhen`) можно только элементу, чьё условие включает условие источника, иначе `composition-enabled-when-reference`.
@@ -192,17 +196,17 @@ resources: {
 
 ```ts
 data: {
-  airlines: vocab('airlines'),
-  aircrafts: vocab('aircrafts').policy({
+  categories: vocab('categories'),
+  products: vocab('products').policy({
     strategy: 'cache-first',
     maxAgeMs: 86_400_000,
   }),
-  stations: vocab('stations').policy({
+  groups: vocab('groups').policy({
     strategy: 'stale-while-revalidate',
     maxAgeMs: 300_000,
     onError: 'use-cache',
   }),
-  flightServiceTypes: vocab('flight-service-types').policy({
+  serviceTypes: vocab('item-service-types').policy({
     strategy: 'network-first',
     onError: 'fail',
   }),
@@ -227,8 +231,8 @@ Translation resources накапливаются по lifecycle scope и при 
 
 ```vue
 <Select
-  :value="flight.flightCarrier"
-  :options="vocab('airlines', {
+  :value="item.category"
+  :options="vocab('categories', {
     valuePath: 'code',
     labelPath: 'description',
   })"
@@ -251,7 +255,7 @@ data: {
   shared: store('schedule'),
   draft: store('schedule').isolated(),
   session: store('user-session').injected(),
-  primaryForm: store('flight-form').slot('primary'),
+  primaryForm: store('item-form').slot('primary'),
 }
 ```
 
@@ -264,7 +268,7 @@ data: {
 Вложенной Composition можно явно передать Store, переименовав alias или выбрав конкретный instance:
 
 ```ts
-composition('flight-board').withData({
+composition('item-board').withData({
   schedule: data('shared'),
 })
 ```
@@ -308,7 +312,7 @@ Filter state меняется через Actions, а не через commands. R
 
 ```ts
 await filter.action('set').run({ key: 'search', value: 'SU' })
-await filter.action('patch').run({ search: 'SU', direction: 'departure' })
+await filter.action('patch').run({ search: 'SU', direction: 'outgoing' })
 await filter.action('reset').run()
 await filter.action('clear').run()
 ```
@@ -328,7 +332,7 @@ defineComposition({
       .persist({ key: 'schedule-sandbox-filter' }),
 
     filterPanel: filterView('schedule')
-      .fields(['search', 'season', 'airlines']),
+      .fields(['search', 'season', 'categories']),
 
     table: component('schedule-sandbox')
       .persist({ key: 'schedule-sandbox-table' }),
@@ -352,7 +356,7 @@ runtimes: {
   filterPanel: filterView('schedule').fields([
     'from',
     'to',
-    'airlines',
+    'categories',
   ]),
 }
 ```
@@ -419,8 +423,8 @@ defineComposition({
   }),
 
   runtimes: {
-    attributes: query('attributes-leg-select').withProps({
-      names: prop('requirements.arrival.attributes'),
+    attributes: query('attributes-item-select').withProps({
+      names: prop('requirements.incoming.attributes'),
     }),
   },
 })
@@ -535,14 +539,14 @@ query('search').withProps({
 
 ```ts
 table: component('schedule-sandbox').withProps({
-  rows: fromData('schedule.sandboxFlights')
+  rows: fromData('schedule.sandboxItems')
     .dataView('schedule-local-filter', {
       search: fromOutput('filter', 'search'),
     })
     .metaFrom('schedule.sandboxItems', {
       key: 'id',
       fields: {
-        flightCarrier: 'flightCarrier',
+        category: 'category',
       },
     }),
 })
@@ -572,7 +576,7 @@ table: component('schedule-sandbox').withProps({
 
 ```ts
 // Автоматическая сборка:
-// { arrival: value, departure: value }
+// { incoming: value, outgoing: value }
 filter: fromOutput('filters')
 
 // Один output без внешней обёртки.
@@ -620,6 +624,9 @@ hooks: [
 | `onChange('runtime.output').run(query)` | После структурного изменения named output runtime-ноды | Query текущей Composition |
 | `onChange(prop('path')).run(query)` | После структурного изменения public prop или его вложенного пути | Query текущей Composition |
 | `onSuccess(query).run(query)` | После успешного завершения исходной Query | Query текущей Composition |
+| `onEvent(alias, event).applyUpdate(...)` | Публичное событие Component SFC | Store и Update |
+| `onEvent(alias, event).executeAction(...)` | Публичное событие Component SFC | Action |
+| `onEvent(alias, event).mutate(...)` | Публичное событие Component SFC | Writable Store data |
 
 Цель `.run(...)` всегда должна быть Query текущей Composition. Нельзя направить hook на Filter, Component, FilterView, scope или вложенную Composition.
 
@@ -836,3 +843,7 @@ outputs: {
 ## Границы ответственности
 
 Composition отвечает за runtime-граф, активацию, реактивные connections и публикацию данных. Она не описывает DOM, Canvas, layout или визуальные теги. Представление остаётся ответственностью [Component SFC](/reference/component-sfc), а преобразование данных — [DataView](/reference/data-view), [Computation](/reference/computation) и [общих функциональных выражений](/reference/value-expressions).
+
+## События Component SFC
+
+Помимо Query/Stream hooks, Composition поддерживает `onEvent(alias, event)` с `.applyUpdate`, `.executeAction` и `.mutate`. Полный синтаксис, event input mapping, ownership и пример — [Component event hooks](/reference/composition-events).

@@ -1,6 +1,10 @@
+---
+description: "Vocab — документ внешнего справочника: provider, mock, output pipeline, использование в Composition и SFC, cache, миграция legacy-документов."
+---
+
 # Справочники (Vocab)
 
-Vocab — source-first документ внешнего справочника. Сохраняемый `source` описывает provider, необязательный Mock и упорядоченный output pipeline. Композиционный вызов остаётся коротким: `vocab('airlines')` ссылается на Vocab по его стабильному `identity`.
+Vocab — source-first документ внешнего справочника. Сохраняемый `source` описывает provider, необязательный Mock и упорядоченный output pipeline. Композиционный вызов остаётся коротким: `vocab('categories')` ссылается на Vocab по его стабильному `identity`.
 
 Каноническая версия контракта:
 
@@ -12,16 +16,16 @@ sourceVersion: 1
 defineVocab({
   provider: payload({
     baseUrl: env('ENDPOINT_VOCABS_SERVICE'),
-    collection: 'airlines',
+    collection: 'categories',
     auth: { mode: 'inherit' },
   }),
 
-  mock: mock('demo-fixtures').path('lookups.airlines'),
+  mock: mock('demo-fixtures').path('lookups.categories'),
 
   outputs: {
     items: output()
       .from(response())
-      .dataView('normalize-airlines')
+      .dataView('normalize-categories')
       .convert('normalize-code'),
   },
 })
@@ -36,7 +40,7 @@ defineVocab({
 ```ts
 provider: payload({
   baseUrl: env('ENDPOINT_VOCABS_SERVICE'),
-  collection: 'stations',
+  collection: 'groups',
   auth: { mode: 'profile', profile: 'keycloak-default' },
 })
 ```
@@ -54,7 +58,7 @@ mock: mock('demo-fixtures')
 Эта форма читает весь JSON-документ. Путь внутрь fixture задаётся через точечную JSON-нотацию:
 
 ```ts
-mock: mock('demo-fixtures').path('lookups.airlines')
+mock: mock('demo-fixtures').path('lookups.categories')
 ```
 
 Числовой сегмент обращается к элементу массива: `groups.0.items`. Отсутствующий явно указанный Mock-документ или путь является ошибкой компиляции/runtime, а не пустым значением.
@@ -91,9 +95,9 @@ Query использует тот же ordered-transform контракт. По�
 ```ts
 defineComposition({
   data: {
-    airlines: vocab('airlines'),
-    aircrafts: vocab('aircrafts'),
-    stations: vocab('stations').policy({
+    categories: vocab('categories'),
+    products: vocab('products'),
+    groups: vocab('groups').policy({
       strategy: 'stale-while-revalidate',
       maxAgeMs: 300_000,
       onError: 'use-cache',
@@ -128,8 +132,8 @@ SFC обращается к публичному alias ближайшей Compos
 
 ```vue
 <Select
-  :value="flight.flightCarrier"
-  :options="vocab('airlines', {
+  :value="item.category"
+  :options="vocab('categories', {
     valuePath: 'code',
     labelPath: 'description',
   })"

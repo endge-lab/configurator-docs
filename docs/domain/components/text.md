@@ -5,9 +5,9 @@ children-интерполяцией или атрибутом `value`.
 
 ```vue
 <Flex col gap="1">
-  <Text weight="600">{{ flight.number }}</Text>
-  <Text color="muted" size="12" truncate>{{ flight.route }}</Text>
-  <Text :value="flight.status" tooltip="Current status" />
+  <Text weight="600">{{ item.number }}</Text>
+  <Text color="muted" size="12" truncate>{{ item.route }}</Text>
+  <Text :value="item.status" tooltip="Current status" />
 </Flex>
 ```
 

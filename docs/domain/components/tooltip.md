@@ -10,7 +10,7 @@
 ```vue
 <Badge
   :value="row.status"
-  :tooltip="`Статус рейса: ${row.status}`"
+  :tooltip="`Статус записи: ${row.status}`"
 />
 ```
 
@@ -44,8 +44,8 @@ Compound-запись удобна, когда настройки и style hooks
   align="start"
   :open-delay="250"
   :close-delay="100"
-  id="flight-status"
-  class="flight-status-tooltip"
+  id="item-status"
+  class="item-status-tooltip"
 >
   <Badge :value="row.status" />
 </Tooltip>
@@ -93,7 +93,7 @@ fenced code blocks и ссылки `http(s)`, `mailto`, `/path`, `#anchor`. Raw 
 
   <TooltipContent>
     <Flex direction="column" gap="1">
-      <Text weight="600">Задержка отправления</Text>
+      <Text weight="600">Задержка обработки</Text>
       <Divider />
       <Grid columns="2" gap="1">
         <Text tone="muted">План</Text>
@@ -152,12 +152,12 @@ Workspace через выбранные документы активных фа
   --endge-tooltip-shadow: 0 10px 30px rgb(0 0 0 / 0.24);
 }
 
-[data-theme="compact"] [data-endge-tooltip-id="flight-status"] {
+[data-theme="compact"] [data-endge-tooltip-id="item-status"] {
   --endge-tooltip-radius: 3px;
   --endge-tooltip-padding: 4px 6px;
 }
 
-.endge-tooltip--vue-native.flight-status-tooltip {
+.endge-tooltip--vue-native.item-status-tooltip {
   --endge-tooltip-background: #172033;
   --endge-tooltip-color: #f8fafc;
 }
