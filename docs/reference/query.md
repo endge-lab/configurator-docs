@@ -383,9 +383,27 @@ items: output()
 
 Converter получает результат предыдущего шага целиком и вызывается один раз. Legacy-поле artifact `dataViews` временно остаётся compatibility projection, но source и новый runtime используют единый ordered-transform список.
 
+Цепочка начинается с любого `.from(...)`: с reader ответа или с имени предыдущего output.
+
+```ts
+outputs: {
+  items: output().from(response('items')),
+  authors: output().from('items').convert('authors-index'),
+}
+```
+
+Converter должен существовать документом (`converters`), иначе компиляция даёт `response-output-converter-missing`; встроенные Converter Core (`to-array`, `split`, `iso-string-to-date` и другие) тоже нужно объявить документом с тем же identity. Реализацию пользовательского Converter регистрирует код приложения. Пока её нет, шаг возвращает `null`: этот output равен `null`, остальные outputs Query вычисляются как обычно.
+
 ## Mock, preview и runtime
 
-`mock.enabled` переключает Query на `mock.data` без транспортного запроса.
+`mock.enabled` переключает Query на `mock.data` без транспортного запроса. Inline mock зависит и от режима данных (переключатель Configurator, `dataMode` Composition, Simulation):
+
+| `mock.enabled` | Режим данных `live` | Режим данных `mock` |
+| --- | --- | --- |
+| `true` | Ответ — `mock.data`, сеть не используется; outputs, контракты и DataView строятся как из ответа сервера | Query в Composition **не выполняется**: ни запроса, ни `mock.data`, outputs остаются пустыми (событие `run:skipped`, причина `mock-mode`) |
+| `false` | HTTP-запрос; `mock.data` игнорируется | То же: Query не выполняется |
+
+В режиме `mock` данные дают [Simulation](/reference/simulation) (`mockRequest` подменяет ответ Query) и инициализаторы Store `value(mock('<identity>'))`. Inline mock — способ работать без сервера в режиме `live`, например для превью одного Query или пока API недоступно.
 
 Для GraphQL `mock.data` — объект `data` операции. Необязательный `mock.errors` задаёт errors ответа; они проходят `errorPolicy` и reader `errors()` так же, как ответ сервера:
 

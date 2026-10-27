@@ -29,8 +29,9 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 
 ## Порядок работы
 
-1. Прочитайте ресурс `llms-agent` (`<AGENT_DOCS_URL>/llms-agent.txt`) — ядро документации: правила, коды ошибок, авторинг Source и список всех операций. Инструкции сервера (`initialize`) начинаются с этого шага.
-2. `endge_status` → `endge_list_workspaces` → чтение: `endge_get_workspace`, `endge_list_documents`, `endge_get_document`. Перед созданием документа прочитайте похожий документ той же коллекции и часть справочника `llms-full/reference/{type}.txt`.
+1. Прочитайте ресурс `llms-agent` (`<AGENT_DOCS_URL>/llms-agent.txt`) — ядро документации: правила, коды ошибок, авторинг Source и список всех операций. Инструкции сервера (`initialize`) начинаются с этого шага. Ядро длиннее одного ответа ресурса и приходит [частями](#чтение-по-частям): прочитайте все части по порядку.
+2. `endge_status` → `endge_list_workspaces` → чтение: `endge_get_workspace`, `endge_list_documents`, `endge_get_document`. Перед созданием документа прочитайте похожий документ той же коллекции, проверенное тело в ресурсе `agents/document-examples.md` и часть справочника `llms-full/reference/{type}.txt`.
+   Для сложной задачи со связями (несколько Composition, Store и Update, компоненты с портами, различия тенантов) прочитайте ресурс `agents/vertical-slice.md`: порядок создания, выбор документа и коды ошибок каждой связи.
 3. Изменение: `endge_create_document`, `endge_update_document`, откат `endge_restore_revision`. Каждый вызов с `revision` проверяет текущую ревизию; при `revision_conflict` перечитайте документ.
 4. `endge_commit_plan` — покажите пользователю документы плана, особенно чужие правки. `endge_commit` — только по его просьбе.
 
@@ -57,7 +58,7 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 | `endge_delete_document` | `write` + `delete` | удаление (аннотация `destructive`) |
 | `endge_commit` | `write` + `commit`, владелец Admin | коммит |
 
-`collection` — коллекция документного API, `facets` (фасеты) или `facet-documents` (документы фасета, например тенанты). Тело документа в `endge_create_document` и `endge_update_document`, а также параметры `endge_commit` проверяются тем же DTO, что REST: неизвестные поля отклоняются, ошибка — `validation_error` с `details.fields` или `details.reason`. Токен с флагом `commit` не видит `endge_commit`, если его владелец не Admin workspace. JWT-сессия видит `endge_commit`, только если пользователь Platform Admin или Admin хотя бы одного workspace; коммит в workspace без роли Admin use case отклоняет с `workspace_admin_required`.
+`collection` — коллекция документного API, `facets` (фасеты) или `facet-documents` (документы фасета, например тенанты). Персональному токену инструменты изменения не предлагают `auth-profiles`: см. [профили авторизации](#профили-авторизации). Тело документа в `endge_create_document` и `endge_update_document`, а также параметры `endge_commit` проверяются тем же DTO, что REST: неизвестные поля отклоняются, ошибка — `validation_error` с `details.fields` или `details.reason`. Токен с флагом `commit` не видит `endge_commit`, если его владелец не Admin workspace. JWT-сессия видит `endge_commit`, только если пользователь Platform Admin или Admin хотя бы одного workspace; коммит в workspace без роли Admin use case отклоняет с `workspace_admin_required`.
 
 Ошибка инструмента — результат с `isError: true` и JSON `{ error, status, message, details?, hint? }`, где `error` — код backend: смысл и действие для каждого кода — в [справочнике ошибок](/agents/errors). Непредвиденный сбой возвращается как `internal_error` без подробностей. Ошибки протокола JSON-RPC (неизвестный инструмент, неверные параметры) приходят в поле `error` ответа JSON-RPC, а не результатом инструмента.
 
@@ -65,20 +66,30 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 
 ### Поле версии формата
 
-Версия формата `source` называется по-разному: у `components` — `modelVersion`, у остальных коллекций с Source — `sourceVersion`. Чужое поле отклоняется как неизвестное (`validation_error`), а подсказка `hint` ошибки называет нужное поле. Описание `endge_create_document` строится из DTO `CreateRequest`, поэтому всегда совпадает с проверкой:
+Версия формата `source` называется по-разному: у `components` — `modelVersion`, у остальных коллекций с Source — `sourceVersion`. Значение — **текущая версия языка Source**, а не ревизия документа: её пишет Configurator при создании документа и принимает компилятор. Чужое поле отклоняется как неизвестное (`validation_error`), а подсказка `hint` ошибки называет поле и его значение. Описание `endge_create_document` строится из DTO `CreateRequest` и перечисляет для каждой коллекции текущее значение и другие обязательные поля, например `- computations: sourceVersion=1 (обязательно); ещё обязательно: contractVersion=1`:
 
-| Коллекции | Поле | Значение |
+| Коллекции | Поле и значение | Ещё обязательно |
 | --- | --- | --- |
-| `queries` | `sourceVersion` | обязательно, ровно `2` |
-| `simulations`, `configurations` | `sourceVersion` | обязательно, ровно `1` |
-| `vocabs` | `sourceVersion` | ровно `1`, обязательно вместе с `source` |
-| `types`, `data-views`, `compositions`, `stores`, `streams`, `updates`, `computations`, `styles` | `sourceVersion` | обязательно, целое > 0, обычно `2` |
-| `filters` | `sourceVersion` | целое > 0 (обычно `2`), обязательно вместе с `source` |
-| `actions` | `sourceVersion` | обязательно, целое ≥ 1 |
-| `components` | `modelVersion` | обязательно, целое > 0, обычно `1` |
-| `folders`, `mocks`, `converters`, `i18n-bundles`, `auth-profiles`, `navigations`, `facets`, `facet-documents` | — | поля версии нет |
+| `queries` | `sourceVersion: 2`, другое значение — ошибка | — |
+| `simulations`, `configurations` | `sourceVersion: 1`, другое значение — ошибка | — |
+| `vocabs`, `filters` | `sourceVersion: 1` вместе с `source` | — |
+| `types`, `data-views`, `compositions`, `stores`, `streams`, `styles`, `actions` | `sourceVersion: 1` | — |
+| `updates` | `sourceVersion: 1` | `storeIdentity` |
+| `computations` | `sourceVersion: 1` | `contractVersion: 1` |
+| `components` | `modelVersion: 1` (не `sourceVersion`) | — |
+| `auth-profiles` | поля версии нет | `adapterId`; только пользователь с ролью Admin |
+| `folders`, `mocks`, `converters`, `i18n-bundles`, `navigations`, `facets`, `facet-documents` | поля версии нет | — |
 
-В `endge_update_document` поле версии передаётся вместе с новым `source`.
+Сервер у части коллекций принимает и другое положительное число, но компилятор и Configurator знают только эти версии: передавайте ровно их. В `endge_update_document` поле версии передаётся вместе с новым `source`. Проверенные тела всех коллекций — [примеры документов](/agents/document-examples).
+
+### Профили авторизации
+
+`auth-profiles` создаёт, меняет и удаляет только пользователь с ролью Admin workspace. Персональному токену эти операции недоступны при любых флагах (`403 access_token_admin_forbidden`), поэтому инструменты изменения не перечисляют `auth-profiles` в `collection` для токена. Читать профили токен может.
+
+Что делать агенту, которому нужен профиль:
+
+- если запрос использует ту же авторизацию, что приложение, укажите в Query и Stream `auth: { mode: 'inherit' }` — профиль не нужен;
+- если нужен отдельный профиль, попросите пользователя создать его в Configurator: назовите `identity`, `adapterId`, `config` и имена переменных workspace для секретов (например, `{EXAMPLE_API_TOKEN}`). После этого сошлитесь на него: `auth: { mode: 'profile', profile: '<identity>' }`. Компилятор Query ссылку на несуществующий профиль не проверяет (инструмент оценки выдаёт только предупреждение `grader-dangling-reference`), и она проявится лишь при выполнении запроса, поэтому до создания профиля оставьте `inherit`.
 
 ### Фасеты и документы фасетов
 
@@ -142,10 +153,22 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 
 - запрос уходит только под префикс `AGENT_DOCS_URL`; разрешены файлы `.md`, `.txt` и `llms-manifest.json`, путь из латиницы, цифр, `.`, `_`, `-`, `/` без `..`; перенаправление за пределы префикса отклоняется;
 - таймаут — 10 с, файл больше 2 МиБ обрезается по границе строки с пометкой, где читать продолжение (например, `llms-full.txt` целиком не помещается — читайте части);
+- ответ `resources/read` не длиннее ≈60 тыс. символов, длинный файл отдаётся [частями](#чтение-по-частям);
 - файл кешируется в памяти backend на 10 минут;
 - несуществующий файл — ошибка JSON-RPC `Resource not found`; сбой сети или ответ не `200` — ошибка с адресом файла: откройте ссылку напрямую или повторите позже.
 
 Адрес должен быть доступен из backend. Без `AGENT_DOCS_URL` ресурсов нет. Те же ссылки есть в инструкциях сервера и в `endge_status`.
+
+### Чтение по частям
+
+MCP-клиенты ограничивают размер ответа инструмента (Claude Code — около 25 тыс. токенов), поэтому backend не отдаёт больше ≈60 тыс. символов за один `resources/read`. Длинный файл, например ядро `llms-agent.txt`, делится на части по заголовкам Markdown (не посреди строки и не внутри блока кода):
+
+- адрес без параметра возвращает первую часть, `<адрес>?part=N` — часть `N` (с 1);
+- первая строка части — `[Часть N из M: <адрес>. Следующая: <адрес>?part=N+1]`, последняя строка — `[Конец части N из M. Продолжение: …]`; у последней части — `Это последняя часть`;
+- короткий файл приходит целиком, без заголовка; `?part=1` для него тоже допустим;
+- номер вне диапазона — ошибка с допустимым диапазоном; другие параметры адреса не принимаются.
+
+Части доступны всем ресурсам и шаблонам выше: в `resources/templates/list` это шаблон `{+resource}{?part}` («Часть длинного ресурса»). Файлы вне списка и шаблонов (например, `llms-full.txt`) не читаются и по частям.
 
 ## Пакет `@endge/mcp`
 

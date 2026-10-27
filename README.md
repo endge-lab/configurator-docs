@@ -44,6 +44,21 @@ pnpm errors:build
 
 Каталог ищется в `ENDGE_ERRORS_PATH`, затем в `services/egorkozelskij-endge-service-backend/docs/error-codes.yaml` монорепозитория. Если исходников backend нет, страница не меняется, и сборка использует сохранённый snapshot. Группы кодов задаёт список `GROUPS` в скрипте; код без группы попадает в «Прочие коды» с предупреждением в консоли.
 
+## Оценка workspace компиляцией
+
+`scripts/grade-workspace.mjs` — dev-инструмент документации: проверяет, что workspace Endge действительно собирается, а не только сохранён. Backend хранит Source как текст, поэтому инструмент загружает snapshot в `@endge/core` тем же путём, что Configurator (`Endge.boot` с provider `service-backend`), компилирует весь Domain и печатает статус и диагностику каждого документа.
+
+```bash
+# Workspace с backend (AUTH_MODE=dev или токен в ENDGE_TOKEN), каждый документ фасета отдельно
+node scripts/grade-workspace.mjs --backend http://127.0.0.1:8080 --workspace <identity> --each-facet --json report.json
+# Сохранённый ответ GET /api/v1/domain
+node scripts/grade-workspace.mjs --snapshot domain.json --facets tenant=tenant-a
+# Тела ```json [POST /api/v1/…] страниц документации поверх пустого workspace
+pnpm examples:check
+```
+
+Core разрешается из `--core <каталог>`, `ENDGE_CORE_DIR` или по умолчанию из `web/packages/@endge/@endge-core` монорепозитория (нужна его сборка `dist`). Версию стендов можно взять из npm: `npm i --prefix <каталог> @endge/core@<версия>` и `--core <каталог>`. Помимо diagnostics компилятора и Problems инструмент проверяет обязательные поля тела создания, лишние и недостающие props при вызове компонента и вложенной Composition, `config(...)` без значения, условия по несуществующим фасетам, висячие и неиспользуемые ссылки. Код выхода: `0` — чисто, `1` — есть ошибки, `2` — сбой инструмента. В `pnpm build` проверка не входит: ей нужен Core.
+
 ## LLM files
 
 ```bash
