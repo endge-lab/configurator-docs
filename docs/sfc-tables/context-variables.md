@@ -16,7 +16,7 @@
 
 ```vue
 <MenuItem
-  v-if="$row.data.status === 'draft' && $context.features.publish"
+  v-if="$row.data.status === 'draft' && props.canPublish"
   :disabled="!props.editable || $table.state.selectedRowIds.length > 1"
   action="order.publish"
   :input="{
@@ -42,19 +42,19 @@
 
 ```vue
 <Text
-  :value="row.flightCarrier"
+  :value="row.category"
   :class="{
-    'is-waiting': $data.metaOf(row.flightCarrier, 'aodb.optimistic')?.status === 'waiting',
+    'is-waiting': $data.metaOf(row.category, 'ui.optimistic')?.status === 'waiting',
   }"
 >
-  {{ row.flightCarrier }}
+  {{ row.category }}
 </Text>
 ```
 
 Без второго аргумента возвращается объект всех namespaces:
 
 ```vue
-{{ $data.metaOf(props.flight.status).validation?.message }}
+{{ $data.metaOf(props.item.status).validation?.message }}
 ```
 
 Разрешены статические ссылки на `props.foo`, прямой prop alias `foo`,

@@ -1,3 +1,7 @@
+---
+description: "Stream — source-first описание внешнего потока событий: transport, авторизация SSE, нормализация событий, подключение в Composition."
+---
+
 # Stream
 
 Stream — source-first описание внешнего потока событий. Он задаёт transport и
@@ -30,7 +34,7 @@ defineStream({
 {
   "eventInfo": { "name": "schedule.row.updated" },
   "payload": {
-    "id": "SU-123",
+    "id": "item-123",
     "patch": { "status": "boarding" }
   }
 }
@@ -50,7 +54,7 @@ transport не меняет маршрутизацию событий в Composi
 
 | Поле | Назначение |
 | --- | --- |
-| `url` | Статическая строка, `env('VARIABLE_NAME')` или выражение над props: `prop('endpoint')`, шаблонная строка |
+| `url` | Статическая строка или `env('VARIABLE_NAME')`; SSE не принимает props |
 | `withCredentials` | Передавать cookies в native `EventSource` при `auth: 'none'` |
 | `auth` | Правило авторизации: Workspace default profile, именованный AuthProfile или соединение без авторизации |
 
@@ -73,56 +77,30 @@ transport не меняет маршрутизацию событий в Composi
 boolean и `null`. Функции, spreads, вычисления и `env(...)` внутри этих сообщений
 не поддерживаются. Каждая запись сериализуется в отдельный JSON frame.
 
-Пример прямого подключения к публичным котировкам Kraken. В настройках рабочего
-пространства, раздел **Среда → Переменные окружения**, задайте:
-
-```text
-QUOTES_WS_URL = wss://ws.kraken.com/v2
-```
-
-В Source Stream:
+Абстрактный пример JSON-протокола: сервер `wss://events.example.test/ws` принимает subscribe-message и отправляет `{ channel: 'items', data: [...] }`. Это договорённость с сервером примера, а не встроенный протокол Core.
 
 ```ts
 defineStream({
   transport: websocket({
-    url: env('QUOTES_WS_URL'),
-    onOpen: [
-      {
-        method: 'subscribe',
-        params: {
-          channel: 'ticker',
-          symbol: ['BTC/USD', 'ETH/USD', 'SOL/USD'],
-          snapshot: true,
-        },
-      },
-    ],
+    url: env('ITEMS_WS_URL'),
+    onOpen: [{ method: 'subscribe', channel: 'items' }],
   }),
-
   events: {
     message: event({
-      match: { channel: 'ticker' },
+      match: { channel: 'items' },
       eachFrom: 'data',
-      type: 'quote.updated',
+      type: 'item.updated',
     }),
   },
 })
 ```
 
-`match` пропускает служебные сообщения Kraken. Для каждого элемента `data`
-Stream публикует `quote.updated`; payload содержит поля Kraken, в том числе
-`symbol`, `last`, `bid`, `ask`. Если Store использует `lastPrice`, соответствующий
-Update читает `input('last')` и записывает результат в это поле. Stream не
-переименовывает поля и не записывает данные в Store самостоятельно.
-
-Формат подписки и сообщения определяет [протокол Kraken](https://docs.kraken.com/api/docs/websocket-v2/ticker/).
-Имена каналов, символы и `method` остаются данными Source; ядро не содержит
-специального кода для биржи. Число символов в подписке должно соответствовать
-нужным инструментам: наличие строки в Store само по себе не добавляет подписку.
+Задайте `ITEMS_WS_URL` в переменных Workspace. `match` оставляет сообщения нужного канала, `eachFrom` публикует отдельное `item.updated` для каждого элемента `data`. Stream не переименовывает поля и не пишет в Store: это делает явно подключённый Update/Composition hook.
 
 WebSocket предоставляет только transport event `message`. Настройки SSE
 `auth` и `withCredentials` для него не поддерживаются и отклоняются compiler.
 Core не добавляет Bearer headers и не разрешает AuthProfile для WebSocket.
-Этот пример использует публичный поток без API-ключа; не помещайте credentials
+Этот пример не требует API-ключа; не помещайте credentials
 в persisted Source.
 
 ### GraphQL-подписка через SSE
@@ -162,7 +140,7 @@ defineStream({
 
 | Поле | Назначение |
 | --- | --- |
-| `url` | Статическая строка или `env('VARIABLE_NAME')` |
+| `url` | Статическая строка, `env('VARIABLE_NAME')` или безопасное выражение над объявленными props (`prop('endpoint')`) |
 | `method` | `'POST'` по умолчанию или `'GET'` |
 | `document` | Статический `gql` с operation `subscription` |
 | `fragments` | Фрагменты GraphQL, в том числе по контексту — как у [Query](/reference/query#фрагменты-по-контексту) |
@@ -229,8 +207,7 @@ transport: graphqlSse({
 `props: defineProps({...})` объявляет входы Stream с тем же контрактом поля, что
 у [Query](/reference/query#props). Props допустимы только с `graphqlSse`
 (`stream-props-transport`), default — только literal: `.from(filter(...))`
-отклоняется (`stream-prop-default-source`). URL из props не вычисляется: он
-остаётся строкой или `env(...)`.
+отклоняется (`stream-prop-default-source`). Для `graphqlSse` URL, variables, headers и extensions могут зависеть от объявленных props; URL вычисляется заново при подключении. У SSE и WebSocket URL остаётся строкой или `env(...)`.
 
 Значения передаются из Composition:
 

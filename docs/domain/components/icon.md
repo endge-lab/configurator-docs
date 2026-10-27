@@ -5,7 +5,7 @@
 
 ```vue
 <Icon name="alert-triangle" tone="warning" size="16" />
-<Icon :name="flight.statusIcon" :tone="flight.statusTone" tooltip="Status" />
+<Icon :name="item.statusIcon" :tone="item.statusTone" tooltip="Status" />
 ```
 
 | Атрибут | Тип | Назначение |

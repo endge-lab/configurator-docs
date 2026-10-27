@@ -1,3 +1,7 @@
+---
+description: "Federation — расширяемая модель композиции runtime-возможностей Endge: модель расширения, runtime identity, singleton и контракт identity."
+---
+
 # Federation
 
 Federation — расширяемая модель композиции runtime-возможностей Endge. Она

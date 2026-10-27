@@ -1,3 +1,7 @@
+---
+description: "Update — рецепт изменения данных одного Store: handles, mutations, условия when, optimistic и серверный вызов, несколько изменений."
+---
+
 # Update
 
 Update — source-first рецепт изменения данных одного Store. Владелец задаётся
@@ -14,7 +18,7 @@ Update не является отдельным глобальным обраб�
 
 ```json
 {
-  "id": "SU-123",
+  "id": "item-123",
   "patch": { "status": "boarding" }
 }
 ```
@@ -112,7 +116,7 @@ plans, а затем применяются одной transaction.
 ```ts
 {
   strategy: 'set',
-  target: meta('rows[id=$id].flightCarrier', 'aodb.optimistic'),
+  target: meta('rows[id=$id].category', 'ui.optimistic'),
   value: {
     status: 'waiting',
     optimisticValue: input('value'),

@@ -1,3 +1,7 @@
+---
+description: "Component SFC — исполняемый документ интерфейса: порты definePorts, Action и Event, require и forward, preview props, runtime-контекст."
+---
+
 # Component SFC
 
 Component SFC — основной исполняемый документ интерфейса. Он объединяет публичные порты, renderer-neutral template, локальные вычислительные ресурсы и EndgeCSS в одном source-документе.
@@ -61,8 +65,8 @@ Composition загружает физические Vocab documents и публ�
 ```ts
 defineComposition({
   data: {
-    airlines: vocab('catalog-airlines'),
-    serviceTypes: vocab('catalog-flight-service-types'),
+    categories: vocab('catalog-categories'),
+    serviceTypes: vocab('catalog-item-types'),
   },
 
   runtimes: {
@@ -71,27 +75,27 @@ defineComposition({
 })
 ```
 
-`catalog-airlines` и `catalog-flight-service-types` — физические identities. Component
-SFC их не знает и обращается только к aliases `airlines` и `serviceTypes`:
+`catalog-categories` и `catalog-item-types` — физические identities. Component
+SFC их не знает и обращается только к aliases `categories` и `serviceTypes`:
 
 ```vue
 <script setup lang="ts">
 defineProps<{
-  flight: ScheduleCardModel
+  item: ScheduleCardModel
 }>()
 </script>
 
 <template>
   <Select
-    :value="flight.flightCarrier"
-    :options="vocab('airlines', {
+    :value="item.category"
+    :options="vocab('categories', {
       valuePath: 'code',
       labelPath: 'description',
     })"
   />
 
   <Select
-    :value="flight.serviceType"
+    :value="item.serviceType"
     :options="vocab('serviceTypes', {
       valuePath: 'code',
       labelPath: 'description',
@@ -153,13 +157,13 @@ provider среди compiled Composition artifacts. Если ни одна Compo
 <script setup lang="ts">
 defineProps<{
   title: string
-  rows: FlightRow[]
+  rows: ItemRow[]
 }>()
 
 definePreviewProps({
-  title: 'Рейсы на перроне',
+  title: 'Список записей',
   rows: [
-    { id: 'SU100', status: 'boarding' },
+    { id: 'item-100', status: 'boarding' },
   ],
 })
 </script>
@@ -208,16 +212,16 @@ Action используется короткая форма без `steps`:
 
 ```vue
 <Text
-  :value="row.flightCarrier"
+  :value="row.category"
   editable
   @edited.stop="operation({
     run: query({
-      identity: 'schedule-sandbox-update-leg',
-      input: { id: rowKey, payload: { flightCarrier: event('value') } },
+      identity: 'records-update-item',
+      input: { id: rowKey, payload: { category: event('value') } },
     }),
     undo: query({
-      identity: 'schedule-sandbox-update-leg',
-      input: { id: rowKey, payload: { flightCarrier: event('previousValue') } },
+      identity: 'records-update-item',
+      input: { id: rowKey, payload: { category: event('previousValue') } },
     }),
   })"
 />
@@ -250,20 +254,20 @@ Action используется короткая форма без `steps`:
 ```vue
 <script setup lang="ts">
 interface Props {
-  rows: Flight[]
+  rows: Item[]
 }
 
 interface BoardInput {
-  rows: Flight[]
+  rows: Item[]
 }
 
 interface BoardOutput {
-  rows: Flight[]
+  rows: Item[]
   total: number
 }
 
 interface DetailsProps {
-  flight: Flight
+  item: Item
 }
 
 interface RowActivated {
@@ -274,7 +278,7 @@ const props = defineProps<Props>()
 
 const ports = definePorts({
   forward: {
-    from: 'departures',
+    from: 'primary',
     ports: {
       provides: [
         'table.sort.setColumnAsc',
@@ -285,14 +289,14 @@ const ports = definePorts({
   },
   require: {
     board: computation<BoardInput, BoardOutput>({
-      default: 'flight-board-state',
+      default: 'item-board-state',
     }),
     details: component<DetailsProps>({
-      tag: 'Flight.Details',
-      default: 'flight-details',
+      tag: 'Item.Details',
+      default: 'item-details',
     }),
     openDetails: action<{ id: string }, void>({
-      default: 'flight.open-details',
+      default: 'item.open-details',
     }),
   },
   provides: {
@@ -307,7 +311,7 @@ const board = ports.require.board({ rows: props.rows })
 </script>
 
 <template>
-  <Table ref="departures" if="board.value" :rows="board.value.rows" row-key="id">
+  <Table ref="primary" if="board.value" :rows="board.value.rows" row-key="id">
     <ColumnMenu>
       <MenuItem action="table.sort.setColumnAsc" label="По возрастанию" />
       <MenuItem action="table.column.pinLeft" label="Закрепить слева" />
@@ -321,7 +325,7 @@ const board = ports.require.board({ rows: props.rows })
         :input="{ id: $row.id, row: $row.data, field: $column.key, value: $cell.value }"
       />
     </CellMenu>
-    <Column key="number" title="Рейс" sortable pinnable />
+    <Column key="number" title="Запись" sortable pinnable />
   </Table>
 </template>
 ```
@@ -333,9 +337,9 @@ Required port всегда содержит `default`. Это provider по ум
 На конкретном вызове Component SFC provider можно заменить плоским dynamic attribute. Имя attribute совпадает с именем port; отдельный объект `ports` не создаётся:
 
 ```vue
-<GroundHandlingProcess
-  :update-actual-time="query('groundhandling-actual-time-update-v2')"
-  :state="computation('groundhandling-cell-computation-v2')"
+<ItemState
+  :update-actual-time="query('item-updated-at-update-v2')"
+  :state="computation('item-cell-computation-v2')"
 />
 ```
 
@@ -378,7 +382,7 @@ const ports = definePorts({
 const ports = definePorts({
   require: {
     openDetails: action<{ id: string }, void>({
-      default: 'flight.open-details',
+      default: 'item.open-details',
     }),
   },
 })
@@ -387,9 +391,9 @@ const ports = definePorts({
 Компонент зависит от стабильного Action contract. Provider можно вызвать из безопасной template reaction и переопределить на месте вызова компонента:
 
 ```vue
-<Button @click="ports.require.openDetails({ id: props.id })">Открыть</Button>
+<Text @click="ports.require.openDetails({ id: props.id })">Открыть</Text>
 
-<FlightCard :open-details="action('flight.open-details-in-drawer')" />
+<ItemCard :open-details="action('item.open-details-in-drawer')" />
 ```
 
 В `MenuItem` port key задаётся expression binding, а не строковой identity:
@@ -402,7 +406,7 @@ const ports = definePorts({
 identity указывается напрямую. Compiler всё равно сохранит её в dependencies:
 
 ```vue
-<MenuItem action="flight.open-details" label="Открыть" :input="{ id: rowId }" />
+<MenuItem action="item.open-details" label="Открыть" :input="{ id: rowId }" />
 ```
 
 Прежняя строковая ссылка на объявленный port пока поддерживается для совместимости,
@@ -412,7 +416,7 @@ identity указывается напрямую. Compiler всё равно с�
 
 ```ts
 interface ActualTimeInput {
-  legId: String
+  itemId: String
   station: String
   operationCode: String
   pointCode: String
@@ -423,7 +427,7 @@ interface ActualTimeInput {
 const ports = definePorts({
   require: {
     updateActualTime: query<ActualTimeInput, void>({
-      default: 'groundhandling-actual-time-update',
+      default: 'item-updated-at-update',
     }),
   },
 })
@@ -437,7 +441,7 @@ Query port вызывается только как reaction на Event и по�
   edit-mode="time"
   :timezone="$context.timezone"
   @edited="ports.require.updateActualTime({
-    legId: props.legId,
+    itemId: props.itemId,
     station: props.station,
     operationCode: props.operationCode,
     pointCode: 'value',
@@ -462,7 +466,7 @@ Query port вызывается только как reaction на Event и по�
 Flat binding required-порта может выбирать provider по фасетам сборки:
 
 ```html
-<Leg.Editor :update="contextSwitch({ default: query('update-afl'), cases: [{ when: { tenant: 'kzn' }, use: query('update-kzn') }] })" />
+<Item.Editor :update="contextSwitch({ default: query('update-variant-a'), cases: [{ when: { tenant: 'variant-b' }, use: query('update-variant-b') }] })" />
 ```
 
 Каждая ветка — `kind('identity')` того же kind, что порт (`action`, `component`, `computation`, `query`). Наличие, kind, активность и contract Query-порта проверяются для каждой ветки: ошибка в любой ветке отклоняет привязку. В IR попадает выбранная ветка, зависимостями компонента становятся все. Правила `contextSwitch` — в [Контексте сборки](/reference/value-expressions#контекст-сборки).
@@ -499,13 +503,13 @@ origin по-прежнему указывает конкретный mounted chi
 ```ts
 const ports = definePorts({
   forward: {
-    from: 'departures',
+    from: 'primary',
   },
 })
 ```
 
 ```vue
-<Table ref="departures" :rows="rows" />
+<Table ref="primary" :rows="rows" />
 ```
 
 Отсутствующее `ports` эквивалентно `ports: '*'`.
@@ -515,7 +519,7 @@ const ports = definePorts({
 ```ts
 const ports = definePorts({
   forward: {
-    from: 'departures',
+    from: 'primary',
     ports: {
       provides: '*',
     },
@@ -533,7 +537,7 @@ child `require` становится parent `require`, child `provides` — pare
 const ports = definePorts({
   forward: [
     {
-      from: 'departures',
+      from: 'primary',
       ports: {
         provides: [
           'table.column.*',
@@ -569,7 +573,7 @@ const ports = definePorts({
 ```ts
 const ports = definePorts({
   forward: {
-    from: ['departures', 'arrivals'],
+    from: ['primary', 'secondary'],
     namespace: 'ref',
     ports: {
       provides: {
@@ -585,7 +589,7 @@ const ports = definePorts({
 ```
 
 `namespace: 'ref'` создаёт identities вроде
-`departures.table.column.pinLeft`. Можно передать literal namespace либо
+`primary.table.column.pinLeft`. Можно передать literal namespace либо
 `'none'`. Для namespace `ref` каждый выбранный компонент обязан иметь literal
 `ref`.
 
@@ -626,7 +630,7 @@ emits: {
   rowActivated: event<TableRowActivatedEvent>({
     from: { ref: 'table', event: 'rowActivated' },
     action: {
-      identity: 'flight.open-details',
+      identity: 'item.open-details',
       input: { id: event('rowId') },
     },
   }),
@@ -702,7 +706,7 @@ emits: {
     input: { pointer: event() },
   })"
 >
-  Открыть рейс
+  Открыть элемент
 </Text>
 ```
 
@@ -776,3 +780,7 @@ Template tags обозначают абстрактные UI primitives, а не
 ## Legacy `Component`
 
 Старый `Component` хранит Table/DSL/JSX-конфигурацию как data-only document и не создаёт runtime host. Для нового исполняемого интерфейса используется Component SFC.
+
+## Точный язык SFC
+
+Состав `<script setup>`, macros, ресурсы и ограничения JavaScript описаны в [SFC script](/reference/sfc-script). Грамматика шаблона, operators, call whitelist и globals — в [SFC expressions](/reference/sfc-expressions). Эти выражения отличаются от функционального Source DSL.

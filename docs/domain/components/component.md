@@ -5,16 +5,16 @@ props передаются дочернему runtime host после evaluation
 
 ```vue
 <Component
-  is="flight-status-badge"
-  :flight="flight"
+  is="item-status-badge"
+  :item="item"
   :compact="compact"
 />
 
 <Component
-  is="flight-row"
-  for="flight in flights"
-  :key="flight.id"
-  :flight="flight"
+  is="item-row"
+  for="item in items"
+  :key="item.id"
+  :item="item"
 />
 ```
 
@@ -26,5 +26,5 @@ props передаются дочернему runtime host после evaluation
 | `if`, `else-if`, `else`, `for`, `:key` | directive | Standard Endge control flow. |
 
 Если компонент зарегистрирован через global tag или component port, его можно
-вызвать напрямую: `<FlightStatus :flight="flight" />`.
+вызвать напрямую: `<ItemStatus :item="item" />`.
 

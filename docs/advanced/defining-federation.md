@@ -131,3 +131,5 @@ EndgeFederation.define({
 
 Не генерируйте id во время запуска и не используйте разные module graphs с одним
 id. В одном JavaScript realm такой id всегда разрешается в один общий runtime-host.
+
+Точные Endge wrappers: [Core Federation contracts](/reference/contracts/core/federation). Унаследованные `provide`, bootstrap и lifecycle API базового framework: [TypedWorks Federation contracts](/reference/contracts/federation/).

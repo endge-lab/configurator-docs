@@ -14,7 +14,7 @@
   pinnable
 >
   <Cell>
-    <DateTime :value="value" format="dd.MM.yyyy HH:mm" />
+    <DateTime :value="value" format="date" />
   </Cell>
 </Column>
 ```

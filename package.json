@@ -1,7 +1,7 @@
 {
   "name": "@endge/configurator-docs",
   "type": "module",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "private": true,
   "packageManager": "pnpm@10.23.0",
   "engines": {
@@ -9,13 +9,15 @@
   },
   "scripts": {
     "dev": "vitepress dev docs --host 0.0.0.0 --port 5179",
-    "build": "pnpm run typecheck && vitepress build docs && node scripts/build-llms.mjs",
+    "build": "node scripts/build-contract-reference.mjs --if-available && node scripts/build-error-reference.mjs && pnpm run typecheck && vitepress build docs && pnpm run llms:build && pnpm run knowledge:build",
     "llms:build": "node scripts/build-llms.mjs",
     "typecheck": "vue-tsc -p tsconfig.json --noEmit",
     "preview": "node scripts/preview.mjs",
     "knowledge:build": "node scripts/build-knowledge-bundle.mjs",
     "lint-check": "eslint . --cache",
-    "lint-fix": "eslint . --fix --cache"
+    "lint-fix": "eslint . --fix --cache",
+    "contracts:build": "node scripts/build-contract-reference.mjs",
+    "errors:build": "node scripts/build-error-reference.mjs"
   },
   "dependencies": {
     "mermaid": "11.14.0",

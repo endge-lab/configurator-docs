@@ -1,3 +1,7 @@
+---
+description: "RMock — документ fixture-данных: глобальный и локальный mock-mode, JSON и code provider, preview Composition, Store, Query, SFC и Vocab."
+---
+
 # Mock data
 
 `RMock` — сохраняемый доменный документ с fixture-данными. Он позволяет вынести большой JSON из source других сущностей, переиспользовать один сценарий в нескольких preview и подключить data provider из application code без скрытого чтения файлов runtime-ом.
@@ -163,7 +167,7 @@ Vocab может выбрать весь JSON Mock либо значение п�
 
 ```ts
 defineVocab({
-  mock: mock('demo-fixtures').path('lookups.airlines'),
+  mock: mock('demo-fixtures').path('lookups.categories'),
   outputs: {
     items: output().from(response()),
   },

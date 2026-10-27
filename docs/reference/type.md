@@ -1,3 +1,7 @@
+---
+description: "Type Source — описание доменного типа: object, enum, union, array, дата и время, field API, contextSwitch и extends, импорт из GraphQL."
+---
+
 # Type Source
 
 Type Source — компактное source-first описание доменного типа. Оно хранится как авторский текст, проверяется безопасным parser и в дальнейшем может стать входом для генерации JSON Schema и визуального представления.
@@ -31,11 +35,11 @@ defineType({
     .max(1)
     .example(0.7),
 
-  flightFilters: field(FlightFilter)
+  itemFilters: field(ItemFilter)
     .array()
     .optional(),
 
-  arrivalDistribution: field(ArrivalDistribution)
+  itemDistribution: field(ItemDistribution)
     .array(),
 })
 ```
@@ -54,8 +58,8 @@ Identifier в `field(TypeName)` — symbolic reference на identity прими�
 
 ```ts
 defineType({
-  departureDate: field(Date),
-  departureTime: field(Time),
+  createdDate: field(Date),
+  createdTime: field(Time),
   updatedAt: field(DateTime),
 })
 ```
@@ -150,8 +154,8 @@ defineType(enumOf([
 
 ```ts
 defineType(unionOf(
-  ArrivalFlight,
-  DepartureFlight,
+  IncomingItem,
+  OutgoingItem,
 ))
 ```
 
@@ -161,7 +165,7 @@ defineType(unionOf(
 
 ```ts
 defineType(arrayOf(
-  Flight,
+  Item,
 ))
 ```
 
@@ -190,7 +194,7 @@ defineType({
 
 ```ts
 defineType({
-  extends: type('Flight'),
+  extends: type('Item'),
   fields: {
     stand: field(String),
     handlingAgent: field(String),
@@ -217,9 +221,9 @@ defineType({
 `contextSwitch` выбирает Type по фасетам сборки в любой позиции type expression (`field`, `arrayOf`, `unionOf`, `recordOf`, `extends`) и в контрактах Source (`defineProps`, `output().contract`, `.contract` Store, поля Filter, props Composition):
 
 ```ts
-flight: output().from(response('flight')).contract(field(contextSwitch({
-  default: type('Flight'),
-  cases: [{ when: { tenant: 'kzn' }, use: type('FlightKzn') }],
+item: output().from(response('item')).contract(field(contextSwitch({
+  default: type('Item'),
+  cases: [{ when: { tenant: 'variant-b' }, use: type('ItemExtended') }],
 }))),
 ```
 

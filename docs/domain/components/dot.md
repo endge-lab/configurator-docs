@@ -4,7 +4,7 @@
 
 ```vue
 <Dot tone="success" />
-<Dot :tone="flight.statusTone" size="6" tooltip="Flight status" />
+<Dot :tone="item.statusTone" size="6" tooltip="Item status" />
 ```
 
 | Атрибут | Тип | Назначение |

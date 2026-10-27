@@ -1,3 +1,7 @@
+---
+description: "Filter — source-first описание полей, их состояния и производных outputs: поиск и виртуализация Select, FilterView в Composition, whitelist."
+---
+
 # Filter
 
 Filter — source-first описание набора полей, их состояния и производных outputs.
@@ -8,9 +12,9 @@ Composition создаёт Filter runtime через `filter(identity)`, а `fil
 defineFilter({
   fields: {
     from: field('DateTime').optional(),
-    airlines: field('String')
+    categories: field('String')
       .array()
-      .vocab('airlines', {
+      .vocab('categories', {
         valuePath: 'code',
         labelPath: 'description',
       })
@@ -20,7 +24,7 @@ defineFilter({
   outputs: {
     request: output().json(({ value }) => compact({
       from: value('from'),
-      airlines: value('airlines'),
+      categories: value('categories'),
     })),
   },
 })
@@ -48,9 +52,9 @@ expressions.
 `endge.ui.select`:
 
 ```ts
-aircrafts: field('String')
+products: field('String')
   .array()
-  .vocab('aircrafts', {
+  .vocab('products', {
     valuePath: 'type',
     labelPath: 'description',
   })
@@ -82,7 +86,7 @@ defineComposition({
     filters: filterView('filter').withProps({
       showLabels: false,
       labels: {
-        airlines: 'Авиакомпании',
+        categories: 'Категории',
       },
     }),
   },
@@ -98,3 +102,36 @@ defineComposition({
 `output().json(...)` строит JSON payload, а `output().predicate(...)` — predicate
 для локального применения. Output пересчитывается после изменения state и может
 использоваться Query через Composition binding.
+
+## Whitelist outputs
+
+Filter намеренно использует ограниченное подмножество общего Expression DSL:
+
+| Output | Readers | Операции |
+| --- | --- | --- |
+| `.json(...)` | `value(path)` | `merge`, `compact`, `inList`, `trim`, `lowerCase`, `upperCase`, `toString` |
+| `.predicate(...)` | `row(path)`, `value(path)` | `and`, `between`, `inArray` |
+
+JSON-compatible literals, objects и arrays остаются допустимыми. Общий каталог операций не расширяет эту таблицу: например, `eq(...)`, `or(...)` и `map(...)` нельзя автоматически использовать в Filter output. Ошибки — `filter-source-output-operation` и `filter-source-output-read`.
+
+```ts
+defineFilter({
+  fields: {
+    from: field('DateTime').optional(),
+    to: field('DateTime').optional(),
+    categories: field('String').array().default([]),
+  },
+  outputs: {
+    predicate: output().predicate(({ row, value }) => and(
+      between(row('createdAt'), value('from'), value('to')),
+      inArray(row('category'), value('categories')),
+    )),
+  },
+})
+```
+
+`between` с отсутствующей границей оставляет эту сторону открытой. Пустой список `inArray` не ограничивает выборку. Для более сложного преобразования используйте DataView/Computation в соответствующей boundary; не маскируйте unsupported expression обычным JavaScript callback.
+
+Filter state принадлежит одному Filter runtime; FilterView — представление этого состояния. Изменение visual labels, layout или Select metadata не создаёт отдельный state и не должно дублировать поля.
+
+[Общий field contract](/reference/field-contracts), [compiler source](https://github.com/endge-lab/core/blob/main/src/features/core/modules/source/services/compilers/filter-source-compile.ts).

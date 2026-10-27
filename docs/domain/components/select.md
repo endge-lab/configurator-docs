@@ -11,8 +11,8 @@
 
 <Select
   multiple
-  :value="airlines"
-  :options="vocab('airlines', {
+  :value="categories"
+  :options="vocab('categories', {
     valuePath: 'code',
     labelPath: 'description',
   })"
@@ -43,7 +43,7 @@ type SourceFieldOption = {
 
 Generated Filter передаёт эти настройки из field metadata. Контракт и пример:
 [Filter](/reference/filter#поиск-и-виртуализация-select) и
-[Metadata поля](/reference/metadata#metadata-поля).
+[Metadata поля](/reference/metadata#metadata-поля-и-внутренних-узлов).
 
 DOM values сравниваются через string normalization. Тег display-only и не
 передаёт `change` обратно в runtime.
@@ -56,7 +56,7 @@ Vocab alias, а встроенная функция `vocab(alias, mapping?)` в�
 ```ts
 defineComposition({
   data: {
-    airlines: vocab('catalog-airlines'),
+    categories: vocab('catalog-categories'),
   },
 
   runtimes: {

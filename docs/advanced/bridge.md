@@ -43,7 +43,7 @@ Bridge по умолчанию выключен. Для dev-стенда зад�
 ```dotenv
 BRIDGE_ENABLED=true
 BRIDGE_DEBUG_ENABLED=true
-BRIDGE_ALLOWED_ORIGINS=https://config-dev.example.com,https://aodb-dev.example.com
+BRIDGE_ALLOWED_ORIGINS=https://config-dev.example.com,https://app-dev.example.com
 ```
 
 `BRIDGE_ALLOWED_ORIGINS` содержит **origin браузерных приложений**, которым
@@ -93,7 +93,7 @@ await Endge.boot({
   ...appBootOptions,
   // appBootOptions.scope.workspaceIdentity должен быть задан.
   bridge: allowedServers.length
-    ? { role: 'client', allowedServers, debug: true, label: 'AODB Dev' }
+    ? { role: 'client', allowedServers, debug: true, label: 'Example App' }
     : undefined,
 })
 ```
@@ -137,7 +137,7 @@ await Endge.boot({
 
 В меню **Отладка → Удалённая отладка** откройте отдельную вкладку `/debugger`.
 Она использует существующий вход разработчика на выбранный backend и workspace.
-Выберите подключённое приложение в header. В AODB появится обычный диалог
+Выберите подключённое приложение в header. В приложении появится обычный диалог
 подтверждения; после согласия и ответа сервера отладчик запросит снимок.
 
 Общий Grid Layout размещает штатный виджет **Домен** со всеми документами
@@ -173,10 +173,7 @@ Domain, Workspace, effective Configuration и Context, не вызывает Com
 и не публикует первоначальные изменения. Входящие события также применяются
 через Context.applyEvent. Поэтому импорт не запускает обратные команды клиенту.
 
-В AODB настройка client Bridge уже подключена к общему boot для Vite mode
-`development`. Задайте `VITE_ENDGE_BRIDGE_ALLOWED_SERVERS`; в остальных modes
-эта интеграция отключена. Для локальной пары backend allowlist origins должен
-содержать адреса Configurator и AODB с их портами.
+Host явно передаёт Bridge policy при bootstrap. Если разрешённые серверы читаются из environment, разбор и выбор допустимых modes принадлежат host, а не Core. В backend allowlist origins укажите фактические адреса Configurator и host с портами.
 
 ## Начать сессию отладки
 
@@ -215,15 +212,7 @@ async function debugClient(client: { serverUrl: string; instanceId: string }) {
 unsubscribe()
 ```
 
-`requestSession()` завершится успешно только после подтверждения в конечном
-приложении. В AODB используется компонент `BridgeConsent_Dialog` на стандартном
-`Dialog`: он показывает пользователя, backend URL, workspace и разрешаемые
-действия. Это обычный интерфейс страницы, поэтому он не зависит от блокировки
-браузерного `confirm` в фоновой вкладке. Вернитесь в AODB и нажмите «Разрешить»
-до истечения срока запроса.
-
-Другой host отображает `Endge.bridge.debug.pendingConsent` своим компонентом и
-передаёт ответ в `Endge.bridge.debug.respondToConsent(request, accepted)`.
+`requestSession()` завершится успешно после подтверждения пользователем в конечном host. Host отображает `Endge.bridge.debug.pendingConsent` собственным UI: кто запросил доступ, backend URL, Workspace и разрешаемые действия. Ответ передаётся в `Endge.bridge.debug.respondToConsent(request, accepted)`.
 Подписка — стандартный `Endge.bridge.debug.subscribe`. Core владеет сроком действия
 и снимает запрос при timeout, отзыве сессии, disconnect/reset. UI не должен
 копировать запрос в persistent state или автоматически давать согласие.

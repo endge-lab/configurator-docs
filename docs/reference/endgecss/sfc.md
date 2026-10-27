@@ -5,7 +5,7 @@
 ```vue
 <template>
   <Badge id="status" class="notice" state="delayed" part="status">
-    Задержан
+    Ожидает
   </Badge>
 </template>
 

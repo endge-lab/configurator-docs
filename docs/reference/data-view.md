@@ -1,3 +1,7 @@
+---
+description: "DataView — чистая проекция входных данных для потребителя: режимы, pipeline, projection, выражения, incremental и manual материализация."
+---
+
 # DataView
 
 DataView описывает чистую проекцию входных данных в форму, нужную потребителю. Глобальный DataView и локальный DataView внутри Query компилируются в один program-контракт и исполняются одним runtime-механизмом.
@@ -103,9 +107,9 @@ Legacy structural join присоединяет первый подходящи�
 
 ```ts
 join('attributes').by({
-  left: 'leg.id',
+  left: 'item.id',
   right: 'entityId',
-  as: 'legAttributes',
+  as: 'itemAttributes',
 })
 ```
 
@@ -232,8 +236,8 @@ Manual-режим пока сохранён в source/compiler contract, но ru
 ```ts
 outputs: {
   rows: output().from(response('rows')).dataView(contextSwitch({
-    default: 'rows-afl',
-    cases: [{ when: { tenant: 'kzn' }, use: dataView('rows-kzn') }],
+    default: 'rows-variant-a',
+    cases: [{ when: { tenant: 'variant-b' }, use: dataView('rows-variant-b') }],
   })),
 }
 ```

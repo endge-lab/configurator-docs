@@ -1,3 +1,7 @@
+---
+description: "Operation History — runtime resource Composition, который записывает выполненные Operation; ссылки на Configuration в shortcuts."
+---
+
 # Operation History
 
 History — runtime resource Composition. Без активной History Operation выполняет
@@ -64,3 +68,7 @@ Endge.runtime.operations.getActiveHistory()
 Успешный undo перемещает cursor в redo branch. Ошибка undo/redo не меняет cursor.
 Новая Operation после undo удаляет redo branch. Undo и redo не создают новые
 History entries и выполняются последовательно.
+
+## Configuration references в shortcuts
+
+`$editing.operationHistoryLimit` и `$editing.shortcuts.undo` — специальные статические ссылки `$<configurationIdentity>.<path>`. Здесь `editing` — существующая Configuration category, `operationHistoryLimit` — числовое значение, а `shortcuts.undo`/`redo` — TriggerSet. Это не произвольные JavaScript globals и не props SFC. Создайте соответствующие Configuration fields до использования ссылок. Отсутствие нужного значения диагностируется при активации; пример не создаёт категорию автоматически. Limit должен быть положительным; default — 20.
