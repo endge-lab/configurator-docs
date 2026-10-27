@@ -32,14 +32,14 @@
 browser events через `:on` и простой `@event`.
 
 ```vue
-<Column key="flight" title="Рейс">
+<Column key="item" title="Запись">
   <Cell
     :on.stop="{
       event: 'click',
       modifiers: { shift: true, exact: true },
       held: { code: ['KeyW'], exact: true },
       reaction: action({
-        identity: 'flight.open',
+        identity: 'item.open',
         input: { rowId: rowKey, row, columnKey, event: event() },
       }),
     }"
@@ -60,11 +60,11 @@ browser events через `:on` и простой `@event`.
 ```vue
 <Cell
   :on="{
-    triggers: $context.config.groundHandling.actualTimeTriggers,
+    triggers: $context.config.itemEditing.actualTimeTriggers,
     reaction: query({
-      identity: 'groundHandling.actualTime.update',
+      identity: 'itemEditing.actualTime.update',
       input: {
-        legId: row.arrivalLeg.id,
+        itemId: row.item.id,
         value: now(),
       },
     }),

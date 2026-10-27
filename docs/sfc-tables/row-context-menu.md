@@ -52,7 +52,7 @@ Action providers runtime-а.
         v-if="$row.data.status === 'draft'"
         action="order.publish"
         label="Опубликовать"
-        :disabled="!$context.permissions.canPublish"
+        :disabled="!props.canPublish"
         :input="{ id: $row.id }"
       />
     </CellMenu>

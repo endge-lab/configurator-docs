@@ -15,11 +15,11 @@ Query → Store → DataView → Component SFC → Table
 ```ts
 defineComposition({
   data: {
-    orders: dataView('active-orders'),
+    orders: store('orders'),
   },
   runtimes: {
     table: component('orders-table').withProps({
-      rows: fromData('orders.items'),
+      rows: fromData('orders.items').dataView('active-orders'),
     }),
   },
 })

@@ -1,37 +1,15 @@
-# Raph в Endge Core и Nova
+# Встраивание в Endge и renderer host
 
-Raph остаётся framework-neutral; consumers задают собственную phase semantics.
+Raph предоставляет framework-neutral data и execution primitives. Host задаёт собственные phases, lifecycle и представление.
 
-## Endge Core
+## Core Endge
 
-Core использует:
+Core использует Kernel как path/meta plane, Runtime nodes как owners, PathHandle watches для bindings и `process(batch)` для update ordering. Изменения данных проходят через явные Store/Update boundaries; UI consumer подписывается на принадлежащие component owner sources.
 
-- `RaphKernel` как path/meta data plane;
-- Runtime nodes как owners lifecycle;
-- persistent PathHandle watches для runtime hosts;
-- `process(batch)` для boundary/node update ordering;
-- `task.causes` для точного определения изменившихся paths;
-- transactions и derived materializations.
+Пользовательская Endge-конфигурация не должна создавать внутренние RaphNode вручную вместо `store(...)` или `component(...)`: runtime-hosts Core уже владеют этими объектами. Raph API нужен при разработке host/implementation, когда такая boundary явно определена.
 
-UI bridge подписывается на принадлежащие component-node sources, а не сканирует
-общий dirty graph.
+## Абстрактный renderer
 
-## Nova
+Renderer может хранить local state в owner-owned signals, отслеживать path data через watches, запрашивать именованные phases, а continuous work связывать с frame loop. Конкретные scene nodes, hit testing и drawing остаются ответственностью renderer. Их методы не входят в общий контракт Raph.
 
-`NovaNode` является RaphNode. Nova выражает:
-
-- reactive state через owner-owned `signal/computed`;
-- business dependencies через `runtime.path` + `node.watch`;
-- редкое нерективное изменение через `node.touch`;
-- горячие phase requests через owner-owned pulses;
-- continuous work через `frameTick`;
-- propagation semantics внутри Nova phase `process(batch)`.
-
-Raph не знает о Canvas, renderer, hit testing или Nova components.
-
-## Shared Kernel
-
-Core и Nova могут разделить Kernel только при реальном общем data contract.
-Их owners, phases, scheduler и pending work остаются разными Runtime lanes.
-Cross-runtime reactive edge не создаётся: связь проходит через path/meta data.
-
+Shared Kernel допустим при общем data contract. Owners, phases, scheduler и pending work остаются независимыми для каждой runtime lane. Связь lanes проходит через path/meta plane; прямое cross-runtime reactive edge не создаётся. Подробности — [Shared Kernel](/raph/integrations/shared-kernel).

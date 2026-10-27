@@ -1,3 +1,7 @@
+---
+description: "Встроенные теги Component SFC: компоненты представления, компоновки, ввода и структурные, редактирование значений и полный пример."
+---
+
 # Компоненты Endge SFC
 
 Компоненты Endge SFC — renderer-neutral теги template. Source не содержит HTML
@@ -77,3 +81,18 @@ defineProps<{
 Все visual tags принимают [общие атрибуты](./common-attributes), Endge
 control-flow directives и собственные атрибуты, перечисленные на их страницах.
 Для сложных комбинаций событий используйте [универсальную аннотацию `:on`](./interactions).
+
+## Полный набор встроенных тегов
+
+| Назначение | Теги и справочник |
+| --- | --- |
+| Представление | [Text](./text), [DateTime](./date-time), [Number](./number), [Icon](./icon), [Badge](./badge), [Dot](./dot) |
+| Компоновка | [Box](./box), [Flex](./flex), [Grid](./grid), [Divider](./divider) |
+| Ввод | [Input](./input), [Textarea](./textarea), [Checkbox](./checkbox), [Select](./select) |
+| Дочерний компонент | [Component](./component) |
+| Таблица | [Table](./table), [Column](./column), [Cell](./cell) |
+| Меню | [ColumnMenu](./column-menu), [CellMenu и deprecated RowMenu](./row-menu), [MenuItem](./menu-item), [MenuSeparator](./menu-separator) |
+| Редактирование | [Editable и Variant](/sfc-tables/cell-editing) |
+| Подсказки | [Tooltip, TooltipTrigger, TooltipContent](./tooltip) |
+
+Этот набор соответствует [compiler built-ins](https://github.com/endge-lab/core/blob/main/src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts). Вложенные structural tags имеют ограничения parent/children из своих справочников. `RowMenu` оставлен только как deprecated alias `Table > RowMenu`. Другие имена требуют зарегистрированного Component port; тег `Button` сам по себе не встроен. Общие call/operator rules — [SFC expressions](/reference/sfc-expressions).

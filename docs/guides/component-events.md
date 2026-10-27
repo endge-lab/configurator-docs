@@ -61,7 +61,7 @@ const ports = definePorts({
 rowActivated: event<TableRowActivatedEvent>({
   from: { ref: 'table', event: 'rowActivated' },
   action: {
-    identity: 'flight.open-details',
+    identity: 'item.open-details',
     input: {
       id: event('rowId'),
       row: event('row'),
@@ -248,7 +248,7 @@ Template handler обязан содержать безопасную reaction-�
     },
   })"
 >
-  Рейс
+  Запись
 </Text>
 ```
 
@@ -302,7 +302,7 @@ Sandbox возвращает один effect или массив effects. Раз
   ref="table"
   :rows="rows"
   @rowContextMenuRequested="action({
-    identity: 'flight.open-context-menu',
+    identity: 'item.open-context-menu',
     input: {
       rowId: event('rowId'),
       anchor: event('anchor'),

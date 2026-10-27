@@ -1,3 +1,7 @@
+---
+description: "Metadata — статический JSON, дополняющий документ или узел Source: способы хранения, допустимый JSON, поддержка документов и чтение в runtime."
+---
+
 # Metadata
 
 Metadata — пользовательский статический JSON-объект, который дополняет документ
@@ -148,9 +152,9 @@ Metadata самого документа не следует смешивать 
 узлов. Например, `.meta(...)` прикрепляет статические подсказки к полю Filter:
 
 ```ts
-aircrafts: field('String')
+products: field('String')
   .array()
-  .vocab('aircrafts', {
+  .vocab('products', {
     valuePath: 'type',
     labelPath: 'description',
   })

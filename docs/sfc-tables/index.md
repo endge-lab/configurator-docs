@@ -1,3 +1,7 @@
+---
+description: "Таблица в Component SFC: compound-компонент Table с renderer-neutral контрактом — колонки, ячейки, меню, сортировка, выбор, paging и состояние."
+---
+
 # Таблицы SFC
 
 Таблица в Component SFC — compound-компонент с единым renderer-neutral

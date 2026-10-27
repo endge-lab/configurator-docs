@@ -10,7 +10,7 @@ JSON UI — рендер-адаптер ядра `@endge/core` (`EndgeUIJsonAdap
 import type { ComponentSFCRenderPort } from '@endge/core'
 import { applyEndgeUIPatch, Endge, mountEndgeUIJson } from '@endge/core'
 
-const session = await Endge.runtime.composition.mount('flight-inspector')
+const session = await Endge.runtime.composition.mount('item-inspector')
 // getChild возвращает общий RuntimeHost; узел Component SFC приводится к порту рендера.
 const host = session.host.getChild('inspector') as unknown as ComponentSFCRenderPort
 
@@ -47,12 +47,12 @@ Mount не создаёт и не уничтожает runtime host: он тол
 {
   "format": "endge-ui/v1",
   "revision": 1,
-  "component": "flight-inspector",
+  "component": "item-inspector",
   "roots": [{
     "id": "root-0", "type": "Flex", "props": { "col": true, "gap": "3" },
     "children": [
       { "id": "root-0-0-0", "type": "Text", "props": { "weight": "600" }, "children": [
-        { "id": "root-0-0-0-0", "type": "#text", "props": {}, "children": [], "text": "Инспектор рейса SU 1402" }
+        { "id": "root-0-0-0-0", "type": "#text", "props": {}, "children": [], "text": "Инспектор записи item-42" }
       ] }
     ]
   }]
@@ -81,7 +81,7 @@ Mount не создаёт и не уничтожает runtime host: он тол
 {
   "format": "endge-ui/v1", "baseRevision": 1, "revision": 2,
   "ops": [
-    { "op": "update", "id": "root-0-0-0-0", "set": { "text": "Инспектор рейса SU 1403" } }
+    { "op": "update", "id": "root-0-0-0-0", "set": { "text": "Инспектор записи item-43" } }
   ]
 }
 ```

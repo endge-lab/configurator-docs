@@ -24,8 +24,8 @@ defineQuery({
 
 ```ts
 data: {
-  airlines: vocab('airlines'),
-  stations: vocab('stations').policy({
+  categories: vocab('categories'),
+  groups: vocab('groups').policy({
     strategy: 'stale-while-revalidate',
     maxAgeMs: 300_000,
     onError: 'use-cache',
@@ -39,15 +39,15 @@ Component SFC читает объявленный alias напрямую из ru
 
 ```vue
 <Select
-  :value="flight.flightCarrier"
-  :options="vocab('airlines', {
+  :value="item.category"
+  :options="vocab('categories', {
     valuePath: 'code',
     labelPath: 'description',
   })"
 />
 ```
 
-Передавать `airlineOptions` через `defineProps` для этого не нужно. Composition
+Передавать `categoryOptions` через `defineProps` для этого не нужно. Composition
 загружает dependency до создания runtime-ноды, а Component host подписывается на
 общий cache path и повторяет render при обновлении справочника.
 

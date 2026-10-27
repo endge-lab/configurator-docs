@@ -1,3 +1,7 @@
+---
+description: "Simulation — подмены запросов и Stream для одной Composition: Source, контракт ответа и подсказки, редактирование и хранение."
+---
+
 # Simulation
 
 Simulation сохраняет описание подмен запросов для одной [Composition](/reference/composition).
@@ -9,7 +13,7 @@ Simulation сохраняет описание подмен запросов д�
 
 ```ts
 defineSimulation({
-  target: composition('aodb-initialization'),
+  target: composition('application-startup'),
   overrides: {
     runtimes: {
       scheduleSandbox: {
@@ -31,7 +35,7 @@ defineSimulation({
 
 `target` выбирает Composition по identity. `scheduleSandbox` и `query` — aliases,
 уже объявленные в её дереве `runtimes`. Вложенность повторяет Composition и scopes.
-Simulation не создаёт новые runtime-узлы и не меняет props, activation, Store или Stream.
+Simulation не создаёт новые aliases и не меняет props, activation или Store. Она подменяет request Query и generator Stream только в явно выбранных runtime-узлах.
 
 `request: mockRequest(...)` допустим только у Query, `stream: mockStream(...)` —
 только у Stream. `seed` — необязательная строка.
@@ -152,8 +156,7 @@ Query и Type. Изменение зависимостей обновляет д
 Доступны обычные действия документа: создание, переименование, дублирование,
 перемещение в папку, история revisions, удаление и восстановление. Экспорт и импорт
 выполняются backend вместе с остальным workspace; Simulation сохраняет `sourceVersion: 1`.
-Полный snapshot использует схему `2`. Файл схемы `1` нужно повторно экспортировать
-после обновления исходного backend.
+Текущий полный workspace snapshot использует `schemaVersion: 10` (отдельно от `sourceVersion` Simulation). Backend строго сверяет версию формата; неподдерживаемый snapshot повторно экспортируйте из совместимого backend. Актуальная версия находится в manifest Service Backend `VERSION`, поле `WORKSPACE_SCHEMA_VERSION`.
 
 Открытие и компиляция Simulation не выполняют Query и не вызывают Mock-сервис.
 Выполнение начинается только при явном запуске.

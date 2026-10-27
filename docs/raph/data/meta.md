@@ -4,10 +4,10 @@ Meta-plane хранит metadata отдельно от обычных path data 
 Metadata может принадлежать только существующему data path.
 
 ```ts
-runtime.set('items[id=42].carrier', 'SU')
+runtime.set('items[id=42].category', 'SU')
 
 runtime.meta.set(
-  'items[id=$id].carrier',
+  'items[id=$id].category',
   'ui.optimistic',
   { status: 'waiting' },
   { vars: { id: 42 } },

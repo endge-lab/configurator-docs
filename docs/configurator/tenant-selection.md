@@ -1,6 +1,6 @@
 # Выбор тенанта
 
-Тенант — это документ фасета, например `tenant/afl` или `tenant/kzn`. Выбранные документы фасетов фиксируются при запуске Endge: от них зависят effective Configuration и значения `facet`, `config`, `context` и `contextSwitch` в Source (см. [Контекст сборки](/reference/value-expressions#контекст-сборки)). Чтобы сменить тенант, Endge запускается заново с другим выбором.
+Тенант — это документ фасета, например `tenant/variant-a` или `tenant/variant-b`. Выбранные документы фасетов фиксируются при запуске Endge: от них зависят effective Configuration и значения `facet`, `config`, `context` и `contextSwitch` в Source (см. [Контекст сборки](/reference/value-expressions#контекст-сборки)). Чтобы сменить тенант, Endge запускается заново с другим выбором.
 
 Есть два способа выбрать тенант: явно при запуске или по claim пользователя после входа.
 
@@ -9,13 +9,13 @@
 Приложение передаёт выбор в `Endge.boot`:
 
 ```ts
-await Endge.boot({ ...ctx, context: { facets: { tenant: 'kzn' } } })
+await Endge.boot({ ...ctx, context: { facets: { tenant: 'variant-b' } } })
 ```
 
 В Configurator то же задаёт переменная сборки:
 
 ```dotenv
-VITE_ENDGE_FACETS={"tenant":"kzn"}
+VITE_ENDGE_FACETS={"tenant":"variant-b"}
 ```
 
 Значение — JSON-объект «фасет → документ». Если это не JSON-объект, инициализация Configurator завершается ошибкой. Во время работы выбор меняет переключатель фасетов (`switchContext({ facets })`), он перезапускает Endge.
@@ -29,7 +29,7 @@ await Endge.boot({
   ...ctx,
   auth: {
     facetClaims: {
-      tenant: { claim: '/org/tenant', map: { 'AFL-01': 'afl', 'KZN-01': 'kzn' }, missing: 'default' },
+      tenant: { claim: '/org/tenant', map: { 'VARIANT-A-01': 'variant-a', 'VARIANT-B-01': 'variant-b' }, missing: 'default' },
     },
   },
 })
@@ -55,7 +55,7 @@ Claims берутся из id/access token default-профиля и допол�
 В Configurator настройку задаёт переменная `VITE_ENDGE_FACET_CLAIMS` — JSON той же формы, что `facetClaims`:
 
 ```dotenv
-VITE_ENDGE_FACET_CLAIMS={"tenant":{"claim":"/org/tenant","map":{"AFL-01":"afl","KZN-01":"kzn"}}}
+VITE_ENDGE_FACET_CLAIMS={"tenant":{"claim":"/org/tenant","map":{"VARIANT-A-01":"variant-a","VARIANT-B-01":"variant-b"}}}
 ```
 
 Если переменная задана, Configurator следит за auth-сессией. Когда после входа или смены пользователя выбор по claims меняется, Configurator перезапускает контекст с новым тенантом. Обновление токена с теми же claims перезапуска не вызывает. Фасет, выбранный по claims, закреплён сессией: его переключатель в шапке неактивен с подсказкой «выбор задан сессией».
@@ -66,4 +66,4 @@ VITE_ENDGE_FACET_CLAIMS={"tenant":{"claim":"/org/tenant","map":{"AFL-01":"afl","
 
 Визуальный редактор Type, графы зависимостей и редактор портов SFC работают без контекста: им нужны все ветки `contextSwitch`.
 
-Сквозной пример — [Инспектор по тенантам АФЛ/КЗН](/cookbook/tenant-inspector).
+Выбор документа фасета применяется к [Composition](/reference/composition) и [Configuration](/reference/configuration).

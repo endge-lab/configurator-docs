@@ -117,12 +117,12 @@ Reactions выполняются последовательно и ожидаю�
 ```vue
 <Cell
   :on="{
-    triggers: $context.config.groundHandling.actualTimeTriggers,
+    triggers: $context.config.itemEditing.actualTimeTriggers,
     reaction: query({
-      identity: 'groundHandling.actualTime.update',
+      identity: 'itemEditing.actualTime.update',
       input: {
-        legId: row.arrivalLeg.id,
-        station: row.arrivalLeg.latestArrivalStationIataCode,
+        itemId: row.item.id,
+        station: row.item.group,
         code: 'Bridge On',
         point: 'value',
         value: now(),
@@ -131,8 +131,8 @@ Reactions выполняются последовательно и ожидаю�
     }),
   }"
 >
-  <GroundHandlingProcess
-    :process="row.arrivalLeg.groundHandling[code = 'Bridge On']"
+  <ItemState
+    :process="row.item.states[code = 'Bridge On']"
   />
 </Cell>
 ```
@@ -178,7 +178,7 @@ event('value')             // значение Input/Select
 ```
 
 Dot-path может читать и поля semantic/custom Event. Например, для payload
-`{ row: { id: 'leg-1' } }` доступно `event('row.id')`. Если путь отсутствует в
+`{ row: { id: 'item-1' } }` доступно `event('row.id')`. Если путь отсутствует в
 конкретном payload, результатом будет `undefined`.
 
 Встроенные semantic Events `Table` имеют собственные typed payload:
@@ -205,7 +205,7 @@ Dot-path может читать и поля semantic/custom Event. Наприм
 
 ```ts
 query({
-  identity: 'groundHandling.actualTime.update',
+  identity: 'itemEditing.actualTime.update',
   input: {
     value: now(),
     sourceEventAt: event('occurredAt'),

@@ -21,10 +21,10 @@ Problems tree не повторяет папки и порядок исходн�
 Критические
   PaymentRuntime       1F
 Ошибки
-  FlightTable          3E 1W
-  ArrivalFilter        1E
+  ItemTable          3E 1W
+  ItemFilter        1E
 Предупреждения
-  FlightDetails        2W
+  ItemDetails        2W
 ```
 
 Сущность находится под своей максимальной текущей severity и показывается один раз, даже если problems появились в нескольких фазах. В центральной области они разделяются по phase-вкладкам.

@@ -1,6 +1,10 @@
+import type { HeadConfig } from 'vitepress'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { defineConfig } from 'vitepress'
+import { autoDescription, isPublicDocumentationPage, splitFrontmatter } from '../../scripts/documentation-pages.mjs'
 import { configureDocsMarkdown } from './docs-markdown'
-import { withFileBase } from './site-base'
+import { resolveSiteBase, withFileBase } from './site-base'
 
 export default defineConfig({
   lang: 'ru-RU',
@@ -8,7 +12,8 @@ export default defineConfig({
   titleTemplate: 'Endge | :title',
   description: 'Документация платформы Endge и конфигуратора',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    // head не получает base от VitePress; сайт может публиковаться под `--base /endge-docs/`.
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${resolveSiteBase()}favicon.svg` }],
   ],
   cleanUrls: true,
   lastUpdated: true,
@@ -16,12 +21,36 @@ export default defineConfig({
     config: configureDocsMarkdown,
   },
 
+  // Страница без frontmatter description получает то же описание, что и в llms.txt:
+  // первый абзац текста (scripts/documentation-pages.mjs).
+  transformPageData(pageData, { siteConfig }) {
+    if (pageData.description || !isPublicDocumentationPage(pageData.relativePath)) {
+      return
+    }
+    const source = readFileSync(path.join(siteConfig.srcDir, pageData.relativePath), 'utf8')
+    const description = autoDescription(splitFrontmatter(source).body.replace(/^# .*$/m, ''))
+    if (description) {
+      pageData.description = description
+    }
+  },
+
+  // Markdown-версию страницы и llms.txt собирает scripts/build-llms.mjs; ссылки учитывают base (`--base /endge-docs/`).
+  transformHead({ pageData, siteConfig }) {
+    const base = siteConfig.site.base
+    const head: Array<HeadConfig> = [
+      ['link', { rel: 'help', type: 'text/plain', href: `${base}llms.txt`, title: 'Документация для ИИ-агентов (llms.txt)' }],
+    ]
+    if (isPublicDocumentationPage(pageData.relativePath)) {
+      head.push(['link', { rel: 'alternate', type: 'text/markdown', href: `${base}${pageData.relativePath}`, title: 'Markdown-версия страницы' }])
+    }
+    return head
+  },
+
   themeConfig: {
     nav: [
       { text: 'Configurator', link: '/' },
       { text: 'Advanced', link: '/advanced/' },
       { text: 'Raph', link: '/raph/' },
-      { text: 'Cookbook', link: '/cookbook/' },
     ],
 
     sidebar: {
@@ -30,6 +59,7 @@ export default defineConfig({
           text: 'Federation',
           items: [
             { text: 'Обзор', link: '/advanced/' },
+            { text: 'Встраивание Core и API', link: '/advanced/core-api' },
             { text: 'Структура feature', link: '/advanced/functional-structure' },
             { text: 'Modules и submodules', link: '/advanced/modules' },
             { text: 'Определение Federation', link: '/advanced/defining-federation' },
@@ -61,6 +91,7 @@ export default defineConfig({
             { text: 'Что такое Raph', link: '/raph/' },
             { text: 'Установка и быстрый старт', link: '/raph/getting-started' },
             { text: 'Какой API выбрать', link: '/raph/choosing-api' },
+            { text: 'Маршрут агента', link: '/raph/agent-guide' },
           ],
         },
         {
@@ -109,6 +140,8 @@ export default defineConfig({
           text: 'Reactive API',
           items: [
             { text: 'Signals, Effects и Watch', link: '/raph/reactive' },
+            { text: 'Observable objects и buffers', link: '/raph/observable' },
+            { text: 'State machines', link: '/raph/machines' },
           ],
         },
         {
@@ -117,7 +150,7 @@ export default defineConfig({
           items: [
             { text: 'Shared Kernel и runtime lanes', link: '/raph/integrations/shared-kernel' },
             { text: 'Пользовательский DataAdapter', link: '/raph/integrations/data-adapter' },
-            { text: 'Endge Core и Nova', link: '/raph/integrations/endge-and-nova' },
+            { text: 'Endge и renderer host', link: '/raph/integrations/endge-and-nova' },
           ],
         },
         {
@@ -126,26 +159,7 @@ export default defineConfig({
           items: [
             { text: 'Отладка и метрики', link: '/raph/debugging' },
             { text: 'Публичный API', link: '/raph/reference' },
-          ],
-        },
-      ],
-      '/cookbook/': [
-        {
-          text: 'Cookbook',
-          items: [
-            { text: 'Обзор', link: '/cookbook/' },
-          ],
-        },
-        {
-          text: 'Данные и синхронизация',
-          items: [
-            { text: 'Оптимистичные обновления', link: '/cookbook/optimistic-updates' },
-          ],
-        },
-        {
-          text: 'Контекст и тенанты',
-          items: [
-            { text: 'Инспектор по тенантам АФЛ/КЗН', link: '/cookbook/tenant-inspector' },
+            { text: 'Точные контракты из source', link: '/raph/contracts/' },
           ],
         },
       ],
@@ -183,12 +197,17 @@ export default defineConfig({
           text: 'ИИ-агентам',
           items: [
             { text: 'Работа с Endge через API', link: '/agents/' },
+            { text: 'Авторинг Source и SFC', link: '/agents/authoring' },
+            { text: 'Репозитории и source map', link: '/agents/repositories' },
             { text: 'Персональные токены', link: '/agents/tokens' },
             { text: 'MCP-сервер backend', link: '/agents/mcp' },
+            { text: 'Сквозные сценарии', link: '/agents/scenarios' },
+            { text: 'Коды ошибок', link: '/agents/errors' },
             {
               text: 'Файлы для агента',
               items: [
                 { text: 'llms.txt — обзор и оглавление', link: withFileBase('/llms.txt'), target: '_blank', rel: 'noopener' },
+                { text: 'llms-agent.txt — ядро для агента', link: withFileBase('/llms-agent.txt'), target: '_blank', rel: 'noopener' },
                 { text: 'llms-full.txt — вся документация', link: withFileBase('/llms-full.txt'), target: '_blank', rel: 'noopener' },
               ],
             },
@@ -198,6 +217,8 @@ export default defineConfig({
           text: 'Домен Endge',
           items: [
             { text: 'Сущности Endge', link: '/domain/entities' },
+            { text: 'Матрица возможностей', link: '/reference/capabilities' },
+            { text: 'Контракты библиотек', link: '/reference/contracts/' },
             { text: 'Converter', link: '/reference/converter' },
             { text: 'Computation', link: '/reference/computation' },
             { text: 'DataView', link: '/reference/data-view' },
@@ -223,17 +244,23 @@ export default defineConfig({
             },
             { text: 'Query', link: '/reference/query' },
             { text: 'Stream', link: '/reference/stream' },
+            { text: 'Store', link: '/reference/store' },
             { text: 'Update', link: '/reference/update' },
             { text: 'Filter', link: '/reference/filter' },
             { text: 'Action', link: '/reference/action' },
             { text: 'Operation History', link: '/reference/operation-history' },
             { text: 'Component SFC', link: '/reference/component-sfc' },
+            { text: 'SFC script и macros', link: '/reference/sfc-script' },
+            { text: 'SFC expressions', link: '/reference/sfc-expressions' },
             { text: 'Composition', link: '/reference/composition' },
+            { text: 'Composition event hooks', link: '/reference/composition-events' },
             { text: 'Simulation', link: '/reference/simulation' },
             { text: 'Справочники (Vocab)', link: '/reference/vocab' },
             { text: 'I18n Bundle', link: '/reference/i18n-bundle' },
             { text: 'Configuration', link: '/reference/configuration' },
             { text: 'Функциональные выражения', link: '/reference/value-expressions' },
+            { text: 'Каталог функций и arity', link: '/reference/language-catalog' },
+            { text: 'Общий контракт field', link: '/reference/field-contracts' },
             { text: 'Metadata', link: '/reference/metadata' },
             { text: 'Связи сущностей', link: '/domain/relations' },
             { text: 'Жизненный цикл документа', link: '/domain/lifecycle' },
@@ -332,6 +359,7 @@ export default defineConfig({
             { text: 'Запуск Query и схема GraphQL', link: '/configurator/query-run-and-graphql-schema' },
             { text: 'Выбор тенанта', link: '/configurator/tenant-selection' },
             { text: 'Доступ для агента и история', link: '/configurator/agent-access' },
+            { text: 'История, перенос и выпуск', link: '/configurator/workspace-delivery' },
             { text: 'Горячие клавиши редактора', link: '/configurator/editor-hotkeys' },
           ],
         },
@@ -418,7 +446,7 @@ export default defineConfig({
                 { text: 'Backup и restore', link: '/project/roadmap/Backup_Restore_Policies' },
                 { text: 'Версионирование', link: '/project/roadmap/Versioning_And_Updates' },
                 { text: 'Виртуализация', link: '/project/roadmap/Virtualization_Of_Lists_And_Tables' },
-                { text: 'Оптимизация bundle', link: '/project/roadmap/Bundle_Optimization_And_Tenant_Isolation' },
+                { text: 'Оптимизация bundle', link: '/project/roadmap/Bundle_Optimization_And_Context_Isolation' },
                 { text: 'Доступность', link: '/project/roadmap/Accessibility_A11y' },
               ],
             },

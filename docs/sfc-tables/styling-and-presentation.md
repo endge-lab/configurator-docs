@@ -46,7 +46,7 @@ EndgeCSS работает с renderer-neutral surfaces.
 
 Переменные можно назначить конкретному `id` или стабильному authored-классу.
 Они наследуются внутренними surfaces, поэтому не зависят от RevoGrid, TanStack
-или AODB DataTable:
+или приложении DataTable:
 
 ```vue
 <Table

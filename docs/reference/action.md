@@ -1,10 +1,14 @@
+---
+description: "Source Actions: именованный алгоритм из шагов — Source-синтаксис, операции, code-owned реализация и provider, вызов из Component SFC."
+---
+
 # Source Actions
 
 Action — именованный алгоритм из последовательных шагов. Source и код вызываются
 одинаково по `identity`; runtime выбирает ровно одну effective implementation.
 
 ```ts
-await Endge.actions.execute('schedule-edit-flight-carrier', {
+await Endge.actions.execute('records-edit-category', {
   input: { id: '42', value: ' lh ', previousValue: 'BA' },
 })
 ```
@@ -29,15 +33,15 @@ defineAction({
       .convert('string-trim')
       .upperCase(),
 
-    validation: computation('schedule.validate-carrier', {
+    validation: computation('records.validate-category', {
       value: output('normalized'),
     }),
 
     save: query({
-      identity: 'schedule-sandbox-update-leg',
+      identity: 'records-update-item',
       input: {
         id: input('id'),
-        payload: { flightCarrier: output('normalized') },
+        payload: { category: output('normalized') },
       },
     }),
   },
@@ -71,11 +75,11 @@ Action step.
 ```ts
 edit: operation({
   run: query({
-    identity: 'schedule-sandbox-update-leg',
+    identity: 'records-update-item',
     input: { id: input('id'), payload: input('patch') },
   }),
   undo: query({
-    identity: 'schedule-sandbox-update-leg',
+    identity: 'records-update-item',
     input: { id: input('id'), payload: input('previous') },
   }),
 })
@@ -91,8 +95,8 @@ edit: operation({
 
   run: {
     steps: {
-      local: update({ identity: 'schedule-local-update-leg', input: input() }),
-      remote: query({ identity: 'schedule-sandbox-update-leg', input: input() }),
+      local: update({ identity: 'records-local-update-item', input: input() }),
+      remote: query({ identity: 'records-update-item', input: input() }),
     },
     output: output('remote'),
   },
@@ -100,7 +104,7 @@ edit: operation({
   undo: {
     steps: {
       remote: query({
-        identity: 'schedule-sandbox-update-leg',
+        identity: 'records-update-item',
         input: {
           id: input('id'),
           value: input('previousValue'),
@@ -126,20 +130,20 @@ Descriptor и функция регистрируются отдельно:
 
 ```ts
 Endge.actions.define({
-  identity: 'aodb.schedule.open-inspector',
+  identity: 'app.records.open-inspector',
   displayName: 'Открыть инспектор',
-  origin: { kind: 'local', owner: 'ramax-aodb' },
+  origin: { kind: 'local', owner: 'example-app' },
   contract: {
     input: { type: 'Object' },
     output: { type: 'Void' },
   },
-  defaultProviderKey: 'ramax-aodb.schedule.open-inspector',
+  defaultProviderKey: 'example-app.records.open-inspector',
 })
 
 Endge.actions.provide({
-  identity: 'aodb.schedule.open-inspector',
-  key: 'ramax-aodb.schedule.open-inspector',
-  origin: { kind: 'local', owner: 'ramax-aodb' },
+  identity: 'app.records.open-inspector',
+  key: 'example-app.records.open-inspector',
+  origin: { kind: 'local', owner: 'example-app' },
   execute({ input }) {
     openInspector(input)
   },
@@ -168,10 +172,10 @@ Inline reaction остаётся компактной ссылкой:
 
 ```vue
 <Text
-  :value="row.flightCarrier"
+  :value="row.category"
   editable
   @edited.stop="action({
-    identity: 'schedule-edit-flight-carrier',
+    identity: 'records-edit-category',
     input: {
       id: rowKey,
       value: event('value'),
@@ -187,16 +191,16 @@ Inline reaction остаётся компактной ссылкой:
 
 ```vue
 <Text
-  :value="row.flightCarrier"
+  :value="row.category"
   editable
   @edited.stop="operation({
     run: query({
-      identity: 'schedule-sandbox-update-leg',
-      input: { id: rowKey, payload: { flightCarrier: event('value') } },
+      identity: 'records-update-item',
+      input: { id: rowKey, payload: { category: event('value') } },
     }),
     undo: query({
-      identity: 'schedule-sandbox-update-leg',
-      input: { id: rowKey, payload: { flightCarrier: event('previousValue') } },
+      identity: 'records-update-item',
+      input: { id: rowKey, payload: { category: event('previousValue') } },
     }),
   })"
 />

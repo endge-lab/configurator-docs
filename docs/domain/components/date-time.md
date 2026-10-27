@@ -5,8 +5,8 @@
 
 ```vue
 <Flex row gap="2">
-  <DateTime :value="flight.std" format="HH:mm" />
-  <DateTime :value="flight.updatedAt" format="date" color="muted" />
+  <DateTime :value="item.std" format="HH:mm" />
+  <DateTime :value="item.updatedAt" format="date" color="muted" />
 </Flex>
 ```
 
@@ -21,5 +21,5 @@
 
 ::: warning Current adapter scope
 `vue-native` v1 непосредственно поддерживает `HH:mm`, `date` и default format.
-Произвольная format string и `timezone` сохраняются в IR, но требуют adapter support.
+`timezone` поддерживает IANA-зону (например, `Europe/Moscow`); `local` и пустое значение выбирают зону браузера. Неверная зона возвращает форматирование в локальной зоне. Произвольная format string пока не поддерживается: используйте `HH:mm`, `date` или default date+time.
 :::

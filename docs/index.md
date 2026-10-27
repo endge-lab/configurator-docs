@@ -1,3 +1,7 @@
+---
+description: "Что такое Endge: расширяемая среда разработки конфигураций приложений — единая модель системы, варианты поведения и исполнение через runtime-модули."
+---
+
 # Что такое Endge
 
 <figure class="endge-author-quote">
@@ -230,3 +234,7 @@ Endge ориентирован на разработчиков, интеграт
 2. [Архитектура экосистемы](/getting-started/architecture) — общая схема приложений, сервисов, авторизации и баз данных.
 3. [Как работает Endge](/getting-started/how-endge-works) — документы, компиляция, исполнение и расширения.
 4. [Начало работы](/configurator/getting-started) — переход к работе в конфигураторе.
+
+## Точный синтаксис и API
+
+Для написания конфигураций начните с [маршрута агента](/agents/authoring) и [матрицы возможностей](/reference/capabilities). [Репозитории](/agents/repositories), [Source functions и arity](/reference/language-catalog) и [контракты библиотек](/reference/contracts/) связывают объяснения с текущими исходниками. [Raph](/raph/agent-guide) имеет собственный маршрут и полный snapshot API.

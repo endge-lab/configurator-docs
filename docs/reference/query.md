@@ -1,3 +1,7 @@
+---
+description: "Query — source-first описание получения данных: props, REST и GraphQL request, упорядоченные outputs, DataView, mock, preview, связывание."
+---
+
 # Query
 
 Query — source-first описание получения данных. Он объявляет входные props, транспортный контракт и упорядоченные outputs, но не определяет, где результат будет храниться и кто станет его потребителем. Поддерживаются два варианта: `kind: 'rest'` и `kind: 'graphql'`.
@@ -74,7 +78,7 @@ defineQuery({
   }),
 
   request: {
-    endpoint: env('ENDPOINT_HUB_GRAPHQL'),
+    endpoint: env('ENDPOINT_API_GRAPHQL'),
     operationName: 'UpdateActualTime',
     document: gql`
       mutation UpdateActualTime($leadId: ID!, $actualTime: DateTime!) {
@@ -142,10 +146,10 @@ props: defineProps({
 
 ```ts
 payload: field(objectOf({
-  flightNumber: field(String),
+  itemNumber: field(String),
   route: field(objectOf({
-    departure: field(String),
-    arrival: field(String),
+    outgoing: field(String),
+    incoming: field(String),
   })),
 }))
 ```
@@ -222,14 +226,14 @@ defineQuery({
   kind: 'graphql',
   props: defineProps({ id: field(String) }),
   request: {
-    endpoint: 'https://flights.example.test/graphql',
-    document: gql`query Flight($id: ID!) { flight(id: $id) { ...FlightFields } }`,
+    endpoint: 'https://items.example.test/graphql',
+    document: gql`query Item($id: ID!) { item(id: $id) { ...ItemFields } }`,
     fragments: {
-      FlightFields: contextSwitch({
-        default: gql`fragment FlightFields on Flight { id number status departure gate crew { role name } }`,
+      ItemFields: contextSwitch({
+        default: gql`fragment ItemFields on Item { id number status outgoing gate crew { role name } }`,
         cases: [{
-          when: { tenant: 'kzn' },
-          use: gql`fragment FlightFields on Flight { id number status departure stand handlingAgent crew { role name } }`,
+          when: { tenant: 'variant-b' },
+          use: gql`fragment ItemFields on Item { id number status outgoing stand handlingAgent crew { role name } }`,
         }],
       }),
     },

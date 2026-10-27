@@ -1,10 +1,14 @@
+---
+description: "Персональный токен endge_pat_… для агента: доступ к одному workspace, права read/write и флаги commit/delete, срок, ограничения, API выпуска и ошибки."
+---
+
 # Персональные токены
 
 Персональный токен (`endge_pat_…`) даёт агенту доступ к одному workspace от имени пользователя. Это проще входа через OIDC: пользователь выпускает токен в Configurator кнопкой «Для агента» ([как это выглядит](/configurator/agent-access)) и передаёт агенту готовый промпт. Агент отправляет токен в заголовке:
 
 ```http
 Authorization: Bearer endge_pat_…
-X-Endge-Workspace: afl
+X-Endge-Workspace: variant-a
 ```
 
 Тот же токен принимает [MCP-сервер backend](/agents/mcp).
@@ -44,8 +48,8 @@ POST /api/v1/access-tokens
 Content-Type: application/json
 
 {
-  "workspaceIdentity": "afl",
-  "name": "Codex: инспектор рейса",
+  "workspaceIdentity": "variant-a",
+  "name": "Агент: правка запросов",
   "description": "Правка Query и DataView",
   "scope": "write",
   "commit": false,
@@ -64,6 +68,8 @@ Content-Type: application/json
 Историю правок документа отдаёт `GET /api/v1/domain/documents/{type}/{identity}/revisions`. Параметры `snapshot=false`, `limit` (1–500) и `offset` дают страницу без снимков; `total` — общее число ревизий.
 
 ## Ошибки
+
+Коды ниже относятся к токенам. Остальные коды backend с действиями агента — в [справочнике ошибок](/agents/errors).
 
 | Код | HTTP | Когда |
 | --- | --- | --- |

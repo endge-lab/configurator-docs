@@ -1,3 +1,7 @@
+---
+description: "ValueExpression — общий декларативный язык значений: пути, коллекции, агрегации, строки, условия, типы, числа, DateTime и Duration."
+---
+
 # Функциональные выражения
 
 ValueExpression — общий декларативный язык значений Endge. Он используется там, где нужно прочитать данные, отобрать или преобразовать коллекцию, собрать объект, вычислить условие либо связать несколько наборов данных. Выражение компилируется в безопасное статическое представление и исполняется штатным evaluator-ом Endge: это не произвольный JavaScript и не `eval`.
@@ -100,14 +104,14 @@ prop('profile')
 | Путь | Что читается |
 | --- | --- |
 | `''` | сам источник |
-| `legs.1.gate`, `title.length` | точечный путь, как раньше: числовой сегмент — индекс, у примитивов читаются свойства |
-| `legs[1].gate` | индекс массива; у не-массива (`title[0]`) — `undefined` |
-| `legs[id="L2"].gate`, `legs[id='L1']` | первый элемент-объект, у которого собственное поле `id` строго равно значению |
-| `legs[id=3]`, `[active=true]`, `[active=null]` | значение без кавычек — число, булево или `null`; `[id=3]` не совпадает с `"3"` |
-| `legs[id="L2"].crew[1].name` | сегменты комбинируются в любом порядке |
-| `legs[id=$leg]`, `legs[$i]`, `legs[0].$field` | `$имя` — переменная из props выражения |
+| `items.1.status`, `title.length` | точечный путь, как раньше: числовой сегмент — индекс, у примитивов читаются свойства |
+| `items[1].status` | индекс массива; у не-массива (`title[0]`) — `undefined` |
+| `items[id="I2"].status`, `items[id='I1']` | первый элемент-объект, у которого собственное поле `id` строго равно значению |
+| `items[id=3]`, `[active=true]`, `[active=null]` | значение без кавычек — число, булево или `null`; `[id=3]` не совпадает с `"3"` |
+| `items[id="L2"].crew[1].name` | сегменты комбинируются в любом порядке |
+| `items[id=$item]`, `items[$i]`, `items[0].$field` | `$имя` — переменная из props выражения |
 
-В DataView переменными путей служат props DataView: `path('leg.$field')`, `path('input.statuses[legId=$legId].value')`, `template('{leg.$field}')`.
+В DataView переменными путей служат props DataView: `path('item.$field')`, `path('input.statuses[itemId=$itemId].value')`, `template('{item.$field}')`.
 
 Литеральный путь проверяется при компиляции: ошибка синтаксиса даёт `source-expression-path-invalid`, а `*` или `[*]` — `source-expression-path-wildcard` (wildcard допустим только в масках подписки Raph, но не в чтении). Если путь вычисляется выражением, ошибка проявляется только при вычислении: результат `undefined` (`has` — `false`) и предупреждение `value-path-invalid`, `value-path-wildcard` или `value-path-variable`, если переменная в `[$i]` или `[k=$v]` не задана. Исключение наружу не выходит.
 
@@ -118,7 +122,7 @@ prop('profile')
 ```ts
 get(row(''), prop('fieldPath'))
 getOr(row(''), prop('fieldPath'), '—')
-row('legs').map(get(prop('fieldPath')))
+row('items').map(get(prop('fieldPath')))
 // DataView: значение поля по пути из схемы инспектора
 get(path(''), get('path'))
 ```
@@ -388,7 +392,7 @@ rows.enrich('details', {
 | --- | --- |
 | `facet('tenant')` | identity выбранного документа фасета или `null`, если фасет не выбран |
 | `config('inspector.page')` | значение Configuration по пути (синтаксис путей выше); нет значения — `undefined` |
-| `context({ tenant: 'kzn', stage: 'prod' })` | `true`, если совпали все перечисленные фасеты; не перечисленный фасет может быть любым |
+| `context({ tenant: 'variant-b', stage: 'prod' })` | `true`, если совпали все перечисленные фасеты; не перечисленный фасет может быть любым |
 | `contextSwitch({ default, cases: [{ when, use }] })` | `use` совпавшего case с наибольшим числом условий, иначе `default` |
 
 `config(...)` читает ту же проекцию, что `$context.config` в Component SFC: системные поля (`defaultLocale`, `themes` и другие) и значения документов Configuration по их identity.
@@ -412,7 +416,7 @@ defineQuery({
     headers: {
       'X-Tenant': facet('tenant'),
       'X-Page': toString(config('inspector.page')),
-      'X-Mode': contextSwitch({ default: 'read', cases: [{ when: { tenant: 'kzn' }, use: 'legacy' }] }),
+      'X-Mode': contextSwitch({ default: 'read', cases: [{ when: { tenant: 'variant-b' }, use: 'legacy' }] }),
     },
   },
   outputs: { raw: output().from(response()) },
@@ -423,8 +427,8 @@ defineQuery({
 
 ```ts
 place: output().from(contextSwitch({
-  default: response('flight.gate'),
-  cases: [{ when: { tenant: 'kzn' }, use: response('flight.stand') }],
+  default: response('item.gate'),
+  cases: [{ when: { tenant: 'variant-b' }, use: response('item.stand') }],
 })),
 ```
 
@@ -469,3 +473,7 @@ ValueExpression намеренно не поддерживает:
 - [Computation: граф вычислений](/reference/computation)
 - [Composition: runtime-граф и связи](/reference/composition)
 - [Converter: зарегистрированные преобразования](/reference/converter)
+
+## Полный каталог имён и arity
+
+[Каталог функций](/reference/language-catalog) извлекается из compiler и перечисляет все общие операции с числом аргументов. Он не отменяет host-specific whitelists: [Filter](/reference/filter), [SFC](/reference/sfc-expressions) и [Composition event mapping](/reference/composition-events) имеют отдельные ограничения. Общий синтаксис `field(...)` — [контракт полей](/reference/field-contracts).

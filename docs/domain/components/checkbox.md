@@ -3,7 +3,7 @@
 `Checkbox` показывает boolean state с необязательной подписью.
 
 ```vue
-<Checkbox :checked="flight.cancelled" label="Cancelled" />
+<Checkbox :checked="item.cancelled" label="Cancelled" />
 <Checkbox checked label="Locked" disabled />
 ```
 

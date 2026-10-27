@@ -1,3 +1,7 @@
+---
+description: "Raph — TypeScript-библиотека реактивных данных с двумя контурами: standalone reactive core и Runtime с Kernel, phases и ownership."
+---
+
 # Raph
 
 Raph — TypeScript-библиотека с двумя явно разделёнными контурами:

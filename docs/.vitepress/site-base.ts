@@ -5,7 +5,7 @@ const FILE_LINK = /\.(?:txt|json|ya?ml|csv|pdf|zip)$/i
 
 /**
  * Базовый путь сайта из CLI: `vitepress build docs --base /endge-docs/`.
- * Ramax публикует документацию под `/endge-docs/`, Demo и локальный запуск — под `/`.
+ * Deployment может задавать `/endge-docs/`; локальный запуск использует `/`.
  */
 export function resolveSiteBase(argv: readonly string[] = process.argv): string {
   let value: string | undefined

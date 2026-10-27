@@ -20,13 +20,15 @@ interface MarkdownItLike {
 }
 
 export function configureDocsMarkdown(markdown: MarkdownItLike): void {
-  // Ссылки на файлы сайта (`/examples/*.json`) получают base, как ссылки на страницы.
+  // VitePress сам добавляет base ко всем корневым ссылкам Markdown, включая файлы
+  // (`/llms.txt`, `/examples/*.json`), кроме ссылок с target или download.
+  // Только им base добавляется здесь, иначе получается `/endge-docs/endge-docs/…`.
   const defaultLinkOpen = markdown.renderer.rules.link_open?.bind(markdown.renderer)
   markdown.renderer.rules.link_open = (...args: Array<any>) => {
     const tokens = args[0] as Array<MarkdownToken>
     const token = tokens[args[1] as number]!
     const href = token.attrGet('href')
-    if (href) {
+    if (href && (token.attrGet('target') !== null || token.attrGet('download') !== null)) {
       token.attrSet('href', withFileBase(href))
     }
     return defaultLinkOpen?.(...args) ?? markdown.renderer.renderToken(...args)

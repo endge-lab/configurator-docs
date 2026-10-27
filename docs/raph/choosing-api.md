@@ -63,3 +63,7 @@ Raph.configure({
 | Ownership hierarchy | `RaphNode` |
 | Process-wide facade | `Raph.configure(...)` |
 
+
+## Другие публичные entrypoints
+
+Для execution profiles существуют `/execution` и `/compact`; их configuration types отличаются от полного Runtime. Для observable objects/classes/buffers используйте `/observable`, для state machines — `/machine`, для pure model inspection — `/machine/testing`. [Маршрут агента](/raph/agent-guide) связывает все surfaces с точными контрактами.

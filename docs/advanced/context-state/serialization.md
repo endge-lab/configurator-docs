@@ -15,7 +15,7 @@ interface PanelState {
 
 Endge.context.setState<PanelState>('my-module.panel', {
   open: true,
-  selectedIds: ['flight-list'],
+  selectedIds: ['item-list'],
 })
 
 const state = Endge.context.getState<PanelState>('my-module.panel')

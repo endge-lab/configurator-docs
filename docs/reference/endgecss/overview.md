@@ -1,3 +1,7 @@
+---
+description: "EndgeCSS — renderer-neutral язык стилей для документов Style и блоков <style> в Component SFC: обзор и маршрут по разделам."
+---
+
 # EndgeCSS: обзор
 
 EndgeCSS — единый renderer-neutral язык стилей для глобальных документов Style и блоков `<style>` в ComponentSFC.
