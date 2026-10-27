@@ -5,8 +5,11 @@ description: "Filter — source-first описание полей, их сост
 # Filter
 
 Filter — source-first описание набора полей, их состояния и производных outputs.
-Composition создаёт Filter runtime через `filter(identity)`, а `filterView(...)`
-строит представление над тем же состоянием.
+Composition создаёт Filter runtime через `filter('<identity документа Filter>')`, а
+`filterView('<имя этого runtime>')` строит представление над тем же состоянием. Аргумент
+`filterView` — ключ в `runtimes` той же Composition, а не identity документа: иначе
+компилятор выдаёт `composition-filter-fields-source-missing`
+(см. [FilterView](/reference/composition#filterview)).
 
 ```ts
 defineFilter({
@@ -82,7 +85,9 @@ Metadata влияет только на представление. Она не 
 ```ts
 defineComposition({
   runtimes: {
+    // runtime с именем filter из документа Filter 'schedule'
     filter: filter('schedule'),
+    // filterView ссылается на имя runtime ('filter'), а не на identity ('schedule')
     filters: filterView('filter').withProps({
       showLabels: false,
       labels: {

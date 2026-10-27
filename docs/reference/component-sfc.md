@@ -376,6 +376,8 @@ const ports = definePorts({
 
 После этого `<Process.Details />` становится локальным typed tag. Local tag имеет приоритет над global registry.
 
+Слотов (`<slot>`) в Component SFC нет. Заменяемую часть разметки — то, что во Vue передают слотом, — объявляйте портом `component`: компонент вызывает локальный тег и передаёт ему props, а провайдера подставляют на месте вызова (`:details="component('process-details-compact')"`) или по контексту через `contextSwitch`. Пример с ячейкой таблицы: [компонент в Cell через порт](/sfc-tables/data-rows-cells#компонент-в-cell-через-порт).
+
 ### Required Action
 
 ```ts

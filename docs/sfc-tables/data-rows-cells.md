@@ -65,6 +65,45 @@ identity находится внутри объекта, подготовьте 
 внутри `Column` есть визуальные children без обёртки `Cell`, они получают тот же
 контекст.
 
+## Компонент в Cell через порт
+
+Чтобы в ячейке показывался отдельный компонент, который можно заменить, не меняя таблицу, объявите порт `component` и вызовите его локальный тег внутри `Cell`. Слотов (`<slot>`) в Component SFC нет: порт `component` — их замена. Контекст ячейки (`row`, `value`, `rowKey`) передаётся в тег как обычные props.
+
+```vue
+<script setup lang="ts">
+interface Row {
+  id: string
+  title: string
+  level: number
+}
+
+interface LevelProps {
+  level: number
+}
+
+defineProps<{ rows: Row[] }>()
+
+const ports = definePorts({
+  require: {
+    level: component<LevelProps>({ tag: 'Rows.Level', default: 'example-level-badge' }),
+  },
+})
+</script>
+
+<template>
+  <Table :rows="rows" row-key="id">
+    <Column key="title" title="Название" />
+    <Column key="level" title="Уровень">
+      <Cell>
+        <Rows.Level :level="value" />
+      </Cell>
+    </Column>
+  </Table>
+</template>
+```
+
+Компонент по умолчанию `example-level-badge` объявляет `defineProps<{ level: number }>()`. Компилятор проверяет, что он существует и его props совместимы с `LevelProps` (`sfc-port-default-missing`, `sfc-template-port-provider-missing`). Другой провайдер подставляется на месте вызова таблицы атрибутом `:level="component('…')"` или по контексту через `contextSwitch`: [порты Component SFC](/reference/component-sfc#component).
+
 ## Обработка browser events на Cell
 
 `Cell` поддерживает общий атрибут `:on`. Это позволяет привязать реакцию к жесту

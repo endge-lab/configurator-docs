@@ -74,6 +74,8 @@ const AGENT_CORE_PAGES = [
   'reference/capabilities.md',
 ]
 const ERRORS_PAGE = 'agents/errors.md'
+/** Страницы вне ядра, на которые ядро ссылается первыми: проверенные тела и сложные связанные задачи. */
+const AGENT_NEXT_PAGES = ['agents/document-examples.md', 'agents/vertical-slice.md']
 
 const SOURCE_REPOSITORIES = [
   ['Service Backend', 'https://github.com/endge-lab/service-backend', 'Go, REST API и MCP-сервер, OpenAPI и каталог кодов ошибок'],
@@ -253,7 +255,7 @@ function indexMarkdown() {
       '',
       `1. Доступ. Попросите пользователя выпустить персональный токен \`endge_pat_…\` в Configurator кнопкой «Для агента» и передавайте его в \`Authorization: Bearer\` ([токены](${url('agents/tokens.md')})). Без токена — вход через OIDC ([руководство](${url('agents/index.md')})).`,
       `2. Ядро. Загрузите [llms-agent.txt](${url('llms-agent.txt')}) (${sizeOf('llms-agent.txt')}): руководство, токены, MCP, правила исходников, версий и лимитов, сценарии, коды ошибок, авторинг, capabilities и все HTTP-операции одним списком.`,
-      '3. Детали по требованию. Схемы операций — файл группы `llms-full/api/<группа>.txt`, авторский Source — часть справочника `llms-full/reference/<тип>.txt`, любая страница — её `.md`. Раздел `## Optional` можно пропустить.',
+      `3. Детали по требованию. Схемы операций — файл группы \`llms-full/api/<группа>.txt\`, авторский Source — часть справочника \`llms-full/reference/<тип>.txt\`, проверенные тела создания всех коллекций — [примеры документов](${url('agents/document-examples.md')}), связанная задача — [вертикальный срез](${url('agents/vertical-slice.md')}), любая страница — её \`.md\`. Раздел \`## Optional\` можно пропустить.`,
     ].join('\n'),
     `Размеры — оценка токенов с запасом: кириллица / 2,5 + остальные символы / 3,5. ${provenanceMarkdown}`,
     `При расхождении документации и поведения истина — исходники развёрнутой версии: \`GET /version\` backend, тег \`v<версия>\` в публичном repository, иначе \`main\` с оговоркой ([правила](${url('agents/repositories.md')})). Закрытые исходники: ${CLOSED_SOURCES.map(([name, note]) => `${name} — ${note}`).join('; ')}.`,
@@ -329,6 +331,14 @@ function agentMarkdown() {
     '---',
     [
       '# Где читать дальше',
+      '## Проверенные примеры и сложные задачи',
+      AGENT_NEXT_PAGES.map((file) => {
+        const page = pageByPath.get(file)
+        if (!page) {
+          throw new Error(`Страница ${file} для ядра агента не найдена.`)
+        }
+        return `- [${page.title}](${url(page.markdownPath)}): ${page.description}`
+      }).join('\n'),
       '## Справочник по типам документов',
       referenceLines.join('\n'),
       '## Разделы целиком',

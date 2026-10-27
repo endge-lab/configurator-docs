@@ -35,7 +35,10 @@ X-Endge-Workspace: variant-a
 - разделы `/api/v1/access-grants`, `/service-users`, `/workspaces` (CRUD и участники), `/ai`, `/backend-connections`, `/integrations`, `/bridge`, `/domain/import`, `/domain/backups`, выгрузка релизов `/releases/{id}/bundle` и `/releases/{id}/export` — `403 access_token_route_forbidden`;
 - `DELETE` без флага `delete` — `403 access_token_delete_forbidden`;
 - `POST /api/v1/commits`, `/commits/{id}/restore`, `/releases`, `/releases/from-build`, `/releases/{id}/restore` без флага `commit` — `403 access_token_commit_forbidden`; планы `/plan` доступны;
-- другой workspace — `403 access_token_workspace_forbidden`.
+- другой workspace — `403 access_token_workspace_forbidden`;
+- создание, изменение, удаление и восстановление профилей авторизации (`/api/v1/auth-profiles`, MCP `collection: "auth-profiles"`) — `403 access_token_admin_forbidden` при любых флагах и любой роли владельца. Чтение профилей доступно.
+
+Если агенту нужен профиль авторизации, он не создаёт его сам: в Query и Stream указывает `auth: { mode: 'inherit' }` (авторизация приложения) или просит пользователя создать профиль в Configurator и затем ссылается на него `auth: { mode: 'profile', profile: '<identity>' }`. Подробнее — [MCP: профили авторизации](/agents/mcp#профили-авторизации).
 
 `GET /api/v1/domain`, `GET /api/v1/domain/export` и `GET /api/session/me` доступны. С токеном `session/me` показывает только workspace токена с суженной ролью.
 
@@ -83,7 +86,7 @@ Content-Type: application/json
 | `access_token_delete_forbidden` | 403 | удаление без флага `delete` |
 | `access_token_commit_forbidden` | 403 | коммит или релиз без флага `commit` |
 | `access_token_owner_admin_required` | 403 | коммит токеном или выпуск токена с `commit`, когда владелец не Admin |
-| `access_token_admin_forbidden` | 403 | операция только для Admin-сессии |
+| `access_token_admin_forbidden` | 403 | операция только для Admin-сессии, например изменение `auth-profiles` |
 | `access_token_scope_exceeds_role` | 403 | выпуск `write` при роли Viewer |
 | `access_token_expiry_required`, `access_token_expiry_invalid`, `access_token_expiry_too_long` | 400 | срок не задан, раньше чем через минуту или больше предела |
 | `access_token_flags_require_write` | 400 | `commit` или `delete` у read-токена |
