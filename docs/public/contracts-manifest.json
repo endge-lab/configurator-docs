@@ -55,13 +55,13 @@
         "reference/contracts/core/workspace.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.0-dev.12",
         "registryUrl": "https://registry.npmjs.org/%40endge%2Fcore/1.0.0-dev.12",
         "integrity": "sha512-X3tvNwCWhA9WI4y7oa7x/2740ZXdr7EnRduw4D7r4tS3WmMUaV2hrjtiCTDu3Lhgyt0m0IQS6A0Kf8YWAAJnKw==",
         "tarball": "https://registry.npmjs.org/@endge/core/-/core-1.0.0-dev.12.tgz",
         "observedDistTags": {
-          "latest": "1.0.0-dev.5",
+          "latest": "1.0.0-dev.12",
           "dev": "1.0.0-dev.12"
         },
         "gitHead": "b1464b670307b484edc455a5ae3da355e0cbb072",
@@ -101,13 +101,13 @@
         "reference/contracts/ui-vue/ui.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.0-dev.11",
         "registryUrl": "https://registry.npmjs.org/%40endge%2Fui-vue/1.0.0-dev.11",
         "integrity": "sha512-yROjEJOiYVj+PNuzP6KyzqO/TYuar7tf+rUtoZ92UJZYbqeUpkBqndJ1zLNhjsbaYf8mw9CoWP+buCh9v6wuMg==",
         "tarball": "https://registry.npmjs.org/@endge/ui-vue/-/ui-vue-1.0.0-dev.11.tgz",
         "observedDistTags": {
-          "latest": "1.0.0-dev.5",
+          "latest": "1.0.0-dev.11",
           "dev": "1.0.0-dev.11"
         },
         "gitHead": "bccb1ef823af23ab92241912d652e4232d28f128",
@@ -144,7 +144,7 @@
         "reference/contracts/utils/updates.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.0-dev.6",
         "registryUrl": "https://registry.npmjs.org/%40endge%2Futils/1.0.0-dev.6",
         "integrity": "sha512-QmZVPxLVKpIYot9HD38w1CdIljtaa7OeZDe01+vLkvFIEy3umM6FqlUHJRDcxzyVSC/3ZODj96Oitg7q5+ZEOg==",
@@ -183,7 +183,7 @@
         "reference/contracts/computation-sandbox/main.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.0-dev.8",
         "registryUrl": "https://registry.npmjs.org/%40endge%2Fcomputation-sandbox/1.0.0-dev.8",
         "integrity": "sha512-Vnn8iLFRxQxG4mcU7DCYlA9benS8iEPaorknP6OKYa6k3kDVoWrIENLpc9B+gXdr5AeTLzBUItIDC4/7vzRLmw==",
@@ -223,7 +223,7 @@
         "reference/contracts/federation/types.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.0-dev.1",
         "registryUrl": "https://registry.npmjs.org/%40typedworks%2Ffederation/1.0.0-dev.1",
         "integrity": "sha512-h2PrLkQfrLYHOTu4PpYCqlcCkP3n3C0HmgcOUVqe9/ZXE69WiSxRO+v1+Q/PBQIaWRlvcgTFwOstlKIBhDaixg==",
@@ -309,7 +309,7 @@
         "raph/contracts/runtime.md"
       ],
       "publication": {
-        "checkedAt": "2026-11-17T10:50:57.985Z",
+        "checkedAt": "2026-11-17T11:15:11.660Z",
         "version": "1.0.1-dev.54",
         "registryUrl": "https://registry.npmjs.org/%40raphy-js%2Fraph/1.0.1-dev.54",
         "integrity": "sha512-oOhsdgCOzCpVEN+LywiuEBG8P4FlaUfmE1IKeDTtSulmSnoeXTYNvY68+SHn4PMCOUjp7GyDXCWOp0o3OdLDhQ==",

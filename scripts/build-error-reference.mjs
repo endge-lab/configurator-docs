@@ -5,7 +5,6 @@
  *
  * Источник каталога:
  * - ENDGE_ERRORS_PATH — путь к error-codes.yaml (обязан существовать, если задан);
- * - иначе services/egorkozelskij-endge-service-backend/docs/error-codes.yaml монорепозитория;
  * - иначе страница не меняется (опубликованный snapshot).
  */
 import { createHash } from 'node:crypto'
@@ -18,7 +17,6 @@ import { parse as parseYaml } from 'yaml'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const output = path.join(root, 'docs/agents/errors.md')
-const localCatalog = path.resolve(root, '../../../services/egorkozelskij-endge-service-backend/docs/error-codes.yaml')
 const CATALOG_PUBLIC_URL = 'https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml'
 
 /**
@@ -114,7 +112,7 @@ function resolveSource() {
     }
     return configured
   }
-  return existsSync(localCatalog) ? localCatalog : undefined
+  return undefined
 }
 
 /** VERSION лежит в корне backend рядом с docs/; для внешнего файла версия может быть неизвестна. */

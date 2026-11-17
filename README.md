@@ -42,7 +42,7 @@ Manifest содержит package versions, revision, hash source inputs, peer d
 pnpm errors:build
 ```
 
-Каталог ищется в `ENDGE_ERRORS_PATH`, затем в `services/egorkozelskij-endge-service-backend/docs/error-codes.yaml` монорепозитория. Если исходников backend нет, страница не меняется, и сборка использует сохранённый snapshot. Группы кодов задаёт список `GROUPS` в скрипте; код без группы попадает в «Прочие коды» с предупреждением в консоли.
+Каталог задаётся через `ENDGE_ERRORS_PATH`. Если путь не задан, страница не меняется, и сборка использует сохранённый snapshot. Группы кодов задаёт список `GROUPS` в скрипте; код без группы попадает в «Прочие коды» с предупреждением в консоли.
 
 ## Оценка workspace компиляцией
 
@@ -81,7 +81,7 @@ pnpm llms:build
 
 Публичный каталог един для LLM, Knowledge и Markdown-версий: все Markdown pages, кроме `project`, скрытых и служебных каталогов (`EXCLUDED_ROOTS`). Navigation и это исключение не определяют доступность страниц самого VitePress: внутренние планы не следует публиковать в public tree.
 
-HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, локальный `services/egorkozelskij-endge-service-backend/docs/openapi3.yaml`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт абсолютный base URL, `ENDGE_LLMS_OUTPUT` — отдельный output directory.
+HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт абсолютный base URL, `ENDGE_LLMS_OUTPUT` — отдельный output directory.
 
 ## Knowledge Bundle
 
@@ -121,3 +121,19 @@ node scripts/grade-workspace.mjs --markdown docs/sfc-tables/server-paging.md --c
 Используйте опубликованный baseline Core из рецепта, затем выполните обычные
 lint/typecheck/build. После поставки сверьте живые `llms.txt`, `llms-agent.txt`,
 страницу рецепта и оба manifest с собранным результатом.
+
+## Обезличивание публичной документации
+
+Страницы, примеры, README, source comments и генерируемые выгрузки описывают
+продукт Endge. Для условных сервисов используйте домены `example.com`,
+`example.test` или `.example`; для локальной разработки — loopback.
+Не включайте сведения о заказчиках, личные данные, внутренние хосты и IP,
+имена рабочих каталогов владельца, реальные workspace snapshots, токены,
+пароли и реквизиты корпоративной инфраструктуры.
+
+Пути к внешним source задаются переменными окружения и не фиксируют устройство
+чьей-либо рабочей машины. `ENDGE_DOCS_URL` задаёт адрес размещения сайта для
+навигационных ссылок; он не является endpoint примеров или описанием окружения
+пользователя. Перед публикацией проверьте исходное дерево и артефакты Docs,
+llms и Knowledge Bundle, включая развёрнутые Markdown includes. Реальные
+credentials не должны попадать даже в закрытые details-блоки или примеры curl.

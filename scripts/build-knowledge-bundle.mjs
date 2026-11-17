@@ -26,7 +26,7 @@ for (const documentPath of documentPaths) {
   chunks.push(...chunkDocument(relativePath, source))
 }
 
-const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi(repositoryRoot)
+const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi()
 chunks.push(...chunkDocument('generated/service-backend-api.md', openApiMarkdown(spec, { specUrl: OPENAPI_PUBLIC_URL }))
   .map(chunk => ({ ...chunk, documentPath: '/llms-full/api.txt' })))
 

@@ -113,7 +113,7 @@ if (unassigned.length) {
 }
 const filledSections = sections.filter(section => section.pages.length)
 
-const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi(repositoryRoot)
+const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi()
 const api = openApiMarkdown(spec, { specUrl: OPENAPI_PUBLIC_URL })
 const operations = openApiOperations(spec)
 const tagSlugs = openApiTagSlugs(operations)
