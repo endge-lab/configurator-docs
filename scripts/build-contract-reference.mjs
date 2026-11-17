@@ -30,6 +30,8 @@ if (!packages.every(item => existsSync(path.join(workspace, item.directory, 'pac
   console.log('API reference: используются сохранённые snapshots; исходники packages недоступны.')
   process.exit(0)
 }
+const previousManifestPath = path.join(root, 'docs/public/contracts-manifest.json')
+const previousManifest = existsSync(previousManifestPath) ? JSON.parse(await readFile(previousManifestPath, 'utf8')) : { packages: [] }
 const manifest = { format: 'endge-contracts/v1', packages: [] }
 const index = [...frontmatter('Каталог публичных TypeScript-контрактов Endge Core, UI Vue, Utils, Federation и Raph из исходников: версии, точки входа и группы деклараций.'), '# Каталог контрактов из исходников', '', 'Справочник фиксирует публичные exports и декларации текущего source. Код пакетов не выполняется. Версия, Git revision, hash входов и peer dependencies указаны в [manifest](/contracts-manifest.json). Эти данные описывают локальный source snapshot; они не подтверждают публикацию соответствующего commit в публичном repository.', '', 'Декларации ниже — TypeScript API библиотек. Это **не** авторский Source (`defineQuery`, `defineStore` и т. п.) и **не** JSON DTO backend. Авторские языки описаны в [маршруте агента](/agents/authoring), HTTP DTO — в [API](/llms-full/api.txt). Private members и комментарии реализации удалены. Protected members предназначены для наследования; подчёркнутые служебные hooks не следует вызывать из обычного consumer. Имена импортируемых вспомогательных типов разрешаются в указанном исходном модуле.', '', 'Наличие export не обещает capability конкретного renderer или backend. Для таких ограничений используйте [матрицу возможностей](/reference/capabilities).', '']
 
@@ -184,7 +186,9 @@ for (const item of packages) {
     }
   }
   const revision = execFileSync('git', ['-C', directory, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-  manifest.packages.push({ name: pkg.name, version: pkg.version, repository, revision, sourceSha256: inputHash.digest('hex'), entrypoints: entries.map(entry => ({ import: entry.import, source: path.relative(directory, entry.source).split(path.sep).join('/') })), exportCount: exports.length, declarationModuleCount: [...groups.values()].reduce((n, records) => n + records.length, 0), exportPatterns: Object.fromEntries(Object.entries(pkg.exports).filter(([key]) => key.includes('*'))), peerDependencies: pkg.peerDependencies ?? {}, pages: [...expected].sort().map(file => `${item.output}/${file}`) })
+  const publication = previousManifest.packages.find(entry => entry.name === pkg.name && entry.version === pkg.version)?.publication
+  const sourceDirty = Boolean(execFileSync('git', ['-C', directory, 'status', '--porcelain', '--untracked-files=normal'], { encoding: 'utf8' }).trim())
+  manifest.packages.push({ name: pkg.name, version: pkg.version, repository, revision, revisionScope: 'source-checkout', sourceDirty, ...(publication ? { publication } : {}), sourceSha256: inputHash.digest('hex'), entrypoints: entries.map(entry => ({ import: entry.import, source: path.relative(directory, entry.source).split(path.sep).join('/') })), exportCount: exports.length, declarationModuleCount: [...groups.values()].reduce((n, records) => n + records.length, 0), exportPatterns: Object.fromEntries(Object.entries(pkg.exports).filter(([key]) => key.includes('*'))), peerDependencies: pkg.peerDependencies ?? {}, pages: [...expected].sort().map(file => `${item.output}/${file}`) })
   index.push(`- [${pkg.name} ${pkg.version}](/${item.output}/) — ${exports.length} exports, ${groups.size} групп контрактов.`)
   console.log(`${pkg.name}: ${exports.length} exports, ${groups.size} групп`)
 }

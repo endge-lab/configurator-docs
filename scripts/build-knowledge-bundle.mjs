@@ -4,6 +4,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { documentationFingerprint, documentationRoute, markdownSections, publicMarkdownFiles, readDocumentation } from './documentation-catalog.mjs'
+import { documentationProvenance } from './documentation-provenance.mjs'
 import { loadOpenApi, OPENAPI_PUBLIC_URL } from './load-openapi.mjs'
 import { openApiMarkdown } from './openapi-markdown.mjs'
 
@@ -37,7 +38,7 @@ const manifest = {
   schemaVersion: 'endge-knowledge/v1',
   bundleId,
   version: packageManifest.version,
-  sourceCommit: process.env.CI_COMMIT_SHA ?? 'local',
+  ...documentationProvenance(repositoryRoot),
   documentationSha256: await documentationFingerprint(documentPaths, documentsRoot),
   contractManifest: 'contracts-manifest.json',
   contractsSha256: createHash('sha256').update(contractManifest).digest('hex'),
