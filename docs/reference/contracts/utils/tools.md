@@ -149,20 +149,19 @@ export declare function globalState<T>(factory: () => T): () => T;
 [Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/system-clock.ts)
 
 ```ts
-import { DateTime } from 'ts-luxon';
 export declare const SystemClock: {
-    DateTime: typeof DateTime;
-    toDateTime(jsDate: Date): DateTime;
-    fromFormat(text: string, format: string, opts: any): DateTime;
-    fromISO(text: string, opts?: any): DateTime | null;
-    getNow(): DateTime;
-    getNowUTC(): DateTime;
-    getToday(): DateTime;
-    getTime(format?: string): string;
-    getUTCTime(format?: string): string;
-    getZone(): import("ts-luxon").Zone;
+    DateTime: any;
+    toDateTime(jsDate: Date): any;
+    fromFormat(text: string, format: string, opts: any): any;
+    fromISO(text: string, opts?: any): any;
+    getNow(): any;
+    getNowUTC(): any;
+    getToday(): any;
+    getTime(format?: string): any;
+    getUTCTime(format?: string): any;
+    getZone(): any;
 };
-export declare const dt: (date: Date) => DateTime;
+export declare const dt: (date: Date) => any;
 ```
 
 ## src/tools/tools.types.ts

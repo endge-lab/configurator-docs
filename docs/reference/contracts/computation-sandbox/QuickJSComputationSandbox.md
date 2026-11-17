@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/computation-sandbox 1.0.0-dev.8, группа QuickJSComputationSandbox; исходных модулей: 1."
+description: "TypeScript-декларации @endge/computation-sandbox 1.0.1-dev.9, группа QuickJSComputationSandbox; исходных модулей: 1."
 ---
 
 # @endge/computation-sandbox: QuickJSComputationSandbox
 
-Версия source: 1.0.0-dev.8. [Каталог package](./). [Repository](https://github.com/endge-lab/computation-sandbox).
+Версия source: 1.0.1-dev.9. [Каталог package](./). [Repository](https://github.com/endge-lab/computation-sandbox).
 
 ## src/QuickJSComputationSandbox.ts
 

@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.54, группа entrypoints; исходных модулей: 8."
+description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.55, группа entrypoints; исходных модулей: 9."
 ---
 
 # @raphy-js/raph: entrypoints
 
-Версия source: 1.0.1-dev.54. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.54 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.54/).
+Версия source: 1.0.1-dev.55. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/).
 
 ## src/entrypoints/compact.ts
 
@@ -109,4 +109,17 @@ export type { RaphMetaSourceOptions } from '../runtime/reactivity/RaphMetaSource
 export type { RaphSelector, RaphSelectorInspection, RaphSelectorOptions } from '../runtime/reactivity/RaphSelector';
 export { inspectSelector } from '../runtime/reactivity/RaphSelector';
 export type { RaphAggregate } from '../runtime/reactivity/RaphWorkGraph';
+```
+
+## src/entrypoints/scheduler.ts
+
+Исходный модуль: `src/entrypoints/scheduler.ts`
+
+```ts
+export type { Disposer, ReadonlySignal, Signal } from '../reactivity/types';
+export { RaphCrossRuntimeError, RaphDisposedError, RaphPhaseProcessError, } from '../runtime/errors';
+export { RaphSchedulerType } from '../runtime/phases/phase.types';
+export type { FrameLoopLease, RaphEffectOptions, RaphFrameContext, RaphPhase, RaphPhaseBatch, RaphSchedulerMode, RaphWorkCause, } from '../runtime/phases/phase.types';
+export { RaphFrameRuntime } from '../runtime/RaphFrameRuntime';
+export type { RaphFrameEffect, RaphFrameRuntimeConfiguration, RaphFrameRuntimeOptions, RaphFrameScope, RaphFrameTask, } from '../runtime/RaphFrameRuntime';
 ```

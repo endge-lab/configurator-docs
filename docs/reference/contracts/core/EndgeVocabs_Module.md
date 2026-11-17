@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа EndgeVocabs_Module; исходных модулей: 1."
+description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа EndgeVocabs_Module; исходных модулей: 1."
 ---
 
 # @endge/core: EndgeVocabs_Module
 
-Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/EndgeVocabs_Module.ts
 

@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.54, группа api; исходных модулей: 4."
+description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.55, группа api; исходных модулей: 4."
 ---
 
 # @raphy-js/raph: api
 
-Версия source: 1.0.1-dev.54. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.54 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.54/).
+Версия source: 1.0.1-dev.55. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/).
 
 ## src/api/errors.ts
 

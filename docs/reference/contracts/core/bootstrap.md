@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа bootstrap; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа bootstrap; исходных модулей: 9."
 ---
 
 # @endge/core: bootstrap
 
-Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/kernel/config/kernel.config.ts
 
@@ -13,7 +13,7 @@ description: "TypeScript-декларации @endge/core 1.0.0-dev.12, груп
 ```ts
 import type { EndgeMockProvider } from '@/features/core/modules/mock/domain/types/mock-data.type';
 export { DEFAULT_FALLBACK_LOCALE, DEFAULT_LOCALE, DEFAULT_SCOPE, DEFAULT_THEME, DEFAULT_TIMEZONE, } from '@/features/core/kernel/constants/kernel.constants';
-export declare const ENDGE_COMPILER_VERSION = "program-v4";
+export declare const ENDGE_COMPILER_VERSION = "program-v5";
 export declare const ENDGE_COMPILER_SPAN_GROUPS: {
     readonly COMPONENTS: "components";
     readonly TYPES: "types";

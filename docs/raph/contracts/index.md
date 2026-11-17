@@ -1,10 +1,10 @@
 ---
-description: "Публичные TypeScript-контракты @raphy-js/raph 1.0.1-dev.54: точки входа, группы деклараций и полный список exports."
+description: "Публичные TypeScript-контракты @raphy-js/raph 1.0.1-dev.55: точки входа, группы деклараций и полный список exports."
 ---
 
 # @raphy-js/raph: публичные контракты
 
-Source version: **1.0.1-dev.54**. Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.54 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.54/). [Общий каталог](/reference/contracts/).
+Source version: **1.0.1-dev.55**. Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/). [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 
@@ -23,19 +23,20 @@ Source version: **1.0.1-dev.54**. Repository: https://gitlab.com/raphyjs/raphy-j
 | `@raphy-js/raph/execution` | `src/entrypoints/execution.ts` |
 | `@raphy-js/raph/observable` | `src/entrypoints/observable.ts` |
 | `@raphy-js/raph/compact` | `src/entrypoints/compact.ts` |
+| `@raphy-js/raph/scheduler` | `src/entrypoints/scheduler.ts` |
 
 Pattern exports: `@raphy-js/raph/debug/*` (types: `./dist/*.d.ts`). Debug build modules не заменяют стабильные entrypoints; таблица exports ниже считает явные entrypoints.
 
 ## Контракты по владельцам
 
 - [api](./api) — 4 исходных модулей.
-- [entrypoints](./entrypoints) — 8 исходных модулей.
+- [entrypoints](./entrypoints) — 9 исходных модулей.
 - [machine](./machine) — 6 исходных модулей.
 - [main](./main) — 1 исходных модулей.
 - [observable](./observable) — 4 исходных модулей.
 - [path](./path) — 13 исходных модулей.
 - [reactivity](./reactivity) — 4 исходных модулей.
-- [runtime](./runtime) — 18 исходных модулей.
+- [runtime](./runtime) — 19 исходных модулей.
 
 ## Все публичные exports
 
@@ -507,6 +508,26 @@ Pattern exports: `@raphy-js/raph/debug/*` (types: `./dist/*.d.ts`). Debug build 
 | `@raphy-js/raph/runtime` | `RaphWatchSource` | `src/runtime/phases/phase.types.ts` |
 | `@raphy-js/raph/runtime` | `RaphWorkCause` | `src/runtime/phases/phase.types.ts` |
 | `@raphy-js/raph/runtime` | `RaphWorkCauseKind` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `Disposer` | `src/reactivity/types.ts` |
+| `@raphy-js/raph/scheduler` | `FrameLoopLease` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphCrossRuntimeError` | `src/runtime/errors.ts` |
+| `@raphy-js/raph/scheduler` | `RaphDisposedError` | `src/runtime/errors.ts` |
+| `@raphy-js/raph/scheduler` | `RaphEffectOptions` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameContext` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameEffect` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameRuntime` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameRuntimeConfiguration` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameRuntimeOptions` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameScope` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphFrameTask` | `src/runtime/RaphFrameRuntime.ts` |
+| `@raphy-js/raph/scheduler` | `RaphPhase` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphPhaseBatch` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphPhaseProcessError` | `src/runtime/errors.ts` |
+| `@raphy-js/raph/scheduler` | `RaphSchedulerMode` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphSchedulerType` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `RaphWorkCause` | `src/runtime/phases/phase.types.ts` |
+| `@raphy-js/raph/scheduler` | `ReadonlySignal` | `src/reactivity/types.ts` |
+| `@raphy-js/raph/scheduler` | `Signal` | `src/reactivity/types.ts` |
 | `@raphy-js/raph/signals` | `batch` | `src/reactivity/engine.ts` |
 | `@raphy-js/raph/signals` | `computed` | `src/reactivity/engine.ts` |
 | `@raphy-js/raph/signals` | `Disposer` | `src/reactivity/types.ts` |

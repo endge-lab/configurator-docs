@@ -18,7 +18,7 @@ Source version: **1.0.0-dev.6**. [Repository](https://github.com/endge-lab/utils
 
 - [collection](./collection) — 4 исходных модулей.
 - [database](./database) — 1 исходных модулей.
-- [events](./events) — 1 исходных модулей.
+- [events](./events) — 2 исходных модулей.
 - [execute](./execute) — 2 исходных модулей.
 - [index](./index) — 1 исходных модулей.
 - [serialize](./serialize) — 7 исходных модулей.
@@ -138,8 +138,8 @@ Source version: **1.0.0-dev.6**. [Repository](https://github.com/endge-lab/utils
 | `@endge/utils` | `SSEManagerOptions` | [src/updates/SSEManager.ts](https://github.com/endge-lab/utils/blob/main/src/updates/SSEManager.ts) |
 | `@endge/utils` | `StructuredLogEntry` | [src/tools/logs.ts](https://github.com/endge-lab/utils/blob/main/src/tools/logs.ts) |
 | `@endge/utils` | `StructuredLogger` | [src/tools/logs.ts](https://github.com/endge-lab/utils/blob/main/src/tools/logs.ts) |
-| `@endge/utils` | `Subscribable` | Реэкспорт: декларация принадлежит dependency package; см. исходный entrypoint |
-| `@endge/utils` | `SubscribableLike` | Реэкспорт: декларация принадлежит dependency package; см. исходный entrypoint |
+| `@endge/utils` | `Subscribable` | [src/events/Subscribable.ts](https://github.com/endge-lab/utils/blob/main/src/events/Subscribable.ts) |
+| `@endge/utils` | `SubscribableLike` | [src/events/Subscribable.ts](https://github.com/endge-lab/utils/blob/main/src/events/Subscribable.ts) |
 | `@endge/utils` | `subscribeKeyboardState` | [src/tools/keyboard.ts](https://github.com/endge-lab/utils/blob/main/src/tools/keyboard.ts) |
 | `@endge/utils` | `SystemClock` | [src/tools/system-clock.ts](https://github.com/endge-lab/utils/blob/main/src/tools/system-clock.ts) |
 | `@endge/utils` | `timeToTimeInput` | [src/shared/utils/time.ts](https://github.com/endge-lab/utils/blob/main/src/shared/utils/time.ts) |

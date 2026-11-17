@@ -22,11 +22,11 @@ export interface ISerializable {
     toPlain: () => any;
     toJson: () => string;
 }
-export declare function DeserializeId(): PropertyDecorator;
-export declare function DeserializeArrayField(field: string): PropertyDecorator;
-export declare function SerializeId(): PropertyDecorator;
-export declare function SerializeIds(): PropertyDecorator;
-export declare function IgnoreToPlain(): PropertyDecorator;
+export declare function DeserializeId(): any;
+export declare function DeserializeArrayField(field: string): any;
+export declare function SerializeId(): any;
+export declare function SerializeIds(): any;
+export declare function IgnoreToPlain(): any;
 ```
 
 ## src/shared/serialize/parse.ts
@@ -61,7 +61,7 @@ export declare function compareNumber(a: number, b: number): number;
 [Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/shared/utils/generate.ts)
 
 ```ts
-export declare const generateUUID: () => string;
+export declare const generateUUID: () => any;
 export declare function randomString(length: number): string;
 ```
 
@@ -98,15 +98,15 @@ export interface DateRange {
     start: Date;
     end: Date;
 }
-export declare function isAfterOrEqual(dateA: Date, dateB: Date): boolean;
+export declare function isAfterOrEqual(dateA: Date, dateB: Date): any;
 export declare function isDateRangeOverlap(s1: Date, s2: Date, validFrom: Date, validTo: Date): boolean;
 export declare function isDateInRange(date: Date, validFrom: Date, validTo: Date): boolean;
 export declare const parseDate: (isoString: string) => "" | Date;
-export declare function formatDatetime(date: Date, formatString?: string, options?: {}): string;
-export declare function formatDatetimeTZ(date: Date | string | object, formatString?: string, options?: {}, isLocalTime?: boolean): string;
+export declare function formatDatetime(date: Date, formatString?: string, options?: {}): any;
+export declare function formatDatetimeTZ(date: Date | string | object, formatString?: string, options?: {}, isLocalTime?: boolean): any;
 export declare function getDayOfWeek(date: Date | number): string;
 export declare function formatDateToMSK(date: Date | string | number): string;
-export declare function extractTime(date: Date | string | object, isLocalTime?: boolean): string;
+export declare function extractTime(date: Date | string | object, isLocalTime?: boolean): any;
 export declare function findMinMaxDates(dates: Set<Date>): {
     minDate: Date;
     maxDate: Date;
