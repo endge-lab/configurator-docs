@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа program; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа program; исходных модулей: 6."
 ---
 
 # @endge/core: program
 
-Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/program/domain/types/action-program.types.ts
 
@@ -86,6 +86,8 @@ export interface ProgramRequirements {
     componentTags: ComponentSFCTagRegistryEntry[];
 }
 export interface ExecutionBundle {
+    executionGraphVersion?: 1;
+    exportScope?: 'startup-composition';
     version: 1;
     programId: string;
     compilerVersion: string;
@@ -161,6 +163,7 @@ export interface ProgramDiagnostic {
     end?: number;
 }
 export interface ProgramDependency {
+    validationOnly?: boolean;
     entityType: ProgramEntityType | string;
     id: string | number;
     identity?: string;
@@ -339,6 +342,7 @@ export declare class EndgeProgram_Module extends EndgeModule {
     completeCompile(catalog: CompiledProgramCatalog, context: CompiledContextDescriptor, isCurrent?: () => boolean, hostActions?: ProgramHostActionRequirement[]): void;
     exportBundle(options?: {
         includeAst?: boolean;
+        scope?: 'complete-model' | 'startup-composition';
     }): ExecutionBundle;
     prepareInstall(value: unknown): PreparedProgramInstall;
     installBundle(prepared: PreparedProgramInstall): void;

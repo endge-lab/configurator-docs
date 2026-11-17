@@ -6,7 +6,7 @@ description: "Все 267 кодов ошибок Service Backend: формат �
 
 # Коды ошибок Service Backend
 
-Справочник собран из каталога ошибок backend 0.17.1 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `fe79d889b7fd`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
+Справочник собран из каталога ошибок backend 0.18.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `fe79d889b7fd`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
 ## Как читать ответ ошибки
 

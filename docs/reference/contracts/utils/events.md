@@ -1,5 +1,5 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа events; исходных модулей: 1."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа events; исходных модулей: 2."
 ---
 
 # @endge/utils: events
@@ -41,4 +41,13 @@ export interface GlobalEvents {
     };
 }
 export declare const AppBus: EventBus<GlobalEvents, Record<string, any>>;
+```
+
+## src/events/Subscribable.ts
+
+[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/events/Subscribable.ts)
+
+```ts
+export { Subscribable } from '@typedworks/federation';
+export type { SubscribableLike } from '@typedworks/federation';
 ```

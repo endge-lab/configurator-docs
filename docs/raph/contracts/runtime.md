@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.54, группа runtime; исходных модулей: 18."
+description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.55, группа runtime; исходных модулей: 19."
 ---
 
 # @raphy-js/raph: runtime
 
-Версия source: 1.0.1-dev.54. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.54 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.54/).
+Версия source: 1.0.1-dev.55. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/).
 
 ## src/runtime/diagnostics/RaphDebug.ts
 
@@ -500,6 +500,65 @@ export declare class RaphExecutionRuntime extends RaphRuntimeBase<RaphExecutionR
     readonly reactiveObjects: true;
     readonly selectors: true;
     constructor(options?: RaphExecutionRuntimeOptions);
+}
+```
+
+## src/runtime/RaphFrameRuntime.ts
+
+Исходный модуль: `src/runtime/RaphFrameRuntime.ts`
+
+```ts
+import type { Disposer, ReadonlySignal, Signal } from '../reactivity/types';
+import type { FrameLoopLease, RaphEffectOptions, RaphFrameContext, RaphPhase, RaphPhaseTask, RaphSchedulerMode } from './phases/phase.types';
+import { RaphScope } from './ownership/RaphScope';
+import { RaphWorkGraph } from './reactivity/RaphWorkGraph';
+import { RuntimeReactivity } from './reactivity/RuntimeReactivity';
+export type RaphFrameTask = RaphPhaseTask<any>;
+export type RaphFrameEffect = (task: RaphFrameTask) => void | Disposer;
+export interface RaphFrameScope {
+    readonly id: string;
+    readonly disposed: boolean;
+    signal: <T>(value: T) => Signal<T>;
+    effect: (phase: string, callback: RaphFrameEffect, options?: RaphEffectOptions) => Disposer;
+}
+export interface RaphFrameRuntimeOptions {
+    readonly id?: string;
+    readonly scheduler?: RaphSchedulerMode;
+}
+export interface RaphFrameRuntimeConfiguration {
+    readonly id: string;
+    readonly scheduler: RaphSchedulerMode;
+}
+export declare class RaphFrameRuntime {
+    readonly configuration: RaphFrameRuntimeConfiguration;
+    readonly root: RaphFrameScope;
+    readonly frameTick: ReadonlySignal<number>;
+    constructor(options?: RaphFrameRuntimeOptions);
+    get id(): string;
+    get disposed(): boolean;
+    get loopEnabled(): boolean;
+    get frame(): RaphFrameContext;
+    get phases(): readonly RaphPhase<any>[];
+    signal<T>(value: T, owner?: RaphFrameScope): Signal<T>;
+    effect(consumer: RaphFrameScope, phaseInput: string, callback: RaphFrameEffect, options?: RaphEffectOptions): Disposer;
+    definePhases(phases: readonly RaphPhase<any>[]): void;
+    batch<T>(operation: () => T): T;
+    flush(): void;
+    acquireLoop(owner: string): FrameLoopLease;
+    startLoop(): void;
+    stopLoop(): void;
+    dispose(): void;
+    _getReactivity(): RuntimeReactivity;
+    _getWorkGraph(): RaphWorkGraph;
+    _registerOwner(_owner: RaphScope<any>): number;
+    _unregisterOwner(_owner: RaphScope<any>): void;
+    _ownerDisposalActive(): boolean;
+    _beginOwnerDisposal(): void;
+    _endOwnerDisposal(): void;
+    _enterWrite(): void;
+    _exitWrite(): void;
+    _failWrite(operationError: unknown): unknown;
+    _assertOwnerRuntime(owner: RaphScope<any>): void;
 }
 ```
 

@@ -1,5 +1,5 @@
 ---
-description: "Короткий маршрут агента по задаче: серверная пагинация, Query и Actions, фильтры, группировка, точные версии, авторинг и доступ к API."
+description: "Короткий маршрут агента по задаче: серверная пагинация, Query и Actions, сборка по фасетам, точные версии, авторинг и доступ к API."
 ---
 
 # Выберите задачу
@@ -32,6 +32,7 @@ description: "Короткий маршрут агента по задаче: с
 | Проверить установленную версию, npm latest/dev, GitHub main/tag | [Репозитории и версии](/agents/repositories#versions) |
 | Создать или изменить Source документа | [Авторинг](/agents/authoring), затем [примеры HTTP DTO](/agents/document-examples) |
 | Собрать несколько документов в экран | [Вертикальный срез](/agents/vertical-slice) |
+| Собрать Bundle для одного заказчика, выбрать фасеты, исключить чужие ветки | Компиляция от фиксированной startup Composition с `startup-composition / effective-context`; [полный пример и ограничения](/guides/context-specific-bundle), [порядок действий агента](/agents/authoring#сборка-и-поставка-выбранного-контекста) |
 | Читать/изменять workspace через HTTP API | [Руководство](/agents/), затем [токены](/agents/tokens) и нужная группа [API](/llms-full/api.txt) |
 | Подключить MCP | [MCP](/agents/mcp) |
 | Разобрать ошибку | [Коды ошибок](/agents/errors), затем исходники точной версии |

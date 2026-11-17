@@ -1,10 +1,10 @@
 ---
-description: "TypeScript-декларации @endge/core 1.0.0-dev.12, группа updates; исходных модулей: 2."
+description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа updates; исходных модулей: 2."
 ---
 
 # @endge/core: updates
 
-Версия source: 1.0.0-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
 
 ## src/features/core/modules/updates/EndgeUpdates_Module.ts
 

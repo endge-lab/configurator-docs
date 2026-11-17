@@ -297,6 +297,7 @@ const guidesSidebar: Array<SidebarItem> = [
     text: 'Интерфейс',
     items: [
       { text: 'Создание интерфейса', link: '/guides/components' },
+      { text: 'Сборка выбранного контекста', link: '/guides/context-specific-bundle' },
       { text: 'События Component SFC', link: '/guides/component-events' },
       { text: 'Представление таблиц', link: '/guides/table-presentation-computations' },
       { text: 'JSON UI endge-ui/v1', link: '/guides/json-ui' },

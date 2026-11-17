@@ -58,3 +58,7 @@ Facet и Facet Document имеют отдельный typed provider contract. I
 - Preview, production host и Simulation имеют разные lifecycle owners. Успешная compilation не подтверждает сетевую доступность, credentials или готовность UI adapter.
 
 [Domain descriptor в source](https://github.com/endge-lab/core/blob/main/src/features/core/modules/domain/documents/domain-document-descriptors.ts) — владелец capability profile. [Маршрут агента](/agents/authoring) объясняет последовательность работы.
+
+## Изолированная сборка выбранного контекста
+
+[Сборка выбранного контекста](/guides/context-specific-bundle): от startup Composition по выбранным веткам фасетов, только исполняемые зависимости, без чужих веток и AST. Полный экспорт для инспекции имеет другой состав и не подходит для поставки одному заказчику.

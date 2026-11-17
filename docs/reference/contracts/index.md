@@ -10,9 +10,11 @@ description: "Каталог публичных TypeScript-контрактов 
 
 Наличие export не обещает capability конкретного renderer или backend. Для таких ограничений используйте [матрицу возможностей](/reference/capabilities).
 
-- [@endge/core 1.0.0-dev.12](/reference/contracts/core/) — 1553 exports, 29 групп контрактов.
-- [@endge/ui-vue 1.0.0-dev.11](/reference/contracts/ui-vue/) — 145 exports, 7 групп контрактов.
+В manifest `publication.gitHead` хранит исторический SHA, записанный в npm при публикации. Для публичных GitHub-исходников `publication.sourceRevision` и `publication.sourceUrl` указывают проверенный source snapshot: после очистки Git-метаданных его SHA может отличаться от npm `gitHead`, даже если файлы не менялись. Публикация npm подтверждается отдельно через exact version и integrity.
+
+- [@endge/core 1.1.0-dev.13](/reference/contracts/core/) — 1553 exports, 29 групп контрактов.
+- [@endge/ui-vue 1.0.1-dev.12](/reference/contracts/ui-vue/) — 145 exports, 7 групп контрактов.
 - [@endge/utils 1.0.0-dev.6](/reference/contracts/utils/) — 125 exports, 10 групп контрактов.
-- [@endge/computation-sandbox 1.0.0-dev.8](/reference/contracts/computation-sandbox/) — 4 exports, 3 групп контрактов.
+- [@endge/computation-sandbox 1.0.1-dev.9](/reference/contracts/computation-sandbox/) — 4 exports, 3 групп контрактов.
 - [@typedworks/federation 1.0.0-dev.1](/reference/contracts/federation/) — 36 exports, 7 групп контрактов.
 - [@raphy-js/raph 1.0.1-dev.55](/raph/contracts/) — 508 exports, 8 групп контрактов.
