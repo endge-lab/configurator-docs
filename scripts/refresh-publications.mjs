@@ -29,23 +29,28 @@ for (const entry of manifest.packages) {
     observedDistTags: metadata['dist-tags'],
     ...(published.gitHead ? { gitHead: published.gitHead } : {}),
   }
-  // gitHead закрытого repository тоже может быть в npm, но публичным URL не является.
-  if (entry.repository.startsWith('https://github.com/') && published.gitHead) {
+  // npm gitHead неизменяем: после очистки Git-метаданных он остаётся историческим.
+  // Публичную ссылку проверяем по revision текущего source snapshot.
+  if (entry.repository.startsWith('https://github.com/')) {
+    if (!/^[a-f\d]{40}$/i.test(entry.revision) || entry.sourceDirty) {
+      throw new Error(`${entry.name}: нужен чистый source snapshot с точной Git revision`)
+    }
     const repository = entry.repository.slice('https://github.com/'.length)
-    const rawUrl = `https://raw.githubusercontent.com/${repository}/${published.gitHead}/package.json`
+    const rawUrl = `https://raw.githubusercontent.com/${repository}/${entry.revision}/package.json`
     const source = await fetch(rawUrl, { signal: AbortSignal.timeout(30_000) })
     if (!source.ok) {
-      throw new Error(`${entry.name}: публичный npm gitHead недоступен (HTTP ${source.status})`)
+      throw new Error(`${entry.name}: публичный source snapshot недоступен (HTTP ${source.status})`)
     }
     const pkg = await source.json()
     if (pkg.name !== entry.name || pkg.version !== entry.version) {
-      throw new Error(`${entry.name}: package.json публичного gitHead не совпадает с npm`)
+      throw new Error(`${entry.name}: package.json публичного source snapshot не совпадает с npm`)
     }
-    publication.sourceUrl = `${entry.repository}/tree/${published.gitHead}`
+    publication.sourceRevision = entry.revision
+    publication.sourceUrl = `${entry.repository}/tree/${entry.revision}`
   }
   entry.publication = publication
   entry.revisionScope = 'source-checkout'
-  console.log(`${entry.name}@${entry.version}: npm integrity и ${publication.sourceUrl ? 'public gitHead' : 'registry'} проверены`)
+  console.log(`${entry.name}@${entry.version}: npm integrity и ${publication.sourceUrl ? 'public source snapshot' : 'registry'} проверены`)
 }
 
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)

@@ -5,9 +5,23 @@
       "name": "@endge/core",
       "version": "1.1.0-dev.13",
       "repository": "https://github.com/endge-lab/core",
-      "revision": "d9fe2891a028402826bfa34ee513271a860f6df8",
+      "revision": "76c7bfe6249ee30d6879e752e9998eb07bced31e",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
+      "publication": {
+        "checkedAt": "2026-11-17T15:22:25.873Z",
+        "version": "1.1.0-dev.13",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcore/1.1.0-dev.13",
+        "integrity": "sha512-8ZrQ6N6Cye3JITe4etngd81/Kp7jp7MYS6FCx3iq0rldSL+W/NU7n26TlRQtaKr40jYxuKJnhUKI2d+aaph0bw==",
+        "tarball": "https://registry.npmjs.org/@endge/core/-/core-1.1.0-dev.13.tgz",
+        "observedDistTags": {
+          "latest": "1.0.0-dev.12",
+          "dev": "1.1.0-dev.13"
+        },
+        "gitHead": "d9fe2891a028402826bfa34ee513271a860f6df8",
+        "sourceRevision": "76c7bfe6249ee30d6879e752e9998eb07bced31e",
+        "sourceUrl": "https://github.com/endge-lab/core/tree/76c7bfe6249ee30d6879e752e9998eb07bced31e"
+      },
       "sourceSha256": "4c2f0884b8b4466e802945623437729f0ca0606492b0fb958bf4770be0e58eef",
       "entrypoints": [
         {
@@ -55,28 +69,29 @@
         "reference/contracts/core/ui.md",
         "reference/contracts/core/updates.md",
         "reference/contracts/core/workspace.md"
-      ],
-      "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
-        "version": "1.1.0-dev.13",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcore/1.1.0-dev.13",
-        "integrity": "sha512-8ZrQ6N6Cye3JITe4etngd81/Kp7jp7MYS6FCx3iq0rldSL+W/NU7n26TlRQtaKr40jYxuKJnhUKI2d+aaph0bw==",
-        "tarball": "https://registry.npmjs.org/@endge/core/-/core-1.1.0-dev.13.tgz",
-        "observedDistTags": {
-          "latest": "1.0.0-dev.12",
-          "dev": "1.1.0-dev.13"
-        },
-        "gitHead": "d9fe2891a028402826bfa34ee513271a860f6df8",
-        "sourceUrl": "https://github.com/endge-lab/core/tree/d9fe2891a028402826bfa34ee513271a860f6df8"
-      }
+      ]
     },
     {
       "name": "@endge/ui-vue",
       "version": "1.0.1-dev.12",
       "repository": "https://github.com/endge-lab/ui-vue",
-      "revision": "e081eaf986f52935eb247f4b785dae7a805ab67d",
+      "revision": "4e9684306ed441c1d20f060b735bbdcce828f08b",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
+      "publication": {
+        "checkedAt": "2026-11-17T15:22:25.873Z",
+        "version": "1.0.1-dev.12",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Fui-vue/1.0.1-dev.12",
+        "integrity": "sha512-tcnbnWeG95LYb3aLPrnc/cQGtJfGvYH7iBx1PygqItZJ7cZB1K+aAojgx+wmUGpS2KLetFQiJgsnRhByoBV1lQ==",
+        "tarball": "https://registry.npmjs.org/@endge/ui-vue/-/ui-vue-1.0.1-dev.12.tgz",
+        "observedDistTags": {
+          "dev": "1.0.1-dev.12",
+          "latest": "1.0.0-dev.11"
+        },
+        "gitHead": "e081eaf986f52935eb247f4b785dae7a805ab67d",
+        "sourceRevision": "4e9684306ed441c1d20f060b735bbdcce828f08b",
+        "sourceUrl": "https://github.com/endge-lab/ui-vue/tree/4e9684306ed441c1d20f060b735bbdcce828f08b"
+      },
       "sourceSha256": "944a07f52044c00d572cc4547f36a9fdac10ba9273a60d41c55471af3cb887c2",
       "entrypoints": [
         {
@@ -102,28 +117,29 @@
         "reference/contracts/ui-vue/services.md",
         "reference/contracts/ui-vue/store.md",
         "reference/contracts/ui-vue/ui.md"
-      ],
-      "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
-        "version": "1.0.1-dev.12",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Fui-vue/1.0.1-dev.12",
-        "integrity": "sha512-tcnbnWeG95LYb3aLPrnc/cQGtJfGvYH7iBx1PygqItZJ7cZB1K+aAojgx+wmUGpS2KLetFQiJgsnRhByoBV1lQ==",
-        "tarball": "https://registry.npmjs.org/@endge/ui-vue/-/ui-vue-1.0.1-dev.12.tgz",
-        "observedDistTags": {
-          "dev": "1.0.1-dev.12",
-          "latest": "1.0.0-dev.11"
-        },
-        "gitHead": "e081eaf986f52935eb247f4b785dae7a805ab67d",
-        "sourceUrl": "https://github.com/endge-lab/ui-vue/tree/e081eaf986f52935eb247f4b785dae7a805ab67d"
-      }
+      ]
     },
     {
       "name": "@endge/utils",
       "version": "1.0.0-dev.6",
       "repository": "https://github.com/endge-lab/utils",
-      "revision": "26b655926cb00e20f47bbaa42530b10f54a6fec7",
+      "revision": "9b2736d293fff0cc6a6a0e2613e4c1317ff1a875",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
+      "publication": {
+        "checkedAt": "2026-11-17T15:22:25.873Z",
+        "version": "1.0.0-dev.6",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Futils/1.0.0-dev.6",
+        "integrity": "sha512-QmZVPxLVKpIYot9HD38w1CdIljtaa7OeZDe01+vLkvFIEy3umM6FqlUHJRDcxzyVSC/3ZODj96Oitg7q5+ZEOg==",
+        "tarball": "https://registry.npmjs.org/@endge/utils/-/utils-1.0.0-dev.6.tgz",
+        "observedDistTags": {
+          "dev": "1.0.0-dev.6",
+          "latest": "1.0.0-dev"
+        },
+        "gitHead": "26b655926cb00e20f47bbaa42530b10f54a6fec7",
+        "sourceRevision": "9b2736d293fff0cc6a6a0e2613e4c1317ff1a875",
+        "sourceUrl": "https://github.com/endge-lab/utils/tree/9b2736d293fff0cc6a6a0e2613e4c1317ff1a875"
+      },
       "sourceSha256": "71289e80a408f99cf4202838fa1202604db5bc87d845fc1134c9e620ddbfe902",
       "entrypoints": [
         {
@@ -146,28 +162,29 @@
         "reference/contracts/utils/tools.md",
         "reference/contracts/utils/ui.md",
         "reference/contracts/utils/updates.md"
-      ],
-      "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
-        "version": "1.0.0-dev.6",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Futils/1.0.0-dev.6",
-        "integrity": "sha512-QmZVPxLVKpIYot9HD38w1CdIljtaa7OeZDe01+vLkvFIEy3umM6FqlUHJRDcxzyVSC/3ZODj96Oitg7q5+ZEOg==",
-        "tarball": "https://registry.npmjs.org/@endge/utils/-/utils-1.0.0-dev.6.tgz",
-        "observedDistTags": {
-          "dev": "1.0.0-dev.6",
-          "latest": "1.0.0-dev"
-        },
-        "gitHead": "26b655926cb00e20f47bbaa42530b10f54a6fec7",
-        "sourceUrl": "https://github.com/endge-lab/utils/tree/26b655926cb00e20f47bbaa42530b10f54a6fec7"
-      }
+      ]
     },
     {
       "name": "@endge/computation-sandbox",
       "version": "1.0.1-dev.9",
       "repository": "https://github.com/endge-lab/computation-sandbox",
-      "revision": "3b8b2e1333999fa373ac432ed8cde2212592a09c",
+      "revision": "9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
+      "publication": {
+        "checkedAt": "2026-11-17T15:22:25.873Z",
+        "version": "1.0.1-dev.9",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcomputation-sandbox/1.0.1-dev.9",
+        "integrity": "sha512-IP51qFkoaFn3NXUyNMaud+Kth7Ca8UHPYL7GTp4nEK4//A9e34fAZjbvj2TFt87WfVjQ4XBIQo4HnHBPMoHtpA==",
+        "tarball": "https://registry.npmjs.org/@endge/computation-sandbox/-/computation-sandbox-1.0.1-dev.9.tgz",
+        "observedDistTags": {
+          "latest": "1.0.0-dev.3",
+          "dev": "1.0.1-dev.9"
+        },
+        "gitHead": "3b8b2e1333999fa373ac432ed8cde2212592a09c",
+        "sourceRevision": "9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75",
+        "sourceUrl": "https://github.com/endge-lab/computation-sandbox/tree/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75"
+      },
       "sourceSha256": "505a02adfdb4edb79fd8f56f7b2313f3883f6e611ff4050608a1eff679003d18",
       "entrypoints": [
         {
@@ -186,20 +203,7 @@
         "reference/contracts/computation-sandbox/QuickJSComputationSandbox.md",
         "reference/contracts/computation-sandbox/index.md",
         "reference/contracts/computation-sandbox/main.md"
-      ],
-      "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
-        "version": "1.0.1-dev.9",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcomputation-sandbox/1.0.1-dev.9",
-        "integrity": "sha512-IP51qFkoaFn3NXUyNMaud+Kth7Ca8UHPYL7GTp4nEK4//A9e34fAZjbvj2TFt87WfVjQ4XBIQo4HnHBPMoHtpA==",
-        "tarball": "https://registry.npmjs.org/@endge/computation-sandbox/-/computation-sandbox-1.0.1-dev.9.tgz",
-        "observedDistTags": {
-          "latest": "1.0.0-dev.3",
-          "dev": "1.0.1-dev.9"
-        },
-        "gitHead": "3b8b2e1333999fa373ac432ed8cde2212592a09c",
-        "sourceUrl": "https://github.com/endge-lab/computation-sandbox/tree/3b8b2e1333999fa373ac432ed8cde2212592a09c"
-      }
+      ]
     },
     {
       "name": "@typedworks/federation",
@@ -209,7 +213,7 @@
       "revisionScope": "source-checkout",
       "sourceDirty": false,
       "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
+        "checkedAt": "2026-11-17T15:22:25.873Z",
         "version": "1.0.0-dev.1",
         "registryUrl": "https://registry.npmjs.org/%40typedworks%2Ffederation/1.0.0-dev.1",
         "integrity": "sha512-h2PrLkQfrLYHOTu4PpYCqlcCkP3n3C0HmgcOUVqe9/ZXE69WiSxRO+v1+Q/PBQIaWRlvcgTFwOstlKIBhDaixg==",
@@ -247,6 +251,17 @@
       "revision": "1fe6c56910a9d39b0758763a6e633ff43a5c2f97",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
+      "publication": {
+        "checkedAt": "2026-11-17T15:22:25.873Z",
+        "version": "1.0.1-dev.55",
+        "registryUrl": "https://registry.npmjs.org/%40raphy-js%2Fraph/1.0.1-dev.55",
+        "integrity": "sha512-KacYDodSKNd5YT8TaKouCWuBDnp409NTIUBxeHb5hZ/IIlLXYb9DKuqZSZDF6tM7mxcrYpXtQGDF48Pmu0PwcA==",
+        "tarball": "https://registry.npmjs.org/@raphy-js/raph/-/raph-1.0.1-dev.55.tgz",
+        "observedDistTags": {
+          "latest": "1.0.1-dev.26",
+          "dev": "1.0.1-dev.55"
+        }
+      },
       "sourceSha256": "337138eed79818a11594c42d2a44ffc64681a705e8378f657e56b48dfb646e55",
       "entrypoints": [
         {
@@ -318,18 +333,7 @@
         "raph/contracts/path.md",
         "raph/contracts/reactivity.md",
         "raph/contracts/runtime.md"
-      ],
-      "publication": {
-        "checkedAt": "2026-11-17T13:50:26.648Z",
-        "version": "1.0.1-dev.55",
-        "registryUrl": "https://registry.npmjs.org/%40raphy-js%2Fraph/1.0.1-dev.55",
-        "integrity": "sha512-KacYDodSKNd5YT8TaKouCWuBDnp409NTIUBxeHb5hZ/IIlLXYb9DKuqZSZDF6tM7mxcrYpXtQGDF48Pmu0PwcA==",
-        "tarball": "https://registry.npmjs.org/@raphy-js/raph/-/raph-1.0.1-dev.55.tgz",
-        "observedDistTags": {
-          "latest": "1.0.1-dev.26",
-          "dev": "1.0.1-dev.55"
-        }
-      }
+      ]
     }
   ]
 }
