@@ -36,6 +36,36 @@ const bundle = Endge.program.exportBundle({ scope: 'startup-composition' })
 
 `buildSavedProgram` загружает сохранённое состояние и компилирует его без запуска Runtime. Bundle фиксирует фактический resolved context вместе с effective configuration. Несохранённые editor drafts в него не входят. Смена фасетов требует нового boot/build. Подробности: [выбор тенанта](/configurator/tenant-selection) и [контекст сборки](/reference/value-expressions#контекст-сборки).
 
+## Профиль сборки через HTTP API
+
+При создании профиля через `POST /api/v1/build-profiles` используйте поля `settings.buildScope` и `settings.contexts`:
+
+```json
+{
+  "displayName": "Сборка выбранного контекста",
+  "visibility": "private",
+  "settings": {
+    "includeAst": false,
+    "fileFormat": "gzip",
+    "buildScope": "startup-composition",
+    "contexts": "effective-context",
+    "diagnostics": "detailed",
+    "debuggerStructure": "complete-catalog",
+    "topology": [{ "node": "frontend", "runtime": "ts-browser" }]
+  }
+}
+```
+
+Профиль сохраняет режим сборки. Значения входных фасетов выбираются отдельно в контексте Configurator/Core перед компиляцией; endpoint профилей сам программу не компилирует. HTTP-заголовки workspace и авторизации описаны в [API профилей](/llms-full/api/build-profiles.txt).
+
+Не подменяйте имена полей между тремя контрактами:
+
+| Контракт | Поля выбранного режима |
+| --- | --- |
+| Настройки профиля Configurator и HTTP API | `buildScope: 'startup-composition'`, `contexts: 'effective-context'`, `includeAst: false` |
+| Параметры Core `exportBundle` | `scope: 'startup-composition'` |
+| Metadata готовой сборки для `releases/from-build` | `scope: 'startup-composition'`, `contextMode: 'effective-context'`, `includeAst: false` |
+
 ## Стартовая Composition и вложенные ветки
 
 Стартовая Composition выбирается ссылкой `startupCompositionIdentity` в workspace. Саму эту ссылку фасеты не переключают. Она может указывать на общий документ `app-entry`, внутри которого объявлен структурный выбор вложенных Composition.
