@@ -4,6 +4,8 @@ description: "Source Actions: именованный алгоритм из ша�
 
 # Source Actions
 
+Серверная пагинация, параметры запроса и границы Table: [сквозной рецепт](/sfc-tables/server-paging). Серверную загрузку через Query можно собрать; готового server mode встроенного пагинатора нет.
+
 Action — именованный алгоритм из последовательных шагов. Source и код вызываются
 одинаково по `identity`; runtime выбирает ровно одну effective implementation.
 

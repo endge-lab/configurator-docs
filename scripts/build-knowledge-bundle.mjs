@@ -4,6 +4,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { documentationFingerprint, documentationRoute, markdownSections, publicMarkdownFiles, readDocumentation } from './documentation-catalog.mjs'
+import { documentationProvenance } from './documentation-provenance.mjs'
 import { loadOpenApi, OPENAPI_PUBLIC_URL } from './load-openapi.mjs'
 import { openApiMarkdown } from './openapi-markdown.mjs'
 
@@ -25,7 +26,7 @@ for (const documentPath of documentPaths) {
   chunks.push(...chunkDocument(relativePath, source))
 }
 
-const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi(repositoryRoot)
+const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi()
 chunks.push(...chunkDocument('generated/service-backend-api.md', openApiMarkdown(spec, { specUrl: OPENAPI_PUBLIC_URL }))
   .map(chunk => ({ ...chunk, documentPath: '/llms-full/api.txt' })))
 
@@ -37,7 +38,7 @@ const manifest = {
   schemaVersion: 'endge-knowledge/v1',
   bundleId,
   version: packageManifest.version,
-  sourceCommit: process.env.CI_COMMIT_SHA ?? 'local',
+  ...documentationProvenance(repositoryRoot),
   documentationSha256: await documentationFingerprint(documentPaths, documentsRoot),
   contractManifest: 'contracts-manifest.json',
   contractsSha256: createHash('sha256').update(contractManifest).digest('hex'),

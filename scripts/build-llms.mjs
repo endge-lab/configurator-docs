@@ -16,6 +16,7 @@
  *
  * Переменные окружения:
  * - ENDGE_DOCS_URL — публичный адрес сайта для абсолютных ссылок;
+ * - ENDGE_DOCS_SOURCE_COMMIT — точный source SHA при сборке без Git metadata;
  * - ENDGE_OPENAPI_PATH — путь к openapi3.yaml Service Backend;
  * - ENDGE_OPENAPI_URL — адрес спецификации, если файла нет локально;
  * - ENDGE_LLMS_OUTPUT — каталог результата (по умолчанию docs/.vitepress/dist).
@@ -30,6 +31,7 @@ import { fileURLToPath } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { documentationFingerprint, documentationRoute, publicMarkdownFiles, readDocumentation } from './documentation-catalog.mjs'
 import { autoDescription, normalizeDescription, splitFrontmatter } from './documentation-pages.mjs'
+import { documentationProvenance } from './documentation-provenance.mjs'
 import { loadOpenApi, OPENAPI_PUBLIC_URL } from './load-openapi.mjs'
 import { openApiHeaderMarkdown, openApiMarkdown, openApiOperationIndex, openApiOperations, openApiTagMarkdown, openApiTags, openApiTagSlugs } from './openapi-markdown.mjs'
 
@@ -111,7 +113,7 @@ if (unassigned.length) {
 }
 const filledSections = sections.filter(section => section.pages.length)
 
-const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi(repositoryRoot)
+const { spec, origin: openApiOrigin, sha256: openApiSha256 } = await loadOpenApi()
 const api = openApiMarkdown(spec, { specUrl: OPENAPI_PUBLIC_URL })
 const operations = openApiOperations(spec)
 const tagSlugs = openApiTagSlugs(operations)
@@ -124,7 +126,7 @@ const provenance = {
   documentationSha256: await documentationFingerprint(documentPaths, documentsRoot),
   openApiSha256,
   openApiOrigin,
-  sourceCommit: process.env.CI_COMMIT_SHA ?? 'local',
+  ...documentationProvenance(repositoryRoot),
   contractManifest: 'contracts-manifest.json',
   contractsSha256: createHash('sha256').update(contractManifest).digest('hex'),
 }
@@ -250,13 +252,8 @@ function indexMarkdown() {
   const lines = [
     '# Endge',
     '> Endge — платформа для сборки конфигурации приложений: Configurator, Service Backend (REST API и MCP) и runtime. Документация на русском; ниже — маршрут для ИИ-агента и оглавление с описанием каждой ссылки.',
-    [
-      'Маршрут агента с ограниченным контекстом:',
-      '',
-      `1. Доступ. Попросите пользователя выпустить персональный токен \`endge_pat_…\` в Configurator кнопкой «Для агента» и передавайте его в \`Authorization: Bearer\` ([токены](${url('agents/tokens.md')})). Без токена — вход через OIDC ([руководство](${url('agents/index.md')})).`,
-      `2. Ядро. Загрузите [llms-agent.txt](${url('llms-agent.txt')}) (${sizeOf('llms-agent.txt')}): руководство, токены, MCP, правила исходников, версий и лимитов, сценарии, коды ошибок, авторинг, capabilities и все HTTP-операции одним списком.`,
-      `3. Детали по требованию. Схемы операций — файл группы \`llms-full/api/<группа>.txt\`, авторский Source — часть справочника \`llms-full/reference/<тип>.txt\`, проверенные тела создания всех коллекций — [примеры документов](${url('agents/document-examples.md')}), связанная задача — [вертикальный срез](${url('agents/vertical-slice.md')}), любая страница — её \`.md\`. Раздел \`## Optional\` можно пропустить.`,
-    ].join('\n'),
+    taskRoutesMarkdown(),
+    `Читайте документы по задаче. Для HTTP API/MCP доступен [llms-agent.txt](${url('llms-agent.txt')}) (${sizeOf('llms-agent.txt')}); это расширенный сборник, а не обязательный первый шаг. Схемы — \`llms-full/api/<группа>.txt\`, Source — \`llms-full/reference/<тип>.txt\`; отдельная страница — её \`.md\`. Раздел \`## Optional\` можно пропустить.`,
     `Размеры — оценка токенов с запасом: кириллица / 2,5 + остальные символы / 3,5. ${provenanceMarkdown}`,
     `При расхождении документации и поведения истина — исходники развёрнутой версии: \`GET /version\` backend, тег \`v<версия>\` в публичном repository, иначе \`main\` с оговоркой ([правила](${url('agents/repositories.md')})). Закрытые исходники: ${CLOSED_SOURCES.map(([name, note]) => `${name} — ${note}`).join('; ')}.`,
   ]
@@ -269,7 +266,7 @@ function indexMarkdown() {
     }
     const items = []
     if (section.id === 'agents') {
-      items.push(link('llms-agent.txt', 'Ядро для агента', `${files.get('llms-agent.txt').description}; загружайте первым`))
+      items.push(link('llms-agent.txt', 'Ядро для агента', `${files.get('llms-agent.txt').description}; для задач HTTP API/MCP`))
     }
     if (section.parts.length) {
       items.push(link(section.file, `${section.title}: оглавление частей`, files.get(section.file).description))
@@ -317,6 +314,7 @@ function agentMarkdown() {
     '> Всё для типовой работы через HTTP API или MCP одним файлом: руководство агента, персональные токены, MCP, правила исходников, версий и лимитов, сквозные сценарии, коды ошибок (компактно), авторинг Source, матрица возможностей и все HTTP-операции.',
     `Схемы тел и ответов не входят: они в файле группы API \`llms-full/api/<группа>.txt\` (ссылка у каждой группы в списке операций ниже). Авторский Source каждого типа документа — в частях справочника (список в конце). Оглавление всей документации: ${url('llms.txt')}.`,
     provenanceMarkdown,
+    taskRoutesMarkdown(),
     repositoriesMarkdown(),
     '---',
     core.join('\n\n---\n\n'),
@@ -456,6 +454,14 @@ function sectionIndexMarkdown(section, wholeTokens) {
     '## Optional',
     section.parts.filter(part => part.optional).map(part => `- [${part.title}](${url(part.file)}): ${clause(part.description)}; ${formatTokens(files.get(part.file)?.tokens ?? estimateTokens(partMarkdown(section, part)))}`).join('\n'),
   ].join('\n\n')
+}
+
+function taskRoutesMarkdown() {
+  const page = pageByPath.get('agents/start.md')
+  if (!page) {
+    throw new Error('Нет страницы маршрутов agents/start.md.')
+  }
+  return pageMarkdown(page)
 }
 
 function repositoriesMarkdown() {

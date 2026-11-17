@@ -4,6 +4,8 @@ description: "Таблица в Component SFC: compound-компонент Table
 
 # Таблицы SFC
 
+Серверную загрузку страниц через Query можно собрать: [сквозной рецепт](/sfc-tables/server-paging). Встроенного серверного режима Table сейчас нет.
+
 Таблица в Component SFC — compound-компонент с единым renderer-neutral
 контрактом. Source описывает данные, колонки, меню и authored defaults, compiler
 переводит их в IR, а активный UI-адаптер материализует конкретный grid.

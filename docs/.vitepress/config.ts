@@ -239,6 +239,7 @@ const referenceSidebar: Array<SidebarItem> = [
       { text: 'Обзор', link: '/sfc-tables/' },
       { text: 'Данные, строки и ячейки', link: '/sfc-tables/data-rows-cells' },
       { text: 'Источники данных, поиск и фильтры', link: '/sfc-tables/data-search-filters' },
+      { text: 'Серверная пагинация через Query', link: '/sfc-tables/server-paging' },
       { text: 'Пейджинг и виртуализация', link: '/sfc-tables/paging-and-virtualization' },
       { text: 'Сортировка', link: '/sfc-tables/sorting' },
       { text: 'Выбор строк и ячеек', link: '/sfc-tables/selection-and-activation' },
@@ -309,6 +310,7 @@ const agentsSidebar: Array<SidebarItem> = [
   {
     text: 'Первые шаги',
     items: [
+      { text: 'Выберите задачу', link: '/agents/start' },
       { text: 'Endge для ИИ-агентов', link: '/agents/' },
       { text: 'Персональные токены', link: '/agents/tokens' },
       { text: 'MCP-сервер backend', link: '/agents/mcp' },

@@ -42,7 +42,7 @@ Manifest содержит package versions, revision, hash source inputs, peer d
 pnpm errors:build
 ```
 
-Каталог ищется в `ENDGE_ERRORS_PATH`, затем в `services/egorkozelskij-endge-service-backend/docs/error-codes.yaml` монорепозитория. Если исходников backend нет, страница не меняется, и сборка использует сохранённый snapshot. Группы кодов задаёт список `GROUPS` в скрипте; код без группы попадает в «Прочие коды» с предупреждением в консоли.
+Каталог задаётся через `ENDGE_ERRORS_PATH`. Если путь не задан, страница не меняется, и сборка использует сохранённый snapshot. Группы кодов задаёт список `GROUPS` в скрипте; код без группы попадает в «Прочие коды» с предупреждением в консоли.
 
 ## Оценка workspace компиляцией
 
@@ -81,7 +81,7 @@ pnpm llms:build
 
 Публичный каталог един для LLM, Knowledge и Markdown-версий: все Markdown pages, кроме `project`, скрытых и служебных каталогов (`EXCLUDED_ROOTS`). Navigation и это исключение не определяют доступность страниц самого VitePress: внутренние планы не следует публиковать в public tree.
 
-HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, локальный `services/egorkozelskij-endge-service-backend/docs/openapi3.yaml`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт абсолютный base URL, `ENDGE_LLMS_OUTPUT` — отдельный output directory.
+HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт абсолютный base URL, `ENDGE_LLMS_OUTPUT` — отдельный output directory.
 
 ## Knowledge Bundle
 
@@ -92,3 +92,48 @@ pnpm knowledge:build
 `dist/knowledge` содержит `documents.jsonl`, `manifest.json` и `contracts-manifest.json`. Помимо всех публичных Markdown pages включается тот же полный HTTP API. `ENDGE_KNOWLEDGE_OUTPUT` меняет output directory.
 
 Manifest фиксирует Docs version, documentation fingerprint, OpenAPI hash/origin, количество documents/chunks и checksum JSONL. Markdown includes и именованные regions разворачиваются в обеих выгрузках. Heading parser учитывает code fences, поэтому Markdown-заголовки внутри примеров не становятся отдельными разделами. Целевой размер chunk — 6000 символов; неделимый code block может быть больше, чтобы сохранить целый пример. Bundle не включает credentials и не является источником фактических Workspace documents.
+
+## Маршрут агента и публикационные сведения
+
+Короткий вход — `docs/agents/start.md`; он включается в начало `llms.txt` и
+`llms-agent.txt` тем же `scripts/build-llms.mjs`, который создаёт Markdown.
+Рецепт серверного paging — `docs/sfc-tables/server-paging.md`. Не правьте
+сгенерированные llms-файлы отдельно от этих источников.
+
+Перед поставкой Docs выполните `pnpm run publications:refresh`: скрипт читает
+exact versions из `docs/public/contracts-manifest.json`, проверяет npm integrity
+и для публичного GitHub проверяет package.json на npm gitHead. Результат хранится
+в `publication`; обычная сборка не обращается к npm. Ошибка любой проверки не
+перезаписывает manifest. Последующий `contracts:build` сохраняет публикационную
+запись только при совпадении имени и версии package.
+
+`revision` и `sourceDirty` описывают source checkout, `publication` — отдельный
+проверенный npm-артефакт; равенство содержимого из совпадения версий не следует.
+GitHub/GitLab CI SHA, локальный HEAD и dirty flag входят в llms manifest.
+Проверяйте, что публикуется clean snapshot и что точные source refs доступны.
+
+Для проверки рецепта компилятором (это не запуск runtime или HTTP-запросов):
+
+```sh
+node scripts/grade-workspace.mjs --markdown docs/sfc-tables/server-paging.md --core <каталог-с-установленным-Core> --quiet
+```
+
+Используйте опубликованный baseline Core из рецепта, затем выполните обычные
+lint/typecheck/build. После поставки сверьте живые `llms.txt`, `llms-agent.txt`,
+страницу рецепта и оба manifest с собранным результатом.
+
+## Обезличивание публичной документации
+
+Страницы, примеры, README, source comments и генерируемые выгрузки описывают
+продукт Endge. Для условных сервисов используйте домены `example.com`,
+`example.test` или `.example`; для локальной разработки — loopback.
+Не включайте сведения о заказчиках, личные данные, внутренние хосты и IP,
+имена рабочих каталогов владельца, реальные workspace snapshots, токены,
+пароли и реквизиты корпоративной инфраструктуры.
+
+Пути к внешним source задаются переменными окружения и не фиксируют устройство
+чьей-либо рабочей машины. `ENDGE_DOCS_URL` задаёт адрес размещения сайта для
+навигационных ссылок; он не является endpoint примеров или описанием окружения
+пользователя. Перед публикацией проверьте исходное дерево и артефакты Docs,
+llms и Knowledge Bundle, включая развёрнутые Markdown includes. Реальные
+credentials не должны попадать даже в закрытые details-блоки или примеры curl.

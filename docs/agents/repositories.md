@@ -10,10 +10,37 @@ description: "Где искать точный контракт: истина п
 
 Если документация и поведение сервера расходятся, истина — **исходники той версии, что развёрнута**. Документация описывает свой snapshot и может отставать или опережать стенд.
 
-1. Узнайте версию. Backend: `GET /version` (поле `version`, без авторизации). Configurator: версия показана в его интерфейсе. Версия npm-пакета — в `package.json` проекта или `contracts-manifest.json` этого сайта.
-2. Откройте исходники этой версии: тег `v<версия>` в публичном repository, например `https://github.com/endge-lab/service-backend/tree/v0.16.1`. У npm-пакетов `@endge/*` теги есть.
-3. Нет тега — смотрите ветку `main` и явно оговорите пользователю, что `main` может быть новее развёрнутой версии.
-4. Исходники закрыты (Raph, Federation, Mock Generator) — сверяйтесь с [точными контрактами](/reference/contracts/) этого сайта и `.d.ts` опубликованного npm-пакета `https://unpkg.com/<пакет>@<версия>/`.
+## Точные версии и npm dist-tags {#versions}
+
+1. Узнайте установленную версию: backend — `GET /version`, Configurator — версия UI; npm dependencies — `package.json` и resolved version в lockfile/установленном пакете. Диапазон в manifest не всегда равен установленной версии.
+2. Для npm используйте точную версию, например `@endge/core@1.0.0-dev.12`. `latest` и `dev` — изменяемые указатели, а не номера версий и не версия стенда. Команда установки без версии использует рекомендованный npm tag и может получить более старый пакет, чем документация.
+3. Откройте `v<версия>` в публичном GitHub. Ещё точнее — npm `gitHead` для этой версии. [Manifest контрактов](/contracts-manifest.json) хранит отдельно source snapshot и, после проверки registry, поле `publication` с точной версией, integrity и публичным source URL. `observedDistTags` — снимок тегов на `checkedAt`, не live registry.
+4. Поле `revision` — Git HEAD checkout, из которого извлечены declarations; оно **не обязано существовать в публичном GitHub**. `revisionScope` это обозначает, `sourceDirty` отмечает изменения snapshot относительно HEAD. Не подставляйте этот SHA в публичный URL. Даже совпадение версии snapshot и npm не доказывает равенство содержимого.
+5. Если точной опубликованной версии/тега нет, не заменяйте её молча веткой `main`. По `main` можно исследовать текущее состояние с явной оговоркой, что оно не доказывает поведение установленного пакета. Отсутствие `publication` в manifest означает отсутствие проверки публикации, а не отсутствие пакета в registry.
+6. Для закрытых исходников используйте точные `.d.ts` npm-пакета `https://unpkg.com/<пакет>@<версия>/` и [контракты](/reference/contracts/). TypeScript declarations подтверждают сигнатуры; Source parser и renderer capabilities проверяются отдельно.
+
+Для сверки тегов и конкретного артефакта доступны:
+
+```sh
+npm view @endge/core dist-tags --json
+npm view @endge/core@1.0.0-dev.12 version gitHead dist.integrity --json
+npm view @endge/ui-vue dist-tags --json
+npm view @endge/ui-vue@1.0.0-dev.11 version gitHead dist.integrity --json
+```
+
+Для воспроизводимой установки baseline примера сохраняйте exact dependencies:
+
+```sh
+npm install --save-exact @endge/core@1.0.0-dev.12 @endge/ui-vue@1.0.0-dev.11
+```
+
+Совместимые peer dependencies, включая Raph, тоже сверяйте с manifest.
+Без `--save-exact` npm обычно сохраняет `^` даже при явном `@версия` в команде:
+последующее разрешение диапазона может выбрать другую стабильную версию.
+Для уже установленного проекта ориентируйтесь на lockfile и installed package,
+а не меняйте зависимости только ради совпадения с примером.
+
+Для сравнения возможностей Table и Query сначала откройте [серверный пейджинг](/sfc-tables/server-paging). Проверяйте отдельно платформенный сценарий, настройку Table и API внешнего сервера.
 
 ## Публичные repositories
 
@@ -63,7 +90,7 @@ description: "Где искать точный контракт: истина п
 
 `llms.txt` — маршрут и оглавление: у каждой ссылки есть описание и оценка размера, а раздел `## Optional` можно пропустить. Порядок загрузки при ограниченном context window:
 
-1. [llms-agent.txt](/llms-agent.txt) — ядро для типовой работы через API или MCP (не больше 60 тыс. токенов): это руководство, токены, MCP, сценарии, компактные коды ошибок, авторинг, capability matrix и все HTTP-операции без схем.
+1. [Выберите задачу](/agents/start) — короткий маршрут. [llms-agent.txt](/llms-agent.txt) — дополнительный сборник для работы через API или MCP (не больше 60 тыс. токенов): это руководство, токены, MCP, сценарии, компактные коды ошибок, авторинг, capability matrix и все HTTP-операции без схем.
 2. Схемы нужной операции — файл её группы `llms-full/api/<группа>.txt`; список групп и всех операций — [llms-full/api.txt](/llms-full/api.txt).
 3. Авторский Source типа документа — часть справочника `llms-full/reference/<тип>.txt` (оглавление — [llms-full/reference.txt](/llms-full/reference.txt)), затем при необходимости соответствующие contracts.
 4. Отдельная страница — её Markdown-версия: тот же адрес с `.md` (на сайте — кнопка «Открыть как Markdown»).
