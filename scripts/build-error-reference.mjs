@@ -136,6 +136,8 @@ function page() {
     '',
     `Справочник собран из каталога ошибок backend${version ? ` ${version}` : ''} ([error-codes.yaml](${CATALOG_PUBLIC_URL}), sha256 \`${sha256.slice(0, 12)}\`): ${catalog.codes.length} кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый \`code\`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).`,
     '',
+    'Controller/window diagnostics нового source candidate не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).',
+    '',
     '## Как читать ответ ошибки',
     '',
     'REST API отвечает на ошибку HTTP-статусом и JSON:',

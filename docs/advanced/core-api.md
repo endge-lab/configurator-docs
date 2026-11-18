@@ -1,5 +1,7 @@
 # Встраивание Core и карта API
 
+Core `1.2.0-dev.15` добавляет `Endge.runtime.controllers`: define/provide/mount и общий owned lifecycle. [Полный provider/SDK пример](/reference/controllers#полный-code-owned-provider-и-sdk).
+
 `@endge/core` предоставляет фасад `Endge`, Domain contracts, compiler и runtime. Приложение подключает provider, implementations и renderer; Source-документы описывают поведение внутри этой среды. Все публичные entrypoints и exports перечислены в [контрактном snapshot](/reference/contracts/core/).
 
 ## Bootstrap

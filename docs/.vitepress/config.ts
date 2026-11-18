@@ -98,6 +98,8 @@ const referenceSidebar: Array<SidebarItem> = [
     items: [
       { text: 'Оглавление справочника', link: '/reference/' },
       { text: 'Матрица возможностей', link: '/reference/capabilities' },
+      { text: 'Controllers', link: '/reference/controllers' },
+      { text: 'Ошибки Controllers', link: '/reference/controller-errors' },
     ],
   },
   {
@@ -288,6 +290,8 @@ const guidesSidebar: Array<SidebarItem> = [
     text: 'Данные',
     items: [
       { text: 'Работа с данными', link: '/guides/data' },
+      { text: 'Скользящее окно коллекции', link: '/guides/collection-window' },
+      { text: 'Retention и кэш страниц', link: '/guides/collection-window-cache' },
       { text: 'GraphQL', link: '/guides/graphql' },
       { text: 'Преобразование данных', link: '/guides/transformations' },
       { text: 'Вычисления', link: '/guides/computations' },
@@ -312,6 +316,7 @@ const agentsSidebar: Array<SidebarItem> = [
     text: 'Первые шаги',
     items: [
       { text: 'Выберите задачу', link: '/agents/start' },
+      { text: 'Controllers и window', link: '/agents/controllers' },
       { text: 'Endge для ИИ-агентов', link: '/agents/' },
       { text: 'Персональные токены', link: '/agents/tokens' },
       { text: 'MCP-сервер backend', link: '/agents/mcp' },

@@ -161,3 +161,15 @@ Component SFC не смешивают состояние.
 Прикладные Actions объявляются отдельно. SFC владеет пунктом меню и Action
 identity; application/runtime provider владеет эффектом, `canExecute`, диалогом,
 Query и серверной авторизацией.
+
+## Viewport и loaded-row positioning
+
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14`: `viewportChanged` сообщает `{tableId,rowsRevision,firstVisible:{key,index}|null,lastVisible:{key,index}|null,rowCount,reason}` без headers и overscan. `reason` — mount/scroll/data/resize/position. Прокиньте его типизированным портом:
+
+```ts
+const ports = definePorts({emits:{viewportChanged:event<TableViewportChangedEvent>({from:{ref:'table',event:'viewportChanged'}})}})
+```
+
+Необобщённый `event()` имеет void payload. Composition hook: `onEvent('screen','viewportChanged').command('window','setViewport',event())`. [Полный linked Source](/guides/collection-window#source).
+
+Intrinsic Action `table.scrollToRow` принимает `{rowId:string|number,align?:'start'|'center'|'end'|'auto'}` и работает только с загруженными keys, default align auto. В event handler она нацелена на исходную Table; для внешнего вызова нужен Table target context. Незагруженный key даёт ошибку. `preserve-scroll-anchor` сохраняет текущий верхний key и pixel offset при prepend/trim; это не remote seek. [Полный рецепт](/guides/collection-window#сохранение-якоря-и-позиционирование).

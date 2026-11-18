@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа actions; исходных модулей: 3."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа actions; исходных модулей: 3."
 ---
 
 # @endge/core: actions
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/actions/domain/action.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/actions/domain/action.types.ts)
+Исходный модуль: [src/features/core/modules/actions/domain/action.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/domain/action.types.ts)
 
 ```ts
 import type { EntityOrigin, EntityRef } from '@/features/core/modules/domain/types/document/entity-management.type';
@@ -109,6 +109,7 @@ export type TableColumnPinSide = 'left' | 'right' | 'none';
 export type TableSortDirection = 'asc' | 'desc';
 export type TableSortMode = 'multiple' | 'single' | 'fixed' | 'disabled';
 export declare const TABLE_RUNTIME_ACTION_IDS: {
+    readonly scrollToRow: "table.scrollToRow";
     readonly columnHide: "table.column.hide";
     readonly columnPinLeft: "table.column.pinLeft";
     readonly columnPinRight: "table.column.pinRight";
@@ -127,6 +128,7 @@ export interface TableColumnSortState {
     index?: number;
 }
 export interface TableRuntimeActionTarget {
+    scrollToRow?: (rowId: string, align?: 'start' | 'center' | 'end' | 'auto') => void | Promise<void>;
     setColumnVisibility?: (columnKey: string, visible: boolean) => void | Promise<void>;
     setColumnPin?: (columnKey: string, side: TableColumnPinSide) => void | Promise<void>;
     resetColumnPin?: (columnKey: string) => void | Promise<void>;
@@ -192,7 +194,7 @@ export type TableCellActionContext = TableRowActionContext;
 
 ## src/features/core/modules/actions/EndgeActions_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/actions/EndgeActions_Module.ts)
+Исходный модуль: [src/features/core/modules/actions/EndgeActions_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/EndgeActions_Module.ts)
 
 ```ts
 import type { ActionDefinitionInput, ActionExecuteOptions, ImplementationBindingScope, ResolvedActionDescriptor, RuntimeAction, RuntimeActionContext, RuntimeActionId, RuntimeActionRegistrySnapshot } from '@/features/core/modules/actions/domain/action.types';
@@ -245,7 +247,7 @@ export declare class EndgeActions_Module extends EndgeModule {
 
 ## src/features/core/modules/actions/services/table-actions.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/actions/services/table-actions.ts)
+Исходный модуль: [src/features/core/modules/actions/services/table-actions.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/services/table-actions.ts)
 
 ```ts
 import type { RuntimeAction, TableColumnActionContext } from '@/features/core/modules/actions/domain/action.types';

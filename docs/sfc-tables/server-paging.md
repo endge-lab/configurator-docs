@@ -4,6 +4,10 @@ description: "Серверная пагинация / пейджинг: Query с
 
 # Серверная пагинация через Query
 
+::: tip Два версионных маршрута
+Этот ручной Action/Query рецепт сохраняет опубликованный baseline Core `1.0.0-dev.12` / UI `1.0.0-dev.11`. Для двунаправленного скролла в Core `1.2.0-dev.15` / UI `2.0.0-dev.14` используйте [Controller collection-window](/guides/collection-window): Store + guarded Update + Query + typed viewport. Новый Controller не меняет `lazy` и не добавляет global scrollbar/remote seek.
+:::
+
 **Серверную загрузку страниц в Endge можно собрать. Готового серверного
 режима встроенного пагинатора Table сейчас нет.** Query передаёт параметры
 API источника, а приложение хранит состояние страницы и показывает ответ.

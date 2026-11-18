@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа program; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа program; исходных модулей: 6."
 ---
 
 # @endge/core: program
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/program/domain/types/action-program.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/domain/types/action-program.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/action-program.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/domain/types/action-program.types.ts)
 
 ```ts
 import type { ActionTargetSelector } from '@/features/core/modules/actions/domain/action.types';
@@ -24,7 +24,7 @@ export interface ActionProgramPayload {
 
 ## src/features/core/modules/program/domain/types/execution-bundle.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/domain/types/execution-bundle.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/execution-bundle.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/domain/types/execution-bundle.types.ts)
 
 ```ts
 import type { ComponentSFCTagRegistryEntry, ProgramArtifact, ProgramArtifactKey } from './program.types';
@@ -81,6 +81,11 @@ export interface ProgramHostActionRequirement {
     providerKey: string;
 }
 export interface ProgramRequirements {
+    controllerFeatures?: Array<'retention-v1' | 'page-cache-v1'>;
+    hostControllers?: Array<{
+        identity: string;
+        providerKey: string;
+    }>;
     hostActions?: ProgramHostActionRequirement[];
     artifactTypes: string[];
     componentTags: ComponentSFCTagRegistryEntry[];
@@ -104,7 +109,7 @@ export interface PreparedProgramInstall {
 
 ## src/features/core/modules/program/domain/types/program-metadata.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/domain/types/program-metadata.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/program-metadata.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/domain/types/program-metadata.types.ts)
 
 ```ts
 export type ProgramMetadataValue = null | boolean | number | string | ProgramMetadataValue[] | {
@@ -126,7 +131,7 @@ export declare function createEmptyProgramMetadata(): ProgramMetadata;
 
 ## src/features/core/modules/program/domain/types/program.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/domain/types/program.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/program.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/domain/types/program.types.ts)
 
 ```ts
 import type { RComponentContract, RComponentDependencies } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -145,7 +150,7 @@ import type { EndgeStyleSheetArtifact } from '@/features/core/modules/styles/dom
 export type { ActionProgramPayload } from '@/features/core/modules/program/domain/types/action-program.types';
 export type { ConfigurationProgramPayload } from '@/features/core/modules/source/domain/types/configuration-source.types';
 export type ProgramArtifactKey = string;
-export type ProgramEntityType = 'type' | 'component-sfc' | 'computation' | 'action' | 'query' | 'vocab' | 'data-view' | 'store' | 'stream' | 'simulation' | 'update' | 'filter' | 'composition' | 'style' | 'configuration';
+export type ProgramEntityType = 'controller' | 'type' | 'component-sfc' | 'computation' | 'action' | 'query' | 'vocab' | 'data-view' | 'store' | 'stream' | 'simulation' | 'update' | 'filter' | 'composition' | 'style' | 'configuration';
 export type ProgramArtifactStatus = 'valid' | 'warning' | 'error';
 export type ProgramCapability = 'compilable' | 'runnable' | 'executable' | 'renderable' | 'data-provider' | 'configuration';
 export interface ProgramArtifactRef {
@@ -322,7 +327,7 @@ export interface EndgeProgramSnapshot {
 
 ## src/features/core/modules/program/EndgeProgram_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/EndgeProgram_Module.ts)
+Исходный модуль: [src/features/core/modules/program/EndgeProgram_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/EndgeProgram_Module.ts)
 
 ```ts
 import type { CompiledContextDescriptor, CompiledProgramCatalog, ExecutionBundle, PreparedProgramInstall, ProgramHostActionRequirement } from './domain/types/execution-bundle.types';
@@ -388,7 +393,7 @@ export declare class EndgeProgram_Module extends EndgeModule {
 
 ## src/features/core/modules/program/tools/restore-program-source.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/program/tools/restore-program-source.ts)
+Исходный модуль: [src/features/core/modules/program/tools/restore-program-source.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/program/tools/restore-program-source.ts)
 
 ```ts
 import type { ProgramArtifact } from '../domain/types/program.types';

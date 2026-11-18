@@ -17,6 +17,8 @@ Query — source-first описание получения данных. Он о
 
 Сквозной сценарий GraphQL — Query, подписка, схема, запуск и mock — описан в руководстве [GraphQL](/guides/graphql).
 
+В версиях `@endge/core@1.2.0-dev.15` и `@endge/ui-vue@2.0.0-dev.14` доступен связанный сценарий [Controllers](/reference/controllers) и [скользящего окна коллекции](/guides/collection-window): полный пример Query, Store, guarded Update, typed Table и Composition. Версии и условия запуска указаны в рецепте.
+
 ## Полный пример
 
 ```ts

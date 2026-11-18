@@ -1,5 +1,7 @@
 # Пейджинг и виртуализация
 
+В Core `1.2.0-dev.15` / UI `2.0.0-dev.14` внешнюю загрузку и bounded memory реализует [Controller collection-window](/guides/collection-window). Table по-прежнему отображает переданные rows; `lazy` не становится server mode. Для старых версий остаётся [ручной рецепт](/sfc-tables/server-paging).
+
 Серверную загрузку страниц через Query можно собрать: [сквозной рецепт](/sfc-tables/server-paging). Встроенного серверного режима Table сейчас нет.
 
 `paging` выбирает способ отображения уже переданной локальной коллекции:

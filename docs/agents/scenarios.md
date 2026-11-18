@@ -4,6 +4,11 @@ description: "Три сквозных сценария с запросами и 
 
 # Сквозные сценарии
 
+## Controllers и двунаправленный скролл
+
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14` поддерживает code-owned [Controllers](/reference/controllers) и [скользящее окно cursor/offset](/guides/collection-window). Начните с [короткого маршрута агента](/agents/controllers): полный Store/guarded Update/Query/typed SFC/Composition и исполнимые Source/SDK exercises. Controller объявляется в Source Composition или через SDK.
+
+
 Три сценария показывают полную последовательность запросов агента: что отправить, какой ответ ждать и что делать при ошибке. Каждый шаг выполнен на Service Backend 0.16.1 с персональным токеном `write` и флагом `commit`; ответы ниже — из этого прогона, сокращены до важных полей (`…`), идентификаторы заменены. Данные условные.
 
 Общие переменные:
@@ -314,3 +319,6 @@ curl -s "$ENDGE_URL/api/v1/domain" "${H[@]}"
 - **В Configurator**: пользователь переключает тенант в шапке, редактор Query показывает выбранную ветку `contextSwitch`.
 
 Коммит фасета и Query выполняется как в [сценарии А](#create-and-commit). Конфигурацию тенанта (`configuration` документа фасета) меняет `PATCH /api/v1/facets/tenant/documents/{documentIdentity}` с `If-Match`.
+
+
+Для retention, memory/IndexedDB и политик обновления окна: [кэш страниц](/guides/collection-window-cache.md). Версии пакетов и команды запуска указаны в руководстве.

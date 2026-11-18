@@ -6,6 +6,8 @@ description: "Store Source — runtime-набор writable-данных и пр�
 
 Store объявляет принадлежащий runtime набор writable-данных и производных полей. Persisted документ хранит `sourceVersion: 1` и авторский `defineStore(...)`; значения смонтированного Store не записываются обратно в этот source. В REST API используется коллекция `stores`.
 
+Пример Store в версиях `@endge/core@1.2.0-dev.15` / `@endge/ui-vue@2.0.0-dev.14`: [Controllers](/reference/controllers) и [скользящее окно коллекции](/guides/collection-window). Рецепт содержит полный связанный Store, guarded Update, Query, typed Table и Composition; версии и условия запуска указаны там.
+
 ## Полный самостоятельный Source
 
 ```ts

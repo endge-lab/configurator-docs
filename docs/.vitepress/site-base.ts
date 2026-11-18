@@ -1,7 +1,7 @@
 import process from 'node:process'
 
 // Расширения файлов, которые сайт отдаёт как есть (не страницы VitePress).
-const FILE_LINK = /\.(?:txt|json|ya?ml|csv|pdf|zip)$/i
+const FILE_LINK = /\.(?:txt|json|ya?ml|csv|pdf|zip|mjs|jsonl)$/i
 
 /**
  * Базовый путь сайта из CLI: `vitepress build docs --base /endge-docs/`.

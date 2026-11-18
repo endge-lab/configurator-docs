@@ -18,7 +18,7 @@ pnpm build
 pnpm preview
 ```
 
-Build последовательно обновляет source-contract snapshots и справочник кодов ошибок при наличии исходников, выполняет typecheck, собирает VitePress, LLM files и Knowledge Bundle. Тесты этой командой не запускаются. Сайт находится в `docs/.vitepress/dist`, Knowledge Bundle — в `dist/knowledge`. Preview корректно отдаёт UTF-8 для Markdown и plain text.
+Build последовательно обновляет source-contract snapshots и справочник кодов ошибок при наличии исходников, выполняет typecheck, собирает VitePress, LLM files и Knowledge Bundle. Тесты этой командой не запускаются. Сайт находится в `docs/.vitepress/dist`, Knowledge Bundle — в `dist/knowledge` и, после HTML build, в `docs/.vitepress/dist/knowledge` для выдачи вместе с сайтом. Preview корректно отдаёт UTF-8 для Markdown и plain text.
 
 ## Контракт публикации API snapshots
 
@@ -30,9 +30,9 @@ pnpm contracts:build
 
 Генератор читает package manifests и TypeScript source, извлекает явные package exports, доступные через фасад Core modules, декларации и унаследованные API собственных base classes. Runtime-код не исполняется; private members и комментарии реализации не публикуются. Debug wildcard patterns фиксируются отдельно от explicit export count. Общий каталог Source operations/arity извлекается из compiler AST. Это не typecheck packages и не доказательство runtime-поддержки каждого export.
 
-По умолчанию исходники берутся из монорепозитория на три уровня выше repository документации. `ENDGE_SOURCE_ROOT` переопределяет его корень. В standalone checkout build с `--if-available` сохраняет опубликованные snapshots, если исходников packages нет. При обновлении контрактов включайте generated pages и manifest в тот же change; проверяйте diff и сборку. Удалённые compiler groups удаляются генератором.
+По умолчанию исходники берутся из монорепозитория на три уровня выше repository документации. `ENDGE_SOURCE_ROOT` переопределяет его корень. В standalone checkout build с `--if-available` сохраняет опубликованные snapshots, если исходников packages нет. `ENDGE_CONTRACT_PACKAGES=core,ui-vue` ограничивает обновление выбранными package IDs и сохраняет snapshots/metadata остальных packages; для каждого исключённого package нужен существующий snapshot. Это полезно для узкой документационной волны без захвата соседнего source WIP. Без переменной обновляются все перечисленные packages. При обновлении контрактов включайте generated pages и manifest в тот же change; проверяйте diff и сборку. Удалённые compiler groups удаляются генератором.
 
-Manifest содержит package versions, revision, hash source inputs, peer dependencies и import entrypoints. Revision относится к локальному source и может ещё отсутствовать в удалённом repository. Ссылки на `main` помогают навигации; для воспроизведения нужна соответствующая версия исходников. Package versions, Source versions, compiler version и Workspace snapshot schema — независимые значения.
+Manifest содержит package versions, revision, hash source inputs, peer dependencies и import entrypoints. Revision относится к локальному source и может ещё отсутствовать в удалённом repository. Для dirty/unpublished source generator показывает относительные пути без ложной ссылки на `main`; точный публичный snapshot не заявляется. Проверенный immutable publication.sourceUrl используется только для совпадающего чистого source fingerprint. Repository-ссылки подписаны как навигация. Package versions, Source versions, compiler version и Workspace snapshot schema — независимые значения.
 
 ## Справочник кодов ошибок
 
@@ -81,7 +81,7 @@ pnpm llms:build
 
 Публичный каталог един для LLM, Knowledge и Markdown-версий: все Markdown pages, кроме `project`, скрытых и служебных каталогов (`EXCLUDED_ROOTS`). Navigation и это исключение не определяют доступность страниц самого VitePress: внутренние планы не следует публиковать в public tree.
 
-HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт абсолютный base URL, `ENDGE_LLMS_OUTPUT` — отдельный output directory.
+HTTP API берётся из OpenAPI Service Backend: явный `ENDGE_OPENAPI_PATH`, затем `ENDGE_OPENAPI_URL` либо public `main`. Явно заданный отсутствующий файл считается ошибкой. Для воспроизводимой публикации задайте один закреплённый OpenAPI файл обеим выгрузкам. Workspace identity/display-name examples при рендеринге заменяются абстрактными; DTO, enum и constraints не меняются. `ENDGE_DOCS_URL` задаёт URL или относительный base path, например `/endge-docs`, `ENDGE_LLMS_OUTPUT` — отдельный output directory. LLM/Markdown exports учитывают этот base в ссылках, сохраняя буквальные пути внутри fenced code. Knowledge Bundle сохраняет логические пути документов для переносимости; адрес размещения задаёт его consumer.
 
 ## Knowledge Bundle
 
@@ -137,3 +137,18 @@ lint/typecheck/build. После поставки сверьте живые `llm
 пользователя. Перед публикацией проверьте исходное дерево и артефакты Docs,
 llms и Knowledge Bundle, включая развёрнутые Markdown includes. Реальные
 credentials не должны попадать даже в закрытые details-блоки или примеры curl.
+
+## Controllers: исполняемые примеры
+
+Документация `0.11.0` описывает Core `1.2.0-dev.15` / UI `2.0.0-dev.14`. [Controllers](docs/reference/controllers.md), [полный window recipe](docs/guides/collection-window.md), [retention и кэш страниц](docs/guides/collection-window-cache.md), [короткий маршрут агента](docs/agents/controllers.md). Для запуска установите точную версию `npm install @endge/core@1.2.0-dev.15` и передайте каталог установленного пакета через `--core`.
+
+```bash
+node scripts/grade-workspace.mjs --markdown docs/guides/collection-window.md --core /path/to/built/core --each-facet
+node docs/public/examples/controllers/source-window.mjs --core /path/to/built/core
+node docs/public/examples/controllers/sdk-controller.mjs --core /path/to/built/core
+node docs/public/examples/controllers/page-cache.mjs --core /path/to/built/core
+```
+
+Source exercise использует нейтральный local mock того же page contract, что browser fixture Configurator; `--endpoint http://127.0.0.1:4180` позволяет переиспользовать уже запущенный fixture API. Default сам владеет ephemeral API и закрывает его после unmount. SDK exercise проверяет provider и instances с реальным Composition owner. Это runtime evidence, а не только syntax grading. Для браузерного host можно отдельно запустить `node docs/public/examples/controllers/mock-api.mjs 4182`.
+
+Для preview под base path используйте `node scripts/preview.mjs --port 4183 --base /endge-docs/` после `pnpm exec vitepress build docs --base /endge-docs/`, `ENDGE_DOCS_URL=/endge-docs pnpm llms:build` и `pnpm knowledge:build`. Все downloads, включая `.mjs`/`.jsonl`, учитывают base.

@@ -4,6 +4,8 @@ description: "Минимальные проверенные примеры до�
 
 # Примеры документов всех типов
 
+Controller — code-owned runtime, **не 23-я HTTP collection**. Его выбирают в Composition Source. Полные связанные POST примеры Store/Update/Query/SFC/Composition этого окна находятся в [скользящем окне](/guides/collection-window#source); code provider/SDK — в [Controllers](/reference/controllers).
+
 На странице — по одному минимальному документу каждой коллекции, которую сохраняет Service Backend. Для каждого показаны Source (если он есть) и **точное тело** `POST /api/v1/<коллекция>`. Тело в блоке `json` — каноническое: Source в нём совпадает с блоком выше. Через MCP то же тело передаётся в `endge_create_document` как `document`, коллекция — в `collection` (для документа фасета ещё `facetIdentity`).
 
 Все примеры вместе образуют один workspace. Он проверен двумя способами:

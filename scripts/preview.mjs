@@ -3,7 +3,7 @@
  * для агентов (`llms.txt`, `llms-full/*.txt`, `<страница>/index.md`) отдаются
  * с `charset=utf-8`. Без кодировки браузер читает русский текст как Latin-1.
  *
- * Использование: node scripts/preview.mjs [--port 4173]
+ * Использование: node scripts/preview.mjs [--port 4173] [--base /endge-docs/]
  */
 
 import process from 'node:process'
@@ -12,9 +12,15 @@ import { serve } from 'vitepress'
 const portIndex = process.argv.indexOf('--port')
 const port = portIndex === -1 ? 4173 : Number(process.argv[portIndex + 1])
 
+const baseIndex = process.argv.indexOf('--base')
+const base = baseIndex === -1 ? undefined : process.argv[baseIndex + 1]
+
 const TEXT_TYPES = {
   '.md': 'text/markdown; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.jsonl': 'application/x-ndjson; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
 }
 
 function textType(url) {
@@ -23,7 +29,7 @@ function textType(url) {
   return extension ? TEXT_TYPES[extension] : undefined
 }
 
-const app = await serve({ root: 'docs', port })
+const app = await serve({ root: 'docs', port, ...(base ? { base } : {}) })
 
 app.server.prependListener('request', (request, response) => {
   const type = textType(request.url)

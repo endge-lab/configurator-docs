@@ -1,0 +1,61 @@
+{
+  "stores": [
+    {
+      "identity": "window-state",
+      "displayName": "Window state",
+      "sourceVersion": 1,
+      "source": "defineStore({data:{window:value({revision:0,rowsRevision:0,blocks:[]})}})"
+    }
+  ],
+  "updates": [
+    {
+      "identity": "window-commit",
+      "displayName": "Commit window",
+      "storeIdentity": "window-state",
+      "sourceVersion": 1,
+      "source": "defineUpdate({mutations:[{strategy:'set',target:'window',value:input('next'),when:eq(data('window.revision'),input('expectedRevision'))}]})"
+    }
+  ],
+  "queries": [
+    {
+      "identity": "window-page",
+      "displayName": "Window page",
+      "sourceVersion": 2,
+      "source": "defineQuery({\n  kind:'rest',\n  props:defineProps({direction:field('String'),limit:field('Number'),cursor:field('String').optional(),offset:field('Number').optional(),filter:field('String').optional(),delay:field('Number').optional(),fail:field('Boolean').optional()}),\n  request:{endpoint:'http://127.0.0.1:4182',path:'/__collection-window/page',method:'POST',headers:{'Content-Type':'application/json'},body:body(({prop})=>({direction:prop('direction'),limit:prop('limit'),cursor:prop('cursor'),offset:prop('offset'),filter:prop('filter'),delay:prop('delay'),fail:prop('fail')}))},\n  outputs:{page:output().from(response())}\n})"
+    },
+    {
+      "identity": "window-page-graphql",
+      "displayName": "Window GraphQL page",
+      "sourceVersion": 2,
+      "source": "defineQuery({\n  kind:'graphql',\n  props:defineProps({direction:field('String'),limit:field('Number'),cursor:field('String').optional(),offset:field('Number').optional(),filter:field('String').optional(),delay:field('Number').optional(),fail:field('Boolean').optional()}),\n  request:{endpoint:'http://127.0.0.1:4182/graphql',document:gql`query Window($direction:String!,$limit:Int!,$cursor:String,$offset:Int,$filter:String,$delay:Int,$fail:Boolean){window(direction:$direction,limit:$limit,cursor:$cursor,offset:$offset,filter:$filter,delay:$delay,fail:$fail){rows{id label} startCursor endCursor hasBefore hasAfter offset total}}`,variables:variables(({prop})=>({direction:prop('direction'),limit:prop('limit'),cursor:prop('cursor'),offset:prop('offset'),filter:prop('filter'),delay:prop('delay'),fail:prop('fail')}))},\n  outputs:{page:output().from(data('window'))}\n})"
+    }
+  ],
+  "components": [
+    {
+      "identity": "window-table",
+      "displayName": "Window table",
+      "modelVersion": 1,
+      "source": "<script setup lang=\"ts\">\ndefineProps<{rows:Array<{id:string,label:string}>,rowsRevision:number}>()\nconst ports = definePorts({emits:{viewportChanged:event<TableViewportChangedEvent>({from:{ref:'table',event:'viewportChanged'}})}})\n</script>\n<template>\n  <Table ref=\"table\" id=\"window-table\" :rows=\"rows\" :rows-revision=\"rowsRevision\" :preserve-scroll-anchor=\"true\" paging=\"virtual\" :row-size=\"32\" height=\"320\" row-key=\"id\" sort-mode=\"disabled\" @rowActivated=\"action({identity:'table.scrollToRow',input:{rowId:event('rowId'),align:'start'}})\">\n    <Column key=\"id\" title=\"Key\" />\n    <Column key=\"label\" title=\"Record\" :width=\"280\" />\n  </Table>\n</template>"
+    }
+  ],
+  "compositions": [
+    {
+      "identity": "window-cursor",
+      "displayName": "Window cursor",
+      "sourceVersion": 1,
+      "source": "defineComposition({\n  data:{state:store('window-state').isolated()},\n  runtimes:{\n    window:controller('endge.collection-window')\n      .withProps({paging:'cursor',batchSize:40,prefetchRows:2,maxLoadedRows:80,initialOffset:100,autoLoad:true,request:{filter:'all'}})\n      .withDependencies({state:{store:data('state'),path:'window',update:'window-commit'},load:{query:'window-page',output:'page'}}),\n    screen:component('window-table').withProps({rows:fromOutput('window','rows'),rowsRevision:fromOutput('window','rowsRevision')})\n  },\n  hooks:[onEvent('screen','viewportChanged').command('window','setViewport',event())],\n  outputs:{rows:output().fromRuntime('window').select('rows'),rowsRevision:output().fromRuntime('window').select('rowsRevision')}\n})"
+    },
+    {
+      "identity": "window-offset",
+      "displayName": "Window offset",
+      "sourceVersion": 1,
+      "source": "defineComposition({\n  data:{state:store('window-state').isolated()},\n  runtimes:{\n    window:controller('endge.collection-window')\n      .withProps({paging:'offset',batchSize:40,prefetchRows:2,maxLoadedRows:80,initialOffset:100,autoLoad:true,request:{filter:'all'}})\n      .withDependencies({state:{store:data('state'),path:'window',update:'window-commit'},load:{query:'window-page',output:'page'}}),\n    screen:component('window-table').withProps({rows:fromOutput('window','rows'),rowsRevision:fromOutput('window','rowsRevision')})\n  },\n  hooks:[onEvent('screen','viewportChanged').command('window','setViewport',event())],\n  outputs:{rows:output().fromRuntime('window').select('rows'),rowsRevision:output().fromRuntime('window').select('rowsRevision')}\n})"
+    },
+    {
+      "identity": "window-graphql",
+      "displayName": "Window GraphQL",
+      "sourceVersion": 1,
+      "source": "defineComposition({\n  data:{state:store('window-state').isolated()},\n  runtimes:{\n    window:controller('endge.collection-window')\n      .withProps({paging:'cursor',batchSize:40,prefetchRows:2,maxLoadedRows:80,initialOffset:100,autoLoad:true,request:{filter:'all'}})\n      .withDependencies({state:{store:data('state'),path:'window',update:'window-commit'},load:{query:'window-page-graphql',output:'page'}}),\n    screen:component('window-table').withProps({rows:fromOutput('window','rows'),rowsRevision:fromOutput('window','rowsRevision')})\n  },\n  hooks:[onEvent('screen','viewportChanged').command('window','setViewport',event())],\n  outputs:{rows:output().fromRuntime('window').select('rows'),rowsRevision:output().fromRuntime('window').select('rowsRevision')}\n})"
+    }
+  ]
+}
