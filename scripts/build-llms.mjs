@@ -78,7 +78,7 @@ const AGENT_CORE_PAGES = [
 ]
 const ERRORS_PAGE = 'agents/errors.md'
 /** Страницы вне ядра, на которые ядро ссылается первыми: проверенные тела и сложные связанные задачи. */
-const AGENT_NEXT_PAGES = ['agents/controllers.md', 'guides/collection-window.md', 'guides/collection-window-cache.md', 'reference/controllers.md', 'reference/controller-errors.md', 'agents/document-examples.md', 'agents/vertical-slice.md']
+const AGENT_NEXT_PAGES = ['agents/controllers.md', 'guides/collection-window.md', 'guides/collection-window-cache.md', 'reference/controllers.md', 'reference/controller-errors.md', 'agents/document-examples.md', 'agents/vertical-slice.md', 'agents/timeline.md']
 
 const SOURCE_REPOSITORIES = [
   ['Service Backend', 'https://github.com/endge-lab/service-backend', 'Go, REST API и MCP-сервер, OpenAPI и каталог кодов ошибок'],

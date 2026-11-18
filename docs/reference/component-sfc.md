@@ -6,6 +6,8 @@ description: "Component SFC — исполняемый документ инте
 
 Component SFC — основной исполняемый документ интерфейса. Он объединяет публичные порты, renderer-neutral template, локальные вычислительные ресурсы и EndgeCSS в одном source-документе.
 
+Для отображения задач на временной шкале используйте [TimelineChart](/domain/components/timeline-chart). [TimelineGroup](/domain/components/timeline-group) связывает несколько графиков по времени. У каждого из этих корневых тегов есть свой Visual в Configurator.
+
 Metadata всего документа объявляется одним статическим `defineMetadata({...})`
 в `<script setup>` и компилируется в `ProgramArtifact.metadata.self`. Она
 отличается от `:metadata` внутренних узлов, которые попадают в
