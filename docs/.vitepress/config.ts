@@ -224,6 +224,8 @@ const referenceSidebar: Array<SidebarItem> = [
         items: [
           { text: 'Component', link: '/domain/components/component' },
           { text: 'Table', link: '/domain/components/table' },
+          { text: 'TimelineChart', link: '/domain/components/timeline-chart' },
+          { text: 'TimelineGroup', link: '/domain/components/timeline-group' },
           { text: 'Column', link: '/domain/components/column' },
           { text: 'Cell', link: '/domain/components/cell' },
           { text: 'ColumnMenu', link: '/domain/components/column-menu' },
@@ -328,6 +330,7 @@ const agentsSidebar: Array<SidebarItem> = [
     items: [
       { text: 'Авторинг Source и SFC', link: '/agents/authoring' },
       { text: 'Примеры документов всех типов', link: '/agents/document-examples' },
+      { text: 'Timeline через MCP', link: '/agents/timeline' },
       { text: 'Вертикальный срез', link: '/agents/vertical-slice' },
       { text: 'Сквозные сценарии', link: '/agents/scenarios' },
     ],

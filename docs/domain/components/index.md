@@ -37,6 +37,7 @@ Visual primitives входят в базовый renderer-adapter contract. Shel
 | --- | --- |
 | Вызов дочернего SFC | [Component](./component) |
 | Таблица | [Table](./table), [Column](./column), [Cell](./cell) |
+| Временная шкала | [TimelineChart](./timeline-chart), [TimelineGroup](./timeline-group) |
 | Меню таблицы | [ColumnMenu](./column-menu), [CellMenu](./row-menu), [MenuItem](./menu-item), [MenuSeparator](./menu-separator) |
 
 Structural tags компилируются в тот же IR, но обрабатываются runtime renderer-ом,
@@ -91,6 +92,7 @@ control-flow directives и собственные атрибуты, перечи
 | Ввод | [Input](./input), [Textarea](./textarea), [Checkbox](./checkbox), [Select](./select) |
 | Дочерний компонент | [Component](./component) |
 | Таблица | [Table](./table), [Column](./column), [Cell](./cell) |
+| Временная шкала | [TimelineChart](./timeline-chart), [TimelineGroup](./timeline-group) |
 | Меню | [ColumnMenu](./column-menu), [CellMenu и deprecated RowMenu](./row-menu), [MenuItem](./menu-item), [MenuSeparator](./menu-separator) |
 | Редактирование | [Editable и Variant](/sfc-tables/cell-editing) |
 | Подсказки | [Tooltip, TooltipTrigger, TooltipContent](./tooltip) |

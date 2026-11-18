@@ -39,6 +39,7 @@ Core `1.2.0-dev.15` / UI `2.0.0-dev.14` поддерживает code-owned [Con
 | Создать или изменить Source документа | [Авторинг](/agents/authoring), затем [примеры HTTP DTO](/agents/document-examples) |
 | Собрать несколько документов в экран | [Вертикальный срез](/agents/vertical-slice) |
 | Собрать Bundle для одного заказчика, выбрать фасеты, исключить чужие ветки | Компиляция от фиксированной startup Composition с `startup-composition / effective-context`; [полный пример и ограничения](/guides/context-specific-bundle), [порядок действий агента](/agents/authoring#сборка-и-поставка-выбранного-контекста) |
+| Добавить TimelineChart или синхронизировать несколько шкал | [Timeline через MCP](/agents/timeline) |
 | Читать/изменять workspace через HTTP API | [Руководство](/agents/), затем [токены](/agents/tokens) и нужная группа [API](/llms-full/api.txt) |
 | Подключить MCP | [MCP](/agents/mcp) |
 | Разобрать ошибку | [Коды ошибок](/agents/errors), затем исходники точной версии |

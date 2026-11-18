@@ -393,6 +393,8 @@ defineAction({
 
 ### Component SFC
 
+Пример графика и пять синхронизированных панелей описаны в [сценарии Timeline](/agents/timeline).
+
 У компонента поле версии формата — `modelVersion` (`1`), а не `sourceVersion`: чужое поле отклоняется как неизвестное.
 
 ```vue
