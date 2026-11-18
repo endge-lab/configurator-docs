@@ -18,7 +18,7 @@ Controller — runtime-узел для длительной координаци
 
 `contract.props` и `outputs` — массивы `SourceFieldDefinition` (key, type, array, optional, defaultValue?). `commands` — named record с optional input/output field contracts. `dependencies` — named record `{kind:'store'|'query',optional?:boolean}`. Definition не содержит JavaScript. `define(...)` и `provide(...)` возвращают unregister-функции; collisions и unregister при активных instances завершаются явной ошибкой. Hot replacement не предусмотрен.
 
-Configurator показывает read-only каталог определений и contracts, Source completion и runtime Preview с provider/props/dependencies/outputs. Определения могут прийти из Program Bundle, даже если локальный provider отсутствует. Тогда metadata читается, а mount явно сообщает `controller-provider-missing`. Визуального конструктора connections и редактора произвольного Controller-кода нет.
+В редакторе Composition Source Configurator подсказывает доступные определения и их контракты. Подключённый экземпляр виден в Runtime Preview, где можно посмотреть provider, props, зависимости и outputs. Определения могут прийти из Program Bundle, даже если локальный provider отсутствует. Тогда metadata читается, а mount явно сообщает `controller-provider-missing`. Визуального конструктора connections и редактора произвольного Controller-кода нет.
 
 Controller **не является persisted Domain document**. Нет `POST /api/v1/controllers`, `defineController(...)` или корневого поля `windows`. Code-defined providers регистрирует разработчик host-приложения, а Source только выбирает известную identity.
 
