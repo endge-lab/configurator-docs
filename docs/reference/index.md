@@ -4,6 +4,11 @@ description: "Оглавление справочника Endge: Source кажд
 
 # Справочник
 
+## Controllers и двунаправленный скролл
+
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14` поддерживает code-owned [Controllers](/reference/controllers) и [скользящее окно cursor/offset](/guides/collection-window). Начните с [короткого маршрута агента](/agents/controllers): полный Store/guarded Update/Query/typed SFC/Composition и исполнимые Source/SDK exercises. Controller объявляется в Source Composition или через SDK.
+
+
 Справочник отвечает на вопрос «как это записать точно». Задачи по шагам — в [руководствах](/guides/), работа через HTTP API и MCP — в разделе [API и агенты](/agents/).
 
 ## С чего начать

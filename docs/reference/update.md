@@ -12,6 +12,8 @@ Update не является отдельным глобальным обраб�
 Компилятор включает его в таблицу обработчиков Store, а `StoreRuntimeHost`
 применяет подготовленные mutation plans атомарно через Raph transaction.
 
+Пример guarded Update в версиях `@endge/core@1.2.0-dev.15` / `@endge/ui-vue@2.0.0-dev.14`: [Controllers](/reference/controllers) и [скользящее окно коллекции](/guides/collection-window). В рецепте приведён полный связанный Source вместе со Store, Query, typed Table и Composition; версии и условия запуска указаны там.
+
 ## Полный пример
 
 Пусть Update принадлежит Store `schedule` и получает payload:

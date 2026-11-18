@@ -401,7 +401,7 @@ async function compileOnce(Endge, snapshot, facets) {
     identity: problem.owner?.entityRef?.identity ?? null,
   }))
   const configValues = structuredClone(Endge.configuration.current?.values ?? {})
-  return { programStatus: Endge.program.status, selections: Endge.context.getFacetSelections?.() ?? facets, artifacts, problems, configValues, payloads, bootError: null }
+  return { programStatus: Endge.program.status, selections: Endge.context.getFacetSelections?.() ?? facets, artifacts, problems, configValues, payloads, codeActions: Endge.actions.listResolved().map(action => action.identity), bootError: null }
 }
 
 function readPath(value, dotted) {
@@ -505,6 +505,11 @@ function analyze(snapshot, run, structural) {
   }
   for (const artifact of run.artifacts) {
     known.add(documentKey(artifact.entityType, artifact.identity))
+  }
+
+  // Code-owned intrinsic Actions are valid dependencies without persisted documents.
+  for (const identity of run.codeActions ?? []) {
+    known.add(documentKey('action', identity))
   }
 
   const referencedBy = new Map()

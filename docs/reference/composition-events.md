@@ -6,7 +6,7 @@ description: "Event-hooks Composition: onEvent связывает Event Componen
 
 `onEvent(runtimeAlias, eventName)` связывает опубликованный Event Component runtime с одним эффектом. Этот механизм дополняет Query-hooks `onMount`, `onChange` и `onSuccess`; data bindings в `.withProps(...)` сами по себе не запускают эффект.
 
-## Три terminal effects
+## Terminal effects
 
 Следующий фрагмент требует Store `records`, принадлежащий ему Update `rename-item`, Action `audit.record` и Component SFC `item-list`, который публично объявляет `renamed`, `opened` и `selected`.
 
@@ -38,8 +38,9 @@ defineComposition({
 | `.applyUpdate(data(alias), update(identity), input?)` | Объявленный Store alias, Update identity и optional mapping | Применяет именованный Store-owned Update |
 | `.executeAction(action(identity), input?)` | Action identity и optional mapping | Выполняет Action через его effective implementation |
 | `.mutate(data(alias), mutation)` | Store alias и mutation object | Одно локальное изменение Store |
+| `.command(controllerAlias, command, input?)` | Статические alias Controller и имя объявленной command, optional mapping; Core `1.2.0-dev.15` | Выполняет command через общий Controller runtime host |
 
-Без input mapping Update/Action получает payload Event. `mutate` принимает `strategy: 'set' | 'replace' | 'merge' | 'append' | 'remove'`, статический `path`, необязательный `value` и `vars`. Ключ здесь называется **`path`**; у persisted Update тот же смысл выражается через **`target`**. Не смешивайте эти shapes.
+Без input mapping Update/Action/Controller command получает payload Event. `mutate` принимает `strategy: 'set' | 'replace' | 'merge' | 'append' | 'remove'`, статический `path`, необязательный `value` и `vars`. Ключ здесь называется **`path`**; у persisted Update тот же смысл выражается через **`target`**. Не смешивайте эти shapes.
 
 ```ts
 onEvent('list', 'renamed').mutate(data('records'), {
@@ -50,7 +51,16 @@ onEvent('list', 'renamed').mutate(data('records'), {
 })
 ```
 
-Для переиспользуемой логики, нескольких mutations и `handles` создавайте [Update](/reference/update). Для последовательности разных effects используйте [Action](/reference/action). Один `onEvent` имеет ровно один terminal effect; chain нескольких `.mutate` или `.executeAction` не поддерживается.
+В Core `1.2.0-dev.15` event можно направить в объявленный Controller:
+
+```ts
+// Фрагмент: screen — Component с typed viewportChanged; window — Controller alias.
+onEvent('screen', 'viewportChanged').command('window', 'setViewport', event())
+```
+
+Источник остаётся Component runtime, а target — Controller alias этой Composition. Для viewport SFC явно объявляет `event<TableViewportChangedEvent>({from:{ref:'table',event:'viewportChanged'}})`. Полный linked Source со Store, guarded Update и Query находится в [рецепте collection-window](/guides/collection-window#source); code-owned definitions, dependencies и lifecycle — в [Controllers](/reference/controllers). Compiler проверяет target, объявленное имя command и wiring; фактические command input/output проверяет Controller runtime. Общая статическая inference/assignability произвольных event mappings не обещается.
+
+Для переиспользуемой логики, нескольких mutations и `handles` создавайте [Update](/reference/update). Для последовательности разных effects используйте [Action](/reference/action). Один `onEvent` имеет ровно один terminal effect; chain нескольких terminal effects, включая `.command(...)`, не поддерживается.
 
 ## Область видимости input
 
@@ -73,6 +83,6 @@ onEvent('list', 'renamed').mutate(data('records'), {
 
 ## Diagnostics
 
-`composition-event-source` — неверные arguments; `composition-event-runtime-kind` — источник не Component; `composition-event-effect-count` — не один terminal; `composition-event-apply-update`, `composition-event-execute-action`, `composition-event-mutate-shape` — неверный effect; `composition-event-input` — неподдерживаемый mapping.
+`composition-event-source` — неверные arguments; `composition-event-runtime-kind` — источник не Component; `composition-event-effect-count` — не один terminal; `composition-event-apply-update`, `composition-event-execute-action`, `composition-event-mutate-shape` — неверный effect; `composition-event-input` — неподдерживаемый mapping. Для Controller: `composition-controller-command` — неверный command terminal/target, `controller-command-missing` — имя отсутствует в definition contract. [Controller/window diagnostics](/reference/controller-errors).
 
-[Compiler](https://github.com/endge-lab/core/blob/main/src/features/core/modules/source/services/compilers/composition-source-compile.ts), [точные types](/reference/contracts/core/source), [Query-hooks](/reference/composition#hooks), [события SFC](/guides/component-events).
+[Compiler contract](/reference/contracts/core/compiler), [точные types](/reference/contracts/core/source), [Query-hooks](/reference/composition#hooks), [события SFC](/guides/component-events).

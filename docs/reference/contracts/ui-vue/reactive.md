@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 1.0.1-dev.12, группа reactive; исходных модулей: 6."
+description: "TypeScript-декларации @endge/ui-vue 2.0.0-dev.14, группа reactive; исходных модулей: 6."
 ---
 
 # @endge/ui-vue: reactive
 
-Версия source: 1.0.1-dev.12. [Каталог package](./). [Repository](https://github.com/endge-lab/ui-vue).
+Версия source: 2.0.0-dev.14. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [b28dfe275ef2d08431082b412644d6fe561a6027](https://github.com/endge-lab/ui-vue/tree/b28dfe275ef2d08431082b412644d6fe561a6027).
 
 ## src/reactive/use-current-facet.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-current-facet.ts)
+Исходный модуль: [src/reactive/use-current-facet.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-current-facet.ts)
 
 ```ts
 export declare function useCurrentFacet(facetIdentity: string): {
@@ -20,7 +20,7 @@ export declare function useCurrentFacet(facetIdentity: string): {
 
 ## src/reactive/use-current-locale.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-current-locale.ts)
+Исходный модуль: [src/reactive/use-current-locale.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-current-locale.ts)
 
 ```ts
 export declare function useCurrentLocale(): {
@@ -31,7 +31,7 @@ export declare function useCurrentLocale(): {
 
 ## src/reactive/use-current-theme.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-current-theme.ts)
+Исходный модуль: [src/reactive/use-current-theme.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-current-theme.ts)
 
 ```ts
 export declare function useCurrentTheme(): {
@@ -42,7 +42,7 @@ export declare function useCurrentTheme(): {
 
 ## src/reactive/use-current-timezone.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-current-timezone.ts)
+Исходный модуль: [src/reactive/use-current-timezone.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-current-timezone.ts)
 
 ```ts
 export declare function useCurrentTimezone(): {
@@ -53,7 +53,7 @@ export declare function useCurrentTimezone(): {
 
 ## src/reactive/use-subscribable-ref.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-subscribable-ref.ts)
+Исходный модуль: [src/reactive/use-subscribable-ref.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-subscribable-ref.ts)
 
 ```ts
 import type { SubscribableLike } from '@endge/utils';
@@ -67,7 +67,7 @@ export declare function useSubscribableRefAuto<T extends SubscribableLike>(owner
 
 ## src/reactive/use-ui.ts
 
-[Исходный модуль](https://github.com/endge-lab/ui-vue/blob/main/src/reactive/use-ui.ts)
+Исходный модуль: [src/reactive/use-ui.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/reactive/use-ui.ts)
 
 ```ts
 import type { EndgeUI_Module } from '@endge/core';

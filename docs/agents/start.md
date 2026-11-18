@@ -4,6 +4,11 @@ description: "Короткий маршрут агента по задаче: с
 
 # Выберите задачу
 
+## Controllers и двунаправленный скролл
+
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14` поддерживает code-owned [Controllers](/reference/controllers) и [скользящее окно cursor/offset](/guides/collection-window). Начните с [короткого маршрута агента](/agents/controllers): полный Store/guarded Update/Query/typed SFC/Composition и исполнимые Source/SDK exercises. Controller объявляется в Source Composition или через SDK.
+
+
 Для чтения документации и исходников токен Endge не нужен. Авторизацию
 подключайте, когда задача требует доступа к workspace или API стенда.
 Сначала откройте нужный маршрут, затем точные контракты по ссылкам внутри него.
@@ -14,7 +19,8 @@ description: "Короткий маршрут агента по задаче: с
 
 | Задача / поисковые слова | Короткий ответ | Читать сначала |
 | --- | --- | --- |
-| Серверная пагинация, серверный пейджинг, server-side pagination / paging, offset / limit / cursor | Собирается через параметризованный Query и внешнее управление страницей; встроенного server mode Table нет | [Сквозной рецепт](/sfc-tables/server-paging) |
+| Скользящее окно, infinite scroll, cursor / offset, load before/after | Controller управляет bounded retained window, Table сообщает viewport | [Маршрут Controllers/window](/agents/controllers), [полный рецепт](/guides/collection-window) |
+| Серверная страница с внешними кнопками | Параметризованный Query и внешнее управление; готового server mode Table нет | [Ручной рецепт прежнего baseline](/sfc-tables/server-paging) |
 | Повторный запрос, новые параметры, REST, GraphQL variables | Query получает props; Action вызывает Query с input; в Composition повторный запуск объявляется hook | [Query](/reference/query), [Action](/reference/action), [Composition hooks](/reference/composition#hooks) |
 | Клиентские страницы или виртуальный скролл | Table делит или виртуализирует уже загруженные rows | [Пейджинг и виртуализация](/sfc-tables/paging-and-virtualization) |
 | Серверная фильтрация и сортировка | Их выполняет API источника; Query передаёт параметры. Сортировка Table применяется только к загруженным rows | [Серверный рецепт](/sfc-tables/server-paging), [данные и фильтры](/sfc-tables/data-search-filters) |
@@ -39,3 +45,6 @@ description: "Короткий маршрут агента по задаче: с
 
 В выводе указывайте отдельно возможность платформы, готовую настройку Table,
 версию проверенного пакета и факт проверки работающего приложения.
+
+
+Для retention, memory/IndexedDB и политик обновления окна: [кэш страниц](/guides/collection-window-cache.md). Версии пакетов и команды запуска указаны в руководстве.

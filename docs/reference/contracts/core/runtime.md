@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа runtime; исходных модулей: 62."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа runtime; исходных модулей: 67."
 ---
 
 # @endge/core: runtime
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/runtime/ComponentSFCEventBoundary.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/ComponentSFCEventBoundary.ts)
+Исходный модуль: [src/features/core/modules/runtime/ComponentSFCEventBoundary.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/ComponentSFCEventBoundary.ts)
 
 ```ts
 import type { RComponentSFC_IR_EventBinding } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -34,7 +34,7 @@ export declare class ComponentSFCEventBoundary {
 
 ## src/features/core/modules/runtime/domain/component-sfc-render-port.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/component-sfc-render-port.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/component-sfc-render-port.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/component-sfc-render-port.types.ts)
 
 ```ts
 import type { ComponentSFCRuntimeHost } from '@/features/core/modules/runtime/hosts/ComponentSFCRuntimeHost';
@@ -46,9 +46,185 @@ export type ComponentSFCRenderPort = Pick<ComponentSFCRuntimeHost, 'id' | 'entit
 };
 ```
 
+## src/features/core/modules/runtime/domain/controllers/controller.types.ts
+
+Исходный модуль: [src/features/core/modules/runtime/domain/controllers/controller.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/controllers/controller.types.ts)
+
+```ts
+import type { StoreRuntimeHost } from '../../hosts/StoreRuntimeHost';
+import type { RuntimeParentRef } from '../runtime-execute.type';
+import type { ControllerPageCache, PageCacheOptions } from './page-cache.types';
+import type { EntityOrigin } from '@/features/core/modules/domain/types/document/entity-management.type';
+import type { SourceFieldDefinition } from '@/features/core/modules/source/domain/types/source-expression.types';
+export interface ControllerContract {
+    props: SourceFieldDefinition[];
+    outputs: SourceFieldDefinition[];
+    commands: Record<string, {
+        input?: SourceFieldDefinition;
+        output?: SourceFieldDefinition;
+    }>;
+    dependencies: Record<string, {
+        kind: 'store' | 'query';
+        optional?: boolean;
+    }>;
+}
+export interface ControllerDefinition {
+    identity: string;
+    displayName: string;
+    origin: EntityOrigin;
+    catalogPath?: string[];
+    contract: ControllerContract;
+    defaultProviderKey: string;
+}
+export interface ControllerModel {
+    type: 'controller';
+    id: string;
+    identity: string;
+    name: string;
+}
+export type ControllerDependencyBinding = {
+    store: string;
+    path: string;
+    update: string;
+} | {
+    query: string;
+    output: string;
+    cache?: PageCacheOptions;
+};
+export type ControllerDependencyBindings = Record<string, ControllerDependencyBinding>;
+export interface ControllerStateDependency {
+    kind: 'store';
+    read: () => unknown;
+    commit: (next: Record<string, unknown>, expectedRevision: number) => void;
+    subscribe: (listener: () => void) => () => void;
+}
+export interface ControllerQueryDependency {
+    kind: 'query';
+    cache?: ControllerPageCache;
+    run: (input: Record<string, unknown>, signal: AbortSignal) => Promise<unknown>;
+}
+export type ControllerDependency = ControllerStateDependency | ControllerQueryDependency;
+export interface ControllerContext {
+    readonly props: Readonly<Record<string, unknown>>;
+    readonly signal: AbortSignal;
+    readonly dependencies: Readonly<Record<string, ControllerDependency>>;
+    publish: (outputs: Record<string, unknown>) => void;
+}
+export interface ControllerInstance {
+    start?: (context: ControllerContext) => void | Promise<void>;
+    setProps?: (props: Readonly<Record<string, unknown>>, context: ControllerContext) => void | Promise<void>;
+    command: (name: string, input: unknown, context: ControllerContext) => unknown | Promise<unknown>;
+    pause?: () => void | Promise<void>;
+    resume?: (context: ControllerContext) => void | Promise<void>;
+    destroy?: () => void | Promise<void>;
+}
+export interface ControllerProvider {
+    identity: string;
+    key: string;
+    create: (context: ControllerContext) => ControllerInstance;
+}
+export interface ControllerMountOptions {
+    owner: RuntimeParentRef;
+    props?: Record<string, unknown>;
+    dependencies?: Record<string, {
+        store: StoreRuntimeHost;
+        path: string;
+        update: string;
+    } | {
+        query: string;
+        output: string;
+        cache?: PageCacheOptions;
+    }>;
+    instanceId?: string;
+}
+export interface ControllerProgramPayload {
+    type: 'controller';
+    sourceVersion: 1;
+    definition: ControllerDefinition;
+}
+export interface CollectionWindowViewport {
+    rowsRevision: number;
+    firstVisible: {
+        key: string | number;
+        index: number;
+    } | null;
+    lastVisible: {
+        key: string | number;
+        index: number;
+    } | null;
+    rowCount: number;
+    reason?: string;
+}
+export interface CollectionWindowBlock {
+    pageId?: string;
+    rows: Record<string, unknown>[];
+    startCursor?: string | null;
+    endCursor?: string | null;
+    offset?: number;
+    total?: number;
+    sourceCount?: number;
+    hasBefore: boolean;
+    hasAfter: boolean;
+}
+export interface CollectionWindowState {
+    revision: number;
+    rowsRevision: number;
+    blocks: CollectionWindowBlock[];
+    [key: string]: unknown;
+}
+```
+
+## src/features/core/modules/runtime/domain/controllers/page-cache.types.ts
+
+Исходный модуль: [src/features/core/modules/runtime/domain/controllers/page-cache.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/controllers/page-cache.types.ts)
+
+```ts
+export interface PageCacheOptions {
+    key: string;
+    storage: 'memory' | 'indexeddb';
+    strategy?: 'cache-first' | 'network-first' | 'stale-while-revalidate';
+    maxAgeMs?: number;
+    maxStaleMs?: number;
+    onError?: 'fail' | 'use-cache';
+    maxEntries?: number;
+    maxBytes?: number;
+}
+export interface PageCacheEntry {
+    version: 1;
+    value: unknown;
+    storedAt: number;
+    bytes: number;
+    epoch: number;
+}
+export interface PageCacheStatus {
+    source: 'memory' | 'indexeddb' | 'network' | null;
+    stale: boolean;
+    revalidating: boolean;
+    hits: number;
+    misses: number;
+    evictions: number;
+    entries: number;
+    bytes: number;
+    pendingWrites: number;
+    pendingBytes: number;
+    error: string | null;
+    invalidated: boolean;
+}
+export interface ControllerPageCache {
+    readonly options: Required<PageCacheOptions>;
+    select: (selection: Record<string, unknown>) => Promise<void>;
+    read: (request: Record<string, unknown>) => Promise<PageCacheEntry | undefined>;
+    write: (request: Record<string, unknown>, value: unknown, requestedAt?: number) => Promise<void>;
+    clear: (structuralChange?: boolean) => Promise<void>;
+    status: () => PageCacheStatus;
+    subscribe: (listener: () => void) => () => void;
+}
+export declare function normalizePageCacheOptions(value: unknown): Required<PageCacheOptions>;
+```
+
 ## src/features/core/modules/runtime/domain/execution-context.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/execution-context.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/execution-context.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/execution-context.types.ts)
 
 ```ts
 export interface EndgeExecutionContext {
@@ -67,7 +243,7 @@ export interface EndgeExecutionContextResolutionInput {
 
 ## src/features/core/modules/runtime/domain/graphql-query-error.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/graphql-query-error.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/graphql-query-error.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/graphql-query-error.ts)
 
 ```ts
 import type { QueryGraphQLErrorPolicy } from '@/features/core/modules/source/domain/types/query-source.types';
@@ -131,7 +307,7 @@ export declare function routeGraphQLNextResult(result: GraphQLExecutionResult, e
 
 ## src/features/core/modules/runtime/domain/query-execution.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/query-execution.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/query-execution.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/query-execution.types.ts)
 
 ```ts
 import type { QueryProgramPayload } from '@/features/core/modules/program/domain/types/program.types';
@@ -168,9 +344,10 @@ export interface QueryExecutionContext extends QueryExecutionObserver {
 
 ## src/features/core/modules/runtime/domain/runtime-entity-map.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-entity-map.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-entity-map.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-entity-map.types.ts)
 
 ```ts
+import type { ControllerModel } from './controllers/controller.types';
 import type { RAction } from '@/features/core/modules/domain/entities/RAction';
 import type { RComponentSFC } from '@/features/core/modules/domain/entities/RComponentSFC';
 import type { RComposition } from '@/features/core/modules/domain/entities/RComposition';
@@ -181,6 +358,7 @@ import type { RSimulation } from '@/features/core/modules/domain/entities/RSimul
 import type { RStore } from '@/features/core/modules/domain/entities/RStore';
 import type { RStream } from '@/features/core/modules/domain/entities/RStream';
 export interface RuntimeEntityModelMap {
+    'controller': ControllerModel;
     'simulation': RSimulation;
     'page': RPage;
     'component-sfc': RComponentSFC;
@@ -196,7 +374,7 @@ export type RuntimeEntityType = keyof RuntimeEntityModelMap;
 
 ## src/features/core/modules/runtime/domain/runtime-execute.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-execute.type.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-execute.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-execute.type.ts)
 
 ```ts
 import type { EndgePersistenceDriver } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -221,7 +399,7 @@ export type RuntimeAppScopeExecuteOptions = Omit<RuntimeExecuteOptions, 'appScop
 
 ## src/features/core/modules/runtime/domain/runtime-host.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-host.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-host.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-host.types.ts)
 
 ```ts
 import type { PathEvent, PhaseName, RaphFrameContext, RaphNode } from '@raphy-js/raph';
@@ -287,6 +465,7 @@ export interface PageRuntimeHostContext extends RuntimeHostContextBase {
     lastRenderAt: string | null;
 }
 export interface RuntimeHostContextMap {
+    'controller': RuntimeHostContextBase;
     'simulation': RuntimeHostContextBase;
     'action': ActionRuntimeHostContext;
     'query': QueryRuntimeHostContext;
@@ -497,7 +676,7 @@ export interface RuntimeHost<TType extends RuntimeEntityType = RuntimeEntityType
 
 ## src/features/core/modules/runtime/domain/runtime-inspection.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-inspection.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-inspection.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-inspection.types.ts)
 
 ```ts
 import type { RuntimeHostStatus } from './runtime-host.types';
@@ -530,7 +709,7 @@ export interface RuntimeStatusChange {
 
 ## src/features/core/modules/runtime/domain/runtime-registry.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-registry.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-registry.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-registry.types.ts)
 
 ```ts
 import type { RuntimeEntityType } from '@/features/core/modules/runtime/domain/runtime-entity-map.types';
@@ -560,7 +739,7 @@ export interface RuntimeHostRegistryLike {
 
 ## src/features/core/modules/runtime/domain/runtime-render-inspection.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-render-inspection.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-render-inspection.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-render-inspection.types.ts)
 
 ```ts
 import type { ComputationRuntimeErrorShape } from '@/features/core/modules/domain/types/computation/computation-runtime.types';
@@ -592,7 +771,7 @@ export interface RuntimeRenderInspection {
 
 ## src/features/core/modules/runtime/domain/runtime-resource.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-resource.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-resource.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-resource.types.ts)
 
 ```ts
 export interface RuntimeOwnedResource {
@@ -614,7 +793,7 @@ export interface RuntimeResourceBagSnapshot {
 
 ## src/features/core/modules/runtime/domain/runtime-scope.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-scope.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-scope.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-scope.types.ts)
 
 ```ts
 import type { RuntimeHost } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -664,7 +843,7 @@ export interface RuntimeScopeLifecycleHooks {
 
 ## src/features/core/modules/runtime/domain/runtime-strategy.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime-strategy.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime-strategy.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime-strategy.types.ts)
 
 ```ts
 import type { RuntimeEntityType } from './runtime-entity-map.types';
@@ -693,9 +872,10 @@ export type AnyRuntimeStrategy = RuntimeStrategy<any, any>;
 
 ## src/features/core/modules/runtime/domain/runtime.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/runtime.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/runtime.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/runtime.types.ts)
 
 ```ts
+import type { ControllerModel } from './controllers/controller.types';
 import type { RAction } from '@/features/core/modules/domain/entities/RAction';
 import type { RComponentSFC } from '@/features/core/modules/domain/entities/RComponentSFC';
 import type { RComposition } from '@/features/core/modules/domain/entities/RComposition';
@@ -706,8 +886,8 @@ import type { RSimulation } from '@/features/core/modules/domain/entities/RSimul
 import type { RStore } from '@/features/core/modules/domain/entities/RStore';
 import type { RStream } from '@/features/core/modules/domain/entities/RStream';
 import type { RuntimeHostRegistrySnapshot } from '@/features/core/modules/runtime/domain/runtime-registry.types';
-export type RuntimeKind = 'query' | 'filter' | 'composition' | 'store' | 'stream' | 'action' | 'simulation' | 'runtime';
-export type RuntimeExecutableModel = RQuery | RAction | RPage | RComponentSFC | RFilter | RComposition | RStore | RStream | RSimulation;
+export type RuntimeKind = 'controller' | 'query' | 'filter' | 'composition' | 'store' | 'stream' | 'action' | 'simulation' | 'runtime';
+export type RuntimeExecutableModel = ControllerModel | RQuery | RAction | RPage | RComponentSFC | RFilter | RComposition | RStore | RStream | RSimulation;
 export interface EndgeRuntimeSnapshot extends RuntimeHostRegistrySnapshot {
     generatedAt: number;
     scopes: import('@/features/core/modules/runtime/domain/runtime-scope.types').RuntimeScopeSnapshot[];
@@ -773,7 +953,7 @@ export type RuntimeEventsByKind<K extends keyof RuntimeProfiles> = RuntimeProfil
 
 ## src/features/core/modules/runtime/domain/sfc-render-inspection.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/sfc-render-inspection.type.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/sfc-render-inspection.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/sfc-render-inspection.type.ts)
 
 ```ts
 import type { RComponentSFC_SourceRange } from '@/features/core/modules/domain/types/component/sfc/location.types';
@@ -822,7 +1002,7 @@ export interface SFCRenderInspectionSessionLike {
 
 ## src/features/core/modules/runtime/domain/simulation-runtime.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/simulation-runtime.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/simulation-runtime.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/simulation-runtime.types.ts)
 
 ```ts
 import type { RuntimeArtifactReader } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -850,7 +1030,7 @@ export interface SimulationRuntimeSession {
 
 ## src/features/core/modules/runtime/domain/stream-runtime.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/stream-runtime.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/stream-runtime.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/stream-runtime.types.ts)
 
 ```ts
 import type { GraphQLResponseError } from '@/features/core/modules/runtime/domain/graphql-query-error';
@@ -882,7 +1062,7 @@ export interface StreamTransportFactory {
 
 ## src/features/core/modules/runtime/domain/table-binding.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/table-binding.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/table-binding.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/table-binding.types.ts)
 
 ```ts
 export interface TableBinding {
@@ -895,7 +1075,7 @@ export interface TableBinding {
 
 ## src/features/core/modules/runtime/domain/table.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/table.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/table.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/table.types.ts)
 
 ```ts
 export interface ColumnSortConfig {
@@ -906,7 +1086,7 @@ export interface ColumnSortConfig {
 
 ## src/features/core/modules/runtime/domain/vocab-cache.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/domain/vocab-cache.types.ts)
+Исходный модуль: [src/features/core/modules/runtime/domain/vocab-cache.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/domain/vocab-cache.types.ts)
 
 ```ts
 export type VocabReference = string | number;
@@ -935,9 +1115,38 @@ export interface VocabOptionMapping {
 }
 ```
 
+## src/features/core/modules/runtime/EndgeControllers_Module.ts
+
+Исходный модуль: [src/features/core/modules/runtime/EndgeControllers_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/EndgeControllers_Module.ts)
+
+```ts
+import type { ControllerDefinition, ControllerModel, ControllerMountOptions, ControllerProvider } from './domain/controllers/controller.types';
+import type { RuntimeArtifactReader } from './domain/runtime-host.types';
+import type { AnyRuntimeHost } from './domain/runtime-strategy.types';
+import { EndgeModule } from '@/features/federation/EndgeModule';
+import { ControllerRuntimeHost } from './hosts/ControllerRuntimeHost';
+export declare class EndgeControllers_Module extends EndgeModule {
+    resetPageCaches(): Promise<void>;
+    constructor();
+    define(definition: ControllerDefinition): () => void;
+    provide(provider: ControllerProvider): () => void;
+    list(): ControllerDefinition[];
+    get(identity: string): ControllerDefinition | null;
+    model(identity: string): ControllerModel;
+    mount(identity: string, options: ControllerMountOptions): Promise<ControllerRuntimeHost>;
+    create(input: {
+        id: string;
+        model: ControllerModel;
+        parent: AnyRuntimeHost | null;
+        meta: Record<string, unknown>;
+        artifacts: RuntimeArtifactReader;
+    }): ControllerRuntimeHost | null;
+}
+```
+
 ## src/features/core/modules/runtime/EndgeRuntime_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/EndgeRuntime_Module.ts)
+Исходный модуль: [src/features/core/modules/runtime/EndgeRuntime_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/EndgeRuntime_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -959,7 +1168,9 @@ import { EndgeOperations_Module } from '@/features/core/modules/runtime/operatio
 import { RuntimeAppScope } from '@/features/core/modules/runtime/RuntimeAppScope';
 import { RuntimeScope } from '@/features/core/modules/runtime/RuntimeScope';
 import { EndgeModule } from '@/features/federation/EndgeModule';
+import { EndgeControllers_Module } from './EndgeControllers_Module';
 export declare class EndgeRuntime_Module extends EndgeModule<EndgeBootContext> {
+    readonly controllers: EndgeControllers_Module;
     readonly query: EndgeQuery;
     readonly dataView: EndgeDataView;
     readonly composition: EndgeComposition;
@@ -1020,7 +1231,7 @@ export declare class EndgeRuntime_Module extends EndgeModule<EndgeBootContext> {
 
 ## src/features/core/modules/runtime/EndgeRuntimeScopes_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/EndgeRuntimeScopes_Module.ts)
+Исходный модуль: [src/features/core/modules/runtime/EndgeRuntimeScopes_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/EndgeRuntimeScopes_Module.ts)
 
 ```ts
 import type { RuntimeHost } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -1044,7 +1255,7 @@ export declare class EndgeRuntimeScopes_Module extends EndgeModule {
 
 ## src/features/core/modules/runtime/execution/endge-composition.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/execution/endge-composition.ts)
+Исходный модуль: [src/features/core/modules/runtime/execution/endge-composition.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/execution/endge-composition.ts)
 
 ```ts
 import type { CompositionRuntimeHost } from '@/features/core/modules/runtime/hosts/CompositionRuntimeHost';
@@ -1058,7 +1269,7 @@ export declare function materializeCompositionPreviewProps(previewProps: Composi
 
 ## src/features/core/modules/runtime/execution/endge-data-view.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/execution/endge-data-view.ts)
+Исходный модуль: [src/features/core/modules/runtime/execution/endge-data-view.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/execution/endge-data-view.ts)
 
 ```ts
 import type { DataViewProgramPayload, ProgramArtifact } from '@/features/core/modules/program/domain/types/program.types';
@@ -1084,7 +1295,7 @@ export declare class EndgeDataView {
 
 ## src/features/core/modules/runtime/execution/endge-query.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/execution/endge-query.ts)
+Исходный модуль: [src/features/core/modules/runtime/execution/endge-query.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/execution/endge-query.ts)
 
 ```ts
 import type { RQuery } from '@/features/core/modules/domain/entities/RQuery';
@@ -1097,6 +1308,8 @@ export declare class EndgeQuery {
     constructor(executor?: QueryExecutor_Adapter);
     run(query: RQuery, params?: Record<string, unknown>, parent?: RuntimeParentRef | null, options?: {
         observer?: QueryExecutionObserver;
+        signal?: AbortSignal;
+        artifactReader?: import('../domain/runtime-host.types').RuntimeArtifactReader;
     }): Promise<any>;
     executeArtifact(input: {
         payload: QueryProgramPayload;
@@ -1118,7 +1331,7 @@ export declare class EndgeQuery {
 
 ## src/features/core/modules/runtime/execution/endge-response-output.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/execution/endge-response-output.ts)
+Исходный модуль: [src/features/core/modules/runtime/execution/endge-response-output.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/execution/endge-response-output.ts)
 
 ```ts
 import type { ProgramArtifact } from '@/features/core/modules/program/domain/types/program.types';
@@ -1129,7 +1342,7 @@ export declare function runResponseOutputTransforms(transforms: readonly Respons
 
 ## src/features/core/modules/runtime/execution/endge-simulation.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/execution/endge-simulation.ts)
+Исходный модуль: [src/features/core/modules/runtime/execution/endge-simulation.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/execution/endge-simulation.ts)
 
 ```ts
 import type { SimulationMountOptions, SimulationRuntimeSession } from '@/features/core/modules/runtime/domain/simulation-runtime.types';
@@ -1140,7 +1353,7 @@ export declare class EndgeSimulation {
 
 ## src/features/core/modules/runtime/hosts/ActionRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/ActionRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/ActionRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/ActionRuntimeHost.ts)
 
 ```ts
 import type { RAction } from '@/features/core/modules/domain/entities/RAction';
@@ -1170,7 +1383,7 @@ export declare class ActionRuntimeHost extends RuntimeHostBase<'action'> {
 
 ## src/features/core/modules/runtime/hosts/ComponentSFCRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/ComponentSFCRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/ComponentSFCRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/ComponentSFCRuntimeHost.ts)
 
 ```ts
 import type { RComponentSFC } from '@/features/core/modules/domain/entities/RComponentSFC';
@@ -1250,7 +1463,7 @@ export declare class ComponentSFCRuntimeHost extends RuntimeHostBase<'component-
 
 ## src/features/core/modules/runtime/hosts/CompositionRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/CompositionRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/CompositionRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/CompositionRuntimeHost.ts)
 
 ```ts
 import type { RComposition } from '@/features/core/modules/domain/entities/RComposition';
@@ -1302,9 +1515,54 @@ export declare class CompositionRuntimeHost extends RuntimeHostBase<'composition
 }
 ```
 
+## src/features/core/modules/runtime/hosts/ControllerRuntimeHost.ts
+
+Исходный модуль: [src/features/core/modules/runtime/hosts/ControllerRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/ControllerRuntimeHost.ts)
+
+```ts
+import type { ControllerDefinition, ControllerDependency, ControllerModel, ControllerProgramPayload, ControllerProvider } from '../domain/controllers/controller.types';
+import type { RuntimeArtifactReader, RuntimeHost, RuntimeHostSnapshot } from '../domain/runtime-host.types';
+import type { TypeProgramCatalogEntry } from '@/features/core/modules/source/domain/types/type-source.types';
+import { RuntimeHostBase } from '../RuntimeHostBase';
+export declare class ControllerRuntimeHost extends RuntimeHostBase<'controller', import('../domain/runtime-host.types').RuntimeHostContextBase, ControllerProgramPayload> {
+    constructor(input: {
+        id: string;
+        model: ControllerModel;
+        parent: RuntimeHost<any, any> | null;
+        meta: Record<string, unknown>;
+        artifacts: RuntimeArtifactReader;
+        definition: ControllerDefinition;
+        provider: ControllerProvider;
+        dependencies: Record<string, ControllerDependency>;
+        cleanups: Array<() => void>;
+        catalog: readonly TypeProgramCatalogEntry[];
+        disposeRuntime: () => Promise<void>;
+        omittedProviderOutputs?: readonly string[];
+        contextCurrent: () => boolean;
+        subscribeContext: (listener: () => void) => () => void;
+    });
+    create(): void;
+    dispose(): Promise<void>;
+    whenReady(): Promise<void>;
+    snapshot(): RuntimeHostSnapshot;
+    getProps(): Readonly<Record<string, unknown>>;
+    getOutputs(): Readonly<Record<string, unknown>>;
+    getOutput(name: string): unknown;
+    outputPath(name: string): string;
+    setProps(patch: Record<string, unknown>): Promise<void>;
+    command(name: string, input?: unknown): Promise<unknown>;
+    subscribe(listener: () => void): () => void;
+    pause(): Promise<void>;
+    resume(): Promise<void>;
+    quiesce(): void;
+    stop(): void;
+    destroy(): Promise<void>;
+}
+```
+
 ## src/features/core/modules/runtime/hosts/FilterRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/FilterRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/FilterRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/FilterRuntimeHost.ts)
 
 ```ts
 import type { RFilter } from '@/features/core/modules/domain/entities/RFilter';
@@ -1341,7 +1599,7 @@ export declare class FilterRuntimeHost extends RuntimeHostBase<'filter', Runtime
 
 ## src/features/core/modules/runtime/hosts/FilterViewRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/FilterViewRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/FilterViewRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/FilterViewRuntimeHost.ts)
 
 ```ts
 import type { RFilter } from '@/features/core/modules/domain/entities/RFilter';
@@ -1380,7 +1638,7 @@ export declare class FilterViewRuntimeHost extends RuntimeHostBase<'filter', Run
 
 ## src/features/core/modules/runtime/hosts/PageRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/PageRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/PageRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/PageRuntimeHost.ts)
 
 ```ts
 import type { RPage } from '@/features/core/modules/domain/entities/RPage';
@@ -1406,7 +1664,7 @@ export declare class PageRuntimeHost extends RuntimeHostBase<'page'> {
 
 ## src/features/core/modules/runtime/hosts/QueryRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/QueryRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/QueryRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/QueryRuntimeHost.ts)
 
 ```ts
 import type { RQuery } from '@/features/core/modules/domain/entities/RQuery';
@@ -1438,6 +1696,7 @@ export declare class QueryRuntimeHost extends RuntimeHostBase<'query', RuntimeHo
     getOutputs(): Readonly<Record<string, unknown>>;
     run(propsPatch?: Record<string, unknown>, options?: {
         observer?: QueryExecutionObserver;
+        signal?: AbortSignal;
     }): Promise<Record<string, unknown>>;
     pause(): void;
     stop(): void;
@@ -1450,7 +1709,7 @@ export declare class QueryRuntimeHost extends RuntimeHostBase<'query', RuntimeHo
 
 ## src/features/core/modules/runtime/hosts/SimulationRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/SimulationRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/SimulationRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/SimulationRuntimeHost.ts)
 
 ```ts
 import type { RSimulation } from '@/features/core/modules/domain/entities/RSimulation';
@@ -1490,7 +1749,7 @@ export declare class SimulationRuntimeHost extends RuntimeHostBase<'simulation',
 
 ## src/features/core/modules/runtime/hosts/StoreRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/StoreRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/StoreRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/StoreRuntimeHost.ts)
 
 ```ts
 import type { RStore } from '@/features/core/modules/domain/entities/RStore';
@@ -1517,6 +1776,7 @@ export declare class StoreRuntimeHost extends RuntimeHostBase<'store', RuntimeHo
     }): StoreRuntimeHost | null;
     getFields(): StoreDataDescriptor[];
     getDataPath(path?: string): string;
+    get(path: string): unknown;
     getDataSnapshot(): Readonly<Record<string, unknown>>;
     isWritable(path: string): boolean;
     isDeclared(path: string): boolean;
@@ -1530,7 +1790,7 @@ export declare class StoreRuntimeHost extends RuntimeHostBase<'store', RuntimeHo
 
 ## src/features/core/modules/runtime/hosts/StreamRuntimeHost.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/hosts/StreamRuntimeHost.ts)
+Исходный модуль: [src/features/core/modules/runtime/hosts/StreamRuntimeHost.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/hosts/StreamRuntimeHost.ts)
 
 ```ts
 import type { RStream } from '@/features/core/modules/domain/entities/RStream';
@@ -1568,7 +1828,7 @@ export declare class StreamRuntimeHost extends RuntimeHostBase<'stream', Runtime
 
 ## src/features/core/modules/runtime/operation/EndgeOperations_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/operation/EndgeOperations_Module.ts)
+Исходный модуль: [src/features/core/modules/runtime/operation/EndgeOperations_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/operation/EndgeOperations_Module.ts)
 
 ```ts
 import type { RuntimeHost } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -1590,7 +1850,7 @@ export declare class EndgeOperations_Module extends EndgeModule {
 
 ## src/features/core/modules/runtime/operation/operation-history.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/operation/operation-history.ts)
+Исходный модуль: [src/features/core/modules/runtime/operation/operation-history.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/operation/operation-history.ts)
 
 ```ts
 import type { ComponentSFCInteractionTrigger } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -1645,7 +1905,7 @@ export declare function defaultOperationHistoryShortcuts(): OperationHistoryShor
 
 ## src/features/core/modules/runtime/RuntimeActionRegistry.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeActionRegistry.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeActionRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeActionRegistry.ts)
 
 ```ts
 import type { AnyRuntimeAction, RuntimeAction, RuntimeActionContext, RuntimeActionId, RuntimeActionRegistrySnapshot } from '@/features/core/modules/actions/domain/action.types';
@@ -1667,7 +1927,7 @@ export declare class RuntimeActionRegistry {
 
 ## src/features/core/modules/runtime/RuntimeAppScope.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeAppScope.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeAppScope.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeAppScope.ts)
 
 ```ts
 import type { RuntimeEntityType } from '@/features/core/modules/runtime/domain/runtime-entity-map.types';
@@ -1718,7 +1978,7 @@ export {};
 
 ## src/features/core/modules/runtime/RuntimeBindingScope.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeBindingScope.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeBindingScope.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeBindingScope.ts)
 
 ```ts
 import type { RuntimeHost } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -1748,7 +2008,7 @@ export declare function resolveScopedTablePath(input: {
 
 ## src/features/core/modules/runtime/RuntimeHostBase.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeHostBase.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeHostBase.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeHostBase.ts)
 
 ```ts
 import type { RaphNode, RaphPhaseEffect } from '@raphy-js/raph';
@@ -1831,7 +2091,7 @@ export declare abstract class RuntimeHostBase<TType extends RuntimeEntityType, T
 
 ## src/features/core/modules/runtime/RuntimeHostFactory.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeHostFactory.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeHostFactory.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeHostFactory.ts)
 
 ```ts
 import type { RuntimeEntityModelMap, RuntimeEntityType } from '@/features/core/modules/runtime/domain/runtime-entity-map.types';
@@ -1851,7 +2111,7 @@ export declare function createRuntimeHost(input: RuntimeHostFactoryAnyInput): Ru
 
 ## src/features/core/modules/runtime/RuntimeHostRegistry.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeHostRegistry.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeHostRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeHostRegistry.ts)
 
 ```ts
 import type { RuntimeEntityType } from '@/features/core/modules/runtime/domain/runtime-entity-map.types';
@@ -1876,7 +2136,7 @@ export declare class RuntimeHostRegistry implements RuntimeHostRegistryLike {
 
 ## src/features/core/modules/runtime/RuntimeResourceBag.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeResourceBag.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeResourceBag.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeResourceBag.ts)
 
 ```ts
 import type { RuntimeOwnedResource, RuntimeResourceBagSnapshot } from '@/features/core/modules/runtime/domain/runtime-resource.types';
@@ -1892,7 +2152,7 @@ export declare class RuntimeResourceBag {
 
 ## src/features/core/modules/runtime/RuntimeScope.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/RuntimeScope.ts)
+Исходный модуль: [src/features/core/modules/runtime/RuntimeScope.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/RuntimeScope.ts)
 
 ```ts
 import type { RuntimeHost } from '@/features/core/modules/runtime/domain/runtime-host.types';
@@ -1938,7 +2198,7 @@ export declare class RuntimeScope implements RuntimeScopeHandle {
 
 ## src/features/core/modules/runtime/services/component-sfc-expression-evaluate.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/component-sfc-expression-evaluate.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/component-sfc-expression-evaluate.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/component-sfc-expression-evaluate.ts)
 
 ```ts
 import type { ComponentSFCExpressionIR as Expression } from '@/features/core/modules/domain/types/component/sfc/expression-ir.types';
@@ -1956,9 +2216,18 @@ export interface SFCExpressionEvaluationContext {
 export declare function evaluateComponentSFCExpression(expression: Expression, context: SFCExpressionEvaluationContext): unknown;
 ```
 
+## src/features/core/modules/runtime/services/controllers/builtins/collection-window.definition.ts
+
+Исходный модуль: [src/features/core/modules/runtime/services/controllers/builtins/collection-window.definition.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/controllers/builtins/collection-window.definition.ts)
+
+```ts
+import type { ControllerDefinition } from '../../../domain/controllers/controller.types';
+export declare const collectionWindowDefinition: ControllerDefinition;
+```
+
 ## src/features/core/modules/runtime/services/RuntimeStrategyRegistry.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/RuntimeStrategyRegistry.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/RuntimeStrategyRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/RuntimeStrategyRegistry.ts)
 
 ```ts
 import type { AnyRuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -1971,7 +2240,7 @@ export declare class RuntimeStrategyRegistry {
 
 ## src/features/core/modules/runtime/services/SFCRenderInspectionSession.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/SFCRenderInspectionSession.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/SFCRenderInspectionSession.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/SFCRenderInspectionSession.ts)
 
 ```ts
 import type { SFCRenderInspectionNode, SFCRenderInspectionNodeInput, SFCRenderInspectionSessionLike, SFCRenderInspectionTreeNode } from '@/features/core/modules/runtime/domain/sfc-render-inspection.type';
@@ -1988,7 +2257,7 @@ export declare class SFCRenderInspectionSession implements SFCRenderInspectionSe
 
 ## src/features/core/modules/runtime/services/strategies/ActionRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/ActionRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/ActionRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/ActionRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2003,7 +2272,7 @@ export declare class ActionRuntimeStrategy implements RuntimeStrategy<RAction> {
 
 ## src/features/core/modules/runtime/services/strategies/ComponentSFCRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/ComponentSFCRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/ComponentSFCRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/ComponentSFCRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2019,7 +2288,7 @@ export declare class ComponentSFCRuntimeStrategy implements RuntimeStrategy<RCom
 
 ## src/features/core/modules/runtime/services/strategies/CompositionRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/CompositionRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/CompositionRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/CompositionRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2035,7 +2304,7 @@ export declare class CompositionRuntimeStrategy implements RuntimeStrategy<RComp
 
 ## src/features/core/modules/runtime/services/strategies/FilterRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/FilterRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/FilterRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/FilterRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2051,7 +2320,7 @@ export declare class FilterRuntimeStrategy implements RuntimeStrategy<RFilter, F
 
 ## src/features/core/modules/runtime/services/strategies/PageRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/PageRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/PageRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/PageRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2066,7 +2335,7 @@ export declare class PageRuntimeStrategy implements RuntimeStrategy<RPage> {
 
 ## src/features/core/modules/runtime/services/strategies/QueryRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/QueryRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/QueryRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/QueryRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2082,7 +2351,7 @@ export declare class QueryRuntimeStrategy implements RuntimeStrategy<RQuery, Que
 
 ## src/features/core/modules/runtime/services/strategies/StoreRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/StoreRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/StoreRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/StoreRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2098,7 +2367,7 @@ export declare class StoreRuntimeStrategy implements RuntimeStrategy<RStore, Sto
 
 ## src/features/core/modules/runtime/services/strategies/StreamRuntimeStrategy.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/strategies/StreamRuntimeStrategy.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/strategies/StreamRuntimeStrategy.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/strategies/StreamRuntimeStrategy.ts)
 
 ```ts
 import type { RuntimeStrategy } from '@/features/core/modules/runtime/domain/runtime-strategy.types';
@@ -2116,7 +2385,7 @@ export declare class StreamRuntimeStrategy implements RuntimeStrategy<RStream, S
 
 ## src/features/core/modules/runtime/services/transports/BrowserGraphQLSseStreamTransportFactory.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/services/transports/BrowserGraphQLSseStreamTransportFactory.ts)
+Исходный модуль: [src/features/core/modules/runtime/services/transports/BrowserGraphQLSseStreamTransportFactory.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/services/transports/BrowserGraphQLSseStreamTransportFactory.ts)
 
 ```ts
 import type { StreamTransportConnection, StreamTransportFactory } from '@/features/core/modules/runtime/domain/stream-runtime.types';
@@ -2135,7 +2404,7 @@ export declare class BrowserGraphQLSseStreamTransportFactory implements StreamTr
 
 ## src/features/core/modules/runtime/tools/runtime-render-inspection.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/tools/runtime-render-inspection.ts)
+Исходный модуль: [src/features/core/modules/runtime/tools/runtime-render-inspection.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/tools/runtime-render-inspection.ts)
 
 ```ts
 import type { RComponentSFC_IR_DataMetaReference } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -2147,7 +2416,7 @@ export declare function runtimeInspectionMetaKey(reference: RComponentSFC_IR_Dat
 
 ## src/features/core/modules/runtime/tools/runtime-render-values.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/runtime/tools/runtime-render-values.ts)
+Исходный модуль: [src/features/core/modules/runtime/tools/runtime-render-values.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/runtime/tools/runtime-render-values.ts)
 
 ```ts
 import type { VocabOptionMapping } from '@/features/core/modules/runtime/domain/vocab-cache.types';

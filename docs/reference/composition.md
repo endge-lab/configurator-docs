@@ -4,6 +4,8 @@ description: "Composition собирает документы в исполня�
 
 # Composition
 
+Core `1.2.0-dev.15`: `controller(identity).withProps(...).withDependencies(...)` добавляет code-owned runtime; `onEvent(...).command(alias,command,input)` направляет событие. [Controllers](/reference/controllers), [полный linked пример](/guides/collection-window).
+
 Серверная пагинация, параметры запроса и границы Table: [сквозной рецепт](/sfc-tables/server-paging). Серверную загрузку через Query можно собрать; готового server mode встроенного пагинатора нет.
 
 Composition собирает доменные документы в исполняемый runtime-граф: создаёт runtime-ноды, связывает их props и outputs, управляет запуском и публикует результаты в Store. Она описывает оркестрацию, но не layout и не способ визуализации компонентов.
@@ -277,13 +279,19 @@ composition('item-board').withData({
 
 ## Runtime-ноды
 
-| Конструктор | Назначение | Поддерживаемые modifiers |
+Для всех runtime descriptors доступны общие `.activateOn(...)`, `.enabledWhen(...)` и `.activateWhen(...)` с правилами совместимости из [раздела активации](#активация). Таблица перечисляет дополнительные modifiers по kind:
+
+| Конструктор | Назначение | Modifiers этого kind |
 | --- | --- | --- |
-| `filter(identity)` | Filter runtime | `activateOn`, `persist` |
-| `query(identity)` | Query runtime | `activateOn`, `withProps`, `storeTo` |
-| `component(identity)` | Component SFC runtime | `activateOn`, `persist`, `withProps` |
-| `composition(identity)` | Вложенная Composition | `activateOn`, `withProps`, `withData`, `storeTo` |
-| `filterView(runtime)` | Представление Filter runtime из этой же Composition; аргумент — имя runtime, а не identity документа | `activateOn`, `fields`, `controls`, `component`, `withProps` |
+| `filter(identity)` | Filter runtime | `persist` |
+| `query(identity)` | Query runtime | `withProps`, `storeTo` |
+| `stream(identity)` | Stream runtime | `withProps`, `dispatchTo`, `batch` |
+| `component(identity)` | Component SFC runtime | `persist`, `withProps`, `dispatchTo` |
+| `composition(identity)` | Вложенная Composition | `withProps`, `withData`, `storeTo` |
+| `filterView(runtime)` | Представление Filter runtime из этой же Composition; аргумент — имя runtime, а не identity документа | `fields`, `controls`, `component`, `withProps` |
+| `controller(identity)` | Core `1.2.0-dev.15`: code-owned Controller runtime | `withProps`, `withDependencies` |
+
+Controller не поддерживает `.persist(...)` или `.storeTo(...)`: Store/Update/Query связываются через объявленные dependencies. Полные shapes, lifecycle и SDK — [Controllers](/reference/controllers); связанный Store/guarded Update/Query/typed SFC/Composition — [рецепт collection-window](/guides/collection-window#source).
 
 Вложенная Composition принимает значения своего публичного props-контракта через `.withProps(...)`. Соответствие обязательным и объявленным props проверяется после linking с compiled artifact вызываемой Composition.
 
@@ -537,7 +545,7 @@ definePreviewProps - ProgramArtifact.previewProps - Runtime Preview - mount({ pr
 
 ## Передача props runtime-нодам
 
-`.withProps({...})` доступен для Query, Component, вложенной Composition и FilterView. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
+`.withProps({...})` доступен для Query, Stream, Component, вложенной Composition, FilterView и Controller (Core `1.2.0-dev.15`). Filter этот modifier не принимает. В нём можно использовать литералы, специальные readers Composition и весь [API ValueExpression](/reference/value-expressions):
 
 ```ts
 query('search').withProps({
@@ -648,10 +656,11 @@ hooks: [
 | `onEvent(alias, event).applyUpdate(...)` | Публичное событие Component SFC | Store и Update |
 | `onEvent(alias, event).executeAction(...)` | Публичное событие Component SFC | Action |
 | `onEvent(alias, event).mutate(...)` | Публичное событие Component SFC | Writable Store data |
+| `onEvent(alias, event).command(controllerAlias, command, input?)` | Публичное событие Component SFC; Core `1.2.0-dev.15` | Объявленная command Controller runtime этой Composition |
 
-Цель `.run(...)` всегда должна быть Query текущей Composition. Нельзя направить hook на Filter, Component, FilterView, scope или вложенную Composition.
+Цель `.run(...)` всегда должна быть Query текущей Composition. Нельзя направить этот terminal на Controller, Filter, Stream, Component, FilterView, scope или вложенную Composition. Для Controller используется отдельный event terminal `.command(...)`, не `.run(...)`.
 
-`onChange('runtime.output')` может наблюдать output Filter, Query или вложенной Composition, если этот output существует в compiled contract. `onChange(prop('path'))` наблюдает public prop текущей Composition, объявленный через `defineProps`. Произвольное выражение в качестве источника hook не поддерживается:
+`onChange('runtime.output')` может наблюдать output Filter, Query, вложенной Composition или Controller, если этот output существует в compiled contract. `onChange(prop('path'))` наблюдает public prop текущей Composition, объявленный через `defineProps`. Произвольное выражение в качестве источника hook не поддерживается:
 
 ```ts
 // Поддерживается.
@@ -867,4 +876,4 @@ Composition отвечает за runtime-граф, активацию, реак
 
 ## События Component SFC
 
-Помимо Query/Stream hooks, Composition поддерживает `onEvent(alias, event)` с `.applyUpdate`, `.executeAction` и `.mutate`. Полный синтаксис, event input mapping, ownership и пример — [Component event hooks](/reference/composition-events).
+Помимо Query-hooks, Composition поддерживает `onEvent(alias, event)` с `.applyUpdate`, `.executeAction`, `.mutate` и, в Core `1.2.0-dev.15`, `.command(controllerAlias, command, input?)`. Источник остаётся Component runtime; Controller является целью command. Compiler проверяет объявленные имена и wiring, а фактические command values проверяет Controller runtime; общая статическая assignability произвольных expressions не заявляется. Полный синтаксис, event input mapping, ownership и пример — [Component event hooks](/reference/composition-events).

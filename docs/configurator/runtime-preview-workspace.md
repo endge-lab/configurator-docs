@@ -1,5 +1,7 @@
 # Рабочая область Runtime Preview
 
+Configurator `2.15.0` показывает read-only Controllers catalog, contracts/provider, Source completion и controller runtime Preview. Imported Program definitions доступны для inspection без provider; execution требует его установки в host. [Контракт и lifecycle](/reference/controllers). Инспектор также показывает `retention`, `load.cache`, `cacheStatus` и `refreshPending`; banner объясняет необходимость явного refresh при изменении структуры страницы. Настройки и команды описаны в [руководстве по кэшу страниц](/guides/collection-window-cache).
+
 В конфигураторе используется единая область визуализации runtime — **Runtime Tree**. Отдельные плавающие превью для SFC, Composition и Demonstration больше не входят в рабочую область редактора.
 
 ## Сценарий работы

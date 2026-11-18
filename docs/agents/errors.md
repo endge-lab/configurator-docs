@@ -8,6 +8,8 @@ description: "Все 267 кодов ошибок Service Backend: формат �
 
 Справочник собран из каталога ошибок backend 0.18.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `fe79d889b7fd`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
+Controller/window diagnostics  не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).
+
 ## Как читать ответ ошибки
 
 REST API отвечает на ошибку HTTP-статусом и JSON:

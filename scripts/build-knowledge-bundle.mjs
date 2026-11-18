@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
@@ -56,6 +57,16 @@ await writeFile(path.join(outputRoot, 'documents.jsonl'), documentsJSONL, 'utf8'
 await writeFile(path.join(outputRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
 
 await writeFile(path.join(outputRoot, 'contracts-manifest.json'), contractManifest, 'utf8')
+
+// Serve the same generated corpus alongside the built HTML/Markdown site.
+const siteRoot = path.join(documentsRoot, '.vitepress', 'dist')
+if (existsSync(path.join(siteRoot, 'index.html'))) {
+  const publicKnowledge = path.join(siteRoot, 'knowledge')
+  await mkdir(publicKnowledge, { recursive: true })
+  await writeFile(path.join(publicKnowledge, 'documents.jsonl'), documentsJSONL, 'utf8')
+  await writeFile(path.join(publicKnowledge, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
+  await writeFile(path.join(publicKnowledge, 'contracts-manifest.json'), contractManifest, 'utf8')
+}
 
 console.log(`Knowledge bundle ${bundleId}: ${manifest.documentCount} documents, ${manifest.chunkCount} chunks`)
 console.log(outputRoot)

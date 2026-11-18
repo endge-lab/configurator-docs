@@ -20,7 +20,11 @@ const packages = [
   { id: 'federation', directory: 'web/packages/@typedworks/@typedworks-federation', output: 'reference/contracts/federation', closed: true },
   { id: 'raph', directory: 'web/packages/@raphy-js/framework/@raphy-js-raph', output: 'raph/contracts', closed: true },
 ]
-if (!packages.every(item => existsSync(path.join(workspace, item.directory, 'package.json')))) {
+const selectedIds = new Set((process.env.ENDGE_CONTRACT_PACKAGES ?? packages.map(item => item.id).join(',')).split(',').map(value => value.trim()).filter(Boolean))
+if ([...selectedIds].some(id => !packages.some(item => item.id === id))) {
+  throw new Error('ENDGE_CONTRACT_PACKAGES содержит неизвестный package id.')
+}
+if (!packages.filter(item => selectedIds.has(item.id)).every(item => existsSync(path.join(workspace, item.directory, 'package.json')))) {
   if (!process.argv.includes('--if-available')) {
     throw new Error('Нужны исходники packages. Задайте ENDGE_SOURCE_ROOT с корнем монорепозитория.')
   }
@@ -33,14 +37,26 @@ if (!packages.every(item => existsSync(path.join(workspace, item.directory, 'pac
 const previousManifestPath = path.join(root, 'docs/public/contracts-manifest.json')
 const previousManifest = existsSync(previousManifestPath) ? JSON.parse(await readFile(previousManifestPath, 'utf8')) : { packages: [] }
 const manifest = { format: 'endge-contracts/v1', packages: [] }
+const sourceSnapshots = new Map()
 const index = [...frontmatter('Каталог публичных TypeScript-контрактов Endge Core, UI Vue, Utils, Federation и Raph из исходников: версии, точки входа и группы деклараций.'), '# Каталог контрактов из исходников', '', 'Справочник фиксирует публичные exports и декларации текущего source. Код пакетов не выполняется. Версия, Git revision, hash входов и peer dependencies указаны в [manifest](/contracts-manifest.json). Эти данные описывают локальный source snapshot; они не подтверждают публикацию соответствующего commit в публичном repository.', '', 'Декларации ниже — TypeScript API библиотек. Это **не** авторский Source (`defineQuery`, `defineStore` и т. п.) и **не** JSON DTO backend. Авторские языки описаны в [маршруте агента](/agents/authoring), HTTP DTO — в [API](/llms-full/api.txt). Private members и комментарии реализации удалены. Protected members предназначены для наследования; подчёркнутые служебные hooks не следует вызывать из обычного consumer. Имена импортируемых вспомогательных типов разрешаются в указанном исходном модуле.', '', 'Наличие export не обещает capability конкретного renderer или backend. Для таких ограничений используйте [матрицу возможностей](/reference/capabilities).', '']
 
 index.push('В manifest `publication.gitHead` хранит исторический SHA, записанный в npm при публикации. Для публичных GitHub-исходников `publication.sourceRevision` и `publication.sourceUrl` указывают проверенный source snapshot: после очистки Git-метаданных его SHA может отличаться от npm `gitHead`, даже если файлы не менялись. Публикация npm подтверждается отдельно через exact version и integrity.', '')
 
 for (const item of packages) {
+  if (!selectedIds.has(item.id)) {
+    const previous = previousManifest.packages.find(entry => entry.pages.some(page => page.startsWith(`${item.output}/`)))
+    if (!previous) {
+      throw new Error(`Нет сохранённого snapshot ${item.id}; включите package в генерацию.`)
+    }
+    manifest.packages.push(previous)
+    index.push(`- [${previous.name} ${previous.version}](/${item.output}/) — ${previous.exportCount} exports, ${previous.pages.length - 1} групп контрактов.`)
+    continue
+  }
   const directory = path.join(workspace, item.directory)
   const pkg = JSON.parse(await readFile(path.join(directory, 'package.json'), 'utf8'))
   const repository = repositoryURL(pkg.repository)
+  const sourceDirty = Boolean(execFileSync('git', ['-C', directory, 'status', '--porcelain', '--untracked-files=normal'], { encoding: 'utf8' }).trim())
+  const candidateNote = sourceDirty ? 'Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена.' : 'Source snapshot не является проверкой текущих npm tags или развёрнутого приложения.'
   const entries = []
   for (const [subpath, value] of Object.entries(pkg.exports ?? {})) {
     const types = typeof value === 'object' && value ? value.types : null
@@ -132,6 +148,16 @@ for (const item of packages) {
   for (const sf of [...sourceFiles].sort((a, b) => a.fileName.localeCompare(b.fileName))) {
     inputHash.update(path.relative(directory, sf.fileName)).update('\0').update(sf.text).update('\0')
   }
+  const sourceSha256 = inputHash.digest('hex')
+  const previousSnapshot = previousManifest.packages.find(entry => entry.name === pkg.name && entry.version === pkg.version)
+  const publication = previousSnapshot?.publication
+  const publicSourceURL = !sourceDirty && previousSnapshot?.sourceSha256 === sourceSha256
+    ? publication?.sourceUrl
+    : undefined
+  sourceSnapshots.set(item.id, publicSourceURL)
+  const sourceNote = publicSourceURL
+    ? `Проверенный опубликованный source snapshot: [${publication.sourceRevision}](${publicSourceURL}).`
+    : 'Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.'
   const groups = new Map()
   for (const sf of sourceFiles) {
     if (!publicFiles.has(sf.fileName) && !/\.types?|\/types\/|\/domain\/|\/entrypoints\//.test(sf.fileName)) {
@@ -158,15 +184,15 @@ for (const item of packages) {
   const output = path.join(root, 'docs', item.output)
   await mkdir(output, { recursive: true })
   const expected = new Set(['index.md'])
-  const lines = [...frontmatter(`Публичные TypeScript-контракты ${pkg.name} ${pkg.version}: точки входа, группы деклараций и полный список exports.`), `# ${pkg.name}: публичные контракты`, '', `Source version: **${pkg.version}**. ${repositoryText(item, pkg, repository)} [Общий каталог](/reference/contracts/).`, '', 'Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.', '', '## Точки входа', '', '| Import | Source |', '| --- | --- |', ...entries.map(entry => `| \`${entry.import}\` | ${sourceLink(item, repository, path.relative(directory, entry.source))} |`), '', ...(Object.keys(pkg.exports).some(key => key.includes('*')) ? [`Pattern exports: ${Object.entries(pkg.exports).filter(([key]) => key.includes('*')).map(([key, value]) => `\`${pkg.name}/${key.slice(2)}\` (types: \`${value.types}\`)`).join(', ')}. Debug build modules не заменяют стабильные entrypoints; таблица exports ниже считает явные entrypoints.`, ''] : []), '## Контракты по владельцам', '']
+  const lines = [...frontmatter(`Публичные TypeScript-контракты ${pkg.name} ${pkg.version}: точки входа, группы деклараций и полный список exports.`), `# ${pkg.name}: публичные контракты`, '', `Source version: **${pkg.version}**. ${repositoryText(item, pkg, repository)} ${candidateNote} ${sourceNote} [Общий каталог](/reference/contracts/).`, '', 'Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.', '', '## Точки входа', '', '| Import | Source |', '| --- | --- |', ...entries.map(entry => `| \`${entry.import}\` | ${sourceLink(item, path.relative(directory, entry.source), publicSourceURL)} |`), '', ...(Object.keys(pkg.exports).some(key => key.includes('*')) ? [`Pattern exports: ${Object.entries(pkg.exports).filter(([key]) => key.includes('*')).map(([key, value]) => `\`${pkg.name}/${key.slice(2)}\` (types: \`${value.types}\`)`).join(', ')}. Debug build modules не заменяют стабильные entrypoints; таблица exports ниже считает явные entrypoints.`, ''] : []), '## Контракты по владельцам', '']
   for (const [group, records] of [...groups].sort(([a], [b]) => a.localeCompare(b))) {
     const file = `${group}.md`
     expected.add(file)
     lines.push(`- [${group}](./${group}) — ${records.length} исходных модулей.`)
-    const content = [...frontmatter(`TypeScript-декларации ${pkg.name} ${pkg.version}, группа ${group}; исходных модулей: ${records.length}.`), `# ${pkg.name}: ${group}`, '', `Версия source: ${pkg.version}. [Каталог package](./). ${repositoryText(item, pkg, repository)}`, '', ...records.sort((a, b) => a.relative.localeCompare(b.relative)).flatMap(record => [
+    const content = [...frontmatter(`TypeScript-декларации ${pkg.name} ${pkg.version}, группа ${group}; исходных модулей: ${records.length}.`), `# ${pkg.name}: ${group}`, '', `Версия source: ${pkg.version}. [Каталог package](./). ${repositoryText(item, pkg, repository)} ${candidateNote} ${sourceNote}`, '', ...records.sort((a, b) => a.relative.localeCompare(b.relative)).flatMap(record => [
       `## ${record.relative}`,
       '',
-      item.closed ? `Исходный модуль: \`${record.relative}\`` : `[Исходный модуль](${sourceURL(repository, record.relative)})`,
+      `Исходный модуль: ${sourceLink(item, record.relative, publicSourceURL)}`,
       '',
       '```ts',
       record.declaration.trim(),
@@ -179,7 +205,7 @@ for (const item of packages) {
   for (const entry of exports.sort((a, b) => `${a.entrypoint}:${a.name}`.localeCompare(`${b.entrypoint}:${b.name}`))) {
     const local = entry.source.startsWith(`${directory}/`)
     const relative = local ? path.relative(directory, entry.source).split(path.sep).join('/') : null
-    lines.push(`| \`${entry.entrypoint}\` | \`${entry.name}\` | ${relative ? sourceLink(item, repository, relative) : 'Реэкспорт: декларация принадлежит dependency package; см. исходный entrypoint'} |`)
+    lines.push(`| \`${entry.entrypoint}\` | \`${entry.name}\` | ${relative ? sourceLink(item, relative, publicSourceURL) : 'Реэкспорт: декларация принадлежит dependency package; см. исходный entrypoint'} |`)
   }
   await writeFile(path.join(output, 'index.md'), `${lines.join('\n')}\n`)
   for (const file of await readdir(output)) {
@@ -188,16 +214,16 @@ for (const item of packages) {
     }
   }
   const revision = execFileSync('git', ['-C', directory, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-  const publication = previousManifest.packages.find(entry => entry.name === pkg.name && entry.version === pkg.version)?.publication
-  const sourceDirty = Boolean(execFileSync('git', ['-C', directory, 'status', '--porcelain', '--untracked-files=normal'], { encoding: 'utf8' }).trim())
-  manifest.packages.push({ name: pkg.name, version: pkg.version, repository, revision, revisionScope: 'source-checkout', sourceDirty, ...(publication ? { publication } : {}), sourceSha256: inputHash.digest('hex'), entrypoints: entries.map(entry => ({ import: entry.import, source: path.relative(directory, entry.source).split(path.sep).join('/') })), exportCount: exports.length, declarationModuleCount: [...groups.values()].reduce((n, records) => n + records.length, 0), exportPatterns: Object.fromEntries(Object.entries(pkg.exports).filter(([key]) => key.includes('*'))), peerDependencies: pkg.peerDependencies ?? {}, pages: [...expected].sort().map(file => `${item.output}/${file}`) })
+  manifest.packages.push({ name: pkg.name, version: pkg.version, repository, revision, revisionScope: 'source-checkout', sourceDirty, ...(publication ? { publication } : {}), sourceSha256, entrypoints: entries.map(entry => ({ import: entry.import, source: path.relative(directory, entry.source).split(path.sep).join('/') })), exportCount: exports.length, declarationModuleCount: [...groups.values()].reduce((n, records) => n + records.length, 0), exportPatterns: Object.fromEntries(Object.entries(pkg.exports).filter(([key]) => key.includes('*'))), peerDependencies: pkg.peerDependencies ?? {}, pages: [...expected].sort().map(file => `${item.output}/${file}`) })
   index.push(`- [${pkg.name} ${pkg.version}](/${item.output}/) — ${exports.length} exports, ${groups.size} групп контрактов.`)
   console.log(`${pkg.name}: ${exports.length} exports, ${groups.size} групп`)
 }
 await mkdir(path.join(root, 'docs/reference/contracts'), { recursive: true })
 await writeFile(path.join(root, 'docs/reference/contracts/index.md'), `${index.join('\n')}\n`)
 await writeFile(path.join(root, 'docs/public/contracts-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-await writeLanguageCatalog()
+if (selectedIds.has('core')) {
+  await writeLanguageCatalog()
+}
 
 /** Описание страницы для meta description и оглавления llms.txt; JSON-строка — валидный YAML. */
 function frontmatter(description) {
@@ -213,16 +239,18 @@ function repositoryURL(value) {
 }
 function repositoryText(item, pkg, repository) {
   if (!item.closed) {
-    return `[Repository](${repository}).`
+    return `[Repository — навигация](${repository}); сама ссылка не подтверждает snapshot этого контракта.`
   }
   return `Repository: ${repository} (закрыт, canonical). Публичные declarations — [${pkg.name}@${pkg.version} в npm](https://unpkg.com/${pkg.name}@${pkg.version}/).`
 }
-function sourceLink(item, repository, file) {
+function sourceLink(item, file, publicSourceURL) {
   const relative = file.split(path.sep).join('/')
-  return item.closed ? `\`${relative}\`` : `[${relative}](${sourceURL(repository, relative)})`
-}
-function sourceURL(repository, file) {
-  return `${repository}/${repository.includes('gitlab.com') ? '-/blob' : 'blob'}/main/${file.split(path.sep).join('/')}`
+  if (item.closed || !publicSourceURL) {
+    return `\`${relative}\``
+  }
+  // Only a previously verified immutable publication URL can identify this source.
+  const blob = publicSourceURL.replace('/tree/', '/blob/')
+  return `[${relative}](${blob}/${relative})`
 }
 function groupOf(file, id) {
   if (id === 'core') {
@@ -290,6 +318,6 @@ async function writeLanguageCatalog() {
     const name = literal(node.name)
     lines.push(`| \`${name}\` | \`${literal(node.initializer)}\` | ${name.startsWith('__') ? 'Внутреннее имя compiler; не писать вручную' : 'Определяется host-документом'} |`)
   }
-  lines.push('', '`facet`, `config`, `context`, `contextSwitch` — отдельные compiler-owned конструкции структурного контекста. `input`, `event`, `now` и другие специализированные readers принадлежат конкретным языкам; отсутствие в общей таблице не отменяет их локальный контракт.', '', `[Владеющий compiler](https://github.com/endge-lab/core/blob/main/${relative}).`, '')
+  lines.push('', '`facet`, `config`, `context`, `contextSwitch` — отдельные compiler-owned конструкции структурного контекста. `input`, `event`, `now` и другие специализированные readers принадлежат конкретным языкам; отсутствие в общей таблице не отменяет их локальный контракт.', '', `Владеющий compiler: ${sourceLink(packages[0], relative, sourceSnapshots.get('core'))}. Путь относится к сгенерированному source snapshot; repository main не подтверждает этот контракт.`, '')
   await writeFile(path.join(root, 'docs/reference/language-catalog.md'), lines.join('\n'))
 }

@@ -67,6 +67,7 @@ const OPTIONAL_PAGES = [/^reference\/contracts\//, /^services\/ai-workbench\//]
 /** Состав ядра агента; порядок — порядок чтения. Коды ошибок и операции API добавляются компактно. */
 const AGENT_CORE_PAGES = [
   'agents/index.md',
+  'agents/controllers.md',
   'agents/tokens.md',
   'agents/mcp.md',
   'agents/scenarios.md',
@@ -77,7 +78,7 @@ const AGENT_CORE_PAGES = [
 ]
 const ERRORS_PAGE = 'agents/errors.md'
 /** Страницы вне ядра, на которые ядро ссылается первыми: проверенные тела и сложные связанные задачи. */
-const AGENT_NEXT_PAGES = ['agents/document-examples.md', 'agents/vertical-slice.md']
+const AGENT_NEXT_PAGES = ['agents/controllers.md', 'guides/collection-window.md', 'guides/collection-window-cache.md', 'reference/controllers.md', 'reference/controller-errors.md', 'agents/document-examples.md', 'agents/vertical-slice.md']
 
 const SOURCE_REPOSITORIES = [
   ['Service Backend', 'https://github.com/endge-lab/service-backend', 'Go, REST API и MCP-сервер, OpenAPI и каталог кодов ошибок'],
@@ -237,7 +238,8 @@ console.log(`LLM docs: ${loaded.length} страниц (описания: ${desc
 console.log(outputRoot)
 
 function addFile(file, content, meta) {
-  const text = content.endsWith('\n') ? content : `${content}\n`
+  const linked = documentationLinks(content)
+  const text = linked.endsWith('\n') ? linked : `${linked}\n`
   files.set(file, { ...meta, content: text, tokens: estimateTokens(text) })
 }
 
@@ -613,4 +615,36 @@ function shortList(items) {
     result.push(item)
   }
   return result.join('; ')
+}
+
+// Markdown exports and topical dumps must keep the same deployment base as HTML.
+// Code examples retain their literal request paths.
+function documentationLinks(markdown) {
+  if (!siteURL) {
+    return markdown
+  }
+  const basePath = siteURL.startsWith('/') ? siteURL : new URL(siteURL).pathname.replace(/\/$/, '')
+  let fence = ''
+  return markdown.split('\n').map((line) => {
+    const marker = /^\s*(`{3,}|~{3,})/.exec(line)?.[1]
+    if (marker) {
+      if (!fence) {
+        fence = marker
+      }
+      else if (marker[0] === fence[0] && marker.length >= fence.length) {
+        fence = ''
+      }
+      return line
+    }
+    if (fence) {
+      return line
+    }
+    return line.replace(/\]\((\/(?!\/)[^\s)]+)/g, (match, target) => {
+      if (basePath && basePath !== '/' && (target === basePath || target.startsWith(`${basePath
+      }/`))) {
+        return match
+      }
+      return `](${siteURL}${target}`
+    })
+  }).join('\n')
 }

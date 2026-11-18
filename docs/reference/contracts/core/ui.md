@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа ui; исходных модулей: 14."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа ui; исходных модулей: 14."
 ---
 
 # @endge/core: ui
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/ui/adapters/json/endge-ui-json-adapter.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/adapters/json/endge-ui-json-adapter.ts)
+Исходный модуль: [src/features/core/modules/ui/adapters/json/endge-ui-json-adapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/adapters/json/endge-ui-json-adapter.ts)
 
 ```ts
 import type { ComponentSFCRenderPort } from '@/features/core/modules/runtime/domain/component-sfc-render-port.types';
@@ -23,7 +23,7 @@ export declare const EndgeUIJsonAdapter: UIRenderAdapter<EndgeUIJsonPrimitiveRen
 
 ## src/features/core/modules/ui/adapters/json/endge-ui-json-patch.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/adapters/json/endge-ui-json-patch.ts)
+Исходный модуль: [src/features/core/modules/ui/adapters/json/endge-ui-json-patch.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/adapters/json/endge-ui-json-patch.ts)
 
 ```ts
 import type { EndgeUIJsonSnapshot, EndgeUIPatch } from '@/features/core/modules/ui/domain/types/endge-ui-json.types';
@@ -33,7 +33,7 @@ export declare function applyEndgeUIPatch(snapshot: EndgeUIJsonSnapshot, patch: 
 
 ## src/features/core/modules/ui/adapters/json/endge-ui-json.schema.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/adapters/json/endge-ui-json.schema.ts)
+Исходный модуль: [src/features/core/modules/ui/adapters/json/endge-ui-json.schema.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/adapters/json/endge-ui-json.schema.ts)
 
 ```ts
 export declare const ENDGE_UI_JSON_SCHEMA: {
@@ -516,7 +516,7 @@ export declare function validateEndgeUIJson(value: unknown, form?: 'snapshot' | 
 
 ## src/features/core/modules/ui/domain/types/context-menu.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/context-menu.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/context-menu.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/context-menu.types.ts)
 
 ```ts
 import type { RuntimeActionId } from '@/features/core/modules/actions/domain/action.types';
@@ -543,7 +543,7 @@ export interface ContextMenuSeparatorDescriptor {
 
 ## src/features/core/modules/ui/domain/types/endge-ui-json.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/endge-ui-json.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/endge-ui-json.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/endge-ui-json.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Tag } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -671,7 +671,7 @@ export interface EndgeUIJsonMount {
 
 ## src/features/core/modules/ui/domain/types/jsx.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/jsx.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/jsx.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/jsx.types.ts)
 
 ```ts
 export declare const EndgeJsxAttr: {
@@ -685,7 +685,7 @@ export declare const EndgeJsxAttr: {
 
 ## src/features/core/modules/ui/domain/types/tooltip-markdown.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/tooltip-markdown.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/tooltip-markdown.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/tooltip-markdown.types.ts)
 
 ```ts
 export type EndgeTooltipMarkdownInline = {
@@ -724,7 +724,7 @@ export type EndgeTooltipMarkdownBlock = {
 
 ## src/features/core/modules/ui/domain/types/ui-composition.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/ui-composition.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/ui-composition.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/ui-composition.types.ts)
 
 ```ts
 import type { UIRenderAdapterDescriptor } from './ui-render-adapter.type';
@@ -898,7 +898,7 @@ export declare function getUIJsxTagName(definition: Pick<UIComponentDefinition, 
 
 ## src/features/core/modules/ui/domain/types/ui-render-adapter.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/ui-render-adapter.type.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/ui-render-adapter.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/ui-render-adapter.type.ts)
 
 ```ts
 export declare const ENDGE_SFC_RENDER_ADAPTER_PROTOCOL = "endge-sfc";
@@ -949,7 +949,7 @@ export interface UIRenderAdapterDescriptor {
 
 ## src/features/core/modules/ui/domain/types/ui.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/domain/types/ui.types.ts)
+Исходный модуль: [src/features/core/modules/ui/domain/types/ui.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/domain/types/ui.types.ts)
 
 ```ts
 export type TimeZoneMode = 'LT' | 'UTC';
@@ -973,7 +973,7 @@ export declare const ALL_THEME_CLASSES: string[];
 
 ## src/features/core/modules/ui/EndgeUI_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/EndgeUI_Module.ts)
+Исходный модуль: [src/features/core/modules/ui/EndgeUI_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/EndgeUI_Module.ts)
 
 ```ts
 import type { EndgeUISnapshot, TimeZoneMode } from '@/features/core/modules/ui/domain/types/ui.types';
@@ -1003,7 +1003,7 @@ export declare class EndgeUI_Module extends EndgeModule {
 
 ## src/features/core/modules/ui/EndgeUIRegistry_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/EndgeUIRegistry_Module.ts)
+Исходный модуль: [src/features/core/modules/ui/EndgeUIRegistry_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/EndgeUIRegistry_Module.ts)
 
 ```ts
 import type { UIAstNodeBase, UIAstNodeLayout, UIComponentConfigDefinition, UIComponentDefinition, UIComponentDefinitionGroup, UIComponentPresetDocument, UIComponentRendererRegistration, UIJsxComponentDocument, UIPresentationRoleContract, UIPresentationSurface, UIPrimitiveKind, UIRegistryNodeDraft, UIRegistrySnapshot, UIResolvedComponentRenderer, UIResolveRendererOptions } from '@/features/core/modules/ui/domain/types/ui-composition.types';
@@ -1050,7 +1050,7 @@ export declare function getUIPresentationRoleContract(definition: UIComponentDef
 
 ## src/features/core/modules/ui/tooltip/endge-tooltip-markdown.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/tooltip/endge-tooltip-markdown.ts)
+Исходный модуль: [src/features/core/modules/ui/tooltip/endge-tooltip-markdown.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/tooltip/endge-tooltip-markdown.ts)
 
 ```ts
 import type { EndgeTooltipMarkdownBlock } from '@/features/core/modules/ui/domain/types/tooltip-markdown.types';
@@ -1060,7 +1060,7 @@ export declare function createEndgeTooltipDomId(seed: string): string;
 
 ## src/features/core/modules/ui/ui-composition.config.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/ui/ui-composition.config.ts)
+Исходный модуль: [src/features/core/modules/ui/ui-composition.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/ui/ui-composition.config.ts)
 
 ```ts
 import type { UIAstNodeBase } from '@/features/core/modules/ui/domain/types/ui-composition.types';

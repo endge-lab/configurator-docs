@@ -4,6 +4,11 @@ description: "Матрица возможностей документов: чт
 
 # Матрица возможностей
 
+## Controllers и двунаправленный скролл
+
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14` поддерживает code-owned [Controllers](/reference/controllers) и [скользящее окно cursor/offset](/guides/collection-window). Начните с [короткого маршрута агента](/agents/controllers): полный Store/guarded Update/Query/typed SFC/Composition и исполнимые Source/SDK exercises. Controller объявляется в Source Composition или через SDK.
+
+
 Эта матрица различает сохранение документа, его авторский язык, compilation и исполнение. Совпадение названий классов и UI editor не создаёт отсутствующую capability. Точные DTO смотрите в [HTTP API](/llms-full/api.txt), сигнатуры — в [контрактах Core](/reference/contracts/core/).
 
 ## Документы с compiler contract
@@ -62,3 +67,12 @@ Facet и Facet Document имеют отдельный typed provider contract. I
 ## Изолированная сборка выбранного контекста
 
 [Сборка выбранного контекста](/guides/context-specific-bundle): от startup Composition по выбранным веткам фасетов, только исполняемые зависимости, без чужих веток и AST. Полный экспорт для инспекции имеет другой состав и не подходит для поставки одному заказчику.
+
+## Code-owned Controllers
+
+Core `1.2.0-dev.15` добавляет serializable definitions, локальные code providers и instances через общий runtime owner. Composition `controller(identity).withProps(...).withDependencies(...)` и SDK используют единый compiled contract. Это не строка таблицы persisted collections. Built-in `endge.collection-window` поддерживает cursor/offset, guarded Store state, retention и cancellation; Vue `2.0.0-dev.14` добавляет viewport/anchor/loaded-row action. [Контракт](/reference/controllers), [рецепт](/guides/collection-window). Поставку провайдера в target host проверяют отдельно от Bundle metadata.
+
+
+## Retention и кэш страниц
+
+В Core `1.2.0-dev.15` доступны `retention`, `load.cache`, memory/IndexedDB, три политики обновления, `refreshPending`, `refresh` и `clearCache`. [Полный контракт и SDK](/guides/collection-window-cache.md). Кэш страниц не является persistence Store. Для исполнения: `node docs/public/examples/controllers/page-cache.mjs --core /path/to/built/core`; IndexedDB после reload проверяется в браузере.

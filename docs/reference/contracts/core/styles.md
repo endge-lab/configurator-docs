@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа styles; исходных модулей: 4."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа styles; исходных модулей: 4."
 ---
 
 # @endge/core: styles
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/styles/domain/types/style.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/styles/domain/types/style.types.ts)
+Исходный модуль: [src/features/core/modules/styles/domain/types/style.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/styles/domain/types/style.types.ts)
 
 ```ts
 export interface EndgeStyleSourceRange {
@@ -210,7 +210,7 @@ export interface EndgeStyleLease {
 
 ## src/features/core/modules/styles/EndgeStyles_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/styles/EndgeStyles_Module.ts)
+Исходный модуль: [src/features/core/modules/styles/EndgeStyles_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/styles/EndgeStyles_Module.ts)
 
 ```ts
 import type { AcquireEndgeStyleOptions, EndgeStyleLease, EndgeStyleMatchNode, EndgeStylePlacement, EndgeStyleResolvedDeclaration, EndgeStyleSheetArtifact, EndgeStyleTargetProfile } from '@/features/core/modules/styles/domain/types/style.types';
@@ -233,7 +233,7 @@ export declare class EndgeStyles_Module extends EndgeModule {
 
 ## src/features/core/modules/styles/services/endgecss-compile.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/styles/services/endgecss-compile.ts)
+Исходный модуль: [src/features/core/modules/styles/services/endgecss-compile.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/styles/services/endgecss-compile.ts)
 
 ```ts
 import type { CompileEndgeCSSOptions, CompileEndgeCSSResult, EndgeStyleSelector, EndgeStyleSupportCondition } from '@/features/core/modules/styles/domain/types/style.types';
@@ -244,7 +244,7 @@ export declare function compileEndgeCSS(source: string, options?: CompileEndgeCS
 
 ## src/features/core/modules/styles/services/endgecss-match.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/styles/services/endgecss-match.ts)
+Исходный модуль: [src/features/core/modules/styles/services/endgecss-match.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/styles/services/endgecss-match.ts)
 
 ```ts
 import type { EndgeStyleMatchNode, EndgeStyleResolvedDeclaration, EndgeStyleRule, EndgeStyleSelector, EndgeStyleSheetArtifact, EndgeStyleSupportCondition, EndgeStyleTargetProfile } from '@/features/core/modules/styles/domain/types/style.types';

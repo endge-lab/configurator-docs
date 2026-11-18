@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа document-import; исходных модулей: 2."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа document-import; исходных модулей: 2."
 ---
 
 # @endge/core: document-import
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/document-import/domain/types/document-import.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/document-import/domain/types/document-import.type.ts)
+Исходный модуль: [src/features/core/modules/document-import/domain/types/document-import.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/document-import/domain/types/document-import.type.ts)
 
 ```ts
 export type DocumentImportFormat = 'graphql' | 'openapi';
@@ -80,7 +80,7 @@ export interface DocumentImportApplyResult {
 
 ## src/features/core/modules/document-import/EndgeDocumentImport_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/document-import/EndgeDocumentImport_Module.ts)
+Исходный модуль: [src/features/core/modules/document-import/EndgeDocumentImport_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/document-import/EndgeDocumentImport_Module.ts)
 
 ```ts
 import type { DocumentImportApplyRequest, DocumentImportApplyResult, DocumentImportPlan, DocumentImportPrepareRequest } from '@/features/core/modules/document-import/domain/types/document-import.type';

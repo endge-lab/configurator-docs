@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа diagnostics; исходных модулей: 16."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа diagnostics; исходных модулей: 16."
 ---
 
 # @endge/core: diagnostics
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts)
 
 ```ts
 import type { DiagnosticsSnapshotRuntimeAdapter, DiagnosticsSnapshotShortcutEvent } from '@/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type';
@@ -21,7 +21,7 @@ export declare class BrowserDiagnosticsSnapshot_Adapter implements DiagnosticsSn
 
 ## src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterFactory, DiagnosticsAdapterRecordContext, DiagnosticsAdapterSnapshotContext } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -38,7 +38,7 @@ export declare const CONSOLE_DIAGNOSTICS_ADAPTER_FACTORY: DiagnosticsAdapterFact
 
 ## src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterCreateContext, DiagnosticsAdapterFactory } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -54,7 +54,7 @@ export declare class DiagnosticsAdapterRegistry {
 
 ## src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterCreateContext, DiagnosticsAdapterFactory, DiagnosticsAdapterRecordContext, DiagnosticsAdapterSnapshotContext } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -73,7 +73,7 @@ export declare const SENTRY_DIAGNOSTICS_ADAPTER_FACTORY: DiagnosticsAdapterFacto
 
 ## src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts)
 
 ```ts
 import type { DiagnosticsAttributeScalar } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -91,7 +91,7 @@ export interface SentryDiagnosticsAdapterOptions {
 
 ## src/features/core/modules/diagnostics/config/diagnostics.config.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/config/diagnostics.config.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/config/diagnostics.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/config/diagnostics.config.ts)
 
 ```ts
 import type { DiagnosticsSeverityNumber, EndgeDiagnosticsConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -101,7 +101,7 @@ export declare const DIAGNOSTICS_SEVERITY_TEXT: Record<DiagnosticsSeverityNumber
 
 ## src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts)
 
 ```ts
 import type { DiagnosticsJsonValue } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -114,7 +114,7 @@ export declare function serializeDiagnosticsJson(input: unknown): DiagnosticsJso
 
 ## src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts)
 
 ```ts
 import type { DiagnosticsRecord, DiagnosticsSignal } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -135,7 +135,7 @@ export declare class DiagnosticsRecordStore {
 
 ## src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts)
 
 ```ts
 import type { DiagnosticsAttributes, DiagnosticsExceptionOptions, DiagnosticsInstrumentationScope, DiagnosticsLogInput, DiagnosticsLogRecord, DiagnosticsSpanEndOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanOwner, DiagnosticsSpanRecord } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -155,7 +155,7 @@ export declare class DiagnosticsSpan implements DiagnosticsSpanHandle {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts)
 
 ```ts
 import type { DiagnosticsRecord, DiagnosticsResource, DiagnosticsSnapshot, EndgeDiagnosticsOutputConfiguration } from './diagnostics.types';
@@ -201,7 +201,7 @@ export interface DiagnosticsFlushResult {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts)
 
 ```ts
 import type { DiagnosticsSnapshot } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -221,7 +221,7 @@ export interface DiagnosticsSnapshotRuntimeAdapter {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts)
 
 ```ts
 import type { ComponentSFCInteractionTriggerActivation } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -524,7 +524,7 @@ export interface DiagnosticsSpanOwner {
 
 ## src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -580,7 +580,7 @@ export declare class EndgeDiagnostics_Module extends EndgeModule<EndgeBootContex
 
 ## src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -603,7 +603,7 @@ export declare class EndgeDiagnosticsSnapshots_Module extends EndgeModule<EndgeB
 
 ## src/features/core/modules/diagnostics/EndgeProblems_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/EndgeProblems_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeProblems_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/EndgeProblems_Module.ts)
 
 ```ts
 import type { DiagnosticsEntityRef, DiagnosticsProblem, DiagnosticsProblemFilter, DiagnosticsProblemInput, DiagnosticsProblemOwner, DiagnosticsProblemsSnapshot } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -623,7 +623,7 @@ export declare class EndgeProblems_Module extends EndgeModule {
 
 ## src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';

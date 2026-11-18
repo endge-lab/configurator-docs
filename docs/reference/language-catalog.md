@@ -162,4 +162,4 @@ description: "Функции и readers общего языка выражени
 
 `facet`, `config`, `context`, `contextSwitch` — отдельные compiler-owned конструкции структурного контекста. `input`, `event`, `now` и другие специализированные readers принадлежат конкретным языкам; отсутствие в общей таблице не отменяет их локальный контракт.
 
-[Владеющий compiler](https://github.com/endge-lab/core/blob/main/src/features/core/modules/source/services/compilers/source-expression-compile.ts).
+Владеющий compiler: [src/features/core/modules/source/services/compilers/source-expression-compile.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/source/services/compilers/source-expression-compile.ts). Путь относится к сгенерированному source snapshot; repository main не подтверждает этот контракт.

@@ -21,7 +21,9 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 
 | Атрибут | Тип | По умолчанию | Назначение |
 | --- | --- | --- | --- |
-| `rows` / `:rows` | массив / выражение | `[]` | Полная локальная коллекция строк. |
+| `rows` / `:rows` | массив / выражение | `[]` | Текущая локальная коллекция строк, в том числе retained window Controller. |
+| `rows-revision` / `rowsRevision` | number | `0` | Ревизия коллекции для событий viewport. |
+| `preserve-scroll-anchor` / `preserveScrollAnchor` | boolean | `false` | Сохранять видимый key и pixel offset при prepend/trim. |
 | `row-key` / `rowKey` | string | `id` | Поле со стабильной identity строки. |
 | `selection-mode` / `selectionMode` | `none` / `single` / `multiple` | `none` | Режим выбора строк. |
 | `selection-trigger` / `selectionTrigger` | `auto` / `control` / `row` / `both` | `auto` | Каким взаимодействием изменяется selection. |
@@ -56,6 +58,7 @@ UI-адаптер выбирает конкретный grid renderer. Дета�
 `Table` публикует `rowActivated`, `rowContextMenuRequested`,
 `selectionChanged`, `cellSelectionChanged`, `sortChanged`, `columnVisibilityChanged`,
 `columnPinChanged`, `columnOrderChanged`, `columnSizeChanged` и `pageChanged`.
+Core `1.2.0-dev.15` / UI `2.0.0-dev.14` также публикует `viewportChanged`: [окно коллекции](/guides/collection-window).
 
 Payload, отличие от браузерных событий и способы публикации наружу описаны в
 [«События, порты и Actions»](/sfc-tables/events-and-actions).

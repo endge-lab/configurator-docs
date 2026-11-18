@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа bridge; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа bridge; исходных модулей: 6."
 ---
 
 # @endge/core: bridge
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/bridge/config/bridge.config.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/config/bridge.config.ts)
+Исходный модуль: [src/features/core/modules/bridge/config/bridge.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/config/bridge.config.ts)
 
 ```ts
 export declare const BRIDGE_CONFIG: {
@@ -53,7 +53,7 @@ export declare function parseBridgeAllowedServers(value: string | undefined): st
 
 ## src/features/core/modules/bridge/configurator/EndgeBridgeConfigurator_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/configurator/EndgeBridgeConfigurator_Module.ts)
+Исходный модуль: [src/features/core/modules/bridge/configurator/EndgeBridgeConfigurator_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/configurator/EndgeBridgeConfigurator_Module.ts)
 
 ```ts
 import type { ConfiguratorConnection, ConfiguratorParticipant } from '@/features/core/modules/bridge/domain/bridge.type';
@@ -69,7 +69,7 @@ export declare class EndgeBridgeConfigurator_Module extends EndgeModule {
 
 ## src/features/core/modules/bridge/debug/EndgeBridgeDebug_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/debug/EndgeBridgeDebug_Module.ts)
+Исходный модуль: [src/features/core/modules/bridge/debug/EndgeBridgeDebug_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/debug/EndgeBridgeDebug_Module.ts)
 
 ```ts
 import type { EndgeBundle } from '@/features/core/kernel/types/endge-bundle.types';
@@ -112,7 +112,7 @@ export declare class EndgeBridgeDebug_Module extends EndgeModule {
 
 ## src/features/core/modules/bridge/domain/bridge-sync.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/domain/bridge-sync.type.ts)
+Исходный модуль: [src/features/core/modules/bridge/domain/bridge-sync.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/domain/bridge-sync.type.ts)
 
 ```ts
 import type { DiagnosticsSnapshot } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -146,7 +146,7 @@ export type BridgeInspectionMessage = BridgeStreamEvent | BridgeInspectionUpdate
 
 ## src/features/core/modules/bridge/domain/bridge.type.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/domain/bridge.type.ts)
+Исходный модуль: [src/features/core/modules/bridge/domain/bridge.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/domain/bridge.type.ts)
 
 ```ts
 export type EndgeBridgeBootOptions = {
@@ -228,7 +228,7 @@ export interface BridgeCommands {
 
 ## src/features/core/modules/bridge/EndgeBridge_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/bridge/EndgeBridge_Module.ts)
+Исходный модуль: [src/features/core/modules/bridge/EndgeBridge_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/bridge/EndgeBridge_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';

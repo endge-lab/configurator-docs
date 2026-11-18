@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа bootstrap; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа bootstrap; исходных модулей: 9."
 ---
 
 # @endge/core: bootstrap
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/kernel/config/kernel.config.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/config/kernel.config.ts)
+Исходный модуль: [src/features/core/kernel/config/kernel.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/config/kernel.config.ts)
 
 ```ts
 import type { EndgeMockProvider } from '@/features/core/modules/mock/domain/types/mock-data.type';
@@ -44,7 +44,7 @@ export default _default;
 
 ## src/features/core/kernel/constants/kernel.constants.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/constants/kernel.constants.ts)
+Исходный модуль: [src/features/core/kernel/constants/kernel.constants.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/constants/kernel.constants.ts)
 
 ```ts
 export declare const DEFAULT_LOCALE = "en";
@@ -60,7 +60,7 @@ export declare const DEFAULT_SCOPE: {
 
 ## src/features/core/kernel/endge.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/endge.ts)
+Исходный модуль: [src/features/core/kernel/endge.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/endge.ts)
 
 ```ts
 import type { EndgeBootMode } from '@/features/core/kernel/types/bootstrap.types';
@@ -303,7 +303,7 @@ export {};
 
 ## src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts)
+Исходный модуль: [src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts)
 
 ```ts
 export declare class EndgeDebuggerReadOnlyError extends Error {
@@ -314,7 +314,7 @@ export declare class EndgeDebuggerReadOnlyError extends Error {
 
 ## src/features/core/kernel/services/EndgeBundleCodec_Service.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/services/EndgeBundleCodec_Service.ts)
+Исходный модуль: [src/features/core/kernel/services/EndgeBundleCodec_Service.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/services/EndgeBundleCodec_Service.ts)
 
 ```ts
 import type { EndgeBundle, EndgeBundleFileFormat } from '../types/endge-bundle.types';
@@ -331,7 +331,7 @@ export declare class EndgeBundleCodec_Service {
 
 ## src/features/core/kernel/tools/read-only-document.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/tools/read-only-document.ts)
+Исходный модуль: [src/features/core/kernel/tools/read-only-document.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/tools/read-only-document.ts)
 
 ```ts
 export declare function readOnlyDocument<T extends object>(value: T, mutableRootKeys?: readonly string[]): T;
@@ -339,7 +339,7 @@ export declare function readOnlyDocument<T extends object>(value: T, mutableRoot
 
 ## src/features/core/kernel/types/bootstrap.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/types/bootstrap.types.ts)
+Исходный модуль: [src/features/core/kernel/types/bootstrap.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/types/bootstrap.types.ts)
 
 ```ts
 import type { EndgeAuthBootOptions } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -378,7 +378,7 @@ export interface EndgeBootContext extends EndgeFederationContext {
 
 ## src/features/core/kernel/types/endge-bundle.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/kernel/types/endge-bundle.types.ts)
+Исходный модуль: [src/features/core/kernel/types/endge-bundle.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/types/endge-bundle.types.ts)
 
 ```ts
 import type { InspectionRecording } from '@/features/core/modules/inspection/types/inspection.types';
@@ -397,7 +397,7 @@ export type BundleJsonValue = null | boolean | number | string | BundleJsonValue
 
 ## src/main.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/main.ts)
+Исходный модуль: [src/main.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/main.ts)
 
 ```ts
 export * from '@/features/federation/EndgeFederation';
@@ -698,4 +698,9 @@ export { resolveRuntimeTranslation } from '@/features/core/modules/i18n/tools/re
 export { resolveRuntimeVocabOptions } from '@/features/core/modules/runtime/tools/runtime-render-values';
 export * from '@/features/core/modules/domain/types/component/sfc/expression-ir.types';
 export * from '@/features/core/modules/runtime/services/component-sfc-expression-evaluate';
+export * from '@/features/core/modules/runtime/domain/controllers/controller.types';
+export * from '@/features/core/modules/runtime/domain/controllers/page-cache.types';
+export * from '@/features/core/modules/runtime/hosts/ControllerRuntimeHost';
+export * from '@/features/core/modules/runtime/EndgeControllers_Module';
+export * from '@/features/core/modules/runtime/services/controllers/builtins/collection-window.definition';
 ```

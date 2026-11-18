@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа computations; исходных модулей: 4."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа computations; исходных модулей: 4."
 ---
 
 # @endge/core: computations
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/computations/EndgeComputations_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/computations/EndgeComputations_Module.ts)
+Исходный модуль: [src/features/core/modules/computations/EndgeComputations_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/computations/EndgeComputations_Module.ts)
 
 ```ts
 import type { ImplementationBindingScope } from '@/features/core/modules/actions/domain/action.types';
@@ -55,7 +55,7 @@ export declare class EndgeComputations_Module extends EndgeModule {
 
 ## src/features/core/modules/computations/model/ComputationResource.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/computations/model/ComputationResource.ts)
+Исходный модуль: [src/features/core/modules/computations/model/ComputationResource.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/computations/model/ComputationResource.ts)
 
 ```ts
 import type { ComputationResource as ComputationResourceContract, ComputationRuntimeErrorShape } from '@/features/core/modules/domain/types/computation/computation-runtime.types';
@@ -85,7 +85,7 @@ export {};
 
 ## src/features/core/modules/computations/model/ComputationResourceRegistry.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/computations/model/ComputationResourceRegistry.ts)
+Исходный модуль: [src/features/core/modules/computations/model/ComputationResourceRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/computations/model/ComputationResourceRegistry.ts)
 
 ```ts
 import type { ComputationResourceState } from './ComputationResource';
@@ -107,7 +107,7 @@ export declare class ComputationResourceRegistry {
 
 ## src/features/core/modules/computations/services/ComputationGraphExecutor.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/computations/services/ComputationGraphExecutor.ts)
+Исходный модуль: [src/features/core/modules/computations/services/ComputationGraphExecutor.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/computations/services/ComputationGraphExecutor.ts)
 
 ```ts
 import type { ComputationProgramPayload } from '@/features/core/modules/domain/types/computation/computation-program.types';

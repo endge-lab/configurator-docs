@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.1.0-dev.13, группа converters; исходных модулей: 3."
+description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа converters; исходных модулей: 3."
 ---
 
 # @endge/core: converters
 
-Версия source: 1.1.0-dev.13. [Каталог package](./). [Repository](https://github.com/endge-lab/core).
+Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
 
 ## src/features/core/modules/converters/EndgeConverters_Module.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/converters/EndgeConverters_Module.ts)
+Исходный модуль: [src/features/core/modules/converters/EndgeConverters_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/converters/EndgeConverters_Module.ts)
 
 ```ts
 import type { ImplementationBindingScope } from '@/features/core/modules/actions/domain/action.types';
@@ -46,7 +46,7 @@ export {};
 
 ## src/features/core/modules/converters/tools/date/string-to-date.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/converters/tools/date/string-to-date.ts)
+Исходный модуль: [src/features/core/modules/converters/tools/date/string-to-date.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/converters/tools/date/string-to-date.ts)
 
 ```ts
 export declare function stringToDate(input: string | Date | null | undefined): Date | null;
@@ -54,7 +54,7 @@ export declare function stringToDate(input: string | Date | null | undefined): D
 
 ## src/features/core/modules/converters/tools/date/weekdays-range.ts
 
-[Исходный модуль](https://github.com/endge-lab/core/blob/main/src/features/core/modules/converters/tools/date/weekdays-range.ts)
+Исходный модуль: [src/features/core/modules/converters/tools/date/weekdays-range.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/converters/tools/date/weekdays-range.ts)
 
 ```ts
 export declare function weekdaysRange(str: any): boolean[];
