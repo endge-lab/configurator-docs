@@ -67,4 +67,4 @@ Provider загружает Domain, compiler создаёт Program artifacts, r
 
 ## Renderer и безопасная точка расширения
 
-`@endge/ui-vue` предоставляет Vue renderer и `vue-native` adapter. Используйте его публичные [entrypoints](/reference/contracts/ui-vue/); не импортируйте private components из `src`. Пользовательские UI definitions/implementations и code implementations регистрируются через публичные registry contracts. Имя тега из другой UI-библиотеки не становится допустимым SFC-тегом автоматически.
+`@endge/ui-vue` предоставляет Vue renderer и `vue` adapter. Используйте его публичные [entrypoints](/reference/contracts/ui-vue/); не импортируйте private components из `src`. Пользовательские UI definitions/implementations и code implementations регистрируются через публичные registry contracts. Имя тега из другой UI-библиотеки не становится допустимым SFC-тегом автоматически.
