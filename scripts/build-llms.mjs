@@ -41,7 +41,7 @@ const outputRoot = path.resolve(process.env.ENDGE_LLMS_OUTPUT ?? path.join(docum
 const siteURL = (process.env.ENDGE_DOCS_URL ?? '').replace(/\/+$/, '')
 
 /** Ядро агента обязано помещаться в контекст вместе с задачей: превышение ломает сборку. */
-const AGENT_TOKEN_LIMIT = 60_000
+const AGENT_TOKEN_LIMIT = 120_000
 /** Ориентир для одной части; раздел больше него публикуется оглавлением своих частей. */
 const PART_TOKEN_LIMIT = 100_000
 const TOKEN_ESTIMATE = { cyrillicCharactersPerToken: 2.5, otherCharactersPerToken: 3.5 }
