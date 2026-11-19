@@ -14,6 +14,10 @@ description: "Маршрут агента для глобального ката
 4. Для записи используйте `PATCH /api/v1/compositions/{identity}` с `X-Endge-Workspace`, `If-Match`, `source` и `sourceVersion: 1`. Через MCP используйте `endge_update_document` для коллекции `compositions` с текущей `revision`. Сверьте сохранённый Source и скомпилируйте выбранный контекст. [Авторинг Source](/agents/authoring)
 5. Запустите Runtime Preview нужной ветки. Проверьте оформление таблицы и список пресетов активного scope. В SFC укажите только имя пресета и его `settings`. После смены фасета запустите Preview повторно и проверьте обе ветки. При адресной замене с тем же именем пресета проверьте, что график использует новый provider и старые подписки сняты. Запись документа, компиляция и поведение Preview подтверждаются отдельно. [Timeline Chart](/domain/components/timeline-chart#пресет-приложения)
 
+## Назначить рендерер в рабочем пространстве
+
+Сверьте `primitive` и `id` в `manifest.contributes.renderers` точной версии. В workspace настройка `configuration.defaultRenderers` хранит пары вида `{ "Table": { "identity": "custom-ui", "version": "1.0.0", "rendererId": "slot" } }`. Сохраняйте остальные поля конфигурации. Удаление ключа тега возвращает рендерер корневого адаптера. Configurator читает manifest для списка настроек и загружает выбранный модуль при запуске SFC. Для локального переопределения на экземпляре компонента используйте `.withRenderers({ Table: 'visual:slot' })`. [Настройки UI](/configurator/modules#рендереры-рабочего-пространства)
+
 ## Проверить или опубликовать ZIP через API
 
 Все операции каталога идут по `/api/v1/modules` на Backend и работают без `X-Endge-Workspace`. Для HTTP используйте OIDC access token пользователя или его браузерную сессию. Создание, изменение метаданных и публикация требуют администратора платформы. Для обычных запросов агента с PAT каталог отвечает `access_token_route_forbidden`. MCP-инструменты работают с документом Composition, а операции каталога выполняются напрямую по REST или через Configurator. [Персональные токены](/agents/tokens)
