@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа context; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа context; исходных модулей: 9."
 ---
 
 # @endge/core: context
 
-Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
+Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
 
 ## src/features/core/modules/context/domain/context-events.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-events.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/domain/context-events.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-events.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-events.types.ts)
 
 ```ts
 import type { EndgeCoreEventMap } from '@/features/core/modules/events/domain/events.types';
@@ -22,7 +22,7 @@ export type ContextEvent = {
 
 ## src/features/core/modules/context/domain/context-persistence.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-persistence.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/domain/context-persistence.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-persistence.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-persistence.types.ts)
 
 ```ts
 import type { EndgePublicConfigurationSnapshot } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -110,7 +110,7 @@ export interface RuntimeStateControllerLike {
 
 ## src/features/core/modules/context/domain/context-state.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-state.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/domain/context-state.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-state.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-state.types.ts)
 
 ```ts
 import type { ClassConstructor } from 'class-transformer';
@@ -124,7 +124,7 @@ export type EndgeContextStateListener = () => void;
 
 ## src/features/core/modules/context/endge-vars.ts
 
-Исходный модуль: [src/features/core/modules/context/endge-vars.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/endge-vars.ts)
+Исходный модуль: [src/features/core/modules/context/endge-vars.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/endge-vars.ts)
 
 ```ts
 import type { EndgeResolvedWorkspaceVariable, EndgeWorkspaceVar } from '@/features/core/modules/workspace/domain/workspace.types';
@@ -154,7 +154,7 @@ export {};
 
 ## src/features/core/modules/context/EndgeContext_Module.ts
 
-Исходный модуль: [src/features/core/modules/context/EndgeContext_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/EndgeContext_Module.ts)
+Исходный модуль: [src/features/core/modules/context/EndgeContext_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/EndgeContext_Module.ts)
 
 ```ts
 import type { EndgeBootContext, EndgeBootMode } from '@/features/core/kernel/types/bootstrap.types';
@@ -235,7 +235,7 @@ export declare class EndgeContext_Module extends EndgeModule<EndgeBootContext> {
 
 ## src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts)
 
 ```ts
 import type { EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -250,7 +250,7 @@ export declare class DisabledContextAdapter implements EndgeStorageAdapter {
 
 ## src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts)
 
 ```ts
 import type { EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -266,7 +266,7 @@ export declare class LocalStorageContextAdapter implements EndgeStorageAdapter {
 
 ## src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts)
 
 ```ts
 import type { EndgePersistenceDriver, EndgePersistenceOptions, EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -281,7 +281,7 @@ export declare class EndgeStorageAdapterRegistry {
 
 ## src/features/core/modules/context/persistence/RuntimeStateController.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/RuntimeStateController.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/context/persistence/RuntimeStateController.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/RuntimeStateController.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/RuntimeStateController.ts)
 
 ```ts
 import type { EndgePersistenceScope, EndgePersistenceScopeResolver, EndgeStorageAdapter, RuntimeStateControllerLike } from '@/features/core/modules/context/domain/context-persistence.types';

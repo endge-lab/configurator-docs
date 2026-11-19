@@ -30,3 +30,91 @@
 - Для деталей синтаксиса перейдите в раздел [«Синтаксис и контракты»](/reference/query).
 
 В дальнейшем документация отдельных сценариев может ссылаться на эти области, не создавая отдельную страницу для каждого виджета.
+
+## Каталог модулей Backend
+
+Откройте **Домен → Инфраструктура → Модули**. Авторизованные пользователи видят один каталог во всех workspace этого Backend. Публикация и редактирование доступны администратору платформы.
+
+1. Нажмите **«Создать»**, введите название, идентификатор и описание, приложите ZIP первой версии и нажмите **«Загрузить»**.
+2. Откройте карточку. **«Добавить версию»** публикует следующий ZIP, **«Редактировать»** меняет название и описание, **«Скачать ZIP»** возвращает оригинальный архив выбранной версии.
+3. В **Source** композиции добавьте точную версию в `resources`, например `visual: module('custom-ui', '1.0.0')`. Запустите **Runtime Preview** и выберите нужную ветку. Таблица получает оформление этой ветки. В редакторе Timeline Chart выберите пресет из списка, доступного в текущем предпросмотре. [Наследование и выбор по фасету](/reference/composition#модули-композиции)
+
+Backend хранит карточку и ревизию её метаданных в `modules`, а опубликованные manifest, ZIP, SHA-256, размер и аудит публикации — в `module_versions`. Пара `identity + version` закреплена за одним архивом. Для рабочей сборки с новыми байтами присвойте следующую версию. При переносе программы на другой Backend опубликуйте там нужные ZIP или предоставьте эти версии через локальный loader. [REST и порядок работы для агентов](/agents/modules)
+
+### Формат сборки
+
+Поместите файлы в корень ZIP. Лимит архива — 15 МиБ, суммарный размер распакованных файлов — до 32 МиБ, manifest — до 16 КиБ.
+
+| Файл | Содержимое |
+| --- | --- |
+| `manifest.json` | Обязательный JSON. `identity` совпадает с идентификатором карточки и записывается строчными латинскими буквами, цифрами и дефисами между частями. `version` — точная SemVer. `formatVersion: 1` и `hostApi: 1` |
+| `module.js` | Один браузерный ES-модуль с фабрикой экземпляра в `export default` |
+| `module.css` | Опциональный CSS внутри визуала, зарегистрированного этим экземпляром. Область ограничена через CSS `@scope`. Для селектора её корня используйте `:scope` |
+
+```json
+{
+  "identity": "custom-ui",
+  "version": "1.0.0",
+  "formatVersion": 1,
+  "hostApi": 1
+}
+```
+
+Фабрика получает `core`, `vue`, `uiVue` и `timeline` из хоста. При сборке используйте переданные экземпляры этих зависимостей вместе с собственным кодом и стилями. Configurator загружает ZIP-версию через адреса JS и CSS на том же origin в пользовательской сессии.
+
+```js
+export default function create({ core, uiVue }) {
+  const renderTable = uiVue.NativeVueSFCAdapter.renderers.Table
+
+  return new class CustomUi extends core.EndgeModule {
+    setup(context) {
+      uiVue.registerScopedVueRenderer(context, 'Table', input =>
+        input.h('div', { class: 'custom-table' }, [renderTable(input)]),
+      )
+      uiVue.registerScopedTimelinePreset(context, {
+        name: 'custom-load',
+        label: 'Загрузка',
+        fields: {
+          taskHeight: { type: 'number', label: 'Высота задачи', default: 20 },
+        },
+      }, {
+        configure: ({ settings }) => ({
+          options: { tasks: { height: Number(settings.taskHeight) } },
+        }),
+      })
+    }
+  }()
+}
+```
+
+После подключения `custom-ui@1.0.0` используйте в SFC `<TimelineChart preset="custom-load" :settings="{ taskHeight: 24 }" />`. Для оформления обёртки таблицы добавьте, например, `:scope.custom-table { outline: 1px solid #478acf; }` в `module.css`.
+
+### Жизненный цикл
+
+Каждое активное подключение принадлежит своему `RuntimeScope`. Хост вызывает `setup → load → build → start` перед запуском зависимых компонентов. `ScopedModuleContext` передаёт `scopeId`, ключ `attachment`, точную `reference` и `signal`. Используйте `signal` для отмены долгой подготовки. При выгрузке Core убирает регистрации и стили экземпляра и вызывает `reset`, где модуль освобождает собственные подписки и фоновые задачи. Для продолжения работы того же экземпляра после паузы можно реализовать `pause` и `resume`.
+
+Хост может адресно заменить активное подключение через `Endge.runtime.modules.replace(scope, key, reference)`. После успешной подготовки переключается регистрация, затем прежний экземпляр освобождается. При ошибке подготовки прежняя версия остаётся активной. [Контракт ресурса в Composition](/reference/composition#модули-композиции)
+
+### Подключение локальной версии
+
+Распакуйте тот же ZIP, импортируйте JS и CSS средствами сборщика приложения и передайте `moduleLoader` в boot-контекст. `createLocalModuleLoader(entries, fallback)` может совмещать локальные версии с загрузчиком Backend для остальных ссылок.
+
+```ts
+import * as core from '@endge/core'
+import * as uiVue from '@endge/ui-vue'
+import * as vue from 'vue'
+import * as moduleEntry from './custom-ui/module.js'
+import css from './custom-ui/module.css?raw'
+
+const host = { core, uiVue, vue, timeline: await uiVue.loadVueModuleTimeline() }
+const moduleLoader = core.createLocalModuleLoader([
+  {
+    reference: { identity: 'custom-ui', version: '1.0.0' },
+    artifact: uiVue.createVueModuleArtifact(moduleEntry, host, css),
+  },
+])
+// Передайте moduleLoader вместе с текущими параметрами запуска.
+await core.Endge.boot({ ...bootOptions, moduleLoader })
+```
+
+Объявление в Source одинаково для локальной и удалённой поставки. Для адаптера, который хост подключает при старте всего приложения, используется существующая регистрация через `Endge.use()`. [Синтаксис подключения](/reference/composition#модули-композиции)

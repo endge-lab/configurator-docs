@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа compiler; исходных модулей: 16."
+description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа compiler; исходных модулей: 16."
 ---
 
 # @endge/core: compiler
 
-Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
+Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
 
 ## src/features/core/modules/compiler/EndgeCompiler_Module.ts
 
-Исходный модуль: [src/features/core/modules/compiler/EndgeCompiler_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/EndgeCompiler_Module.ts)
+Исходный модуль: [src/features/core/modules/compiler/EndgeCompiler_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/EndgeCompiler_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -63,7 +63,7 @@ export declare class EndgeCompiler_Module extends EndgeModule<EndgeBootContext> 
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-attributes.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-attributes.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-attributes.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-attributes.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-attributes.ts)
 
 ```ts
 import type { RComponentContractInput, RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -76,7 +76,7 @@ export declare function createComponentSFCAttributeContractsFromInputs(inputs: r
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-built-in-tags.ts)
 
 ```ts
 import type { RComponentSFC_IR_Tag } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -86,7 +86,7 @@ export declare function isComponentSFCBuiltInTag(tag: string): tag is RComponent
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-compile.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-compile.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-compile.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-compile.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-compile.ts)
 
 ```ts
 import type { EndgeSFCEditingConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -127,7 +127,7 @@ export declare function compileComponentSFC(source: string, options?: ComponentS
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-expression.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-expression.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-expression.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-expression.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-expression.ts)
 
 ```ts
 import type { Node } from '@babel/types';
@@ -171,7 +171,7 @@ export declare function compileComponentSFCExpressionAST(ast: Node, source: stri
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-forward.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-forward.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-forward.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-forward.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-forward.ts)
 
 ```ts
 import type { RComponentDependencies, RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -194,7 +194,7 @@ export declare function listBuiltInComponentPortManifests(): Array<{
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-parse.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-parse.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-parse.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-parse.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-parse.ts)
 
 ```ts
 import type { RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -210,7 +210,7 @@ export declare function parseComponentSFC(source: string): ComponentSFCParseResu
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-ports.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-ports.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-ports.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-ports.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-ports.ts)
 
 ```ts
 import type { File } from '@babel/types';
@@ -237,7 +237,7 @@ export declare function analyzeComponentSFCPorts(script: RComponentSFC_AST_Scrip
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-script.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-script.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-script.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-script.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-script.ts)
 
 ```ts
 import type { File } from '@babel/types';
@@ -245,7 +245,7 @@ import type { RComponentContract, RComponentDiagnostic } from '@/features/core/m
 import type { RComponentSFC_AST_Script } from '@/features/core/modules/domain/types/component/sfc/ast.types';
 import type { RComponentSFC_IR_LocalBinding, RComponentSFC_IR_Prop } from '@/features/core/modules/domain/types/component/sfc/ir.types';
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
-import type { ComponentSFCPreviewOptions, ComponentSFCPreviewProps } from '@/features/core/modules/program/domain/types/program.types';
+import type { ComponentSFCPreviewLiteral, ComponentSFCPreviewOptions, ComponentSFCPreviewProps } from '@/features/core/modules/program/domain/types/program.types';
 import type { TypeSourceDefinition } from '@/features/core/modules/source/domain/types/type-source.types';
 export interface ComponentSFCTypeResolutionOptions {
     scriptSyntax?: File | null;
@@ -262,11 +262,17 @@ export interface ComponentSFCScriptAnalysisResult {
 }
 export declare function analyzeComponentSFCScript(script: RComponentSFC_AST_Script | null, options?: ComponentSFCTypeResolutionOptions): ComponentSFCScriptAnalysisResult;
 export declare function parseComponentSFCTypeFields(source: string, scriptContent?: string, options?: ComponentSFCTypeResolutionOptions): RComponentSFC_IR_Prop[];
+export declare function readPreviewLiteral(node: any): {
+    ok: true;
+    value: ComponentSFCPreviewLiteral;
+} | {
+    ok: false;
+};
 ```
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-style.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-style.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-style.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-style.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-style.ts)
 
 ```ts
 import type { RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -284,7 +290,7 @@ export declare function compileComponentSFCStyle(style: RComponentSFC_AST_Style 
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-table-menu.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-menu.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-menu.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-menu.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-menu.ts)
 
 ```ts
 import type { ComponentSFCTableCellMenuDescriptor, ComponentSFCTableColumnMenuDescriptor, ComponentSFCTableRowMenuDescriptor, RComponentSFC_IR_ElementNode } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -309,7 +315,7 @@ export declare function readComponentSFCTableMenuActionPortReference(source: str
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-table-pin.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-pin.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-pin.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-pin.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-pin.ts)
 
 ```ts
 import type { TableColumnPinSide } from '@/features/core/modules/actions/domain/action.types';
@@ -346,7 +352,7 @@ export declare function normalizeTableColumnPinSide(value: unknown): TableColumn
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-table-sort.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-sort.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-sort.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-sort.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-sort.ts)
 
 ```ts
 import type { RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -396,7 +402,7 @@ export declare function parseComponentSFCTableSortPaths(value: unknown, fallback
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-table-visibility.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-visibility.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-visibility.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-table-visibility.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-table-visibility.ts)
 
 ```ts
 import type { RComponentSFC_IR_ElementNode } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -406,7 +412,7 @@ export declare function normalizeComponentSFCTableColumnVisibility(tableNode: RC
 
 ## src/features/core/modules/compiler/services/component-sfc/component-sfc-template.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-template.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/component-sfc/component-sfc-template.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/component-sfc/component-sfc-template.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/component-sfc/component-sfc-template.ts)
 
 ```ts
 import type { EndgeSFCEditingConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -440,7 +446,7 @@ export declare function compileComponentSFCTemplate(template: RComponentSFC_AST_
 
 ## src/features/core/modules/compiler/services/computation/computation-compile.ts
 
-Исходный модуль: [src/features/core/modules/compiler/services/computation/computation-compile.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/compiler/services/computation/computation-compile.ts)
+Исходный модуль: [src/features/core/modules/compiler/services/computation/computation-compile.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/compiler/services/computation/computation-compile.ts)
 
 ```ts
 import type { ComputationProgramPayload } from '@/features/core/modules/domain/types/computation/computation-program.types';

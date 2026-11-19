@@ -48,6 +48,10 @@ Query GraphQL выполняет `query` и `mutation`. GraphQL `subscription` �
 
 Facet и Facet Document имеют отдельный typed provider contract. Identity Facet Document уникальна внутри родительского Facet. Их нельзя отправлять произвольным generic document endpoint.
 
+## Модули композиции
+
+Глобальный каталог Backend хранит ZIP и метаданные точной версии. Composition компилирует `module(identity, version)` как ресурс своего scope. При активации хост получает артефакт из Backend или локального loader. Vue-хост разрешает Table и Timeline-пресеты в активной ветке по ближайшему ключу подключения. Перенос программы требует наличия тех же версий модулей у принимающего хоста. [Синтаксис и наследование](/reference/composition#модули-композиции) · [Каталог и сборка](/configurator/modules#каталог-модулей-backend)
+
 ## Контракты с ограниченной поддержкой
 
 `integration`, `policy`, `page-template`, `page`, `component-dsl` и `component-table` представлены в Core, но отсутствуют в текущей канонической таблице backend collections. Не обещайте их сохранение через Service Backend по аналогии с Component SFC. Legacy Component Table/DSL не является исполняемым SFC. `Version` не следует создавать как обычный domain document: история, revisions, commits и releases имеют собственные API. Отдельного универсального persisted `Parameter` collection нет: параметры объявляются в props, Filter fields или Configuration в зависимости от назначения.

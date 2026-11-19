@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа bootstrap; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа bootstrap; исходных модулей: 9."
 ---
 
 # @endge/core: bootstrap
 
-Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
+Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
 
 ## src/features/core/kernel/config/kernel.config.ts
 
-Исходный модуль: [src/features/core/kernel/config/kernel.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/config/kernel.config.ts)
+Исходный модуль: [src/features/core/kernel/config/kernel.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/config/kernel.config.ts)
 
 ```ts
 import type { EndgeMockProvider } from '@/features/core/modules/mock/domain/types/mock-data.type';
@@ -44,7 +44,7 @@ export default _default;
 
 ## src/features/core/kernel/constants/kernel.constants.ts
 
-Исходный модуль: [src/features/core/kernel/constants/kernel.constants.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/constants/kernel.constants.ts)
+Исходный модуль: [src/features/core/kernel/constants/kernel.constants.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/constants/kernel.constants.ts)
 
 ```ts
 export declare const DEFAULT_LOCALE = "en";
@@ -60,7 +60,7 @@ export declare const DEFAULT_SCOPE: {
 
 ## src/features/core/kernel/endge.ts
 
-Исходный модуль: [src/features/core/kernel/endge.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/endge.ts)
+Исходный модуль: [src/features/core/kernel/endge.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/endge.ts)
 
 ```ts
 import type { EndgeBootMode } from '@/features/core/kernel/types/bootstrap.types';
@@ -303,7 +303,7 @@ export {};
 
 ## src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts
 
-Исходный модуль: [src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts)
+Исходный модуль: [src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/errors/EndgeDebuggerReadOnlyError.ts)
 
 ```ts
 export declare class EndgeDebuggerReadOnlyError extends Error {
@@ -314,7 +314,7 @@ export declare class EndgeDebuggerReadOnlyError extends Error {
 
 ## src/features/core/kernel/services/EndgeBundleCodec_Service.ts
 
-Исходный модуль: [src/features/core/kernel/services/EndgeBundleCodec_Service.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/services/EndgeBundleCodec_Service.ts)
+Исходный модуль: [src/features/core/kernel/services/EndgeBundleCodec_Service.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/services/EndgeBundleCodec_Service.ts)
 
 ```ts
 import type { EndgeBundle, EndgeBundleFileFormat } from '../types/endge-bundle.types';
@@ -331,7 +331,7 @@ export declare class EndgeBundleCodec_Service {
 
 ## src/features/core/kernel/tools/read-only-document.ts
 
-Исходный модуль: [src/features/core/kernel/tools/read-only-document.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/tools/read-only-document.ts)
+Исходный модуль: [src/features/core/kernel/tools/read-only-document.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/tools/read-only-document.ts)
 
 ```ts
 export declare function readOnlyDocument<T extends object>(value: T, mutableRootKeys?: readonly string[]): T;
@@ -339,7 +339,7 @@ export declare function readOnlyDocument<T extends object>(value: T, mutableRoot
 
 ## src/features/core/kernel/types/bootstrap.types.ts
 
-Исходный модуль: [src/features/core/kernel/types/bootstrap.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/types/bootstrap.types.ts)
+Исходный модуль: [src/features/core/kernel/types/bootstrap.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/types/bootstrap.types.ts)
 
 ```ts
 import type { EndgeAuthBootOptions } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -348,6 +348,7 @@ import type { EndgeCommandsBootOptions } from '@/features/core/modules/commands/
 import type { EndgeDomainBundle } from '@/features/core/modules/domain/types/document/domain-export.type';
 import type { EndgeDomainProvider } from '@/features/core/modules/domain/types/document/domain-provider.type';
 import type { EndgeExecutionContext } from '@/features/core/modules/runtime/domain/execution-context.types';
+import type { ModuleArtifactLoader } from '@/features/core/modules/runtime/module/module-artifact';
 import type { EndgeFederationContext } from '@/features/federation/types/federation.types';
 export type EndgeDataProvider = 'default' | 'bundle' | 'plain';
 export interface EndgeLoadScope {
@@ -361,6 +362,7 @@ export interface EndgeUIBootOptions {
 export type EndgeBootMode = 'application' | 'debugger';
 export interface EndgeBootContext extends EndgeFederationContext {
     mode?: EndgeBootMode;
+    moduleLoader?: ModuleArtifactLoader;
     dataProvider?: EndgeDataProvider;
     scope: EndgeLoadScope;
     context?: Partial<EndgeExecutionContext>;
@@ -378,7 +380,7 @@ export interface EndgeBootContext extends EndgeFederationContext {
 
 ## src/features/core/kernel/types/endge-bundle.types.ts
 
-Исходный модуль: [src/features/core/kernel/types/endge-bundle.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/kernel/types/endge-bundle.types.ts)
+Исходный модуль: [src/features/core/kernel/types/endge-bundle.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/kernel/types/endge-bundle.types.ts)
 
 ```ts
 import type { InspectionRecording } from '@/features/core/modules/inspection/types/inspection.types';
@@ -397,7 +399,7 @@ export type BundleJsonValue = null | boolean | number | string | BundleJsonValue
 
 ## src/main.ts
 
-Исходный модуль: [src/main.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/main.ts)
+Исходный модуль: [src/main.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/main.ts)
 
 ```ts
 export * from '@/features/federation/EndgeFederation';
@@ -443,6 +445,8 @@ export * from '@/features/core/modules/converters/EndgeConverters_Module';
 export * from '@/features/core/modules/runtime/operation/operation-history';
 export * from '@/features/core/modules/runtime/operation/EndgeOperations_Module';
 export * from '@/features/core/modules/runtime/EndgeRuntime_Module';
+export * from '@/features/core/modules/runtime/module/module-artifact';
+export * from '@/features/core/modules/runtime/module/module-reference';
 export * from '@/features/core/modules/auth/EndgeAuth_Module';
 export * from '@/features/core/modules/auth/domain/AuthInteractionRequiredError';
 export * from '@/features/core/modules/auth/adapters/OidcBrowserSession_Adapter';
@@ -676,6 +680,7 @@ export * from '@/features/core/modules/source/services/configuration-source-patc
 export * from '@/features/core/modules/source/services/typescript-type-source';
 export * from '@/features/core/modules/source/services/component-sfc/component-sfc-visual-projection';
 export * from '@/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch';
+export * from '@/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch';
 export * from '@/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch';
 export * from '@/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch';
 export * from '@/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch';

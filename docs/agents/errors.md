@@ -1,14 +1,14 @@
 ---
-description: "Все 267 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
+description: "Все 273 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
 ---
 
 <!-- Сгенерировано scripts/build-error-reference.mjs из docs/error-codes.yaml Service Backend. Не редактируйте вручную: pnpm errors:build. -->
 
 # Коды ошибок Service Backend
 
-Справочник собран из каталога ошибок backend 0.18.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `fe79d889b7fd`): 267 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
+Справочник собран из каталога ошибок backend 0.19.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `21f3ea029155`): 273 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
-Controller/window diagnostics  не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).
+Controller/window diagnostics нового source candidate не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).
 
 ## Как читать ответ ошибки
 
@@ -57,6 +57,7 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 - [Фасеты](#facets) — 15
 - [Коммиты, восстановление, импорт и экспорт](#history) — 27
 - [Релизы и сборки](#releases) — 12
+- [Глобальный каталог модулей](#module-catalog) — 6
 - [Профили сборки](#build-profiles) — 7
 - [Документы, Source и папки](#documents) — 51
 - [Workspace](#workspace) — 9
@@ -228,6 +229,17 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 | <a id="release_last_read_only"></a>`release_last_read_only` | 400 | Псевдоним last доступен только для чтения. | Для изменения используйте точный identity релиза. |
 | <a id="release_snapshot_invalid"></a>`release_snapshot_invalid` | 500 | Снимок релиза не прошёл проверку. | Не повторяйте: результат не изменится. Сообщите пользователю code, операцию и identity объекта — нужна диагностика на стороне сервера. |
 | <a id="release_text_too_long"></a>`release_text_too_long` | 400 | Текст релиза превышает лимит. | Не повторяйте запрос без изменений. Исправьте поле, названное в message (и в details.field, если оно есть), по схеме операции в OpenAPI и отправьте запрос снова. |
+
+## Глобальный каталог модулей {#module-catalog}
+
+| Код | HTTP | Смысл | Действие |
+| --- | --- | --- | --- |
+| <a id="module_archive_invalid"></a>`module_archive_invalid` | 400 | ZIP не соответствует формату модуля или лимиту размера. | Проверьте manifest.json, точный identity и SemVer, module.js и опциональный module.css. |
+| <a id="module_asset_not_found"></a>`module_asset_not_found` | 404 | Запрошенный файл отсутствует в опубликованной версии. | Получите метаданные версии и используйте адрес из assets. |
+| <a id="module_conflict"></a>`module_conflict` | 409 | Идентификатор занят, ревизия устарела или версия уже опубликована с другими байтами. | Проверьте текущую карточку и выберите новую версию для изменённой сборки. |
+| <a id="module_metadata_invalid"></a>`module_metadata_invalid` | 400 | Поля карточки модуля отсутствуют или не проходят проверку. | Укажите identity в нижнем регистре, название и необязательное описание в пределах лимита. |
+| <a id="module_not_found"></a>`module_not_found` | 404 | Модуль или его версия отсутствуют в глобальном каталоге Backend. | Проверьте identity и точный номер опубликованной версии. |
+| <a id="module_platform_admin_required"></a>`module_platform_admin_required` | 403 | Изменять каталог и публиковать версии может администратор платформы. | Используйте сессию администратора платформы. |
 
 ## Профили сборки {#build-profiles}
 

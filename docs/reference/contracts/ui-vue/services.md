@@ -1,23 +1,49 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 2.0.0-dev.14, группа services; исходных модулей: 8."
+description: "TypeScript-декларации @endge/ui-vue 2.1.0-dev.16, группа services; исходных модулей: 9."
 ---
 
 # @endge/ui-vue: services
 
-Версия source: 2.0.0-dev.14. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [b28dfe275ef2d08431082b412644d6fe561a6027](https://github.com/endge-lab/ui-vue/tree/b28dfe275ef2d08431082b412644d6fe561a6027).
+Версия source: 2.1.0-dev.16. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [c04ff37288b65db89bc2d828c9e1339ada37fda8](https://github.com/endge-lab/ui-vue/tree/c04ff37288b65db89bc2d828c9e1339ada37fda8).
 
 ## src/services/debug/vue-console.ts
 
-Исходный модуль: [src/services/debug/vue-console.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/debug/vue-console.ts)
+Исходный модуль: [src/services/debug/vue-console.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/debug/vue-console.ts)
 
 ```ts
 import type { App } from 'vue';
 export declare function installEndgeVueWarnHandler(app: App): void;
 ```
 
+## src/services/modules/vue-module.ts
+
+Исходный модуль: [src/services/modules/vue-module.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/modules/vue-module.ts)
+
+```ts
+import type { ModuleArtifact, ScopedModule, ScopedModuleContext } from '@endge/core';
+import type { SFCVueRenderAdapterKey, SFCVueRenderFunction } from '@/services/render/sfc/sfc-vue-render.type';
+import type { TimelinePresetDescriptor, TimelinePresetProvider } from '@/ui/timeline/timeline-presets';
+export declare const MODULE_VISUAL_ATTRIBUTE = "data-endge-module-visual";
+export declare const VUE_MODULE_RENDERERS = "endge.vue.renderers";
+export declare const VUE_MODULE_TIMELINE_PRESETS = "endge.vue.timeline.presets";
+export declare function registerScopedVueRenderer(context: ScopedModuleContext, tag: SFCVueRenderAdapterKey, renderer: SFCVueRenderFunction): () => void;
+export declare function registerScopedTimelinePreset(context: ScopedModuleContext, descriptor: TimelinePresetDescriptor, provider: TimelinePresetProvider): () => void;
+export interface VueModuleHost {
+    core: typeof import('@endge/core');
+    vue: typeof import('vue');
+    uiVue: typeof import('@/main');
+    timeline: typeof import('@nova-lab/timeline');
+}
+export interface VueModuleExports {
+    default: (host: VueModuleHost) => ScopedModule;
+}
+export declare function createVueModuleArtifact(module: VueModuleExports, host: VueModuleHost, css?: string): ModuleArtifact;
+export declare function loadVueModuleTimeline(): Promise<VueModuleHost['timeline']>;
+```
+
 ## src/services/render/register-vue-ui-renderer.ts
 
-Исходный модуль: [src/services/render/register-vue-ui-renderer.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/render/register-vue-ui-renderer.ts)
+Исходный модуль: [src/services/render/register-vue-ui-renderer.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/render/register-vue-ui-renderer.ts)
 
 ```ts
 import type { UIComponentRendererRegistration } from '@endge/core';
@@ -30,7 +56,7 @@ export declare function registerVueUIRenderer(input: VueUIComponentRendererRegis
 
 ## src/services/render/sfc/native-vue-sfc-adapter.ts
 
-Исходный модуль: [src/services/render/sfc/native-vue-sfc-adapter.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/render/sfc/native-vue-sfc-adapter.ts)
+Исходный модуль: [src/services/render/sfc/native-vue-sfc-adapter.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/render/sfc/native-vue-sfc-adapter.ts)
 
 ```ts
 import type { SFCVueRenderAdapter } from '@/services/render/sfc/sfc-vue-render.type';
@@ -40,7 +66,7 @@ export declare const NativeVueSFCAdapter: SFCVueRenderAdapter;
 
 ## src/services/render/sfc/sfc-vue-render.type.ts
 
-Исходный модуль: [src/services/render/sfc/sfc-vue-render.type.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/render/sfc/sfc-vue-render.type.ts)
+Исходный модуль: [src/services/render/sfc/sfc-vue-render.type.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/render/sfc/sfc-vue-render.type.ts)
 
 ```ts
 import type { ComponentSFCEventBoundary, ComponentSFCRenderPort, ComponentSFCRequiredPortBinding, EndgeRuntimeContextSnapshot, EndgeStyleMatchNode, EndgeStyleSheetArtifact, ProgramMetadata, RComponentSFC_IR, RComponentSFC_IR_ElementNode, RComponentSFC_IR_Node, RComponentSFC_IR_Tag, RComponentSFC_IR_Value, RuntimeBoundaryPatch, RuntimeHostInputSource, RuntimeHostLocalInputSource, RuntimeHostRaphInputBinding, RuntimeHostRaphInputSource, SFCRenderInspectionSessionLike, UIRenderAdapter } from '@endge/core';
@@ -64,7 +90,13 @@ export declare const SFC_VUE_RENDER_ADAPTER_REQUIRED_KEYS: readonly [
     "Tooltip",
     "Table"
 ];
-export type SFCVueRenderAdapterKey = typeof SFC_VUE_RENDER_ADAPTER_REQUIRED_KEYS[number];
+export declare const SFC_VUE_RENDER_ADAPTER_OPTIONAL_KEYS: readonly [
+    "TimelineChart",
+    "TimelineGroup"
+];
+type SFCVueRequiredRenderAdapterKey = typeof SFC_VUE_RENDER_ADAPTER_REQUIRED_KEYS[number];
+type SFCVueOptionalRenderAdapterKey = typeof SFC_VUE_RENDER_ADAPTER_OPTIONAL_KEYS[number];
+export type SFCVueRenderAdapterKey = SFCVueRequiredRenderAdapterKey | SFCVueOptionalRenderAdapterKey;
 export type SFCVueRenderPrimitive = RComponentSFC_IR_Tag;
 export type SFCVueRenderBinding = {
     kind: 'literal';
@@ -119,6 +151,7 @@ export interface SFCVueRenderAdapterProps {
     ir: RComponentSFC_IR | null;
     props?: Record<string, unknown>;
     renderVersion?: number;
+    runtimeScopeId?: string;
     host?: ComponentSFCRenderPort | null;
     inspection?: SFCRenderInspectionSessionLike | null;
 }
@@ -149,7 +182,7 @@ export interface SFCVueRenderElementInput {
 export type SFCVueRenderAdapterElementInput = Pick<SFCVueRenderElementInput, 'h' | 'children' | 'props' | 'attrs'>;
 export type SFCVueRenderAdapterFunction = (input: SFCVueRenderAdapterElementInput) => SFCVueRenderResult;
 export type SFCVueRenderFunction = (input: SFCVueRenderElementInput) => SFCVueRenderResult;
-export type SFCVueRenderAdapterRendererMap = Record<SFCVueRenderAdapterKey, SFCVueRenderFunction>;
+export type SFCVueRenderAdapterRendererMap = Record<SFCVueRequiredRenderAdapterKey, SFCVueRenderFunction> & Partial<Record<SFCVueOptionalRenderAdapterKey, SFCVueRenderFunction>>;
 export interface SFCVueRenderAdapter extends UIRenderAdapter<SFCVueRenderFunction> {
     protocol: 'endge-sfc';
     protocolVersion: 1;
@@ -175,11 +208,12 @@ export interface SFCVueRenderConditionState {
 }
 export type SFCVueRenderStyleValue = string | number | null | undefined;
 export type SFCVueRenderValueEvaluator = (value: RComponentSFC_IR_Value | undefined, context: SFCVueRenderContext) => unknown;
+export {};
 ```
 
 ## src/services/render/sfc/SFCVueExpressionPreview.ts
 
-Исходный модуль: [src/services/render/sfc/SFCVueExpressionPreview.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/render/sfc/SFCVueExpressionPreview.ts)
+Исходный модуль: [src/services/render/sfc/SFCVueExpressionPreview.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/render/sfc/SFCVueExpressionPreview.ts)
 
 ```ts
 import type { SFCVueRenderContext } from '@/services/render/sfc/sfc-vue-render.type';
@@ -188,7 +222,7 @@ export declare function evaluateSFCExpression(source: string, context: SFCVueRen
 
 ## src/services/render/sfc/SFCVueRuntimeBridge.ts
 
-Исходный модуль: [src/services/render/sfc/SFCVueRuntimeBridge.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/render/sfc/SFCVueRuntimeBridge.ts)
+Исходный модуль: [src/services/render/sfc/SFCVueRuntimeBridge.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/render/sfc/SFCVueRuntimeBridge.ts)
 
 ```ts
 import type { ComponentSFCRenderPort } from '@endge/core';
@@ -210,7 +244,7 @@ export declare class SFCVueRuntimeBridge {
 
 ## src/services/style/endge-dom-style.ts
 
-Исходный модуль: [src/services/style/endge-dom-style.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/style/endge-dom-style.ts)
+Исходный модуль: [src/services/style/endge-dom-style.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/style/endge-dom-style.ts)
 
 ```ts
 import type { EndgeStyleDiagnostic, EndgeStylePlacement, EndgeStyleSheetArtifact, EndgeStyleTargetProfile } from '@endge/core';
@@ -231,7 +265,7 @@ export declare function materializeEndgeCSSForDOM(inputs: readonly EndgeDOMStyle
 
 ## src/services/style/EndgeDOMStyleRuntime.ts
 
-Исходный модуль: [src/services/style/EndgeDOMStyleRuntime.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/services/style/EndgeDOMStyleRuntime.ts)
+Исходный модуль: [src/services/style/EndgeDOMStyleRuntime.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/services/style/EndgeDOMStyleRuntime.ts)
 
 ```ts
 import type { EndgeStylePlacement, EndgeStyleSheetArtifact, EndgeStyleTargetProfile } from '@endge/core';

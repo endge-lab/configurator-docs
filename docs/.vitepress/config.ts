@@ -331,6 +331,7 @@ const agentsSidebar: Array<SidebarItem> = [
       { text: 'Авторинг Source и SFC', link: '/agents/authoring' },
       { text: 'Примеры документов всех типов', link: '/agents/document-examples' },
       { text: 'Timeline через MCP', link: '/agents/timeline' },
+      { text: 'Модули композиции', link: '/agents/modules' },
       { text: 'Вертикальный срез', link: '/agents/vertical-slice' },
       { text: 'Сквозные сценарии', link: '/agents/scenarios' },
     ],

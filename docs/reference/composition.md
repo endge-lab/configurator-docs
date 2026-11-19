@@ -121,7 +121,8 @@ inspector: contextSwitch({
 - `default` обязателен; ветки — ссылки одного kind (`composition-context-switch-kind-mismatch`);
 - modifiers (`withProps`, `activateOn`, `enabledWhen`, `activateWhen` и другие) пишутся после `contextSwitch(...)`, а не внутри ветки (`composition-context-switch-branch-modifier`);
 - выбирается case с наибольшим числом совпавших условий; пересечение cases одинаковой специфичности — `composition-context-switch-ambiguous`;
-- в значениях `withProps` работает `contextSwitch` значений и функции `facet`, `config`, `context` — см. [Контекст сборки](/reference/value-expressions#контекст-сборки).
+- в значениях `withProps` работает `contextSwitch` значений и функции `facet`, `config`, `context` — см. [Контекст сборки](/reference/value-expressions#контекст-сборки);
+- в `resources` ветки `contextSwitch` могут выбирать точные ссылки на [модули композиции](#модули-композиции).
 
 ### `enabledWhen`: элемент только для фасета
 
@@ -219,7 +220,7 @@ data: {
 
 Без `.policy(...)` используется `cache-first`, `maxAgeMs: null`, `onError: 'fail'`. Полный контракт стратегий, ручных built-in Actions и хранения в Raph описан в разделе [Справочники (Vocab)](/reference/vocab).
 
-В `resources` доступны `style(identity)` и `i18n(identity)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
+В `resources` доступны `style(identity)`, `i18n(identity)`, `operationHistory(options)` и `module(identity, version)`. Имя поля i18n-resource становится публичным alias: документ `schedule-default` доступен компонентам как `schedule`, а его физический identity в SFC не используется.
 
 ```vue
 <Text>{{ t('schedule:columns.status') }}</Text>
@@ -276,6 +277,46 @@ composition('item-board').withData({
   schedule: data('shared'),
 })
 ```
+
+### Модули композиции
+
+`module(identity, version)` подключает точную опубликованную версию. Ключ подключения определяет наследование в дереве композиций и scope. Ближайшее объявление с тем же ключом даёт ветке отдельный экземпляр и заменяет все регистрации предка под этим ключом.
+
+```ts
+defineComposition({
+  resources: {
+    slotUi: contextSwitch({
+      default: module('slot-ui-preview', '0.1.0-dev.1'),
+      cases: [
+        {
+          when: { deployment: 'test' },
+          use: module('slot-ui-preview', '0.1.0-dev.2'),
+        },
+      ],
+    }),
+  },
+  runtimes: {
+    overview: composition('slot-overview'),
+    review: composition('slot-review'),
+  },
+})
+```
+
+Если `slot-review` явно подключает `slotUi: module('slot-ui-preview', '0.1.0-dev.1')`, эта ветка сохраняет `dev.1` при любом значении `deployment`. Удаление подключения возвращает наследование. Редактируйте подключение в **Source** композиции и проверяйте результат в **Runtime Preview**.
+
+Таблица использует зарегистрированный в своём scope рендерер `Table`. Пресет Timeline выбирается по имени из штатных и доступных в выбранном Runtime Preview. Вложенный `scope({ resources: { ... } })` поддерживает тот же синтаксис. В `contextSwitch` укажите `default` и `cases` с точными ссылками на модули. Компилятор проверяет все ветки и записывает в программу пару, выбранную для контекста сборки.
+
+В обычном Preview после смены фасета запустите композицию повторно. Для адресной замены уже активного подключения в хосте используйте `Endge.runtime.modules.replace(scope, key, { identity, version })`. Этот вызов подготавливает новый экземпляр до переключения и оставляет прежний активным при ошибке подготовки. Изменение действует в текущем runtime. Для сохранения новой ссылки отредактируйте Source.
+
+```html
+<TimelineChart
+  preset="slot-resource-load"
+  :data="props.timeline"
+  :settings="{ pane: 'resource-load', taskHeight: 20 }"
+/>
+```
+
+См. [каталог Backend и формат сборки](/configurator/modules#каталог-модулей-backend).
 
 ## Runtime-ноды
 

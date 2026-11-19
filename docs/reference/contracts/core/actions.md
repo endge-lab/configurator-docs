@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа actions; исходных модулей: 3."
+description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа actions; исходных модулей: 3."
 ---
 
 # @endge/core: actions
 
-Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
+Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
 
 ## src/features/core/modules/actions/domain/action.types.ts
 
-Исходный модуль: [src/features/core/modules/actions/domain/action.types.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/domain/action.types.ts)
+Исходный модуль: [src/features/core/modules/actions/domain/action.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/actions/domain/action.types.ts)
 
 ```ts
 import type { EntityOrigin, EntityRef } from '@/features/core/modules/domain/types/document/entity-management.type';
@@ -194,7 +194,7 @@ export type TableCellActionContext = TableRowActionContext;
 
 ## src/features/core/modules/actions/EndgeActions_Module.ts
 
-Исходный модуль: [src/features/core/modules/actions/EndgeActions_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/EndgeActions_Module.ts)
+Исходный модуль: [src/features/core/modules/actions/EndgeActions_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/actions/EndgeActions_Module.ts)
 
 ```ts
 import type { ActionDefinitionInput, ActionExecuteOptions, ImplementationBindingScope, ResolvedActionDescriptor, RuntimeAction, RuntimeActionContext, RuntimeActionId, RuntimeActionRegistrySnapshot } from '@/features/core/modules/actions/domain/action.types';
@@ -247,7 +247,7 @@ export declare class EndgeActions_Module extends EndgeModule {
 
 ## src/features/core/modules/actions/services/table-actions.ts
 
-Исходный модуль: [src/features/core/modules/actions/services/table-actions.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/actions/services/table-actions.ts)
+Исходный модуль: [src/features/core/modules/actions/services/table-actions.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/actions/services/table-actions.ts)
 
 ```ts
 import type { RuntimeAction, TableColumnActionContext } from '@/features/core/modules/actions/domain/action.types';
