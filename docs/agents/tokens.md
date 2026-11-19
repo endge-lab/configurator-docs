@@ -32,7 +32,7 @@ X-Endge-Workspace: variant-a
 ## Что токену недоступно
 
 - управление токенами (`/api/v1/access-tokens`) — `403 access_token_management_forbidden`;
-- разделы `/api/v1/access-grants`, `/service-users`, `/workspaces` (CRUD и участники), `/ai`, `/backend-connections`, `/integrations`, `/bridge`, `/domain/import`, `/domain/backups`, выгрузка релизов `/releases/{id}/bundle` и `/releases/{id}/export` — `403 access_token_route_forbidden`;
+- разделы `/api/v1/access-grants`, `/service-users`, `/workspaces` (CRUD и участники), `/ai`, `/backend-connections`, `/integrations`, `/modules`, `/bridge`, `/domain/import`, `/domain/backups`, выгрузка релизов `/releases/{id}/bundle` и `/releases/{id}/export` — `403 access_token_route_forbidden`;
 - `DELETE` без флага `delete` — `403 access_token_delete_forbidden`;
 - `POST /api/v1/commits`, `/commits/{id}/restore`, `/releases`, `/releases/from-build`, `/releases/{id}/restore` без флага `commit` — `403 access_token_commit_forbidden`; планы `/plan` доступны;
 - другой workspace — `403 access_token_workspace_forbidden`;

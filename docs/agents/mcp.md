@@ -32,7 +32,7 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 1. Прочитайте ресурс `llms-agent` (`<AGENT_DOCS_URL>/llms-agent.txt`) — ядро документации: правила, коды ошибок, авторинг Source и список всех операций. Инструкции сервера (`initialize`) начинаются с этого шага. Ядро длиннее одного ответа ресурса и приходит [частями](#чтение-по-частям): прочитайте все части по порядку.
 2. `endge_status` → `endge_list_workspaces` → чтение: `endge_get_workspace`, `endge_list_documents`, `endge_get_document`. Перед созданием документа прочитайте похожий документ той же коллекции, проверенное тело в ресурсе `agents/document-examples.md` и часть справочника `llms-full/reference/{type}.txt`.
    Для сложной задачи со связями (несколько Composition, Store и Update, компоненты с портами, различия тенантов) прочитайте ресурс `agents/vertical-slice.md`: порядок создания, выбор документа и коды ошибок каждой связи.
-   Для TimelineChart и TimelineGroup используйте [сценарий Timeline](/agents/timeline) (ресурс `agents/timeline.md`).
+   Для TimelineChart и TimelineGroup используйте [сценарий Timeline](/agents/timeline) (ресурс `agents/timeline.md`). Подключение версии через Source Composition и операции каталога через REST описаны в [маршруте модулей](/agents/modules) (ресурс `agents/modules.md`).
 3. Изменение: `endge_create_document`, `endge_update_document`, откат `endge_restore_revision`. Каждый вызов с `revision` проверяет текущую ревизию; при `revision_conflict` перечитайте документ.
 4. `endge_commit_plan` — покажите пользователю документы плана, особенно чужие правки. `endge_commit` — только по его просьбе.
 

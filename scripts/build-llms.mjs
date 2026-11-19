@@ -72,6 +72,7 @@ const AGENT_CORE_PAGES = [
   'agents/mcp.md',
   'agents/scenarios.md',
   'agents/authoring.md',
+  'agents/modules.md',
   'agents/repositories.md',
   'configurator/agent-access.md',
   'reference/capabilities.md',

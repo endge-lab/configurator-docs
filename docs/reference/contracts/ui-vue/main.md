@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 2.0.0-dev.14, группа main; исходных модулей: 1."
+description: "TypeScript-декларации @endge/ui-vue 2.1.0-dev.16, группа main; исходных модулей: 1."
 ---
 
 # @endge/ui-vue: main
 
-Версия source: 2.0.0-dev.14. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [b28dfe275ef2d08431082b412644d6fe561a6027](https://github.com/endge-lab/ui-vue/tree/b28dfe275ef2d08431082b412644d6fe561a6027).
+Версия source: 2.1.0-dev.16. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [c04ff37288b65db89bc2d828c9e1339ada37fda8](https://github.com/endge-lab/ui-vue/tree/c04ff37288b65db89bc2d828c9e1339ada37fda8).
 
 ## src/main.ts
 
-Исходный модуль: [src/main.ts](https://github.com/endge-lab/ui-vue/blob/b28dfe275ef2d08431082b412644d6fe561a6027/src/main.ts)
+Исходный модуль: [src/main.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/main.ts)
 
 ```ts
 import '@/assets/styles.scss';
@@ -21,6 +21,7 @@ export * from '@/reactive/use-current-timezone';
 export * from '@/reactive/use-subscribable-ref';
 export * from '@/reactive/use-ui';
 export * from '@/services/debug/vue-console';
+export * from '@/services/modules/vue-module';
 export * from '@/services/render/register-vue-ui-renderer';
 export * from '@/services/render/sfc/native-vue-sfc-adapter';
 export * from '@/services/render/sfc/sfc-vue-render.type';
@@ -64,4 +65,6 @@ export * from '@/ui/render/sfc/SFCRender_Tooltip';
 export * from '@/ui/table/tanstack-table.types';
 export { default as TanStackSfcDataTable } from '@/ui/table/TanStackSfcDataTable.vue';
 export { default as TanStackTableRuntimeRenderer } from '@/ui/table/TanStackTableRuntimeRenderer.vue';
+export { listTimelinePresets, registerTimelinePreset } from '@/ui/timeline/timeline-presets';
+export type { TimelinePresetContext, TimelinePresetDescriptor, TimelinePresetField, TimelinePresetProvider } from '@/ui/timeline/timeline-presets';
 ```

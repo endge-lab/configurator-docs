@@ -36,6 +36,7 @@ description: "Главная страница для ИИ-агента: вход
   [Component SFC](/reference/component-sfc), [Composition](/reference/composition),
   [Computation](/reference/computation), [Type](/reference/type) и других.
   Номер формата хранится в `sourceVersion`.
+- **Модуль** — ZIP с точной версией, общий для workspace Backend. Composition подключает его через Source. Пара `identity + version`, правила REST и проверка в Preview описаны в [маршруте модулей](/agents/modules).
 - **Revision** — номер версии документа. Каждое изменение увеличивает его на
   единицу. Изменение и удаление требуют текущей revision в заголовке `If-Match`.
 - **Commit** — фиксация накопленных revisions с сообщением, как коммит в Git.

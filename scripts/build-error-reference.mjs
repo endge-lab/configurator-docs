@@ -47,6 +47,7 @@ const GROUPS = [
     match: /^(?:head_sequence_conflict|nothing_to_|revision_policy_invalid|import_|domain_version_|precondition_failed|export_option_invalid|archive_|encrypted_workspace_|workspace_password_|workspace_confirmation_invalid|workspace_schema_unsupported|backup_|revision_snapshot_invalid)/,
   },
   { id: 'releases', title: 'Релизы и сборки', match: /^(?:release_|build_(?!profile)|commit_message_required)/ },
+  { id: 'module-catalog', title: 'Глобальный каталог модулей', match: /^module_/ },
   { id: 'build-profiles', title: 'Профили сборки', match: /^build_profile/ },
   {
     id: 'documents',

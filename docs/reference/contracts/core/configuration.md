@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.2.0-dev.15, группа configuration; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа configuration; исходных модулей: 6."
 ---
 
 # @endge/core: configuration
 
-Версия source: 1.2.0-dev.15. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [42de8952dd5da9eecb167ee8e062d0ee8bbeeba0](https://github.com/endge-lab/core/tree/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0).
+Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
 
 ## src/features/core/modules/configuration/domain/configuration-value.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/configuration-value.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/domain/configuration-value.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/configuration-value.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/configuration-value.ts)
 
 ```ts
 import type { ProgramDiagnostic } from '@/features/core/modules/program/domain/types/program.types';
@@ -33,7 +33,7 @@ export {};
 
 ## src/features/core/modules/configuration/domain/endge-configuration.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/endge-configuration.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/domain/endge-configuration.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/endge-configuration.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/endge-configuration.ts)
 
 ```ts
 import type { EndgeConfiguration, EndgeConfigurationContribution, EndgePublicConfigurationSnapshot } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -48,7 +48,7 @@ export declare function createEndgePublicConfigurationSnapshot(configuration: En
 
 ## src/features/core/modules/configuration/domain/tooltip.config.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/tooltip.config.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/domain/tooltip.config.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/tooltip.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/tooltip.config.ts)
 
 ```ts
 import type { EndgeTooltipConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -57,7 +57,7 @@ export declare const DEFAULT_ENDGE_TOOLTIP_CONFIGURATION: Readonly<EndgeTooltipC
 
 ## src/features/core/modules/configuration/domain/types/configuration.type.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/types/configuration.type.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/domain/types/configuration.type.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/types/configuration.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/types/configuration.type.ts)
 
 ```ts
 import type { DiagnosticsSeverityNumber, DiagnosticsSignal, EndgeDiagnosticsConfiguration, EndgeDiagnosticsOutputConfiguration, EndgeDiagnosticsRoute } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -222,7 +222,7 @@ export interface EndgeBuildContext {
 
 ## src/features/core/modules/configuration/EndgeConfiguration_Module.ts
 
-Исходный модуль: [src/features/core/modules/configuration/EndgeConfiguration_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/EndgeConfiguration_Module.ts)
+Исходный модуль: [src/features/core/modules/configuration/EndgeConfiguration_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/EndgeConfiguration_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -246,7 +246,7 @@ export declare class EndgeConfiguration_Module extends EndgeModule<EndgeBootCont
 
 ## src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts
 
-Исходный модуль: [src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts](https://github.com/endge-lab/core/blob/42de8952dd5da9eecb167ee8e062d0ee8bbeeba0/src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts)
+Исходный модуль: [src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
