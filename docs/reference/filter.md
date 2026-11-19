@@ -69,7 +69,7 @@ products: field('String')
   .default([])
 ```
 
-Правило для `vue`:
+Правило для `vue-native`:
 
 - `searchable: true` принудительно включает поиск;
 - `searchable: false` принудительно скрывает поиск;

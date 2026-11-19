@@ -61,7 +61,7 @@ Facet и Facet Document имеют отдельный typed provider contract. I
 ## Границы языков и окружений
 
 - Общие Source expressions не исполняют произвольный JavaScript. У Filter, event input и SFC свои подмножества.
-- UI adapter определяет renderer capabilities. Для таблиц действует [публичная матрица vue](/sfc-tables/adapters-and-limitations); backend paging `lazy` и grouping не возникают от наличия сторонней grid-библиотеки.
+- UI adapter определяет renderer capabilities. Для таблиц действует [публичная матрица vue-native](/sfc-tables/adapters-and-limitations); backend paging `lazy` и grouping не возникают от наличия сторонней grid-библиотеки.
 - Bundle provider предназначен для исполнения готового снимка и не является редакторским API записи.
 - Наличие права редактирования документа не добавляет runtime permission в `$context`: бизнес-флаги передаются явно через props или Configuration.
 - Preview, production host и Simulation имеют разные lifecycle owners. Успешная compilation не подтверждает сетевую доступность, credentials или готовность UI adapter.
