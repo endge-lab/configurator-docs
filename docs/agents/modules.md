@@ -16,7 +16,7 @@ description: "Маршрут агента для глобального ката
 
 ## Назначить рендерер в рабочем пространстве
 
-Сверьте `primitive` и `id` в `manifest.contributes.renderers` точной версии. В workspace настройка `configuration.defaultRenderers` хранит пары вида `{ "Table": { "identity": "custom-ui", "version": "1.0.0", "rendererId": "slot" } }`. Сохраняйте остальные поля конфигурации. Удаление ключа тега возвращает рендерер корневого адаптера. Configurator читает manifest для списка настроек и загружает выбранный модуль при запуске SFC. Для локального переопределения на экземпляре компонента используйте `.withRenderers({ Table: 'visual:slot' })`. [Настройки UI](/configurator/modules#рендереры-рабочего-пространства)
+Сверьте `primitive` и `id` в `manifest.contributes.renderers` точной версии. В workspace настройка `configuration.defaultRenderers` хранит пары вида `{ "Table": { "identity": "custom-ui", "version": "1.0.0", "rendererId": "slot" } }`. Сохраняйте остальные поля конфигурации. В Configurator корневой адаптер имеет ID `vue`. Пункт `default` удаляет ключ тега. При отсутствии выбора в композиции используется штатный рендерер приложения. В режиме `live` проверьте переопределение повторной загрузкой workspace. Для bundle проверьте, что приложение получило новый релиз конфигурации. Configurator читает manifest для списка настроек и загружает выбранный модуль при запуске SFC. Для локального переопределения на экземпляре компонента используйте `.withRenderers({ Table: 'visual:slot' })`. [Настройки UI](/configurator/modules#рендереры-рабочего-пространства)
 
 ## Проверить или опубликовать ZIP через API
 

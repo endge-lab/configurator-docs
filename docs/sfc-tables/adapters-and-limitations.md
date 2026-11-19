@@ -9,7 +9,7 @@ grid-библиотеки. Стандартные Vue-адаптеры испо�
 
 | Адаптер | Реализация Table |
 | --- | --- |
-| `vue-native` | TanStack Table и TanStack Virtual |
+| `vue` | TanStack Table и TanStack Virtual |
 
 Все адаптеры должны сохранять структуру `Table`/`Column`/`Cell`, смысловые Events,
 Actions, row identity и authored defaults. Внешний Component SFC не импортирует
@@ -22,7 +22,7 @@ Actions, row identity и authored defaults. Внешний Component SFC не и
 
 | Адаптер | `auto` разрешается как |
 | --- | --- |
-| `vue-native` | `control` |
+| `vue` | `control` |
 
 Если переносимый Component SFC требует конкретного поведения, укажите
 `control`, `row` или `both` явно. Явное значение имеет приоритет над стандартом
@@ -30,7 +30,7 @@ Actions, row identity и authored defaults. Внешний Component SFC не и
 выбор через control обязан давать ту же подсветку, Events и Actions, что и
 выбор через строку.
 
-`cell-selection-mode="single"` поддерживается `vue-native`.
+`cell-selection-mode="single"` поддерживается `vue`.
 В этой реализации identity ячейки — это
 `rowId + columnKey`, публикуется `cellSelectionChanged`, а выбранная surface
 получает states `selected` и `cell-selected`. Row selection и cell selection
@@ -47,7 +47,7 @@ Actions, row identity и authored defaults. Внешний Component SFC не и
 - способ измерения виртуальных строк;
 - theme hint и доступные visual tokens.
 
-Публичный `vue-native` поддерживает: selection, cell selection, activation, editable-содержимое,
+Публичный `vue` поддерживает: selection, cell selection, activation, editable-содержимое,
 сортировку, pinning, visibility, resize, порядок колонок, paging, virtualization
 и Table Events. Внешнее оформление остаётся ответственностью темы приложения.
 Если одинаковый состав команд обязателен, объявляйте inline `ColumnMenu`.
@@ -65,12 +65,12 @@ Actions, row identity и authored defaults. Внешний Component SFC не и
 | Отдельный `ColumnMenu` на каждой Column | Не поддерживается в v1 |
 | Grouping и aggregation contract | Не объявлен публичным Table API |
 | Persistence selection | Не поддерживается |
-| Выбор одной ячейки | Поддерживается в публичном `vue-native` adapter |
+| Выбор одной ячейки | Поддерживается в публичном `vue` adapter |
 
 ## Как документировать расширение
 
 Новая возможность становится общей только после появления renderer-neutral
-контракта, compiler validation и реализации в публичном `vue-native` adapter.
+контракта, compiler validation и реализации в публичном `vue` adapter.
 Опция одной grid-библиотеки не должна автоматически попадать в публичную SFC
 документацию.
 
