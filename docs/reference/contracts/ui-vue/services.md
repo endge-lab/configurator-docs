@@ -60,7 +60,7 @@ export declare function registerVueUIRenderer(input: VueUIComponentRendererRegis
 
 ```ts
 import type { SFCVueRenderAdapter } from '@/services/render/sfc/sfc-vue-render.type';
-export declare const NATIVE_VUE_SFC_ADAPTER_ID = "vue";
+export declare const NATIVE_VUE_SFC_ADAPTER_ID = "vue-native";
 export declare const NativeVueSFCAdapter: SFCVueRenderAdapter;
 ```
 

@@ -50,7 +50,7 @@ npm install --save-exact @endge/core@1.0.0-dev.12 @endge/ui-vue@1.0.0-dev.11
 | [Configurator](https://github.com/endge-lab/configurator) | Редакторы, preview, visual authoring, API adapters и работа с сохранёнными документами |
 | [Configurator Docs](https://github.com/endge-lab/configurator-docs) | Этот сайт, исходники страниц и генераторы LLM/reference |
 | [Core](https://github.com/endge-lab/core) | Source parsers, compiler/linker, Domain entities, Program artifacts, runtime hosts, data ownership, facade Endge |
-| [UI Vue](https://github.com/endge-lab/ui-vue) | Публичный renderer `vue`, SFC tags, таблицы, FilterView, интеграция с Vue |
+| [UI Vue](https://github.com/endge-lab/ui-vue) | Публичный renderer `vue-native`, SFC tags, таблицы, FilterView, интеграция с Vue |
 | [Utils](https://github.com/endge-lab/utils) | Общие utilities, сериализация и вспомогательные типы |
 | [Computation Sandbox](https://github.com/endge-lab/computation-sandbox) | Ограниченное выполнение вычислительных выражений |
 | [Service Kit Go](https://github.com/endge-lab/service-kit-go) | Общая инфраструктура Go-сервисов |

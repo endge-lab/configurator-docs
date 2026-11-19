@@ -16,7 +16,9 @@ description: "Маршрут агента для глобального ката
 
 ## Назначить рендерер в рабочем пространстве
 
-Сверьте `primitive` и `id` в `manifest.contributes.renderers` точной версии. В workspace настройка `configuration.defaultRenderers` хранит пары вида `{ "Table": { "identity": "custom-ui", "version": "1.0.0", "rendererId": "slot" } }`. Сохраняйте остальные поля конфигурации. В Configurator корневой адаптер имеет ID `vue`. Пункт `default` удаляет ключ тега. При отсутствии выбора в композиции используется штатный рендерер приложения. В режиме `live` проверьте переопределение повторной загрузкой workspace. Для bundle проверьте, что приложение получило новый релиз конфигурации. Configurator читает manifest для списка настроек и загружает выбранный модуль при запуске SFC. Для локального переопределения на экземпляре компонента используйте `.withRenderers({ Table: 'visual:slot' })`. [Настройки UI](/configurator/modules#рендереры-рабочего-пространства)
+Сверьте `primitive` и `id` в `manifest.contributes.renderers` точной версии. В workspace настройка `configuration.defaultRenderers` хранит пары вида `{ "Table": { "identity": "custom-ui", "version": "1.0.0", "rendererId": "slot" } }`. Сохраняйте остальные поля конфигурации. Удаление ключа тега возвращает рендерер корневого адаптера. Configurator читает manifest для списка настроек и загружает выбранный модуль при запуске SFC. Для локального переопределения на экземпляре компонента используйте `.withRenderers({ Table: 'visual:slot' })`. [Настройки UI](/configurator/modules#рендереры-рабочего-пространства)
+
+Для офлайн-поставки используйте контекстную сборку с включённым параметром **«Включить модули в артефакт»**. Состав версий определяется по выбранным программам и эффективным настройкам тегов. Проверяйте распакованный `endge-bundle` версии 2, включая `bundle`, `delivery.variants` и `delivery.modules`. Для одного тенанта во всех вариантах значение `context.facets.tenant` должно совпадать. [Сборка выбранного контекста](/guides/context-specific-bundle#выбор-вариантов-и-автономная-поставка)
 
 ## Проверить или опубликовать ZIP через API
 
@@ -25,10 +27,10 @@ description: "Маршрут агента для глобального ката
 | Метод и маршрут | Вход или результат |
 | --- | --- |
 | `GET /api/v1/modules` | Список модулей Backend |
-| `POST /api/v1/modules` | Multipart `identity`, `name`, необязательное `description`, `archive`. Публикует первую версию атомарно с созданием карточки |
+| `POST /api/v1/modules` | Multipart `name`, `archive` и необязательное `description`. Backend берёт идентификатор и версию из manifest и публикует первую версию атомарно с созданием карточки. Если клиент передаёт необязательное поле `identity`, оно должно совпадать с manifest |
 | `GET /api/v1/modules/{identity}` | Метаданные, ревизия и опубликованные версии |
 | `PATCH /api/v1/modules/{identity}` | JSON с `name` или `description`, заголовок `If-Match` с актуальной ревизией карточки |
-| `POST /api/v1/modules/{identity}/versions` | Multipart `archive`. Версия берётся из manifest |
+| `POST /api/v1/modules/{identity}/versions` | Multipart `archive`. Версия берётся из manifest, идентификатор должен совпадать с `{identity}` в маршруте |
 | `GET /api/v1/modules/{identity}/versions/{version}` | Manifest, SHA-256 оригинального ZIP, размер, `archiveUrl` и `assets` |
 | `GET /api/v1/modules/{identity}/versions/{version}/archive` | Оригинал опубликованного ZIP |
 | `GET /api/v1/modules/{identity}/versions/{version}/assets/{file}` | `module.js` или, при наличии, `module.css` |
