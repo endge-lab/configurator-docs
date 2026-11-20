@@ -1,12 +1,12 @@
 ---
-description: "Все 273 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
+description: "Все 286 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
 ---
 
 <!-- Сгенерировано scripts/build-error-reference.mjs из docs/error-codes.yaml Service Backend. Не редактируйте вручную: pnpm errors:build. -->
 
 # Коды ошибок Service Backend
 
-Справочник собран из каталога ошибок backend 0.19.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `21f3ea029155`): 273 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
+Справочник собран из каталога ошибок backend 0.22.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `705e837bf21e`): 286 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
 Controller/window diagnostics нового source candidate не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).
 
@@ -58,6 +58,7 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 - [Коммиты, восстановление, импорт и экспорт](#history) — 27
 - [Релизы и сборки](#releases) — 12
 - [Глобальный каталог модулей](#module-catalog) — 6
+- [Рабочие настройки пользователей](#user-state) — 13
 - [Профили сборки](#build-profiles) — 7
 - [Документы, Source и папки](#documents) — 51
 - [Workspace](#workspace) — 9
@@ -240,6 +241,24 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 | <a id="module_metadata_invalid"></a>`module_metadata_invalid` | 400 | Поля карточки модуля отсутствуют или не проходят проверку. | Укажите identity в нижнем регистре, название и необязательное описание в пределах лимита. |
 | <a id="module_not_found"></a>`module_not_found` | 404 | Модуль или его версия отсутствуют в глобальном каталоге Backend. | Проверьте identity и точный номер опубликованной версии. |
 | <a id="module_platform_admin_required"></a>`module_platform_admin_required` | 403 | Изменять каталог и публиковать версии может администратор платформы. | Используйте сессию администратора платформы. |
+
+## Рабочие настройки пользователей {#user-state}
+
+| Код | HTTP | Смысл | Действие |
+| --- | --- | --- | --- |
+| <a id="user_state_actor_changed"></a>`user_state_actor_changed` | 403 | Сеанс сменился после подготовки пакета настроек. | Восстановите исходный сеанс и загрузите подтверждённое состояние перед отправкой. |
+| <a id="user_state_backend_disabled"></a>`user_state_backend_disabled` | 403 | Для этого контекста выбран другой драйвер хранения. | Проверьте настройки workspace и выбранных документов фасетов. |
+| <a id="user_state_batch_invalid"></a>`user_state_batch_invalid` | 400 | Пакет настроек пуст, превышает 32 операции или содержит неверную ревизию сброса. | Уменьшите пакет и передайте resetRevision из снимка. |
+| <a id="user_state_body_invalid"></a>`user_state_body_invalid` | 400 | Тело запроса имеет неверный JSON или превышает 64 КиБ. | Не повторяйте запрос без изменений. Исправьте поле, названное в message (и в details.field, если оно есть), по схеме операции в OpenAPI и отправьте запрос снова. |
+| <a id="user_state_confirmation_required"></a>`user_state_confirmation_required` | 400 | Не передано явное подтверждение сброса. | Покажите выбранный контекст и масштаб удаления. Отправляйте подтверждение после согласия администратора. |
+| <a id="user_state_context_invalid"></a>`user_state_context_invalid` | 400 | Запрошенный набор документов фасетов недействителен. | Уточните текущий контекст и передайте все выбранные активные документы. |
+| <a id="user_state_facet_forbidden"></a>`user_state_facet_forbidden` | 403 | Сеансу недоступен защищённый контекст сохранения. | Выберите разрешённый контекст или обратитесь к владельцу политики OIDC. |
+| <a id="user_state_filter_invalid"></a>`user_state_filter_invalid` | 400 | Некорректный поисковый фильтр или курсор пользователей. | Исправьте параметр запроса, названный в message, по описанию параметра в OpenAPI и повторите запрос. |
+| <a id="user_state_operation_invalid"></a>`user_state_operation_invalid` | 400 | Операция содержит неподдерживаемый ключ, значение, UUID или ревизию. | Проверьте значение по каталогу и передайте одну операцию на ключ. |
+| <a id="user_state_partition_changed"></a>`user_state_partition_changed` | 403 | Очередь относится к другой среде или прежнему рабочему пространству. | Загрузите актуальный контекст перед созданием нового пакета. |
+| <a id="user_state_session_required"></a>`user_state_session_required` | 403 | Пользовательские настройки требуют аутентифицированную пользовательскую сессию. | Войдите через настроенный OIDC-провайдер. |
+| <a id="user_state_target_invalid"></a>`user_state_target_invalid` | 400 | Цель операции должна быть пользователем Backend с валидным UUID. | Не повторяйте запрос без изменений. Исправьте поле, названное в message (и в details.field, если оно есть), по схеме операции в OpenAPI и отправьте запрос снова. |
+| <a id="user_state_user_not_found"></a>`user_state_user_not_found` | 404 | Для указанного пользователя отсутствуют сохранённые настройки в этом контексте. | Обновите список пользователей и выберите актуальную запись. |
 
 ## Профили сборки {#build-profiles}
 

@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа program; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа program; исходных модулей: 6."
 ---
 
 # @endge/core: program
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/program/domain/types/action-program.types.ts
 
-Исходный модуль: [src/features/core/modules/program/domain/types/action-program.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/domain/types/action-program.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/action-program.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/domain/types/action-program.types.ts)
 
 ```ts
 import type { ActionTargetSelector } from '@/features/core/modules/actions/domain/action.types';
@@ -24,7 +24,7 @@ export interface ActionProgramPayload {
 
 ## src/features/core/modules/program/domain/types/execution-bundle.types.ts
 
-Исходный модуль: [src/features/core/modules/program/domain/types/execution-bundle.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/domain/types/execution-bundle.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/execution-bundle.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/domain/types/execution-bundle.types.ts)
 
 ```ts
 import type { ComponentSFCTagRegistryEntry, ProgramArtifact, ProgramArtifactKey } from './program.types';
@@ -91,6 +91,7 @@ export interface ProgramRequirements {
     componentTags: ComponentSFCTagRegistryEntry[];
 }
 export interface ExecutionBundle {
+    runtimeDocuments?: Partial<Record<'mocks' | 'authProfiles' | 'i18nBundles' | 'converters', Record<string, unknown>[]>>;
     executionGraphVersion?: 1;
     exportScope?: 'startup-composition';
     version: 1;
@@ -109,7 +110,7 @@ export interface PreparedProgramInstall {
 
 ## src/features/core/modules/program/domain/types/program-metadata.types.ts
 
-Исходный модуль: [src/features/core/modules/program/domain/types/program-metadata.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/domain/types/program-metadata.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/program-metadata.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/domain/types/program-metadata.types.ts)
 
 ```ts
 export type ProgramMetadataValue = null | boolean | number | string | ProgramMetadataValue[] | {
@@ -131,7 +132,7 @@ export declare function createEmptyProgramMetadata(): ProgramMetadata;
 
 ## src/features/core/modules/program/domain/types/program.types.ts
 
-Исходный модуль: [src/features/core/modules/program/domain/types/program.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/domain/types/program.types.ts)
+Исходный модуль: [src/features/core/modules/program/domain/types/program.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/domain/types/program.types.ts)
 
 ```ts
 import type { RComponentContract, RComponentDependencies } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -327,7 +328,7 @@ export interface EndgeProgramSnapshot {
 
 ## src/features/core/modules/program/EndgeProgram_Module.ts
 
-Исходный модуль: [src/features/core/modules/program/EndgeProgram_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/EndgeProgram_Module.ts)
+Исходный модуль: [src/features/core/modules/program/EndgeProgram_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/EndgeProgram_Module.ts)
 
 ```ts
 import type { CompiledContextDescriptor, CompiledProgramCatalog, ExecutionBundle, PreparedProgramInstall, ProgramHostActionRequirement } from './domain/types/execution-bundle.types';
@@ -393,7 +394,7 @@ export declare class EndgeProgram_Module extends EndgeModule {
 
 ## src/features/core/modules/program/tools/restore-program-source.ts
 
-Исходный модуль: [src/features/core/modules/program/tools/restore-program-source.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/program/tools/restore-program-source.ts)
+Исходный модуль: [src/features/core/modules/program/tools/restore-program-source.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/program/tools/restore-program-source.ts)
 
 ```ts
 import type { ProgramArtifact } from '../domain/types/program.types';

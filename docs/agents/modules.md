@@ -22,18 +22,22 @@ description: "Маршрут агента для глобального ката
 
 ## Проверить или опубликовать ZIP через API
 
-Все операции каталога идут по `/api/v1/modules` на Backend и работают без `X-Endge-Workspace`. Для HTTP используйте OIDC access token пользователя или его браузерную сессию. Создание, изменение метаданных и публикация требуют администратора платформы. Для обычных запросов агента с PAT каталог отвечает `access_token_route_forbidden`. MCP-инструменты работают с документом Composition, а операции каталога выполняются напрямую по REST или через Configurator. [Персональные токены](/agents/tokens)
+Все операции каталога идут по `/api/v1/modules` на Backend и работают без `X-Endge-Workspace`. Для HTTP используйте OIDC access token пользователя или его браузерную сессию. Создание, изменение метаданных, публикация, просмотр архива и восстановление требуют администратора платформы. Для обычных запросов агента с PAT каталог отвечает `access_token_route_forbidden`. MCP-инструменты работают с документом Composition, а операции каталога выполняются напрямую по REST или через Configurator. [Персональные токены](/agents/tokens)
 
 | Метод и маршрут | Вход или результат |
 | --- | --- |
-| `GET /api/v1/modules` | Список модулей Backend |
+| `GET /api/v1/modules` | Активные модули Backend. `?deleted=true` возвращает архив с текущими ревизиями |
 | `POST /api/v1/modules` | Multipart `name`, `archive` и необязательное `description`. Backend берёт идентификатор и версию из manifest и публикует первую версию атомарно с созданием карточки. Если клиент передаёт необязательное поле `identity`, оно должно совпадать с manifest |
 | `GET /api/v1/modules/{identity}` | Метаданные, ревизия и опубликованные версии |
 | `PATCH /api/v1/modules/{identity}` | JSON с `name` или `description`, заголовок `If-Match` с актуальной ревизией карточки |
+| `DELETE /api/v1/modules/{identity}` | Перенос в архив с `If-Match`. Ответ содержит `deletedAt` и новую ревизию |
+| `POST /api/v1/modules/{identity}/restore` | Восстановление с `If-Match` по ревизии записи в архиве |
 | `POST /api/v1/modules/{identity}/versions` | Multipart `archive`. Версия берётся из manifest, идентификатор должен совпадать с `{identity}` в маршруте |
 | `GET /api/v1/modules/{identity}/versions/{version}` | Manifest, SHA-256 оригинального ZIP, размер, `archiveUrl` и `assets` |
 | `GET /api/v1/modules/{identity}/versions/{version}/archive` | Оригинал опубликованного ZIP |
 | `GET /api/v1/modules/{identity}/versions/{version}/assets/{file}` | `module.js` или, при наличии, `module.css` |
+
+После архивации карточка возвращает `404`, а manifest, ZIP и assets остаются доступны по точной версии. Ответ о версии содержит `moduleArchived: true`. Перед созданием новой привязки проверьте, что модуль активен. При конфликте ревизии перечитайте карточку или запись в архиве и проверьте состояние перед повтором.
 
 Добавляйте маршруты к полному базовому адресу Backend, включая префикс. Кодируйте версию как путь из одного сегмента. Например, для проверки версии с помощью пользовательского OIDC-токена:
 

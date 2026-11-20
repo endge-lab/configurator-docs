@@ -46,6 +46,7 @@ const configuratorSidebar: Array<SidebarItem> = [
       { text: 'Начало работы', link: '/configurator/getting-started' },
       { text: 'Установка', link: '/configurator/installation' },
       { text: 'Модули конфигуратора', link: '/configurator/modules' },
+      { text: 'Настройки пользователей', link: '/configurator/user-settings' },
       { text: 'Основной рабочий процесс', link: '/configurator/workflow' },
     ],
   },

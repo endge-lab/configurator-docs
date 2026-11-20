@@ -3,34 +3,33 @@
   "packages": [
     {
       "name": "@endge/core",
-      "version": "1.3.0-dev.17",
+      "version": "1.8.0-dev.25",
       "repository": "https://github.com/endge-lab/core",
-      "revision": "5013d6272b427b472eb5c38a698d3608cf8f4ceb",
+      "revision": "ef69ac170d1982c3df93d1bfc4be5a03893c5226",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
       "publication": {
-        "checkedAt": "2026-11-19T12:25:54.706Z",
-        "version": "1.3.0-dev.17",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcore/1.3.0-dev.17",
-        "integrity": "sha512-zKyjDbg14zcI56YXL/qTVAkyEklNeVP5jIx+sE136RbOxKSTrNjrFm62Hh74pkVrXfqpgv4TwVfw/wQCWxhTeA==",
-        "tarball": "https://registry.npmjs.org/@endge/core/-/core-1.3.0-dev.17.tgz",
+        "checkedAt": "2026-11-20T09:15:07.693694Z",
+        "version": "1.8.0-dev.25",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Fcore/1.8.0-dev.25",
+        "integrity": "sha512-VfQaJqLhBn6dQbOPYyvmfFFhMKyidY/6tFwsDiYr+u9z2ngTzeIvcjIRcfM5RtagsrffcW6IvXQEMNZhnxewCA==",
+        "tarball": "https://registry.npmjs.org/@endge/core/-/core-1.8.0-dev.25.tgz",
         "observedDistTags": {
-          "latest": "1.0.0-dev.12",
-          "dev": "1.3.0-dev.17"
+          "dev": "1.8.0-dev.25"
         },
-        "gitHead": "5013d6272b427b472eb5c38a698d3608cf8f4ceb",
-        "sourceRevision": "5013d6272b427b472eb5c38a698d3608cf8f4ceb",
-        "sourceUrl": "https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb"
+        "gitHead": "ef69ac170d1982c3df93d1bfc4be5a03893c5226",
+        "sourceRevision": "ef69ac170d1982c3df93d1bfc4be5a03893c5226",
+        "sourceUrl": "https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226"
       },
-      "sourceSha256": "8f0e91b544e05c55151be814f7ff65cd79cf2c292c73e59aeb7768e6e4058db1",
+      "sourceSha256": "af16241d50b4c27a62b4cdbf71ec706af57f14bc815e8a95fb34f2c30d69695b",
       "entrypoints": [
         {
           "import": "@endge/core",
           "source": "src/main.ts"
         }
       ],
-      "exportCount": 1599,
-      "declarationModuleCount": 319,
+      "exportCount": 1635,
+      "declarationModuleCount": 326,
       "exportPatterns": {},
       "peerDependencies": {
         "@raphy-js/raph": ">=1.0.0-dev.18 <2 || >=1.0.1-dev.25 <2",
@@ -73,37 +72,36 @@
     },
     {
       "name": "@endge/ui-vue",
-      "version": "2.1.0-dev.16",
+      "version": "2.4.1-dev.24",
       "repository": "https://github.com/endge-lab/ui-vue",
-      "revision": "c04ff37288b65db89bc2d828c9e1339ada37fda8",
+      "revision": "3e2e86a56e6b69243302b632d6e35106293ab8b4",
       "revisionScope": "source-checkout",
       "sourceDirty": false,
       "publication": {
-        "checkedAt": "2026-11-19T12:25:54.706Z",
-        "version": "2.1.0-dev.16",
-        "registryUrl": "https://registry.npmjs.org/%40endge%2Fui-vue/2.1.0-dev.16",
-        "integrity": "sha512-8/fc7oUL/ZFKL/RQJau0kbsXiJ+rMF3Hz1HdPHfjaSwWRsguLaVaimUUXgrRh+4D9FW2jXNYQDz8JAPGbMFjmg==",
-        "tarball": "https://registry.npmjs.org/@endge/ui-vue/-/ui-vue-2.1.0-dev.16.tgz",
+        "checkedAt": "2026-11-20T09:19:46.044132Z",
+        "version": "2.4.1-dev.24",
+        "registryUrl": "https://registry.npmjs.org/%40endge%2Fui-vue/2.4.1-dev.24",
+        "integrity": "sha512-0vNPXkentnLQ3KG4/vNWaebFRXhYEQ8Es28uArsWmBaqdGMGBQHHLDcjGYBuTzBT/Bo4BQl1bOfvmdj4nzao2g==",
+        "tarball": "https://registry.npmjs.org/@endge/ui-vue/-/ui-vue-2.4.1-dev.24.tgz",
         "observedDistTags": {
-          "latest": "1.0.0-dev.11",
-          "dev": "2.1.0-dev.16"
+          "dev": "2.4.1-dev.24"
         },
-        "gitHead": "c04ff37288b65db89bc2d828c9e1339ada37fda8",
-        "sourceRevision": "c04ff37288b65db89bc2d828c9e1339ada37fda8",
-        "sourceUrl": "https://github.com/endge-lab/ui-vue/tree/c04ff37288b65db89bc2d828c9e1339ada37fda8"
+        "gitHead": "3e2e86a56e6b69243302b632d6e35106293ab8b4",
+        "sourceRevision": "3e2e86a56e6b69243302b632d6e35106293ab8b4",
+        "sourceUrl": "https://github.com/endge-lab/ui-vue/tree/3e2e86a56e6b69243302b632d6e35106293ab8b4"
       },
-      "sourceSha256": "f1405010074662f191f31c3dac0441112ab0b9e1eda98961116a830736ead269",
+      "sourceSha256": "990dc6b055b045c0c2305f263da88308522c316857d1d4819e3d9e54d60b4c4e",
       "entrypoints": [
         {
           "import": "@endge/ui-vue",
           "source": "src/main.ts"
         }
       ],
-      "exportCount": 161,
-      "declarationModuleCount": 49,
+      "exportCount": 166,
+      "declarationModuleCount": 51,
       "exportPatterns": {},
       "peerDependencies": {
-        "@endge/core": "1.3.0-dev.17",
+        "@endge/core": "1.8.0-dev.25",
         "@endge/utils": ">=1.0.0-dev <2",
         "@raphy-js/raph": ">=1.0.0-dev.18 <2 || >=1.0.1-dev.25 <2",
         "vue": "^3.3.0"

@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 2.1.0-dev.16, группа main; исходных модулей: 1."
+description: "TypeScript-декларации @endge/ui-vue 2.4.1-dev.24, группа main; исходных модулей: 1."
 ---
 
 # @endge/ui-vue: main
 
-Версия source: 2.1.0-dev.16. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [c04ff37288b65db89bc2d828c9e1339ada37fda8](https://github.com/endge-lab/ui-vue/tree/c04ff37288b65db89bc2d828c9e1339ada37fda8).
+Версия source: 2.4.1-dev.24. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [3e2e86a56e6b69243302b632d6e35106293ab8b4](https://github.com/endge-lab/ui-vue/tree/3e2e86a56e6b69243302b632d6e35106293ab8b4).
 
 ## src/main.ts
 
-Исходный модуль: [src/main.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/main.ts)
+Исходный модуль: [src/main.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/main.ts)
 
 ```ts
 import '@/assets/styles.scss';
@@ -21,7 +21,9 @@ export * from '@/reactive/use-current-timezone';
 export * from '@/reactive/use-subscribable-ref';
 export * from '@/reactive/use-ui';
 export * from '@/services/debug/vue-console';
+export * from '@/services/modules/vue-delivery';
 export * from '@/services/modules/vue-module';
+export * from '@/services/modules/vue-module-catalog-loader';
 export * from '@/services/render/register-vue-ui-renderer';
 export * from '@/services/render/sfc/native-vue-sfc-adapter';
 export * from '@/services/render/sfc/sfc-vue-render.type';
