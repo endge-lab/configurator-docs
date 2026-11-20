@@ -4,7 +4,7 @@ description: "Публичные TypeScript-контракты @typedworks/feder
 
 # @typedworks/federation: публичные контракты
 
-Source version: **1.0.0-dev.1**. Repository: https://gitlab.com/typedworks/typedworks-federation (закрыт, canonical). Публичные declarations — [@typedworks/federation@1.0.0-dev.1 в npm](https://unpkg.com/@typedworks/federation@1.0.0-dev.1/). [Общий каталог](/reference/contracts/).
+Source version: **1.0.0-dev.1**. Repository: https://gitlab.com/typedworks/typedworks-federation (закрыт, canonical). Публичные declarations — [@typedworks/federation@1.0.0-dev.1 в npm](https://unpkg.com/@typedworks/federation@1.0.0-dev.1/). Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main. [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 

@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа updates; исходных модулей: 2."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.9, группа updates; исходных модулей: 2."
 ---
 
 # @endge/utils: updates
 
-Версия source: 1.0.0-dev.6. [Каталог package](./). [Repository](https://github.com/endge-lab/utils).
+Версия source: 1.0.0-dev.9. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/utils); сама ссылка не подтверждает snapshot этого контракта. Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/updates/SSEManager.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/updates/SSEManager.ts)
+Исходный модуль: `src/updates/SSEManager.ts`
 
 ```ts
 export interface SSEManagerMessage {
@@ -40,7 +40,7 @@ export declare class SSEManager {
 
 ## src/updates/UPSMeter_Service.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/updates/UPSMeter_Service.ts)
+Исходный модуль: `src/updates/UPSMeter_Service.ts`
 
 ```ts
 export declare class UPSMeter_Service {

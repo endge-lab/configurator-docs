@@ -4,7 +4,7 @@ description: "TypeScript-декларации @raphy-js/raph 1.0.1-dev.55, гр�
 
 # @raphy-js/raph: reactivity
 
-Версия source: 1.0.1-dev.55. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/).
+Версия source: 1.0.1-dev.55. [Каталог package](./). Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/). Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/reactivity/engine-core.ts
 

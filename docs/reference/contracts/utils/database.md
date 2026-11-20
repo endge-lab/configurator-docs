@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа database; исходных модулей: 1."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.9, группа database; исходных модулей: 1."
 ---
 
 # @endge/utils: database
 
-Версия source: 1.0.0-dev.6. [Каталог package](./). [Repository](https://github.com/endge-lab/utils).
+Версия source: 1.0.0-dev.9. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/utils); сама ссылка не подтверждает snapshot этого контракта. Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/database/PayloadHttpClient.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/database/PayloadHttpClient.ts)
+Исходный модуль: `src/database/PayloadHttpClient.ts`
 
 ```ts
 export interface PayloadClientOptions {

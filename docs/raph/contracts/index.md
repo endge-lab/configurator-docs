@@ -4,7 +4,7 @@ description: "Публичные TypeScript-контракты @raphy-js/raph 1.
 
 # @raphy-js/raph: публичные контракты
 
-Source version: **1.0.1-dev.55**. Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/). [Общий каталог](/reference/contracts/).
+Source version: **1.0.1-dev.55**. Repository: https://gitlab.com/raphyjs/raphy-js-raph (закрыт, canonical). Публичные declarations — [@raphy-js/raph@1.0.1-dev.55 в npm](https://unpkg.com/@raphy-js/raph@1.0.1-dev.55/). Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main. [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 

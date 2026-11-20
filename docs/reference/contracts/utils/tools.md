@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа tools; исходных модулей: 10."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.9, группа tools; исходных модулей: 10."
 ---
 
 # @endge/utils: tools
 
-Версия source: 1.0.0-dev.6. [Каталог package](./). [Repository](https://github.com/endge-lab/utils).
+Версия source: 1.0.0-dev.9. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/utils); сама ссылка не подтверждает snapshot этого контракта. Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/tools/console.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/console.ts)
+Исходный модуль: `src/tools/console.ts`
 
 ```ts
 export declare function consoleValueSummary(value: unknown): string;
@@ -17,7 +17,7 @@ export declare function consoleErrorSummary(error: unknown): string;
 
 ## src/tools/debug.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/debug.ts)
+Исходный модуль: `src/tools/debug.ts`
 
 ```ts
 export declare const IS_DEBUG: boolean;
@@ -26,7 +26,7 @@ export declare function profile<T>(label: string, fn: () => T): T;
 
 ## src/tools/geometry.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/geometry.ts)
+Исходный модуль: `src/tools/geometry.ts`
 
 ```ts
 export interface DataRect {
@@ -48,7 +48,7 @@ export type Side = 'left' | 'right' | 'top' | 'bottom';
 
 ## src/tools/hotkeys.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/hotkeys.ts)
+Исходный модуль: `src/tools/hotkeys.ts`
 
 ```ts
 type HotkeyHandler = (event: KeyboardEvent) => void;
@@ -70,7 +70,7 @@ export {};
 
 ## src/tools/keyboard.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/keyboard.ts)
+Исходный модуль: `src/tools/keyboard.ts`
 
 ```ts
 export { isAnyKeyComboActive, type KeyCombo, type KeyComboArray } from '@/shared/utils/keyboard';
@@ -96,7 +96,7 @@ export declare function subscribeKeyboardState(target: Document, listener: (snap
 
 ## src/tools/logs.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/logs.ts)
+Исходный модуль: `src/tools/logs.ts`
 
 ```ts
 import { Subscribable } from '@/events/Subscribable';
@@ -128,7 +128,7 @@ export declare class StructuredLogger extends Subscribable {
 
 ## src/tools/reflect.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/reflect.ts)
+Исходный модуль: `src/tools/reflect.ts`
 
 ```ts
 export declare function isConstructor<T extends new (...args: Array<any>) => any>(fn: any): fn is T;
@@ -138,7 +138,7 @@ export declare function createInstance<T, Args extends Array<any>>(source: Const
 
 ## src/tools/state.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/state.ts)
+Исходный модуль: `src/tools/state.ts`
 
 ```ts
 export declare function globalState<T>(factory: () => T): () => T;
@@ -146,27 +146,28 @@ export declare function globalState<T>(factory: () => T): () => T;
 
 ## src/tools/system-clock.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/system-clock.ts)
+Исходный модуль: `src/tools/system-clock.ts`
 
 ```ts
+import { DateTime } from 'ts-luxon';
 export declare const SystemClock: {
-    DateTime: any;
-    toDateTime(jsDate: Date): any;
-    fromFormat(text: string, format: string, opts: any): any;
-    fromISO(text: string, opts?: any): any;
-    getNow(): any;
-    getNowUTC(): any;
-    getToday(): any;
-    getTime(format?: string): any;
-    getUTCTime(format?: string): any;
-    getZone(): any;
+    DateTime: typeof DateTime;
+    toDateTime(jsDate: Date): DateTime;
+    fromFormat(text: string, format: string, opts: any): DateTime;
+    fromISO(text: string, opts?: any): DateTime | null;
+    getNow(): DateTime;
+    getNowUTC(): DateTime;
+    getToday(): DateTime;
+    getTime(format?: string): string;
+    getUTCTime(format?: string): string;
+    getZone(): import("ts-luxon").Zone;
 };
-export declare const dt: (date: Date) => any;
+export declare const dt: (date: Date) => DateTime;
 ```
 
 ## src/tools/tools.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/tools/tools.types.ts)
+Исходный модуль: `src/tools/tools.types.ts`
 
 ```ts
 export type Maybe<T> = T | null | undefined;

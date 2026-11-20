@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа events; исходных модулей: 2."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.9, группа events; исходных модулей: 1."
 ---
 
 # @endge/utils: events
 
-Версия source: 1.0.0-dev.6. [Каталог package](./). [Repository](https://github.com/endge-lab/utils).
+Версия source: 1.0.0-dev.9. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/utils); сама ссылка не подтверждает snapshot этого контракта. Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/events/EventBus.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/events/EventBus.ts)
+Исходный модуль: `src/events/EventBus.ts`
 
 ```ts
 import type { OneOrMany } from '@/tools/tools.types';
@@ -41,13 +41,4 @@ export interface GlobalEvents {
     };
 }
 export declare const AppBus: EventBus<GlobalEvents, Record<string, any>>;
-```
-
-## src/events/Subscribable.ts
-
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/events/Subscribable.ts)
-
-```ts
-export { Subscribable } from '@typedworks/federation';
-export type { SubscribableLike } from '@typedworks/federation';
 ```
