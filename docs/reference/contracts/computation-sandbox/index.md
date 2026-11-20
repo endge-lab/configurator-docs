@@ -4,7 +4,7 @@ description: "Публичные TypeScript-контракты @endge/computatio
 
 # @endge/computation-sandbox: публичные контракты
 
-Source version: **1.0.1-dev.9**. [Repository](https://github.com/endge-lab/computation-sandbox). [Общий каталог](/reference/contracts/).
+Source version: **1.0.1-dev.9**. [Repository — навигация](https://github.com/endge-lab/computation-sandbox); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75](https://github.com/endge-lab/computation-sandbox/tree/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75). [Общий каталог](/reference/contracts/).
 
 Точные сигнатуры, overloads, generic-параметры, события и shapes собраны из исходников TypeScript. Вызовы из примеров документации сверяйте с этим snapshot. Извлечение declarations не заменяет typecheck или runtime verification.
 
@@ -12,7 +12,7 @@ Source version: **1.0.1-dev.9**. [Repository](https://github.com/endge-lab/compu
 
 | Import | Source |
 | --- | --- |
-| `@endge/computation-sandbox` | [src/main.ts](https://github.com/endge-lab/computation-sandbox/blob/main/src/main.ts) |
+| `@endge/computation-sandbox` | [src/main.ts](https://github.com/endge-lab/computation-sandbox/blob/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75/src/main.ts) |
 
 ## Контракты по владельцам
 
@@ -24,7 +24,7 @@ Source version: **1.0.1-dev.9**. [Repository](https://github.com/endge-lab/compu
 
 | Import | Export | Объявление |
 | --- | --- | --- |
-| `@endge/computation-sandbox` | `createQuickJSComputationSandbox` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/main/src/QuickJSComputationSandbox.ts) |
-| `@endge/computation-sandbox` | `EndgeComputationSandboxPlugin` | [src/EndgeComputationSandboxPlugin.ts](https://github.com/endge-lab/computation-sandbox/blob/main/src/EndgeComputationSandboxPlugin.ts) |
-| `@endge/computation-sandbox` | `QuickJSComputationSandbox` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/main/src/QuickJSComputationSandbox.ts) |
-| `@endge/computation-sandbox` | `QuickJSComputationSandboxOptions` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/main/src/QuickJSComputationSandbox.ts) |
+| `@endge/computation-sandbox` | `createQuickJSComputationSandbox` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75/src/QuickJSComputationSandbox.ts) |
+| `@endge/computation-sandbox` | `EndgeComputationSandboxPlugin` | [src/EndgeComputationSandboxPlugin.ts](https://github.com/endge-lab/computation-sandbox/blob/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75/src/EndgeComputationSandboxPlugin.ts) |
+| `@endge/computation-sandbox` | `QuickJSComputationSandbox` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75/src/QuickJSComputationSandbox.ts) |
+| `@endge/computation-sandbox` | `QuickJSComputationSandboxOptions` | [src/QuickJSComputationSandbox.ts](https://github.com/endge-lab/computation-sandbox/blob/9ff99c3e84afc9e3dd024abc93a4bf69c10b0a75/src/QuickJSComputationSandbox.ts) |

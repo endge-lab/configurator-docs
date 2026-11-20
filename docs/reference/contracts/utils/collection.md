@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/utils 1.0.0-dev.6, группа collection; исходных модулей: 4."
+description: "TypeScript-декларации @endge/utils 1.0.0-dev.9, группа collection; исходных модулей: 4."
 ---
 
 # @endge/utils: collection
 
-Версия source: 1.0.0-dev.6. [Каталог package](./). [Repository](https://github.com/endge-lab/utils).
+Версия source: 1.0.0-dev.9. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/utils); сама ссылка не подтверждает snapshot этого контракта. Source checkout содержит незакоммиченные изменения; публикация этого кандидата не подтверждена. Публичный snapshot данного source-контракта не подтверждён; относительные пути ниже относятся к source-кандидату, а не к repository main.
 
 ## src/collection/collection.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/collection/collection.ts)
+Исходный модуль: `src/collection/collection.ts`
 
 ```ts
 import type { CollectionEntity, CollectionEvents } from '@/collection/collection.types';
@@ -28,7 +28,7 @@ export declare class Collection<T extends CollectionEntity> extends Subscribable
 
 ## src/collection/collection.types.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/collection/collection.types.ts)
+Исходный модуль: `src/collection/collection.types.ts`
 
 ```ts
 export interface CollectionEntity {
@@ -70,7 +70,7 @@ export interface ReadonlyIndexCollection<T extends IndexCollectionEntity<ID>, ID
 
 ## src/collection/indexed-collection.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/collection/indexed-collection.ts)
+Исходный модуль: `src/collection/indexed-collection.ts`
 
 ```ts
 import type { CollectionOptions, IndexCollectionEntity } from '@/collection/collection.types';
@@ -107,7 +107,7 @@ export declare class IndexedCollection<T extends IndexCollectionEntity<ID>, ID =
 
 ## src/collection/RingBuffer.ts
 
-[Исходный модуль](https://github.com/endge-lab/utils/blob/main/src/collection/RingBuffer.ts)
+Исходный модуль: `src/collection/RingBuffer.ts`
 
 ```ts
 export declare class RingBuffer<T> {
