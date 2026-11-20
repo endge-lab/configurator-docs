@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа source; исходных модулей: 36."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа source; исходных модулей: 36."
 ---
 
 # @endge/core: source
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/source/domain/types/action-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/action-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/action-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/action-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/action-source.types.ts)
 
 ```ts
 import type { SourceExpressionIR, SourceFieldDefinition } from '@/features/core/modules/source/domain/types/source-expression.types';
@@ -55,11 +55,12 @@ export interface ActionSourceDocument extends ActionSourceBlock {
 
 ## src/features/core/modules/source/domain/types/composition-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/composition-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/composition-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/composition-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/composition-source.types.ts)
 
 ```ts
 import type { ComponentSFCInteractionTrigger } from '@/features/core/modules/domain/types/component/sfc/ir.types';
 import type { ComponentSFCEventInputValue } from '@/features/core/modules/domain/types/component/sfc/ports.types';
+import type { EndgeSFCRendererTag } from '@/features/core/modules/domain/types/component/sfc/renderer-tags';
 import type { I18nCompiledLocales } from '@/features/core/modules/i18n/domain/i18n.types';
 import type { EndgeMockReference } from '@/features/core/modules/mock/domain/types/mock-data.type';
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -98,6 +99,13 @@ type CompositionOperationHistoryResourceDescriptor = CompositionResourceDescript
 };
 type CompositionModuleResourceDescriptor = CompositionResourceDescriptorBase & ModuleReference & {
     kind: 'module';
+    contextSwitch?: {
+        default: ModuleReference | null;
+        cases: Array<{
+            when: Readonly<Record<string, string>>;
+            reference: ModuleReference | null;
+        }>;
+    };
 };
 export type CompositionResourceDescriptor = CompositionSourceAssetResourceDescriptor | CompositionOperationHistoryResourceDescriptor | CompositionModuleResourceDescriptor;
 export interface OperationHistoryShortcutDescriptor {
@@ -238,6 +246,7 @@ export interface CompositionRuntimeDescriptor {
     fields?: string[];
     controls?: Record<string, FilterViewControlDefinition>;
     componentIdentity?: string;
+    renderers?: Partial<Record<EndgeSFCRendererTag, string>>;
     persistKey?: string;
     props: Record<string, CompositionBindingValue>;
     dataBindings?: Record<string, string>;
@@ -468,7 +477,7 @@ export {};
 
 ## src/features/core/modules/source/domain/types/configuration-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/configuration-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/configuration-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/configuration-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/configuration-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -521,7 +530,7 @@ export interface EndgeConfigurationSchemaEntry {
 
 ## src/features/core/modules/source/domain/types/data-view-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/data-view-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/data-view-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/data-view-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/data-view-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -658,7 +667,7 @@ export interface DataViewRunTools {
 
 ## src/features/core/modules/source/domain/types/filter-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/filter-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/filter-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/filter-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/filter-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -759,7 +768,7 @@ export interface FilterRuntimeActionHandle {
 
 ## src/features/core/modules/source/domain/types/filter-view.type.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/filter-view.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/filter-view.type.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/filter-view.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/filter-view.type.ts)
 
 ```ts
 import type { SourceFieldDefinition, SourceFieldOption } from '@/features/core/modules/source/domain/types/source-expression.types';
@@ -801,7 +810,7 @@ export interface FilterViewRenderModel {
 
 ## src/features/core/modules/source/domain/types/graphql-fragments.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/graphql-fragments.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/graphql-fragments.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/graphql-fragments.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/graphql-fragments.types.ts)
 
 ```ts
 import type { SourceContextPattern } from '@/features/core/modules/source/domain/types/source-context.types';
@@ -825,7 +834,7 @@ export interface GraphQLDocumentVariant {
 
 ## src/features/core/modules/source/domain/types/query-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/query-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/query-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/query-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/query-source.types.ts)
 
 ```ts
 import type { RQueryAuth } from '@/features/core/modules/domain/types/document/query.types';
@@ -913,7 +922,7 @@ export {};
 
 ## src/features/core/modules/source/domain/types/response-output.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/response-output.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/response-output.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/response-output.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/response-output.types.ts)
 
 ```ts
 import type { DataViewRef } from '@/features/core/modules/source/domain/types/data-view-source.types';
@@ -929,7 +938,7 @@ export type ResponseOutputTransform = {
 
 ## src/features/core/modules/source/domain/types/simulation-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/simulation-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/simulation-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/simulation-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/simulation-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -1011,7 +1020,7 @@ export interface SimulationSourceCatalog {
 
 ## src/features/core/modules/source/domain/types/source-context.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/source-context.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/source-context.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/source-context.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/source-context.types.ts)
 
 ```ts
 export type SourceContextPattern = Readonly<Record<string, string>>;
@@ -1019,12 +1028,13 @@ export interface SourceContextValues {
     facets: Readonly<Record<string, string>>;
     config: Readonly<Record<string, unknown>>;
     knownFacets?: readonly string[];
+    knownFacetDocuments?: ReadonlyMap<string, ReadonlySet<string>>;
 }
 ```
 
 ## src/features/core/modules/source/domain/types/source-engine.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/source-engine.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/source-engine.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/source-engine.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/source-engine.types.ts)
 
 ```ts
 import type { I18nCatalogProvenance, I18nRuntimeCatalog } from '@/features/core/modules/i18n/domain/i18n.types';
@@ -1206,7 +1216,7 @@ export interface SourceLanguageStrategy {
 
 ## src/features/core/modules/source/domain/types/source-expression.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/source-expression.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/source-expression.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/source-expression.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/source-expression.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -1309,7 +1319,7 @@ export interface SourceExpressionWarning {
 
 ## src/features/core/modules/source/domain/types/store-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/store-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/store-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/store-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/store-source.types.ts)
 
 ```ts
 import type { EndgeMockReference } from '@/features/core/modules/mock/domain/types/mock-data.type';
@@ -1360,7 +1370,7 @@ export interface StoreSourceCompileResult {
 
 ## src/features/core/modules/source/domain/types/stream-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/stream-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/stream-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/stream-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/stream-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -1443,7 +1453,7 @@ export interface StreamEventEnvelope {
 
 ## src/features/core/modules/source/domain/types/type-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/type-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/type-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/type-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/type-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -1528,7 +1538,7 @@ export interface TypeSourceCompileResult {
 
 ## src/features/core/modules/source/domain/types/update-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/update-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/update-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/update-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/update-source.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -1576,7 +1586,7 @@ export interface StoreMutationPlan {
 
 ## src/features/core/modules/source/domain/types/vocab-source.types.ts
 
-Исходный модуль: [src/features/core/modules/source/domain/types/vocab-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/domain/types/vocab-source.types.ts)
+Исходный модуль: [src/features/core/modules/source/domain/types/vocab-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/domain/types/vocab-source.types.ts)
 
 ```ts
 import type { RQueryAuth } from '@/features/core/modules/domain/types/document/query.types';
@@ -1620,7 +1630,7 @@ export interface VocabSourcePatch {
 
 ## src/features/core/modules/source/EndgeSource_Module.ts
 
-Исходный модуль: [src/features/core/modules/source/EndgeSource_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/EndgeSource_Module.ts)
+Исходный модуль: [src/features/core/modules/source/EndgeSource_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/EndgeSource_Module.ts)
 
 ```ts
 import type { SourceContextValues } from '@/features/core/modules/source/domain/types/source-context.types';
@@ -1655,7 +1665,7 @@ export declare class EndgeSource_Module extends EndgeModule {
 
 ## src/features/core/modules/source/services/compilers/configuration-source-compile.ts
 
-Исходный модуль: [src/features/core/modules/source/services/compilers/configuration-source-compile.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/compilers/configuration-source-compile.ts)
+Исходный модуль: [src/features/core/modules/source/services/compilers/configuration-source-compile.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/compilers/configuration-source-compile.ts)
 
 ```ts
 import type { ConfigurationSourceCompileResult } from '@/features/core/modules/source/domain/types/configuration-source.types';
@@ -1665,7 +1675,7 @@ export declare function compileConfigurationSource(source: string, catalog?: rea
 
 ## src/features/core/modules/source/services/compilers/vocab-source-compile.ts
 
-Исходный модуль: [src/features/core/modules/source/services/compilers/vocab-source-compile.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/compilers/vocab-source-compile.ts)
+Исходный модуль: [src/features/core/modules/source/services/compilers/vocab-source-compile.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/compilers/vocab-source-compile.ts)
 
 ```ts
 import type { VocabSourceCompileResult } from '@/features/core/modules/source/domain/types/vocab-source.types';
@@ -1674,7 +1684,7 @@ export declare function compileVocabSource(source: string): VocabSourceCompileRe
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-metadata-source-patch.ts)
 
 ```ts
 import type { ComponentSFCMetadataSourcePatchResult, ComponentSFCMetadataVisualProjection } from '@/features/core/modules/domain/types/component/sfc/metadata-visual.types';
@@ -1685,7 +1695,7 @@ export declare function patchComponentSFCMetadataSource(source: string, metadata
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-ports-source-patch.ts)
 
 ```ts
 import type { ComponentSFCCompileOptions } from '@/features/core/modules/compiler/services/component-sfc/component-sfc-compile';
@@ -1696,7 +1706,7 @@ export declare function patchComponentSFCPortsSource(source: string, patch: Comp
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-props-source-patch.ts)
 
 ```ts
 import type { RComponentSFC_IR_Prop } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -1707,7 +1717,7 @@ export declare function patchComponentSFCPropsSource(source: string, props: read
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-table-source-patch.ts)
 
 ```ts
 import type { RComponentSFC_AST_ElementNode } from '@/features/core/modules/domain/types/component/sfc/ast.types';
@@ -1719,7 +1729,7 @@ export { setNodeAttributeValue as setComponentSFCNodeAttributeValue };
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-timeline-source-patch.ts)
 
 ```ts
 import type { ComponentSFCVisualInspectionOptions } from '@/features/core/modules/domain/types/component/sfc/visual-projection.types';
@@ -1734,7 +1744,7 @@ export declare function patchComponentSFCTimelineSource(source: string, patch: C
 
 ## src/features/core/modules/source/services/component-sfc/component-sfc-visual-projection.ts
 
-Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-visual-projection.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/component-sfc/component-sfc-visual-projection.ts)
+Исходный модуль: [src/features/core/modules/source/services/component-sfc/component-sfc-visual-projection.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/component-sfc/component-sfc-visual-projection.ts)
 
 ```ts
 import type { ComponentSFCVisualInspection, ComponentSFCVisualInspectionOptions } from '@/features/core/modules/domain/types/component/sfc/visual-projection.types';
@@ -1743,7 +1753,7 @@ export declare function inspectComponentSFCVisual(source: string, options?: Comp
 
 ## src/features/core/modules/source/services/configuration-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/configuration-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/configuration-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/configuration-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/configuration-source-patch.ts)
 
 ```ts
 import type { ConfigurationSourceValueDefinition } from '@/features/core/modules/source/domain/types/configuration-source.types';
@@ -1764,7 +1774,7 @@ export declare function serializeConfigurationValue(value: ConfigurationSourceVa
 
 ## src/features/core/modules/source/services/document-metadata.ts
 
-Исходный модуль: [src/features/core/modules/source/services/document-metadata.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/document-metadata.ts)
+Исходный модуль: [src/features/core/modules/source/services/document-metadata.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/document-metadata.ts)
 
 ```ts
 import type { DocumentMetadataInput, DocumentMetadataPatchResult, DocumentMetadataProjection } from '@/features/core/modules/domain/types/document/document-metadata.types';
@@ -1776,7 +1786,7 @@ export declare function patchDocumentMetadata(type: DomainDocumentType, input: D
 
 ## src/features/core/modules/source/services/filter-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/filter-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/filter-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/filter-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/filter-source-patch.ts)
 
 ```ts
 import type { FilterSourceEditorDocument, FilterSourcePatch } from '@/features/core/modules/source/domain/types/filter-source.types';
@@ -1793,7 +1803,7 @@ export declare function patchFilterSource(source: string, patch: FilterSourcePat
 
 ## src/features/core/modules/source/services/graphql-fragments.ts
 
-Исходный модуль: [src/features/core/modules/source/services/graphql-fragments.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/graphql-fragments.ts)
+Исходный модуль: [src/features/core/modules/source/services/graphql-fragments.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/graphql-fragments.ts)
 
 ```ts
 import type { DocumentNode } from 'graphql';
@@ -1815,7 +1825,7 @@ export declare function readGraphQLFragmentDefinitions(document: DocumentNode): 
 
 ## src/features/core/modules/source/services/graphql-schema.ts
 
-Исходный модуль: [src/features/core/modules/source/services/graphql-schema.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/graphql-schema.ts)
+Исходный модуль: [src/features/core/modules/source/services/graphql-schema.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/graphql-schema.ts)
 
 ```ts
 import type { IntrospectionOptions, IntrospectionQuery } from 'graphql';
@@ -1848,7 +1858,7 @@ export declare function validateGraphQLDocument(schema: GraphQLSchemaInput, sour
 
 ## src/features/core/modules/source/services/source-expression-evaluate.ts
 
-Исходный модуль: [src/features/core/modules/source/services/source-expression-evaluate.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/source-expression-evaluate.ts)
+Исходный модуль: [src/features/core/modules/source/services/source-expression-evaluate.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/source-expression-evaluate.ts)
 
 ```ts
 import type { SourceExpressionContext, SourceExpressionIR } from '@/features/core/modules/source/domain/types/source-expression.types';
@@ -1858,7 +1868,7 @@ export declare const evaluateValueExpression: typeof evaluateSourceExpression;
 
 ## src/features/core/modules/source/services/type-source-serialize.ts
 
-Исходный модуль: [src/features/core/modules/source/services/type-source-serialize.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/type-source-serialize.ts)
+Исходный модуль: [src/features/core/modules/source/services/type-source-serialize.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/type-source-serialize.ts)
 
 ```ts
 import type { TypeSourceDocument, TypeSourceExpression } from '@/features/core/modules/source/domain/types/type-source.types';
@@ -1869,7 +1879,7 @@ export declare function serializeTypeSourceReference(identity: string): string;
 
 ## src/features/core/modules/source/services/typescript-type-source.ts
 
-Исходный модуль: [src/features/core/modules/source/services/typescript-type-source.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/typescript-type-source.ts)
+Исходный модуль: [src/features/core/modules/source/services/typescript-type-source.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/typescript-type-source.ts)
 
 ```ts
 import type { TypeSourceDocument } from '@/features/core/modules/source/domain/types/type-source.types';
@@ -1892,7 +1902,7 @@ export declare function analyzeTypeScriptTypeDeclarations(source: string): TypeS
 
 ## src/features/core/modules/source/services/vocab-source-patch.ts
 
-Исходный модуль: [src/features/core/modules/source/services/vocab-source-patch.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/source/services/vocab-source-patch.ts)
+Исходный модуль: [src/features/core/modules/source/services/vocab-source-patch.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/source/services/vocab-source-patch.ts)
 
 ```ts
 import type { SourcePatchResult } from '@/features/core/modules/source/domain/types/source-engine.types';

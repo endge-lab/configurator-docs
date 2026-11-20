@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа context; исходных модулей: 9."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа context; исходных модулей: 11."
 ---
 
 # @endge/core: context
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/context/domain/context-events.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-events.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-events.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-events.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/domain/context-events.types.ts)
 
 ```ts
 import type { EndgeCoreEventMap } from '@/features/core/modules/events/domain/events.types';
@@ -22,7 +22,7 @@ export type ContextEvent = {
 
 ## src/features/core/modules/context/domain/context-persistence.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-persistence.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-persistence.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-persistence.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/domain/context-persistence.types.ts)
 
 ```ts
 import type { EndgePublicConfigurationSnapshot } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -41,9 +41,7 @@ export interface EndgeContextSnapshot {
     theme: string | null;
     timezone: string | null;
 }
-export interface EndgePersistedContextSnapshot extends EndgeContextSnapshot {
-    themePreferenceVersion?: 1;
-}
+export type EndgePersistedContextSnapshot = EndgeContextSnapshot;
 export interface EndgeKeyboardContextSnapshot {
     platform: 'macos' | 'windows' | 'linux' | 'unknown';
     modifiers: {
@@ -77,6 +75,7 @@ export interface EndgePersistenceFacetSelection {
 export type EndgePersistenceScopeResolver = () => EndgePersistenceScope;
 export interface EndgeSessionIdentity {
     userId?: string | null;
+    identityNamespace?: string | null;
     facetSelections?: Readonly<Record<string, string>>;
     facetErrors?: readonly string[];
 }
@@ -110,7 +109,7 @@ export interface RuntimeStateControllerLike {
 
 ## src/features/core/modules/context/domain/context-state.types.ts
 
-Исходный модуль: [src/features/core/modules/context/domain/context-state.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/domain/context-state.types.ts)
+Исходный модуль: [src/features/core/modules/context/domain/context-state.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/domain/context-state.types.ts)
 
 ```ts
 import type { ClassConstructor } from 'class-transformer';
@@ -122,9 +121,70 @@ export type EndgeContextStateTransform<T> = ClassConstructor<T> | EndgeContextSt
 export type EndgeContextStateListener = () => void;
 ```
 
+## src/features/core/modules/context/domain/workspace-state.types.ts
+
+Исходный модуль: [src/features/core/modules/context/domain/workspace-state.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/domain/workspace-state.types.ts)
+
+```ts
+import type { EndgeJSONValue } from '@/features/core/modules/source/domain/types/configuration-source.types';
+export type EndgeWorkspaceStateDriver = 'local' | 'indexeddb' | 'backend' | 'disabled';
+export interface EndgeWorkspaceStateScope {
+    workspace: string;
+    facets: Readonly<Record<string, string>>;
+}
+export interface EndgeWorkspaceStateEntry {
+    key: string;
+    value: EndgeJSONValue;
+    deleted: boolean;
+    revision: number;
+}
+export interface EndgeWorkspaceStateSnapshot {
+    partition: string;
+    actorId: string;
+    resetRevision: number;
+    entries: EndgeWorkspaceStateEntry[];
+}
+export interface EndgeWorkspaceStateOperation {
+    key: string;
+    id: string;
+    baseRevision: number;
+    value?: EndgeJSONValue;
+    delete?: true;
+}
+export interface EndgeWorkspaceStateBatch {
+    partition: string;
+    actorId: string;
+    resetRevision: number;
+    operations: EndgeWorkspaceStateOperation[];
+}
+export interface EndgeWorkspaceStateBatchResult {
+    resetRevision: number;
+    results: {
+        key: string;
+        status: 'saved' | 'conflict' | 'reset';
+        entry: EndgeWorkspaceStateEntry | null;
+    }[];
+}
+export interface EndgeWorkspaceStateTransport {
+    namespace: string;
+    read: (scope: EndgeWorkspaceStateScope, signal: AbortSignal) => Promise<EndgeWorkspaceStateSnapshot>;
+    save: (scope: EndgeWorkspaceStateScope, batch: EndgeWorkspaceStateBatch, signal: AbortSignal) => Promise<EndgeWorkspaceStateBatchResult>;
+}
+export interface EndgeWorkspaceStateOptions {
+    backend?: EndgeWorkspaceStateTransport;
+    account?: () => string | null;
+    backendKeys?: readonly string[];
+}
+export interface EndgeWorkspaceStateSyncStatus {
+    pending: number;
+    error: 'network' | 'session' | 'storage' | null;
+    conflicts: readonly string[];
+}
+```
+
 ## src/features/core/modules/context/endge-vars.ts
 
-Исходный модуль: [src/features/core/modules/context/endge-vars.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/endge-vars.ts)
+Исходный модуль: [src/features/core/modules/context/endge-vars.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/endge-vars.ts)
 
 ```ts
 import type { EndgeResolvedWorkspaceVariable, EndgeWorkspaceVar } from '@/features/core/modules/workspace/domain/workspace.types';
@@ -154,7 +214,7 @@ export {};
 
 ## src/features/core/modules/context/EndgeContext_Module.ts
 
-Исходный модуль: [src/features/core/modules/context/EndgeContext_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/EndgeContext_Module.ts)
+Исходный модуль: [src/features/core/modules/context/EndgeContext_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/EndgeContext_Module.ts)
 
 ```ts
 import type { EndgeBootContext, EndgeBootMode } from '@/features/core/kernel/types/bootstrap.types';
@@ -162,6 +222,7 @@ import type { EndgeConfiguration } from '@/features/core/modules/configuration/d
 import type { ContextEvent } from '@/features/core/modules/context/domain/context-events.types';
 import type { EndgeContextPersistenceConfig, EndgeContextSnapshot, EndgeKeyboardContextSnapshot, EndgePersistenceScope, EndgeRuntimeContextSnapshot, EndgeSessionIdentityProvider, EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
 import type { EndgeContextStateListener, EndgeContextStateTransform } from '@/features/core/modules/context/domain/context-state.types';
+import type { EndgeWorkspaceStateDriver, EndgeWorkspaceStateSyncStatus } from '@/features/core/modules/context/domain/workspace-state.types';
 import type { EndgePersistenceInput } from '@/features/core/modules/context/persistence/EndgeStorageAdapterRegistry';
 import type { EndgeExecutionContext, EndgeExecutionContextResolutionInput } from '@/features/core/modules/runtime/domain/execution-context.types';
 import type { EndgeDataMode } from '@/features/core/modules/workspace/domain/workspace.types';
@@ -172,6 +233,10 @@ export declare class EndgeContext_Module extends EndgeModule<EndgeBootContext> {
     constructor();
     setup(ctx: EndgeBootContext): void;
     reset(): void;
+    start(ctx: EndgeBootContext): void | Promise<void>;
+    get workspaceStateDriver(): EndgeWorkspaceStateDriver;
+    getWorkspaceStateSyncStatus(): EndgeWorkspaceStateSyncStatus;
+    resolveWorkspaceStateConflict(key: string, action: 'retry' | 'discard'): Promise<void>;
     get isLoadingFromStorage(): boolean;
     registerStorageAdapter(adapter: EndgeStorageAdapter): void;
     configurePersistence(config: EndgeContextPersistenceConfig): void;
@@ -211,9 +276,12 @@ export declare class EndgeContext_Module extends EndgeModule<EndgeBootContext> {
     setFacetSelection(facetIdentity: string, documentIdentity: string | null): void;
     setFacetSelections(selections: Readonly<Record<string, string>>): void;
     getExecutionContext(): EndgeExecutionContext;
-    resolveExecutionContext(input: EndgeExecutionContextResolutionInput): EndgeExecutionContext;
+    resolveExecutionContext(input: EndgeExecutionContextResolutionInput, options?: {
+        persist?: boolean;
+    }): EndgeExecutionContext;
     getCurrentUser(): string;
-    setCurrentUser(identity: string | null): void;
+    setCurrentUser(identity: string | null, identityNamespace?: string | null): void;
+    getCurrentUserStateId(): string | null;
     get dataMode(): EndgeDataMode;
     get isMockEnabled(): boolean;
     get isDataModeOverridden(): boolean;
@@ -235,7 +303,7 @@ export declare class EndgeContext_Module extends EndgeModule<EndgeBootContext> {
 
 ## src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/persistence/adapters/DisabledContextAdapter.ts)
 
 ```ts
 import type { EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -250,7 +318,7 @@ export declare class DisabledContextAdapter implements EndgeStorageAdapter {
 
 ## src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/persistence/adapters/LocalStorageContextAdapter.ts)
 
 ```ts
 import type { EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -264,9 +332,26 @@ export declare class LocalStorageContextAdapter implements EndgeStorageAdapter {
 }
 ```
 
+## src/features/core/modules/context/persistence/BackendWorkspaceStateTransport.ts
+
+Исходный модуль: [src/features/core/modules/context/persistence/BackendWorkspaceStateTransport.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/persistence/BackendWorkspaceStateTransport.ts)
+
+```ts
+import type { EndgeWorkspaceStateTransport } from '@/features/core/modules/context/domain/workspace-state.types';
+export declare class EndgeWorkspaceStateRequestError extends Error {
+    readonly status: number;
+    constructor(status: number);
+}
+export declare function createEndgeBackendWorkspaceStateTransport(options: {
+    baseUrl: string;
+    getUserId?: () => string | null;
+    getHeaders?: () => HeadersInit | Promise<HeadersInit>;
+}): EndgeWorkspaceStateTransport;
+```
+
 ## src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/persistence/EndgeStorageAdapterRegistry.ts)
 
 ```ts
 import type { EndgePersistenceDriver, EndgePersistenceOptions, EndgeStorageAdapter } from '@/features/core/modules/context/domain/context-persistence.types';
@@ -281,7 +366,7 @@ export declare class EndgeStorageAdapterRegistry {
 
 ## src/features/core/modules/context/persistence/RuntimeStateController.ts
 
-Исходный модуль: [src/features/core/modules/context/persistence/RuntimeStateController.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/context/persistence/RuntimeStateController.ts)
+Исходный модуль: [src/features/core/modules/context/persistence/RuntimeStateController.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/context/persistence/RuntimeStateController.ts)
 
 ```ts
 import type { EndgePersistenceScope, EndgePersistenceScopeResolver, EndgeStorageAdapter, RuntimeStateControllerLike } from '@/features/core/modules/context/domain/context-persistence.types';

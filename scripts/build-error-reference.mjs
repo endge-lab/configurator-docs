@@ -48,6 +48,7 @@ const GROUPS = [
   },
   { id: 'releases', title: 'Релизы и сборки', match: /^(?:release_|build_(?!profile)|commit_message_required)/ },
   { id: 'module-catalog', title: 'Глобальный каталог модулей', match: /^module_/ },
+  { id: 'user-state', title: 'Рабочие настройки пользователей', match: /^user_state_/ },
   { id: 'build-profiles', title: 'Профили сборки', match: /^build_profile/ },
   {
     id: 'documents',

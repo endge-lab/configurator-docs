@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа configuration; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа configuration; исходных модулей: 6."
 ---
 
 # @endge/core: configuration
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/configuration/domain/configuration-value.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/configuration-value.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/configuration-value.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/configuration-value.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/domain/configuration-value.ts)
 
 ```ts
 import type { ProgramDiagnostic } from '@/features/core/modules/program/domain/types/program.types';
@@ -33,7 +33,7 @@ export {};
 
 ## src/features/core/modules/configuration/domain/endge-configuration.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/endge-configuration.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/endge-configuration.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/endge-configuration.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/domain/endge-configuration.ts)
 
 ```ts
 import type { EndgeConfiguration, EndgeConfigurationContribution, EndgePublicConfigurationSnapshot } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -48,7 +48,7 @@ export declare function createEndgePublicConfigurationSnapshot(configuration: En
 
 ## src/features/core/modules/configuration/domain/tooltip.config.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/tooltip.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/tooltip.config.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/tooltip.config.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/domain/tooltip.config.ts)
 
 ```ts
 import type { EndgeTooltipConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -57,12 +57,15 @@ export declare const DEFAULT_ENDGE_TOOLTIP_CONFIGURATION: Readonly<EndgeTooltipC
 
 ## src/features/core/modules/configuration/domain/types/configuration.type.ts
 
-Исходный модуль: [src/features/core/modules/configuration/domain/types/configuration.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/domain/types/configuration.type.ts)
+Исходный модуль: [src/features/core/modules/configuration/domain/types/configuration.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/domain/types/configuration.type.ts)
 
 ```ts
-import type { DiagnosticsSeverityNumber, DiagnosticsSignal, EndgeDiagnosticsConfiguration, EndgeDiagnosticsOutputConfiguration, EndgeDiagnosticsRoute } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+import type { EndgeWorkspaceStateDriver } from '@/features/core/modules/context/domain/workspace-state.types';
+import type { DiagnosticsSeverityNumber, DiagnosticsShortcutOperation, DiagnosticsSignal, EndgeDiagnosticsConfiguration, EndgeDiagnosticsOutputConfiguration, EndgeDiagnosticsRoute } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
 import type { ComponentSFCInteractionKeyboardCondition, ComponentSFCInteractionTrigger, ComponentSFCInteractionTriggerActivation } from '@/features/core/modules/domain/types/component/sfc/ir.types';
+import type { EndgeSFCRendererTag } from '@/features/core/modules/domain/types/component/sfc/renderer-tags';
 import type { EndgeExecutionContext } from '@/features/core/modules/runtime/domain/execution-context.types';
+import type { ModuleRendererReference } from '@/features/core/modules/runtime/module/module-reference';
 import type { EndgeJSONValue } from '@/features/core/modules/source/domain/types/configuration-source.types';
 export type EndgeConfigurationValues = Record<string, Record<string, EndgeJSONValue>>;
 export type EndgeConfigurationValuePatch = Record<string, Record<string, EndgeValueOverride<EndgeJSONValue>>>;
@@ -98,6 +101,7 @@ export interface EndgeTooltipConfiguration {
     keyboard?: ComponentSFCInteractionKeyboardCondition;
 }
 export interface EndgeConfiguration {
+    userStateDriver?: EndgeWorkspaceStateDriver;
     vars: EndgeVariableDefinition[];
     locales: EndgeLocaleDefinition[];
     defaultLocale: string;
@@ -109,6 +113,7 @@ export interface EndgeConfiguration {
     defaultAuthProfileIdentity: string | null;
     sfcAdapterIds: string[];
     defaultSfcAdapterId: string;
+    defaultRenderers?: Partial<Record<EndgeSFCRendererTag, ModuleRendererReference>>;
     sfcEditing: EndgeSFCEditingConfiguration;
     tooltips: EndgeTooltipConfiguration;
     diagnostics: EndgeDiagnosticsConfiguration;
@@ -144,6 +149,8 @@ export interface EndgeCollectionPatch<T> {
     entries: EndgeCollectionPatchEntry<T>[];
 }
 export interface EndgeConfigurationPatch {
+    userStateDriver?: EndgeValueOverride<EndgeWorkspaceStateDriver>;
+    defaultRenderers?: Partial<Record<EndgeSFCRendererTag, EndgeValueOverride<ModuleRendererReference>>>;
     vars?: EndgeCollectionPatch<EndgeVariableDefinition>;
     locales?: EndgeCollectionPatch<EndgeLocaleDefinition>;
     defaultLocale?: EndgeValueOverride<string>;
@@ -192,6 +199,8 @@ export interface EndgeDiagnosticsAutomaticSnapshotPatch {
 export interface EndgeDiagnosticsShortcutSnapshotPatch {
     triggerSet?: EndgeValueOverride<ComponentSFCInteractionTriggerActivation>;
     content?: EndgeDiagnosticsSnapshotContentPatch;
+    action?: EndgeValueOverride<NonNullable<EndgeDiagnosticsConfiguration['snapshots']['shortcut']['action']>>;
+    bindings?: Partial<Record<DiagnosticsShortcutOperation, EndgeValueOverride<ComponentSFCInteractionTriggerActivation>>>;
 }
 export interface EndgeDiagnosticsSnapshotsPatch {
     content?: EndgeDiagnosticsSnapshotContentPatch;
@@ -201,6 +210,10 @@ export interface EndgeDiagnosticsSnapshotsPatch {
 export interface EndgeDiagnosticsConfigurationPatch {
     telemetry?: EndgeDiagnosticsTelemetryPatch;
     snapshots?: EndgeDiagnosticsSnapshotsPatch;
+    recording?: {
+        enabled?: EndgeValueOverride<boolean>;
+        content?: EndgeDiagnosticsSnapshotContentPatch;
+    };
 }
 export type EndgeConfigurationContribution = {
     mode: 'inherit';
@@ -222,14 +235,22 @@ export interface EndgeBuildContext {
 
 ## src/features/core/modules/configuration/EndgeConfiguration_Module.ts
 
-Исходный модуль: [src/features/core/modules/configuration/EndgeConfiguration_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/EndgeConfiguration_Module.ts)
+Исходный модуль: [src/features/core/modules/configuration/EndgeConfiguration_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/EndgeConfiguration_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
 import type { EndgeBuildContext, EndgeConfiguration, EndgeConfigurationContribution, EndgeConfigurationLayer } from '@/features/core/modules/configuration/domain/types/configuration.type';
+import type { EndgeExecutionContext } from '@/features/core/modules/runtime/domain/execution-context.types';
 import { EndgeModule } from '@/features/federation/EndgeModule';
 export declare class EndgeConfiguration_Module extends EndgeModule<EndgeBootContext> {
     build(ctx: EndgeBootContext): void;
+    availableFacets(): {
+        identity: string;
+        position: number;
+        documents: string[];
+    }[];
+    refreshRuntimeRenderers(): void;
+    withBuildContext<T>(facets: EndgeExecutionContext['facets'], compile: () => T): T;
     reset(): void;
     applyInspection(configuration: EndgeConfiguration): void;
     createDiagnosticsSnapshot(): EndgeConfiguration;
@@ -246,7 +267,7 @@ export declare class EndgeConfiguration_Module extends EndgeModule<EndgeBootCont
 
 ## src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts
 
-Исходный модуль: [src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts)
+Исходный модуль: [src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/configuration/EndgeConfigurationSchema_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';

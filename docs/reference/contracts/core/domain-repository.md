@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа domain-repository; исходных модулей: 1."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа domain-repository; исходных модулей: 2."
 ---
 
 # @endge/core: domain-repository
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts
 
-Исходный модуль: [src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts)
+Исходный модуль: [src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain-repository/EndgeDomainRepository_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -65,4 +65,39 @@ export declare class EndgeDomainRepository_Module extends EndgeModule<EndgeBootC
     restoreFacetDocument(facetIdentity: string, identity: string): Promise<RFacetDocument>;
     toJSON(): Record<string, unknown>;
 }
+```
+
+## src/features/core/modules/domain-repository/services/resolve-endge-domain-load-options.ts
+
+Исходный модуль: [src/features/core/modules/domain-repository/services/resolve-endge-domain-load-options.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain-repository/services/resolve-endge-domain-load-options.ts)
+
+```ts
+import type { EndgeDomainBundle } from '../../domain/types/document/domain-export.type';
+import type { EndgeDomainProvider } from '../../domain/types/document/domain-provider.type';
+export type EndgeDomainSource = {
+    kind: 'live';
+    workspaceIdentity: string;
+    backendURL: string;
+} | {
+    kind: 'release';
+    workspaceIdentity: string;
+    backendURL: string;
+    releaseIdentity: string;
+} | {
+    kind: 'bundle';
+    workspaceIdentity: string;
+    bundleURL: string;
+};
+export type EndgeDomainLoadOptions = {
+    dataProvider: 'default';
+    domainProvider: EndgeDomainProvider;
+} | {
+    dataProvider: 'bundle';
+    bundleSource: EndgeDomainBundle;
+};
+export interface EndgeDomainLoadRequestOptions {
+    resolveBootstrapToken?: () => Promise<string | null>;
+    signal?: AbortSignal;
+}
+export declare function resolveEndgeDomainLoadOptions(source: EndgeDomainSource, options?: EndgeDomainLoadRequestOptions): Promise<EndgeDomainLoadOptions>;
 ```

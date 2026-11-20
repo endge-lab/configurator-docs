@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа diagnostics; исходных модулей: 16."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа diagnostics; исходных модулей: 17."
 ---
 
 # @endge/core: diagnostics
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/adapters/BrowserDiagnosticsSnapshot_Adapter.ts)
 
 ```ts
 import type { DiagnosticsSnapshotRuntimeAdapter, DiagnosticsSnapshotShortcutEvent } from '@/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type';
@@ -21,7 +21,7 @@ export declare class BrowserDiagnosticsSnapshot_Adapter implements DiagnosticsSn
 
 ## src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/adapters/ConsoleDiagnosticsAdapter.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterFactory, DiagnosticsAdapterRecordContext, DiagnosticsAdapterSnapshotContext } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -38,7 +38,7 @@ export declare const CONSOLE_DIAGNOSTICS_ADAPTER_FACTORY: DiagnosticsAdapterFact
 
 ## src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterCreateContext, DiagnosticsAdapterFactory } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -54,7 +54,7 @@ export declare class DiagnosticsAdapterRegistry {
 
 ## src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.ts)
 
 ```ts
 import type { DiagnosticsAdapter, DiagnosticsAdapterCreateContext, DiagnosticsAdapterFactory, DiagnosticsAdapterRecordContext, DiagnosticsAdapterSnapshotContext } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
@@ -73,7 +73,7 @@ export declare const SENTRY_DIAGNOSTICS_ADAPTER_FACTORY: DiagnosticsAdapterFacto
 
 ## src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/adapters/SentryDiagnosticsAdapter.types.ts)
 
 ```ts
 import type { DiagnosticsAttributeScalar } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -91,17 +91,32 @@ export interface SentryDiagnosticsAdapterOptions {
 
 ## src/features/core/modules/diagnostics/config/diagnostics.config.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/config/diagnostics.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/config/diagnostics.config.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/config/diagnostics.config.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/config/diagnostics.config.ts)
 
 ```ts
-import type { DiagnosticsSeverityNumber, EndgeDiagnosticsConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+import type { DiagnosticsSeverityNumber, EndgeDiagnosticsConfiguration, EndgeDiagnosticsSnapshotContentConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+export declare const DEFAULT_ENDGE_DIAGNOSTICS_RECORDING_CONTENT: Readonly<EndgeDiagnosticsSnapshotContentConfiguration>;
 export declare const DEFAULT_ENDGE_DIAGNOSTICS_CONFIGURATION: Readonly<EndgeDiagnosticsConfiguration>;
 export declare const DIAGNOSTICS_SEVERITY_TEXT: Record<DiagnosticsSeverityNumber, 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FATAL'>;
 ```
 
+## src/features/core/modules/diagnostics/domain/diagnostics-shortcuts.ts
+
+Исходный модуль: [src/features/core/modules/diagnostics/domain/diagnostics-shortcuts.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/diagnostics-shortcuts.ts)
+
+```ts
+import type { DiagnosticsShortcutOperation, EndgeDiagnosticsShortcutSnapshotConfiguration } from './types/diagnostics.types';
+export declare const DIAGNOSTICS_SHORTCUT_OPERATIONS: readonly [
+    "download",
+    "start",
+    "stop"
+];
+export declare function legacyDiagnosticsShortcutOperation(shortcut: EndgeDiagnosticsShortcutSnapshotConfiguration): DiagnosticsShortcutOperation | null;
+```
+
 ## src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/diagnostics-snapshot.ts)
 
 ```ts
 import type { DiagnosticsJsonValue } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -114,7 +129,7 @@ export declare function serializeDiagnosticsJson(input: unknown): DiagnosticsJso
 
 ## src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/entities/DiagnosticsRecordStore.ts)
 
 ```ts
 import type { DiagnosticsRecord, DiagnosticsSignal } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -135,7 +150,7 @@ export declare class DiagnosticsRecordStore {
 
 ## src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/entities/DiagnosticsSpan.ts)
 
 ```ts
 import type { DiagnosticsAttributes, DiagnosticsExceptionOptions, DiagnosticsInstrumentationScope, DiagnosticsLogInput, DiagnosticsLogRecord, DiagnosticsSpanEndOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanOwner, DiagnosticsSpanRecord } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -155,7 +170,7 @@ export declare class DiagnosticsSpan implements DiagnosticsSpanHandle {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type.ts)
 
 ```ts
 import type { DiagnosticsRecord, DiagnosticsResource, DiagnosticsSnapshot, EndgeDiagnosticsOutputConfiguration } from './diagnostics.types';
@@ -201,7 +216,7 @@ export interface DiagnosticsFlushResult {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type.ts)
 
 ```ts
 import type { DiagnosticsSnapshot } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -221,7 +236,7 @@ export interface DiagnosticsSnapshotRuntimeAdapter {
 
 ## src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/domain/types/diagnostics.types.ts)
 
 ```ts
 import type { ComponentSFCInteractionTriggerActivation } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -382,9 +397,15 @@ export interface EndgeDiagnosticsAutomaticSnapshotConfiguration {
     cooldownSeconds: number;
     outputIds: string[];
 }
+export type DiagnosticsShortcutOperation = 'download' | 'start' | 'stop';
 export interface EndgeDiagnosticsShortcutSnapshotConfiguration {
     triggerSet: ComponentSFCInteractionTriggerActivation;
     content: EndgeDiagnosticsSnapshotContentConfiguration;
+    action?: {
+        identity: string;
+        input?: unknown;
+    };
+    bindings?: Partial<Record<DiagnosticsShortcutOperation, ComponentSFCInteractionTriggerActivation>>;
 }
 export interface EndgeDiagnosticsSnapshotsConfiguration {
     content: EndgeDiagnosticsSnapshotContentConfiguration;
@@ -394,6 +415,10 @@ export interface EndgeDiagnosticsSnapshotsConfiguration {
 export interface EndgeDiagnosticsConfiguration {
     telemetry: EndgeDiagnosticsTelemetryConfiguration;
     snapshots: EndgeDiagnosticsSnapshotsConfiguration;
+    recording?: {
+        enabled: boolean;
+        content: EndgeDiagnosticsSnapshotContentConfiguration;
+    };
 }
 export interface DiagnosticsLogOptions {
     timestamp?: number;
@@ -484,6 +509,7 @@ export interface DiagnosticsSnapshot {
     version?: 1 | 2;
     generatedAt: number;
     trigger: 'manual' | 'shortcut' | 'automatic';
+    recording?: DiagnosticsFinishedRecording;
     telemetry?: DiagnosticsTelemetrySnapshot;
     problems?: DiagnosticsProblemsSnapshot;
     configuration?: EndgeDiagnosticsConfiguration;
@@ -499,6 +525,22 @@ export interface DiagnosticsSnapshot {
         fields: number;
     };
 }
+export interface DiagnosticsFinishedRecording {
+    id: string;
+    startedAt: number;
+    stoppedAt: number;
+    retainedRecords: number;
+    droppedRecords: number;
+}
+export type DiagnosticsRecordingState = {
+    status: 'idle';
+} | {
+    status: 'recording';
+    id: string;
+    startedAt: number;
+} | ({
+    status: 'stopped';
+} & DiagnosticsFinishedRecording);
 export type DiagnosticsListener = (record: DiagnosticsRecord) => void;
 export interface DiagnosticsSubscribeOptions {
     replayStored?: boolean;
@@ -524,12 +566,12 @@ export interface DiagnosticsSpanOwner {
 
 ## src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/EndgeDiagnostics_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
 import type { DiagnosticsAdapter, DiagnosticsAdapterFactory, DiagnosticsFlushResult } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
-import type { DiagnosticsContextProvider, DiagnosticsExceptionOptions, DiagnosticsFilter, DiagnosticsListener, DiagnosticsLogInput, DiagnosticsLogOptions, DiagnosticsLogRecord, DiagnosticsRecord, DiagnosticsResource, DiagnosticsSnapshot, DiagnosticsSnapshotOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanRecord, DiagnosticsSubscribeOptions, EndgeDiagnosticsConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+import type { DiagnosticsContextProvider, DiagnosticsExceptionOptions, DiagnosticsFilter, DiagnosticsFinishedRecording, DiagnosticsListener, DiagnosticsLogInput, DiagnosticsLogOptions, DiagnosticsLogRecord, DiagnosticsRecord, DiagnosticsRecordingState, DiagnosticsResource, DiagnosticsSnapshot, DiagnosticsSnapshotOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanRecord, DiagnosticsSubscribeOptions, EndgeDiagnosticsConfiguration, EndgeDiagnosticsSnapshotContentConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
 import { DiagnosticsAdapterRegistry } from '@/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry';
 import { EndgeDiagnosticsSnapshots_Module } from '@/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module';
 import { EndgeProblems_Module } from '@/features/core/modules/diagnostics/EndgeProblems_Module';
@@ -564,6 +606,10 @@ export declare class EndgeDiagnostics_Module extends EndgeModule<EndgeBootContex
     createDiagnosticsSnapshot(): unknown;
     sendSnapshot(outputIds?: readonly string[], options?: DiagnosticsSnapshotOptions): DiagnosticsSnapshot;
     downloadSnapshot(options?: DiagnosticsSnapshotOptions): DiagnosticsSnapshot;
+    get recordingState(): DiagnosticsRecordingState;
+    startRecording(): DiagnosticsRecordingState;
+    stopRecording(content?: Partial<EndgeDiagnosticsSnapshotContentConfiguration>): DiagnosticsRecordingState;
+    downloadRecording(recordingId?: string): DiagnosticsFinishedRecording;
     getCounters(): ReturnType<EndgeTelemetry_Module['getCounters']>;
     clear(): void;
     registerContextProvider(id: string, provider: DiagnosticsContextProvider): () => void;
@@ -580,21 +626,25 @@ export declare class EndgeDiagnostics_Module extends EndgeModule<EndgeBootContex
 
 ## src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/EndgeDiagnosticsSnapshots_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
 import type { DiagnosticsSnapshotRuntimeAdapter } from '@/features/core/modules/diagnostics/domain/types/diagnostics-snapshot-runtime-adapter.type';
-import type { DiagnosticsSnapshot, DiagnosticsSnapshotOptions } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+import type { DiagnosticsFinishedRecording, DiagnosticsRecordingState, DiagnosticsSnapshot, DiagnosticsSnapshotOptions, EndgeDiagnosticsSnapshotContentConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
 import type { EndgeProblems_Module } from '@/features/core/modules/diagnostics/EndgeProblems_Module';
 import type { EndgeTelemetry_Module } from '@/features/core/modules/diagnostics/EndgeTelemetry_Module';
 import { EndgeModule } from '@/features/federation/EndgeModule';
 export declare class EndgeDiagnosticsSnapshots_Module extends EndgeModule<EndgeBootContext> {
     constructor(_telemetry: EndgeTelemetry_Module, _problems: EndgeProblems_Module, _runtimeAdapter?: DiagnosticsSnapshotRuntimeAdapter);
     build(_ctx: EndgeBootContext): void;
-    start(_ctx: EndgeBootContext): void;
+    start(ctx: EndgeBootContext): void;
     reset(): void;
     configure(): void;
+    get recordingState(): DiagnosticsRecordingState;
+    startRecording(): DiagnosticsRecordingState;
+    stopRecording(content?: Partial<EndgeDiagnosticsSnapshotContentConfiguration>): DiagnosticsRecordingState;
+    downloadRecording(recordingId?: string): DiagnosticsFinishedRecording;
     snapshot(options?: DiagnosticsSnapshotOptions): DiagnosticsSnapshot;
     sendSnapshot(outputIds?: readonly string[], options?: DiagnosticsSnapshotOptions): DiagnosticsSnapshot;
     downloadSnapshot(options?: DiagnosticsSnapshotOptions): DiagnosticsSnapshot;
@@ -603,7 +653,7 @@ export declare class EndgeDiagnosticsSnapshots_Module extends EndgeModule<EndgeB
 
 ## src/features/core/modules/diagnostics/EndgeProblems_Module.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/EndgeProblems_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/EndgeProblems_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeProblems_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/EndgeProblems_Module.ts)
 
 ```ts
 import type { DiagnosticsEntityRef, DiagnosticsProblem, DiagnosticsProblemFilter, DiagnosticsProblemInput, DiagnosticsProblemOwner, DiagnosticsProblemsSnapshot } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -623,13 +673,13 @@ export declare class EndgeProblems_Module extends EndgeModule {
 
 ## src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts
 
-Исходный модуль: [src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts)
+Исходный модуль: [src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/diagnostics/EndgeTelemetry_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
 import type { DiagnosticsAdapterRegistry } from '@/features/core/modules/diagnostics/adapters/DiagnosticsAdapterRegistry';
 import type { DiagnosticsAdapter, DiagnosticsFlushResult } from '@/features/core/modules/diagnostics/domain/types/diagnostics-adapter.type';
-import type { DiagnosticsAttributes, DiagnosticsContextProvider, DiagnosticsCounters, DiagnosticsExceptionOptions, DiagnosticsFilter, DiagnosticsInstrumentationScope, DiagnosticsListener, DiagnosticsLogInput, DiagnosticsLogOptions, DiagnosticsLogRecord, DiagnosticsRecord, DiagnosticsResource, DiagnosticsSnapshot, DiagnosticsSpanEndOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanOwner, DiagnosticsSpanRecord, DiagnosticsSubscribeOptions, DiagnosticsTelemetrySnapshot, EndgeDiagnosticsConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
+import type { DiagnosticsAttributes, DiagnosticsContextProvider, DiagnosticsCounters, DiagnosticsExceptionOptions, DiagnosticsFilter, DiagnosticsFinishedRecording, DiagnosticsInstrumentationScope, DiagnosticsListener, DiagnosticsLogInput, DiagnosticsLogOptions, DiagnosticsLogRecord, DiagnosticsRecord, DiagnosticsResource, DiagnosticsSnapshot, DiagnosticsSpanEndOptions, DiagnosticsSpanHandle, DiagnosticsSpanOptions, DiagnosticsSpanOwner, DiagnosticsSpanRecord, DiagnosticsSubscribeOptions, DiagnosticsTelemetrySnapshot, EndgeDiagnosticsConfiguration } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
 import { EndgeModule } from '@/features/federation/EndgeModule';
 export declare class EndgeTelemetry_Module extends EndgeModule implements DiagnosticsSpanOwner {
     constructor(_adapterRegistry: DiagnosticsAdapterRegistry);
@@ -664,6 +714,13 @@ export declare class EndgeTelemetry_Module extends EndgeModule implements Diagno
     subscribe(filter: DiagnosticsFilter, listener: DiagnosticsListener, options?: DiagnosticsSubscribeOptions): () => void;
     query(filter?: DiagnosticsFilter): readonly DiagnosticsRecord[];
     snapshot(filter?: DiagnosticsFilter): DiagnosticsTelemetrySnapshot;
+    get localRecording(): Pick<DiagnosticsFinishedRecording, 'id' | 'startedAt'> | null;
+    startLocalRecording(): void;
+    captureLocalRecording(): {
+        recording: DiagnosticsFinishedRecording;
+        telemetry: DiagnosticsTelemetrySnapshot;
+    } | null;
+    clearLocalRecording(): void;
     getCounters(): DiagnosticsCounters;
     clear(): void;
     registerContextProvider(id: string, provider: DiagnosticsContextProvider): () => void;

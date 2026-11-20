@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа domain; исходных модулей: 80."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа domain; исходных модулей: 81."
 ---
 
 # @endge/core: domain
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/domain/component/component-sfc-edit-trigger.ts
 
-Исходный модуль: [src/features/core/modules/domain/component/component-sfc-edit-trigger.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/component/component-sfc-edit-trigger.ts)
+Исходный модуль: [src/features/core/modules/domain/component/component-sfc-edit-trigger.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/component/component-sfc-edit-trigger.ts)
 
 ```ts
 import type { ComponentSFCInteractionKeyboardCondition, ComponentSFCInteractionTrigger, ComponentSFCInteractionTriggerActivation, ComponentSFCInteractionTriggerEvent, ComponentSFCInteractionTriggerHeldKeys, ComponentSFCInteractionTriggerModifiers, ComponentSFCInteractionTriggerPlatform } from '@/features/core/modules/domain/types/component/sfc/ir.types';
@@ -44,7 +44,7 @@ export declare const resolveComponentSFCEditTriggerPlatform: typeof resolveCompo
 
 ## src/features/core/modules/domain/component/sfc-editing.config.ts
 
-Исходный модуль: [src/features/core/modules/domain/component/sfc-editing.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/component/sfc-editing.config.ts)
+Исходный модуль: [src/features/core/modules/domain/component/sfc-editing.config.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/component/sfc-editing.config.ts)
 
 ```ts
 import type { EndgeSFCEditingConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -53,7 +53,7 @@ export declare const DEFAULT_ENDGE_SFC_EDITING_CONFIGURATION: Readonly<EndgeSFCE
 
 ## src/features/core/modules/domain/component/sfc/component-sfc-source-parts.ts
 
-Исходный модуль: [src/features/core/modules/domain/component/sfc/component-sfc-source-parts.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/component/sfc/component-sfc-source-parts.ts)
+Исходный модуль: [src/features/core/modules/domain/component/sfc/component-sfc-source-parts.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/component/sfc/component-sfc-source-parts.ts)
 
 ```ts
 import type { RComponentSFCSource_Parts } from '@/features/core/modules/domain/types/component/sfc/source.types';
@@ -65,7 +65,7 @@ export declare function parseSFCSourceParts(source: string): RComponentSFCSource
 
 ## src/features/core/modules/domain/component/table.ts
 
-Исходный модуль: [src/features/core/modules/domain/component/table.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/component/table.ts)
+Исходный модуль: [src/features/core/modules/domain/component/table.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/component/table.ts)
 
 ```ts
 import type { ColumnSortConfig } from '@/features/core/modules/runtime/domain/table.types';
@@ -76,7 +76,7 @@ export declare function normalizeSortConfig(raw: unknown): ColumnSortConfig | nu
 
 ## src/features/core/modules/domain/documents/domain-document-descriptors.ts
 
-Исходный модуль: [src/features/core/modules/domain/documents/domain-document-descriptors.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/documents/domain-document-descriptors.ts)
+Исходный модуль: [src/features/core/modules/domain/documents/domain-document-descriptors.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/documents/domain-document-descriptors.ts)
 
 ```ts
 import type { DocumentSerializationContext } from '@/features/core/modules/domain/documents/service-document-serializer';
@@ -179,7 +179,7 @@ export {};
 
 ## src/features/core/modules/domain/documents/service-document-serializer.ts
 
-Исходный модуль: [src/features/core/modules/domain/documents/service-document-serializer.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/documents/service-document-serializer.ts)
+Исходный модуль: [src/features/core/modules/domain/documents/service-document-serializer.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/documents/service-document-serializer.ts)
 
 ```ts
 import type { DomainDocumentType } from '@/features/core/modules/domain/types/document/document.types';
@@ -192,7 +192,7 @@ export declare function serializeServiceFolder(source: unknown, context: Pick<Do
 
 ## src/features/core/modules/domain/EndgeDomain_Module.ts
 
-Исходный модуль: [src/features/core/modules/domain/EndgeDomain_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/EndgeDomain_Module.ts)
+Исходный модуль: [src/features/core/modules/domain/EndgeDomain_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/EndgeDomain_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -567,7 +567,7 @@ export declare class EndgeDomain_Module extends EndgeModule<EndgeBootContext> {
 
 ## src/features/core/modules/domain/entities/RAction.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RAction.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RAction.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RAction.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RAction.ts)
 
 ```ts
 import type { ActionImplementation, ActionTargetSelector } from '@/features/core/modules/actions/domain/action.types';
@@ -594,7 +594,7 @@ export declare class RAction extends REntity {
 
 ## src/features/core/modules/domain/entities/RAuthProfile.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RAuthProfile.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RAuthProfile.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RAuthProfile.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RAuthProfile.ts)
 
 ```ts
 import type { AuthProfileAdapterId, AuthProfileConfig, AuthProfileCredentials, AuthSessionPolicy } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -616,7 +616,7 @@ export declare class RAuthProfile extends REntity {
 
 ## src/features/core/modules/domain/entities/RComponent.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponent.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponent.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponent.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponent.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -629,7 +629,7 @@ export declare function ReflectComponentToPayloadData(component: RComponent, com
 
 ## src/features/core/modules/domain/entities/RComponentBase.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentBase.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentBase.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentBase.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentBase.ts)
 
 ```ts
 import type { ComponentType } from '@/features/core/modules/domain/types/document/document.types';
@@ -646,7 +646,7 @@ export declare class RComponentBase extends REntity {
 
 ## src/features/core/modules/domain/entities/RComponentCore.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentCore.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentCore.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentCore.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentCore.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -666,7 +666,7 @@ export declare abstract class RComponentCore extends REntity {
 
 ## src/features/core/modules/domain/entities/RComponentDSL.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentDSL.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentDSL.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentDSL.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentDSL.ts)
 
 ```ts
 import { RComponentBase } from '@/features/core/modules/domain/entities/RComponentBase';
@@ -677,7 +677,7 @@ export declare class RComponentDSL extends RComponentBase {
 
 ## src/features/core/modules/domain/entities/RComponentSFC.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentSFC.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentSFC.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentSFC.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentSFC.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -701,7 +701,7 @@ export declare class RComponentSFC extends RComponentCore {
 
 ## src/features/core/modules/domain/entities/RComponentTable.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentTable.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentTable.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentTable.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentTable.ts)
 
 ```ts
 import type { RComponentTableColumn } from '@/features/core/modules/domain/entities/RComponentTableColumn';
@@ -717,7 +717,7 @@ export declare class RComponentTable extends RComponentBase {
 
 ## src/features/core/modules/domain/entities/RComponentTableColumn.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComponentTableColumn.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComponentTableColumn.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComponentTableColumn.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComponentTableColumn.ts)
 
 ```ts
 import type { Constructor } from '@endge/utils';
@@ -764,7 +764,7 @@ export declare function RComponentTableColumn_isHtml(column: RComponentTableColu
 
 ## src/features/core/modules/domain/entities/RComposition.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComposition.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComposition.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComposition.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComposition.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -791,7 +791,7 @@ export declare class RComposition extends REntity {
 
 ## src/features/core/modules/domain/entities/RComputation.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RComputation.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RComputation.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RComputation.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RComputation.ts)
 
 ```ts
 import type { DiagnosticsProblemInput } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -812,7 +812,7 @@ export declare class RComputation extends REntity {
 
 ## src/features/core/modules/domain/entities/RConfiguration.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RConfiguration.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RConfiguration.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RConfiguration.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RConfiguration.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -830,7 +830,7 @@ export declare class RConfiguration extends REntity {
 
 ## src/features/core/modules/domain/entities/RConverter.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RConverter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RConverter.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RConverter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RConverter.ts)
 
 ```ts
 import type { EntityManagement } from '@/features/core/modules/domain/types/document/entity-management.type';
@@ -852,7 +852,7 @@ export declare class RConverter extends REntity {
 
 ## src/features/core/modules/domain/entities/RDataView.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RDataView.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RDataView.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RDataView.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RDataView.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -866,7 +866,7 @@ export declare class RDataView extends REntity {
 
 ## src/features/core/modules/domain/entities/REntity.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/REntity.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/REntity.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/REntity.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/REntity.ts)
 
 ```ts
 import type { DiagnosticsProblemInput } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -905,7 +905,7 @@ export declare class REntity<TId extends string | number = number> {
 
 ## src/features/core/modules/domain/entities/RFacet.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RFacet.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RFacet.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RFacet.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RFacet.ts)
 
 ```ts
 import type { EndgeDocumentServerState } from '@/features/core/modules/domain/types/document/domain-snapshot.type';
@@ -923,7 +923,7 @@ export declare class RFacet extends REntity<string | number> {
 
 ## src/features/core/modules/domain/entities/RFacetDocument.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RFacetDocument.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RFacetDocument.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RFacetDocument.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RFacetDocument.ts)
 
 ```ts
 import type { EndgeConfigurationContribution } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -940,7 +940,7 @@ export declare class RFacetDocument extends REntity<string | number> {
 
 ## src/features/core/modules/domain/entities/RField.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RField.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RField.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RField.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RField.ts)
 
 ```ts
 export declare class RField {
@@ -956,7 +956,7 @@ export declare class RField {
 
 ## src/features/core/modules/domain/entities/RFilter.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RFilter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RFilter.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RFilter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RFilter.ts)
 
 ```ts
 import type { DomainDocumentType } from '@/features/core/modules/domain/types/document/document.types';
@@ -974,7 +974,7 @@ export declare class RFilter extends REntity {
 
 ## src/features/core/modules/domain/entities/RFolder.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RFolder.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RFolder.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RFolder.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RFolder.ts)
 
 ```ts
 import { REntity } from '@/features/core/modules/domain/entities/REntity';
@@ -992,7 +992,7 @@ export declare class RFolder extends REntity {
 
 ## src/features/core/modules/domain/entities/RI18nBundle.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RI18nBundle.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RI18nBundle.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RI18nBundle.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RI18nBundle.ts)
 
 ```ts
 import type { DiagnosticsProblemInput } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -1012,7 +1012,7 @@ export declare class RI18nBundle extends REntity {
 
 ## src/features/core/modules/domain/entities/RIntegration.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RIntegration.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RIntegration.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RIntegration.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RIntegration.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1034,7 +1034,7 @@ export declare class RIntegration extends REntity {
 
 ## src/features/core/modules/domain/entities/RMock.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RMock.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RMock.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RMock.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RMock.ts)
 
 ```ts
 import type { DiagnosticsProblemInput } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -1057,7 +1057,7 @@ export declare class RMock extends REntity {
 
 ## src/features/core/modules/domain/entities/RNavigation.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RNavigation.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RNavigation.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RNavigation.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RNavigation.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1086,7 +1086,7 @@ export declare class RNavigation extends REntity {
 
 ## src/features/core/modules/domain/entities/RPage.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RPage.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RPage.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RPage.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RPage.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1133,7 +1133,7 @@ export declare class RPage extends REntity {
 
 ## src/features/core/modules/domain/entities/RPageTemplate.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RPageTemplate.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RPageTemplate.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RPageTemplate.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RPageTemplate.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1170,7 +1170,7 @@ export declare class RPageTemplate extends REntity {
 
 ## src/features/core/modules/domain/entities/RPolicy.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RPolicy.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RPolicy.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RPolicy.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RPolicy.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1184,7 +1184,7 @@ export declare class RPolicy extends REntity {
 
 ## src/features/core/modules/domain/entities/RQuery.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RQuery.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RQuery.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RQuery.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RQuery.ts)
 
 ```ts
 import { REntity } from '@/features/core/modules/domain/entities/REntity';
@@ -1198,7 +1198,7 @@ export declare class RQuery extends REntity {
 
 ## src/features/core/modules/domain/entities/RSimulation.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RSimulation.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RSimulation.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RSimulation.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RSimulation.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1213,7 +1213,7 @@ export declare class RSimulation extends REntity {
 
 ## src/features/core/modules/domain/entities/RStore.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RStore.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RStore.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RStore.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RStore.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1228,7 +1228,7 @@ export declare class RStore extends REntity {
 
 ## src/features/core/modules/domain/entities/RStream.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RStream.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RStream.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RStream.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RStream.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1243,7 +1243,7 @@ export declare class RStream extends REntity {
 
 ## src/features/core/modules/domain/entities/RStyle.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RStyle.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RStyle.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RStyle.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RStyle.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1262,7 +1262,7 @@ export declare class RStyle extends REntity {
 
 ## src/features/core/modules/domain/entities/RType.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RType.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RType.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RType.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RType.ts)
 
 ```ts
 import { REntity } from '@/features/core/modules/domain/entities/REntity';
@@ -1278,7 +1278,7 @@ export declare class RType extends REntity<string> {
 
 ## src/features/core/modules/domain/entities/RUpdate.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RUpdate.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RUpdate.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RUpdate.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RUpdate.ts)
 
 ```ts
 import type { DuplicateOptions } from '@/features/core/modules/domain/entities/REntity';
@@ -1294,7 +1294,7 @@ export declare class RUpdate extends REntity {
 
 ## src/features/core/modules/domain/entities/RVersion.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RVersion.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RVersion.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RVersion.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RVersion.ts)
 
 ```ts
 export declare class RVersion {
@@ -1323,7 +1323,7 @@ export declare class RVersion {
 
 ## src/features/core/modules/domain/entities/RVocabs.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RVocabs.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RVocabs.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RVocabs.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RVocabs.ts)
 
 ```ts
 import type { DiagnosticsProblemInput } from '@/features/core/modules/diagnostics/domain/types/diagnostics.types';
@@ -1356,7 +1356,7 @@ export declare function createLegacyVocabSource(input: {
 
 ## src/features/core/modules/domain/entities/RWorkspace.ts
 
-Исходный модуль: [src/features/core/modules/domain/entities/RWorkspace.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/entities/RWorkspace.ts)
+Исходный модуль: [src/features/core/modules/domain/entities/RWorkspace.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/entities/RWorkspace.ts)
 
 ```ts
 import type { EndgeConfiguration } from '@/features/core/modules/configuration/domain/types/configuration.type';
@@ -1377,7 +1377,7 @@ export declare function normalizeEndgeWorkspaceDefinition(input: unknown): Endge
 
 ## src/features/core/modules/domain/resolved/resolved-entity-index.ts
 
-Исходный модуль: [src/features/core/modules/domain/resolved/resolved-entity-index.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/resolved/resolved-entity-index.ts)
+Исходный модуль: [src/features/core/modules/domain/resolved/resolved-entity-index.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/resolved/resolved-entity-index.ts)
 
 ```ts
 import type { REntity } from '@/features/core/modules/domain/entities/REntity';
@@ -1393,7 +1393,7 @@ export declare class ResolvedEntityIndex {
 
 ## src/features/core/modules/domain/types/component/component-core.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/component-core.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/component-core.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/component-core.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/component-core.types.ts)
 
 ```ts
 export type RComponentRenderTarget = 'dom' | 'canvas';
@@ -1454,7 +1454,7 @@ export declare function createEmptyComponentDependencies(): RComponentDependenci
 
 ## src/features/core/modules/domain/types/component/component.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/component.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/component.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/component.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/component.types.ts)
 
 ```ts
 import type { RComponentDSL } from '@/features/core/modules/domain/entities/RComponentDSL';
@@ -1472,7 +1472,7 @@ export type ColumnComponentType = ComponentType.Html | ComponentType.Component;
 
 ## src/features/core/modules/domain/types/component/sfc/ast.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ast.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/ast.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ast.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/ast.types.ts)
 
 ```ts
 import type { File } from '@babel/types';
@@ -1565,7 +1565,7 @@ export interface RComponentSFC_AST_Style {
 
 ## src/features/core/modules/domain/types/component/sfc/dependencies.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/dependencies.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/dependencies.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/dependencies.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/dependencies.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_DataMetaReference, RComponentSFC_IR_Read } from './ir.types';
@@ -1623,7 +1623,7 @@ export declare function createEmptyComponentSFCRuntimeDependencies(): RComponent
 
 ## src/features/core/modules/domain/types/component/sfc/expression-ir.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/expression-ir.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/expression-ir.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/expression-ir.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/expression-ir.types.ts)
 
 ```ts
 export type ComponentSFCExpressionIR = {
@@ -1681,7 +1681,7 @@ export type ComponentSFCExpressionIR = {
 
 ## src/features/core/modules/domain/types/component/sfc/intrinsic-events.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/intrinsic-events.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/intrinsic-events.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/intrinsic-events.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/intrinsic-events.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Tag } from './ir.types';
@@ -1746,7 +1746,7 @@ export declare function getComponentSFCIntrinsicEventDefinitions(tag: RComponent
 
 ## src/features/core/modules/domain/types/component/sfc/ir.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ir.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/ir.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ir.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/ir.types.ts)
 
 ```ts
 import type { RComponentDiagnostic } from '../component-core.types';
@@ -2022,7 +2022,7 @@ export type RComponentSFC_IR_Style = EndgeStyleSheetArtifact;
 
 ## src/features/core/modules/domain/types/component/sfc/location.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/location.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/location.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/location.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/location.types.ts)
 
 ```ts
 export interface RComponentSFC_SourceRange {
@@ -2037,7 +2037,7 @@ export interface RComponentSFC_SourceRange {
 
 ## src/features/core/modules/domain/types/component/sfc/metadata-visual.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/metadata-visual.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/metadata-visual.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/metadata-visual.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/metadata-visual.types.ts)
 
 ```ts
 import type { RComponentSFC_SourceRange } from './location.types';
@@ -2063,7 +2063,7 @@ export interface ComponentSFCMetadataSourcePatchResult {
 
 ## src/features/core/modules/domain/types/component/sfc/ports-source.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ports-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/ports-source.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ports-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/ports-source.types.ts)
 
 ```ts
 import type { RComponentSFC_SourceRange } from './location.types';
@@ -2110,7 +2110,7 @@ export interface ComponentSFCPortsSourcePatchResult {
 
 ## src/features/core/modules/domain/types/component/sfc/ports.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ports.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/ports.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/ports.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/ports.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Value } from './ir.types';
@@ -2370,7 +2370,7 @@ export declare function createEmptyComponentSFCPortManifest(): ComponentSFCPortM
 
 ## src/features/core/modules/domain/types/component/sfc/props-visual.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/props-visual.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/props-visual.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/props-visual.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/props-visual.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Prop } from './ir.types';
@@ -2393,9 +2393,55 @@ export interface ComponentSFCPropsSourcePatchResult {
 }
 ```
 
+## src/features/core/modules/domain/types/component/sfc/renderer-tags.ts
+
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/renderer-tags.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/renderer-tags.ts)
+
+```ts
+export declare const ENDGE_SFC_RENDER_ADAPTER_REQUIRED_KEYS: readonly [
+    "Text",
+    "DateTime",
+    "Number",
+    "Icon",
+    "Badge",
+    "Dot",
+    "Box",
+    "Flex",
+    "Grid",
+    "Divider",
+    "Input",
+    "Textarea",
+    "Checkbox",
+    "Select"
+];
+export type EndgeSFCRenderAdapterKey = typeof ENDGE_SFC_RENDER_ADAPTER_REQUIRED_KEYS[number];
+export declare const ENDGE_SFC_RENDERER_TAGS: readonly [
+    "Text",
+    "DateTime",
+    "Number",
+    "Icon",
+    "Badge",
+    "Dot",
+    "Box",
+    "Flex",
+    "Grid",
+    "Divider",
+    "Input",
+    "Textarea",
+    "Checkbox",
+    "Select",
+    "Tooltip",
+    "Table",
+    "TimelineChart",
+    "TimelineGroup"
+];
+export type EndgeSFCRendererTag = typeof ENDGE_SFC_RENDERER_TAGS[number];
+export declare function isEndgeSFCRendererTag(value: unknown): value is EndgeSFCRendererTag;
+```
+
 ## src/features/core/modules/domain/types/component/sfc/source.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/source.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/source.types.ts)
 
 ```ts
 export interface RComponentSFCSource_Script {
@@ -2417,7 +2463,7 @@ export interface RComponentSFCSource_Parts {
 
 ## src/features/core/modules/domain/types/component/sfc/table-events.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/table-events.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/table-events.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/table-events.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/table-events.types.ts)
 
 ```ts
 export type TableSelectionMode = 'none' | 'single' | 'multiple';
@@ -2530,7 +2576,7 @@ export declare const TABLE_EVENT_DEFINITIONS: readonly TableEventDefinition[];
 
 ## src/features/core/modules/domain/types/component/sfc/table-visibility.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/table-visibility.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/table-visibility.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/table-visibility.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/table-visibility.types.ts)
 
 ```ts
 import type { RComponentDiagnostic } from '@/features/core/modules/domain/types/component/component-core.types';
@@ -2542,7 +2588,7 @@ export interface ComponentSFCTableColumnVisibilityDescriptor {
 
 ## src/features/core/modules/domain/types/component/sfc/tag-attribute-contract.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/tag-attribute-contract.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/tag-attribute-contract.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/tag-attribute-contract.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/tag-attribute-contract.types.ts)
 
 ```ts
 export type ComponentSFCTagAttributeLiteral = string | number | boolean;
@@ -2919,7 +2965,7 @@ export declare function getComponentSFCTagAttributeContract(tag: string, attribu
 
 ## src/features/core/modules/domain/types/component/sfc/tag-input-contract.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/tag-input-contract.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/tag-input-contract.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/tag-input-contract.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/tag-input-contract.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Tag } from './ir.types';
@@ -3206,7 +3252,7 @@ export declare function getComponentSFCTagInputContract(tag: RComponentSFC_IR_Ta
 
 ## src/features/core/modules/domain/types/component/sfc/visual-projection.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/component/sfc/visual-projection.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/component/sfc/visual-projection.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/component/sfc/visual-projection.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/component/sfc/visual-projection.types.ts)
 
 ```ts
 import type { RComponentSFC_IR_Tag } from './ir.types';
@@ -3533,7 +3579,7 @@ export interface ComponentSFCVisualInspection {
 
 ## src/features/core/modules/domain/types/computation/computation-program.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/computation/computation-program.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/computation/computation-program.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/computation/computation-program.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/computation/computation-program.types.ts)
 
 ```ts
 import type { ComputationSourceDocument } from './computation-source.types';
@@ -3575,7 +3621,7 @@ export interface ComputationProgramPayload {
 
 ## src/features/core/modules/domain/types/computation/computation-runtime.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/computation/computation-runtime.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/computation/computation-runtime.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/computation/computation-runtime.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/computation/computation-runtime.types.ts)
 
 ```ts
 import type { SourceExpressionIR } from '@/features/core/modules/source/domain/types/source-expression.types';
@@ -3628,7 +3674,7 @@ export interface ComputationOverride {
 
 ## src/features/core/modules/domain/types/computation/computation-source.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/computation/computation-source.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/computation/computation-source.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/computation/computation-source.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/computation/computation-source.types.ts)
 
 ```ts
 import type { ComputationContractField } from './computation-program.types';
@@ -3665,7 +3711,7 @@ export interface ComputationSourceDocument {
 
 ## src/features/core/modules/domain/types/computation/computation.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/computation/computation.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/computation/computation.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/computation/computation.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/computation/computation.types.ts)
 
 ```ts
 export * from './computation-program.types';
@@ -3675,7 +3721,7 @@ export * from './computation-source.types';
 
 ## src/features/core/modules/domain/types/document/document-create.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document-create.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document-create.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document-create.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document-create.type.ts)
 
 ```ts
 import type { DomainDocumentType } from './document.types';
@@ -3698,7 +3744,7 @@ export interface DocumentCreateResult {
 
 ## src/features/core/modules/domain/types/document/document-draft.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document-draft.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document-draft.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document-draft.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document-draft.type.ts)
 
 ```ts
 export interface DocumentDraftOptions {
@@ -3710,7 +3756,7 @@ export interface DocumentDraftOptions {
 
 ## src/features/core/modules/domain/types/document/document-identity.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document-identity.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document-identity.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document-identity.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document-identity.types.ts)
 
 ```ts
 export type EndgeFacetId = string;
@@ -3745,7 +3791,7 @@ export type EndgeI18nBundleId = string;
 
 ## src/features/core/modules/domain/types/document/document-metadata.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document-metadata.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document-metadata.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document-metadata.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document-metadata.types.ts)
 
 ```ts
 import type { ProgramMetadataMap } from '@/features/core/modules/program/domain/types/program-metadata.types';
@@ -3788,7 +3834,7 @@ export interface DocumentMetadataPatchResult {
 
 ## src/features/core/modules/domain/types/document/document-move.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document-move.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document-move.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document-move.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document-move.type.ts)
 
 ```ts
 import type { DomainDocumentType } from './document.types';
@@ -3800,7 +3846,7 @@ export interface EndgeDomainDocumentMove {
 
 ## src/features/core/modules/domain/types/document/document.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/document.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/document.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/document.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/document.types.ts)
 
 ```ts
 import type { RAction } from '@/features/core/modules/domain/entities/RAction';
@@ -3914,7 +3960,7 @@ export type RDocument = RComponent | RComponentSFC | RQuery | RDataView | RCompo
 
 ## src/features/core/modules/domain/types/document/domain-export.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/domain-export.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/domain-export.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/domain-export.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/domain-export.type.ts)
 
 ```ts
 import type { EndgeWorkspaceDefinition } from '@/features/core/modules/workspace/domain/workspace.types';
@@ -3994,7 +4040,7 @@ export interface EndgeDomainBundle {
 
 ## src/features/core/modules/domain/types/document/domain-provider.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/domain-provider.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/domain-provider.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/domain-provider.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/domain-provider.type.ts)
 
 ```ts
 import type { EndgeLiveDomainDocument, EndgeLiveDomainSnapshot, EndgeWorkspaceServerState } from '@/features/core/modules/domain/types/document/domain-snapshot.type';
@@ -4141,7 +4187,7 @@ export interface EndgeDomainRepositoryCapabilities {
 
 ## src/features/core/modules/domain/types/document/domain-snapshot.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/domain-snapshot.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/domain-snapshot.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/domain-snapshot.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/domain-snapshot.type.ts)
 
 ```ts
 import type { EndgeDomainBundle, EndgePortableDocuments } from '@/features/core/modules/domain/types/document/domain-export.type';
@@ -4182,7 +4228,7 @@ export type EndgeLiveDomainSnapshot = Omit<EndgeDomainBundle, 'documents' | 'wor
 
 ## src/features/core/modules/domain/types/document/entity-management.type.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/entity-management.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/entity-management.type.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/entity-management.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/entity-management.type.ts)
 
 ```ts
 export type ManagedBy = 'system' | 'integration' | 'user';
@@ -4217,7 +4263,7 @@ export declare function isExternallyManaged(value: EntityManagementLike): boolea
 
 ## src/features/core/modules/domain/types/document/filter.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/filter.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/filter.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/filter.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/filter.types.ts)
 
 ```ts
 export interface FilterStaticOptionSchema {
@@ -4256,7 +4302,7 @@ export interface RFilterSchema {
 
 ## src/features/core/modules/domain/types/document/navigation.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/navigation.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/navigation.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/navigation.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/navigation.types.ts)
 
 ```ts
 import type { EntityManagement } from './entity-management.type';
@@ -4297,7 +4343,7 @@ export {};
 
 ## src/features/core/modules/domain/types/document/query.types.ts
 
-Исходный модуль: [src/features/core/modules/domain/types/document/query.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/domain/types/document/query.types.ts)
+Исходный модуль: [src/features/core/modules/domain/types/document/query.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/domain/types/document/query.types.ts)
 
 ```ts
 export type RQueryAuthMode = 'none' | 'inherit' | 'profile';

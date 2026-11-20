@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/ui-vue 2.1.0-dev.16, группа ui; исходных модулей: 30."
+description: "TypeScript-декларации @endge/ui-vue 2.4.1-dev.24, группа ui; исходных модулей: 30."
 ---
 
 # @endge/ui-vue: ui
 
-Версия source: 2.1.0-dev.16. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [c04ff37288b65db89bc2d828c9e1339ada37fda8](https://github.com/endge-lab/ui-vue/tree/c04ff37288b65db89bc2d828c9e1339ada37fda8).
+Версия source: 2.4.1-dev.24. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/ui-vue); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [3e2e86a56e6b69243302b632d6e35106293ab8b4](https://github.com/endge-lab/ui-vue/tree/3e2e86a56e6b69243302b632d6e35106293ab8b4).
 
 ## src/ui/filter/index.ts
 
-Исходный модуль: [src/ui/filter/index.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/filter/index.ts)
+Исходный модуль: [src/ui/filter/index.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/filter/index.ts)
 
 ```ts
 export { default as EndgeFilterField } from './EndgeFilterField.vue';
@@ -17,7 +17,7 @@ export { default as EndgeFilterRenderer } from './EndgeFilterRenderer.vue';
 
 ## src/ui/overlay/context-menu-manager.ts
 
-Исходный модуль: [src/ui/overlay/context-menu-manager.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/overlay/context-menu-manager.ts)
+Исходный модуль: [src/ui/overlay/context-menu-manager.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/overlay/context-menu-manager.ts)
 
 ```ts
 import type { ContextMenuDescriptor, ContextMenuItemDescriptor, ContextMenuNodeDescriptor, RuntimeActionContext } from '@endge/core';
@@ -72,7 +72,7 @@ export declare function resolveEndgeContextMenuItemLabel(item: ContextMenuItemDe
 
 ## src/ui/overlay/tooltip/endge-tooltip-manager.ts
 
-Исходный модуль: [src/ui/overlay/tooltip/endge-tooltip-manager.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/overlay/tooltip/endge-tooltip-manager.ts)
+Исходный модуль: [src/ui/overlay/tooltip/endge-tooltip-manager.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/overlay/tooltip/endge-tooltip-manager.ts)
 
 ```ts
 import type { EndgeTooltipConfiguration } from '@endge/core';
@@ -122,7 +122,7 @@ export declare function attachEndgeTooltipTriggerAttrs(attrs: Record<string, unk
 
 ## src/ui/render/sfc/SFCRender_Badge.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Badge.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Badge.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Badge.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Badge.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -131,7 +131,7 @@ export declare const SFCRender_Badge: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Base.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Base.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Base.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Base.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Base.ts)
 
 ```ts
 import type { EndgeStyleMatchNode, RComponentSFC_IR_ElementNode } from '@endge/core';
@@ -145,7 +145,7 @@ export declare function createSFCNodeEventAttrs(node: RComponentSFC_IR_ElementNo
 
 ## src/ui/render/sfc/SFCRender_BoundaryRegistry.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_BoundaryRegistry.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_BoundaryRegistry.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_BoundaryRegistry.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_BoundaryRegistry.ts)
 
 ```ts
 import type { RuntimeBoundaryPatch } from '@endge/core';
@@ -163,7 +163,7 @@ export declare function createSFCVueBoundaryRegistry(): SFCVueBoundaryRegistry;
 
 ## src/ui/render/sfc/SFCRender_Box.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Box.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Box.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Box.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Box.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -172,7 +172,7 @@ export declare const SFCRender_Box: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Checkbox.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Checkbox.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Checkbox.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Checkbox.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Checkbox.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -181,7 +181,7 @@ export declare const SFCRender_Checkbox: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Component.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Component.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Component.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Component.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Component.ts)
 
 ```ts
 import type { SFCVueRenderFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -190,7 +190,7 @@ export declare const SFCRender_Component: SFCVueRenderFunction;
 
 ## src/ui/render/sfc/SFCRender_Context.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Context.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Context.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Context.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Context.ts)
 
 ```ts
 import type { ComponentSFCEventBoundary, ComponentSFCRenderPort, ComponentSFCRequiredPortBinding, EndgeStyleMatchNode, EndgeStyleSheetArtifact, ProgramMetadata, RComponentSFC_IR, SFCRenderInspectionSessionLike } from '@endge/core';
@@ -207,7 +207,7 @@ export declare function extendSFCVueStyleContext(context: SFCVueRenderContext, p
 
 ## src/ui/render/sfc/SFCRender_DateTime.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_DateTime.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_DateTime.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_DateTime.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_DateTime.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -217,7 +217,7 @@ export declare function formatSFCDateTime(value: unknown, format: unknown, timez
 
 ## src/ui/render/sfc/SFCRender_Divider.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Divider.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Divider.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Divider.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Divider.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -226,7 +226,7 @@ export declare const SFCRender_Divider: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Dot.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Dot.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Dot.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Dot.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Dot.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -235,7 +235,7 @@ export declare const SFCRender_Dot: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Evaluator.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Evaluator.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Evaluator.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Evaluator.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Evaluator.ts)
 
 ```ts
 import type { RComponentSFC_IR_Value } from '@endge/core';
@@ -250,7 +250,7 @@ export declare function readSFCObjectPath(path: string, source: unknown): unknow
 
 ## src/ui/render/sfc/SFCRender_Flex.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Flex.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Flex.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Flex.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Flex.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -259,7 +259,7 @@ export declare const SFCRender_Flex: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Grid.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Grid.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Grid.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Grid.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Grid.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -268,7 +268,7 @@ export declare const SFCRender_Grid: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Icon.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Icon.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Icon.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Icon.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Icon.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -277,7 +277,7 @@ export declare const SFCRender_Icon: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Input.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Input.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Input.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Input.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Input.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -286,7 +286,7 @@ export declare const SFCRender_Input: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Node.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Node.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Node.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Node.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Node.ts)
 
 ```ts
 import type { RComponentSFC_IR_Node } from '@endge/core';
@@ -297,7 +297,7 @@ export declare function renderSFCNode(h: SFCVueRenderH, node: RComponentSFC_IR_N
 
 ## src/ui/render/sfc/SFCRender_Number.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Number.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Number.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Number.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Number.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -306,7 +306,7 @@ export declare const SFCRender_Number: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Select.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Select.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Select.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Select.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Select.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -315,7 +315,7 @@ export declare const SFCRender_Select: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Table.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Table.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Table.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Table.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Table.ts)
 
 ```ts
 import type { SFCVueRenderFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -336,7 +336,7 @@ export declare function applyRowSnapshots(rows: Record<string, unknown>[], patch
 
 ## src/ui/render/sfc/SFCRender_TableAlignment.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_TableAlignment.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_TableAlignment.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_TableAlignment.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_TableAlignment.ts)
 
 ```ts
 export type SFCTableCellAlign = 'left' | 'center' | 'right';
@@ -350,7 +350,7 @@ export declare function normalizeSFCTableCellAlignment(horizontal: unknown, vert
 
 ## src/ui/render/sfc/SFCRender_TableMenu.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_TableMenu.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_TableMenu.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_TableMenu.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_TableMenu.ts)
 
 ```ts
 import type { ComponentSFCTableMenuDescriptor, ContextMenuDescriptor } from '@endge/core';
@@ -360,7 +360,7 @@ export declare function resolveSFCTableMenu(descriptor: ComponentSFCTableMenuDes
 
 ## src/ui/render/sfc/SFCRender_TableStyle.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_TableStyle.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_TableStyle.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_TableStyle.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_TableStyle.ts)
 
 ```ts
 import type { SFCVueRenderContext } from '@/services/render/sfc/sfc-vue-render.type';
@@ -415,7 +415,7 @@ export declare function getSFCTableCellStyleSurfaces(row: Record<string, unknown
 
 ## src/ui/render/sfc/SFCRender_Text.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Text.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Text.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Text.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Text.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -424,7 +424,7 @@ export declare const SFCRender_Text: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Textarea.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Textarea.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Textarea.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Textarea.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Textarea.ts)
 
 ```ts
 import type { SFCVueRenderAdapterFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -433,7 +433,7 @@ export declare const SFCRender_Textarea: SFCVueRenderAdapterFunction;
 
 ## src/ui/render/sfc/SFCRender_Tooltip.ts
 
-Исходный модуль: [src/ui/render/sfc/SFCRender_Tooltip.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/render/sfc/SFCRender_Tooltip.ts)
+Исходный модуль: [src/ui/render/sfc/SFCRender_Tooltip.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/render/sfc/SFCRender_Tooltip.ts)
 
 ```ts
 import type { SFCVueRenderFunction } from '@/services/render/sfc/sfc-vue-render.type';
@@ -442,7 +442,7 @@ export declare const SFCRender_Tooltip: SFCVueRenderFunction;
 
 ## src/ui/table/tanstack-table.types.ts
 
-Исходный модуль: [src/ui/table/tanstack-table.types.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/table/tanstack-table.types.ts)
+Исходный модуль: [src/ui/table/tanstack-table.types.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/table/tanstack-table.types.ts)
 
 ```ts
 import type { ComponentSFCEventBoundary, ComponentSFCTableColumnMenuDescriptor, ComponentSFCTableColumnPinMode, ComponentSFCTableColumnPinStateItem, ComponentSFCTableRowMenuDescriptor, ComponentSFCTableSortComparator, ComponentSFCTableSortMode, ComponentSFCTableSortStateItem, RComponentSFC_IR_ElementNode, RComponentSFC_IR_EventBinding, RComponentSFC_IR_Node, TableCellSelectionMode, TableSelectionMode, TableSelectionTrigger, TableViewportOptions } from '@endge/core';
@@ -506,7 +506,7 @@ export interface EndgeTanStackTableProps extends TableViewportOptions {
 
 ## src/ui/timeline/timeline-presets.ts
 
-Исходный модуль: [src/ui/timeline/timeline-presets.ts](https://github.com/endge-lab/ui-vue/blob/c04ff37288b65db89bc2d828c9e1339ada37fda8/src/ui/timeline/timeline-presets.ts)
+Исходный модуль: [src/ui/timeline/timeline-presets.ts](https://github.com/endge-lab/ui-vue/blob/3e2e86a56e6b69243302b632d6e35106293ab8b4/src/ui/timeline/timeline-presets.ts)
 
 ```ts
 import type { RuntimeScope } from '@endge/core';

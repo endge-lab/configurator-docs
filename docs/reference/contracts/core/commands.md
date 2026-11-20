@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа commands; исходных модулей: 6."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа commands; исходных модулей: 6."
 ---
 
 # @endge/core: commands
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/commands/config/commands.config.ts
 
-Исходный модуль: [src/features/core/modules/commands/config/commands.config.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/config/commands.config.ts)
+Исходный модуль: [src/features/core/modules/commands/config/commands.config.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/config/commands.config.ts)
 
 ```ts
 import type { EndgeCommandExecutor, EndgeCommandHandler } from '@/features/core/modules/commands/types/command-executor.type';
@@ -21,7 +21,7 @@ export declare function createRuntimeCommandHandlers(runtime: EndgeRuntimeComman
 
 ## src/features/core/modules/commands/domain/commands.types.ts
 
-Исходный модуль: [src/features/core/modules/commands/domain/commands.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/domain/commands.types.ts)
+Исходный модуль: [src/features/core/modules/commands/domain/commands.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/domain/commands.types.ts)
 
 ```ts
 import type { RuntimeControlTarget } from '@/features/core/modules/runtime/domain/runtime-inspection.types';
@@ -64,7 +64,7 @@ export type EndgeCommand = {
 
 ## src/features/core/modules/commands/EndgeCommands_Module.ts
 
-Исходный модуль: [src/features/core/modules/commands/EndgeCommands_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/EndgeCommands_Module.ts)
+Исходный модуль: [src/features/core/modules/commands/EndgeCommands_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/EndgeCommands_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -81,7 +81,7 @@ export declare class EndgeCommands_Module extends EndgeModule<EndgeBootContext> 
 
 ## src/features/core/modules/commands/types/command-executor.type.ts
 
-Исходный модуль: [src/features/core/modules/commands/types/command-executor.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/types/command-executor.type.ts)
+Исходный модуль: [src/features/core/modules/commands/types/command-executor.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/types/command-executor.type.ts)
 
 ```ts
 import type { EndgeCommand, EndgeCommandType } from '@/features/core/modules/commands/domain/commands.types';
@@ -103,7 +103,7 @@ export interface EndgeCommandHandler {
 
 ## src/features/core/modules/commands/types/context-command-target.type.ts
 
-Исходный модуль: [src/features/core/modules/commands/types/context-command-target.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/types/context-command-target.type.ts)
+Исходный модуль: [src/features/core/modules/commands/types/context-command-target.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/types/context-command-target.type.ts)
 
 ```ts
 import type { EndgeDataMode } from '@/features/core/modules/workspace/domain/workspace.types';
@@ -121,7 +121,7 @@ export interface EndgeContextCommandTarget {
 
 ## src/features/core/modules/commands/types/runtime-command-target.type.ts
 
-Исходный модуль: [src/features/core/modules/commands/types/runtime-command-target.type.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/commands/types/runtime-command-target.type.ts)
+Исходный модуль: [src/features/core/modules/commands/types/runtime-command-target.type.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/commands/types/runtime-command-target.type.ts)
 
 ```ts
 import type { RuntimeControlOperation, RuntimeControlTarget } from '@/features/core/modules/runtime/domain/runtime-inspection.types';

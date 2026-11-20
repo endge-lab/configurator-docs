@@ -1,14 +1,14 @@
 ---
-description: "TypeScript-декларации @endge/core 1.3.0-dev.17, группа auth; исходных модулей: 7."
+description: "TypeScript-декларации @endge/core 1.8.0-dev.25, группа auth; исходных модулей: 8."
 ---
 
 # @endge/core: auth
 
-Версия source: 1.3.0-dev.17. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [5013d6272b427b472eb5c38a698d3608cf8f4ceb](https://github.com/endge-lab/core/tree/5013d6272b427b472eb5c38a698d3608cf8f4ceb).
+Версия source: 1.8.0-dev.25. [Каталог package](./). [Repository — навигация](https://github.com/endge-lab/core); сама ссылка не подтверждает snapshot этого контракта. Source snapshot не является проверкой текущих npm tags или развёрнутого приложения. Проверенный опубликованный source snapshot: [ef69ac170d1982c3df93d1bfc4be5a03893c5226](https://github.com/endge-lab/core/tree/ef69ac170d1982c3df93d1bfc4be5a03893c5226).
 
 ## src/features/core/modules/auth/adapters/OidcBrowserSession_Adapter.ts
 
-Исходный модуль: [src/features/core/modules/auth/adapters/OidcBrowserSession_Adapter.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/adapters/OidcBrowserSession_Adapter.ts)
+Исходный модуль: [src/features/core/modules/auth/adapters/OidcBrowserSession_Adapter.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/adapters/OidcBrowserSession_Adapter.ts)
 
 ```ts
 import type { AuthSessionSource, AuthSessionSourceResolveOptions, AuthTokenSet, OidcBrowserSessionOptions } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -30,7 +30,7 @@ export { OidcBrowserSession_Adapter as OidcBrowserSession_Service };
 
 ## src/features/core/modules/auth/domain/AuthInteractionRequiredError.ts
 
-Исходный модуль: [src/features/core/modules/auth/domain/AuthInteractionRequiredError.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/domain/AuthInteractionRequiredError.ts)
+Исходный модуль: [src/features/core/modules/auth/domain/AuthInteractionRequiredError.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/domain/AuthInteractionRequiredError.ts)
 
 ```ts
 export declare class AuthInteractionRequiredError extends Error {
@@ -42,7 +42,7 @@ export declare class AuthInteractionRequiredError extends Error {
 
 ## src/features/core/modules/auth/domain/types/auth-profile.types.ts
 
-Исходный модуль: [src/features/core/modules/auth/domain/types/auth-profile.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/domain/types/auth-profile.types.ts)
+Исходный модуль: [src/features/core/modules/auth/domain/types/auth-profile.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/domain/types/auth-profile.types.ts)
 
 ```ts
 export type AuthProfileAdapterId = 'oidc' | 'oauth2-client-credentials' | 'oauth2-password' | 'basic' | 'bearer' | (string & {});
@@ -179,6 +179,7 @@ export interface AuthSessionSource {
 export interface EndgeAuthContext {
     authenticated: boolean;
     subject?: string;
+    issuer?: string;
     sessionId?: string;
     profileIdentity?: string;
 }
@@ -241,7 +242,7 @@ export interface OidcBrowserSessionOptions {
 
 ## src/features/core/modules/auth/domain/types/auth-runtime.types.ts
 
-Исходный модуль: [src/features/core/modules/auth/domain/types/auth-runtime.types.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/domain/types/auth-runtime.types.ts)
+Исходный модуль: [src/features/core/modules/auth/domain/types/auth-runtime.types.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/domain/types/auth-runtime.types.ts)
 
 ```ts
 import type { AuthProfileAdapterId, AuthTokenSet } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -260,7 +261,7 @@ export interface AuthSessionState {
 
 ## src/features/core/modules/auth/EndgeAuth_Module.ts
 
-Исходный модуль: [src/features/core/modules/auth/EndgeAuth_Module.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/EndgeAuth_Module.ts)
+Исходный модуль: [src/features/core/modules/auth/EndgeAuth_Module.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/EndgeAuth_Module.ts)
 
 ```ts
 import type { EndgeBootContext } from '@/features/core/kernel/types/bootstrap.types';
@@ -291,7 +292,7 @@ export declare class EndgeAuth_Module extends EndgeModule<EndgeBootContext> {
 
 ## src/features/core/modules/auth/services/auth-context.ts
 
-Исходный модуль: [src/features/core/modules/auth/services/auth-context.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/services/auth-context.ts)
+Исходный модуль: [src/features/core/modules/auth/services/auth-context.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/services/auth-context.ts)
 
 ```ts
 import type { EndgeAuthContext } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -309,7 +310,7 @@ export declare function createEndgeAuthContext(source: EndgeAuthContextSource): 
 
 ## src/features/core/modules/auth/services/auth-facet-claims.ts
 
-Исходный модуль: [src/features/core/modules/auth/services/auth-facet-claims.ts](https://github.com/endge-lab/core/blob/5013d6272b427b472eb5c38a698d3608cf8f4ceb/src/features/core/modules/auth/services/auth-facet-claims.ts)
+Исходный модуль: [src/features/core/modules/auth/services/auth-facet-claims.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/services/auth-facet-claims.ts)
 
 ```ts
 import type { EndgeFacetClaimIssue, EndgeFacetClaimMapping, EndgeFacetClaimResolution } from '@/features/core/modules/auth/domain/types/auth-profile.types';
@@ -317,4 +318,19 @@ export declare function normalizeFacetClaimMappings(input: Readonly<Record<strin
 export declare function resolveFacetSelectionsFromClaims(mappings: ReturnType<typeof normalizeFacetClaimMappings>, claims: Readonly<Record<string, unknown>>, authenticated: boolean): EndgeFacetClaimResolution;
 export declare function readClaim(claims: Readonly<Record<string, unknown>>, claim: string): unknown;
 export declare function describeFacetClaimIssue(issue: EndgeFacetClaimIssue): string;
+```
+
+## src/features/core/modules/auth/services/create-oidc-redirect-initializer.ts
+
+Исходный модуль: [src/features/core/modules/auth/services/create-oidc-redirect-initializer.ts](https://github.com/endge-lab/core/blob/ef69ac170d1982c3df93d1bfc4be5a03893c5226/src/features/core/modules/auth/services/create-oidc-redirect-initializer.ts)
+
+```ts
+import type { OidcBrowserSession_Adapter } from '../adapters/OidcBrowserSession_Adapter';
+type OidcRedirectSource = Pick<OidcBrowserSession_Adapter, 'completeRedirectCallback' | 'hasSession' | 'loginRedirect'>;
+interface OidcRedirectInitializationOptions {
+    clearCallback: (url: URL) => void;
+    beforeRedirect?: () => void;
+}
+export declare function createOidcRedirectInitializer(source: OidcRedirectSource, options: OidcRedirectInitializationOptions): () => Promise<boolean>;
+export {};
 ```
