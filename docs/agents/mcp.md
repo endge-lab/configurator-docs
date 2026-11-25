@@ -1,5 +1,5 @@
 ---
-description: "MCP-сервер Service Backend: подключение по Streamable HTTP с Bearer-токеном, порядок работы, инструменты endge_* (документы, фасеты, откат, коммиты), поле версии формата, ресурсы документации и пакет @endge/mcp."
+description: "MCP-сервер Service Backend: подключение по Streamable HTTP с Bearer-токеном, порядок работы, инструменты endge_* (workspace, документы, фасеты, откат, коммиты), поле версии формата, ресурсы документации и пакет @endge/mcp."
 ---
 
 # MCP-сервер backend
@@ -25,7 +25,7 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 - Сервер stateless: `Mcp-Session-Id` не выдаётся, каждый `POST` обслуживается отдельно, ответы — `application/json` без SSE. Запросы можно распределять по экземплярам backend без привязки. `GET` и `DELETE` отвечают `405`.
 - Запросов сервер → клиент (sampling, elicitation) и уведомлений нет.
 - Без учётных данных или с неверным токеном — `401` с телом `AuthMiddleware` (`unauthorized`, `access_token_invalid`, `access_token_revoked`, `access_token_expired`) и заголовком `WWW-Authenticate: Bearer realm="endge"`.
-- Workspace: для токена — workspace токена, параметр `workspace` можно не передавать (другой — `access_token_workspace_forbidden`). Для JWT параметр обязателен (`workspace_required`).
+- Workspace: параметр `workspace` можно опустить для токена на один workspace (другой identity даёт `access_token_workspace_forbidden`). Для токена на все workspace и для JWT явно передавайте identity из `endge_list_workspaces` (`workspace_required`).
 
 ## Порядок работы
 
@@ -43,7 +43,7 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 | Инструмент | Права | Назначение |
 | --- | --- | --- |
 | `endge_status` | все | состояние сервера и ссылки на документацию |
-| `endge_list_workspaces` | все | доступные workspace; токен видит только свой |
+| `endge_list_workspaces` | все | доступные workspace в области токена, с эффективными ролями и `revision` |
 | `endge_list_documents` | все | документы коллекции: `withSource`, `limit` 1–500 (по умолчанию 100), `offset`, `folderIdentity`, `includeDeleted` |
 | `endge_get_document` | все | документ коллекции |
 | `endge_get_workspace` | все | сводка workspace по коллекциям или полный снимок (`full=true`) |
@@ -59,11 +59,25 @@ claude mcp add --transport http endge https://endge.example.com/endge/mcp \
 | `endge_delete_document` | `write` + `delete` | удаление (аннотация `destructive`) |
 | `endge_commit` | `write` + `commit`, владелец Admin | коммит |
 
-`collection` — коллекция документного API, `facets` (фасеты) или `facet-documents` (документы фасета, например тенанты). Персональному токену инструменты изменения не предлагают `auth-profiles`: см. [профили авторизации](#профили-авторизации). Тело документа в `endge_create_document` и `endge_update_document`, а также параметры `endge_commit` проверяются тем же DTO, что REST: неизвестные поля отклоняются, ошибка — `validation_error` с `details.fields` или `details.reason`. Токен с флагом `commit` не видит `endge_commit`, если его владелец не Admin workspace. JWT-сессия видит `endge_commit`, только если пользователь Platform Admin или Admin хотя бы одного workspace; коммит в workspace без роли Admin use case отклоняет с `workspace_admin_required`.
+`collection` — коллекция документного API, `facets` (фасеты) или `facet-documents` (документы фасета, например тенанты). Персональному токену инструменты изменения не предлагают `auth-profiles`: см. [профили авторизации](#профили-авторизации). Тело документа в `endge_create_document` и `endge_update_document`, а также параметры `endge_commit` проверяются тем же DTO, что REST: неизвестные поля отклоняются, ошибка — `validation_error` с `details.fields` или `details.reason`. Токен с флагом `commit` видит `endge_commit`, если у владельца есть роль Admin хотя бы в одном workspace в области токена или роль Platform Admin. При вызове проверяется роль в конкретном workspace. JWT-сессия видит `endge_commit`, только если пользователь Platform Admin или Admin хотя бы одного workspace; коммит в workspace без роли Admin use case отклоняет с `workspace_admin_required`.
 
 Ошибка инструмента — результат с `isError: true` и JSON `{ error, status, message, details?, hint? }`, где `error` — код backend: смысл и действие для каждого кода — в [справочнике ошибок](/agents/errors). Непредвиденный сбой возвращается как `internal_error` без подробностей. Ошибки протокола JSON-RPC (неизвестный инструмент, неверные параметры) приходят в поле `error` ответа JSON-RPC, а не результатом инструмента.
 
 Тело запроса `/mcp` — до 4 МиБ (больше — `413` текстом). Сервер не хранит сессий: повтор вызова — это новый вызов, поэтому изменяющие инструменты повторяйте по правилам [повторов](/agents/#limits).
+
+### Управление workspace {#workspace-management}
+
+Эти инструменты доступны токену `write` на все workspace с флагом `manageWorkspaces`. Для создания требуется роль Platform Admin у владельца токена. Для изменения, архивирования и восстановления требуется роль Admin соответствующего workspace.
+
+| Инструмент | Параметры |
+| --- | --- |
+| `endge_create_workspace` | `workspace` — объект с `identity` и `displayName`; остальные поля по DTO REST |
+| `endge_update_workspace` | `workspace` — identity, `revision` из списка доступных workspace, `changes` — поля PATCH DTO |
+| `endge_archive_workspace` | `workspace`, `revision` из списка доступных workspace; операция сохраняет документы и назначения доступа |
+| `endge_list_workspace_archive` | без параметров; возвращает архивные workspace, которыми владелец токена может управлять |
+| `endge_restore_workspace` | `workspace`, `revision` из списка архива |
+
+При конфликте ревизии перечитайте соответствующий список и повторно проверьте изменение. Флаг `manageWorkspaces` охватывает архивирование, а флаг `delete` управляет удалением документов.
 
 ### Поле версии формата
 

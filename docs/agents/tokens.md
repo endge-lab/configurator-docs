@@ -1,10 +1,10 @@
 ---
-description: "Персональный токен endge_pat_… для агента: доступ к одному workspace, права read/write и флаги commit/delete, срок, ограничения, API выпуска и ошибки."
+description: "Персональный токен endge_pat_… для агента: доступ к одному или всем доступным workspace, срок до года, права и управление через MCP, ограничения, API выпуска и ошибки."
 ---
 
 # Персональные токены
 
-Персональный токен (`endge_pat_…`) даёт агенту доступ к одному workspace от имени пользователя. Это проще входа через OIDC: пользователь выпускает токен в Configurator кнопкой «Для агента» ([как это выглядит](/configurator/agent-access)) и передаёт агенту готовый промпт. Агент отправляет токен в заголовке:
+Персональный токен (`endge_pat_…`) даёт агенту доступ к одному или всем доступным workspace от имени пользователя. Это проще входа через OIDC: пользователь выпускает токен в Configurator кнопкой «Для агента» ([как это выглядит](/configurator/agent-access)) и передаёт агенту готовый промпт. Агент отправляет токен в заголовке:
 
 ```http
 Authorization: Bearer endge_pat_…
@@ -18,14 +18,16 @@ X-Endge-Workspace: variant-a
 | Свойство | Значение |
 | --- | --- |
 | Владелец | пользователь, выпустивший токен; правки агента записываются от его имени |
-| Workspace | ровно один |
-| Права | `read` (по умолчанию) или `write`; флаги `commit` и `delete` — только при `write` |
-| Срок | обязателен: не раньше чем через минуту и не позже `ACCESS_TOKEN_MAX_TTL` backend (по умолчанию 30 дней) |
+| Workspace | один workspace или все доступные владельцу, включая будущие |
+| Права | `read` (по умолчанию) или `write`; флаги `commit`, `delete` и `manageWorkspaces` требуют `write` |
+| Срок | обязателен: не раньше чем через минуту и не позже `ACCESS_TOKEN_MAX_TTL` backend (до 365 дней, по умолчанию 365) |
 | Хранение | backend хранит только SHA-256 токена и префикс для списка; секрет показывается один раз |
 
-Эффективные права — пересечение роли владельца в workspace и прав токена: `read` даёт не больше Viewer, `write` — не больше Editor. Понижение роли владельца сразу сужает токен. Выпуск токена `write` требует роли Editor и выше.
+Эффективные права — пересечение роли владельца в workspace и прав токена: `read` даёт не больше Viewer, `write` — не больше Editor. Понижение роли владельца сразу сужает токен. При выпуске токена `write` на один workspace проверяется роль Editor или выше.
 
-Коммит токеном (`POST /api/v1/commits`, MCP `endge_commit`) возможен, только если у токена есть флаг `commit`, а владелец — Admin этого workspace или Platform Admin. Токен с `commit` может выпустить только такой владелец. Права токена никогда не выше прав человека.
+Коммит токеном (`POST /api/v1/commits`, MCP `endge_commit`) возможен, только если у токена есть флаг `commit`, а владелец — Admin этого workspace или Platform Admin. Для токена на один workspace роль Admin проверяется также при выпуске флага `commit`.
+
+Токен на все workspace с `manageWorkspaces` открывает [управление workspace через MCP](/agents/mcp#workspace-management) в пределах текущих ролей владельца.
 
 Изменения агента помечаются: ревизия документа получает `accessTokenId` и `accessTokenName`, автором (`createdBy`) остаётся владелец.
 
@@ -35,12 +37,12 @@ X-Endge-Workspace: variant-a
 - разделы `/api/v1/access-grants`, `/service-users`, `/workspaces` (CRUD и участники), `/ai`, `/backend-connections`, `/integrations`, `/modules`, `/bridge`, `/domain/import`, `/domain/backups`, выгрузка релизов `/releases/{id}/bundle` и `/releases/{id}/export` — `403 access_token_route_forbidden`;
 - `DELETE` без флага `delete` — `403 access_token_delete_forbidden`;
 - `POST /api/v1/commits`, `/commits/{id}/restore`, `/releases`, `/releases/from-build`, `/releases/{id}/restore` без флага `commit` — `403 access_token_commit_forbidden`; планы `/plan` доступны;
-- другой workspace — `403 access_token_workspace_forbidden`;
+- запрос токеном на один workspace к другому workspace — `403 access_token_workspace_forbidden`;
 - создание, изменение, удаление и восстановление профилей авторизации (`/api/v1/auth-profiles`, MCP `collection: "auth-profiles"`) — `403 access_token_admin_forbidden` при любых флагах и любой роли владельца. Чтение профилей доступно.
 
 Если агенту нужен профиль авторизации, он не создаёт его сам: в Query и Stream указывает `auth: { mode: 'inherit' }` (авторизация приложения) или просит пользователя создать профиль в Configurator и затем ссылается на него `auth: { mode: 'profile', profile: '<identity>' }`. Подробнее — [MCP: профили авторизации](/agents/mcp#профили-авторизации).
 
-`GET /api/v1/domain`, `GET /api/v1/domain/export` и `GET /api/session/me` доступны. С токеном `session/me` показывает только workspace токена с суженной ролью.
+`GET /api/v1/domain`, `GET /api/v1/domain/export` и `GET /api/session/me` доступны. С токеном `session/me` показывает workspace в пределах области токена с эффективными ролями.
 
 ## API
 
@@ -61,7 +63,9 @@ Content-Type: application/json
 }
 ```
 
-Ответ `201` содержит `token` (единственный раз) и `accessToken` — описание без секрета: `id`, `owner`, `workspaceIdentity`, `name`, `scope`, флаги, `tokenPrefix`, `status`, `createdAt`, `expiresAt`.
+Для всех workspace передайте `"allWorkspaces": true` вместо `workspaceIdentity`. Для управления через MCP дополнительно передайте `"manageWorkspaces": true` и `"scope": "write"`.
+
+Ответ `201` содержит `token` (единственный раз) и `accessToken` — описание без секрета: `id`, `owner`, `workspaceIdentity`, `allWorkspaces`, `manageWorkspaces`, `name`, `scope`, флаги, `tokenPrefix`, `status`, `createdAt`, `expiresAt`.
 
 | Маршрут | Назначение |
 | --- | --- |
@@ -89,7 +93,9 @@ Content-Type: application/json
 | `access_token_admin_forbidden` | 403 | операция только для Admin-сессии, например изменение `auth-profiles` |
 | `access_token_scope_exceeds_role` | 403 | выпуск `write` при роли Viewer |
 | `access_token_expiry_required`, `access_token_expiry_invalid`, `access_token_expiry_too_long` | 400 | срок не задан, раньше чем через минуту или больше предела |
-| `access_token_flags_require_write` | 400 | `commit` или `delete` у read-токена |
+| `access_token_flags_require_write` | 400 | `commit`, `delete` или `manageWorkspaces` у read-токена |
+| `access_token_workspace_scope_invalid` | 400 | переданы `workspaceIdentity` и `allWorkspaces` вместе или запрошен `manageWorkspaces` для одного workspace |
+| `access_token_workspace_management_forbidden` | 403 | токен не разрешает управление workspace |
 | `access_token_scope_invalid`, `access_token_name_invalid`, `access_token_description_invalid` | 400 | неверные поля при выпуске |
 | `access_token_not_found` | 404 | отзыв чужого или несуществующего токена |
 | `user_inactive` | 403 | владелец деактивирован |

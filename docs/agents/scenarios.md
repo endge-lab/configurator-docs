@@ -35,7 +35,7 @@ curl -s "$ENDGE_URL/api/session/me" -H "Authorization: Bearer $TOKEN"
 #      "workspaces":[{"identity":"demo","role":"editor",…}],…}
 ```
 
-Версия нужна, чтобы при расхождении сверяться с исходниками этой версии ([правило](/agents/repositories#source-of-truth)). С персональным токеном `session/me` показывает только workspace токена и роль, суженную токеном: `write` даёт не больше `editor`. Коммит токеном разрешает флаг `commit` при роли владельца Admin, поэтому роль `editor` в ответе ему не мешает.
+Версия нужна, чтобы при расхождении сверяться с исходниками этой версии ([правило](/agents/repositories#source-of-truth)). С персональным токеном `session/me` показывает workspace в области токена и эффективные роли: `write` даёт не больше `editor`. Коммит токеном разрешает флаг `commit` при роли владельца Admin, поэтому роль `editor` в ответе ему не мешает.
 
 ### 2. Прочитать состояние workspace
 
