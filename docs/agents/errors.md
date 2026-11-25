@@ -1,12 +1,12 @@
 ---
-description: "Все 285 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
+description: "Все 287 кодов ошибок Service Backend: формат ответа, HTTP-статус, смысл и что делать агенту — исправить, повторить или спросить пользователя."
 ---
 
 <!-- Сгенерировано scripts/build-error-reference.mjs из docs/error-codes.yaml Service Backend. Не редактируйте вручную: pnpm errors:build. -->
 
 # Коды ошибок Service Backend
 
-Справочник собран из каталога ошибок backend 0.23.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `c67923e937aa`): 285 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
+Справочник собран из каталога ошибок backend 0.25.0 ([error-codes.yaml](https://github.com/endge-lab/service-backend/blob/main/docs/error-codes.yaml), sha256 `dbbdb4d120a9`): 287 кодов. Каталог генерируется из исходников backend, поэтому в нём есть каждый `code`, который сервер может вернуть. Если код пришёл, а здесь его нет, сверьтесь с исходниками развёрнутой версии ([правила](/agents/#sources-and-versions)).
 
 Controller/window diagnostics нового source candidate не являются HTTP-кодами backend: [отдельный справочник](/reference/controller-errors).
 
@@ -51,7 +51,7 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 ## Группы
 
 - [Вход и сессия](#auth) — 12
-- [Персональные токены](#tokens) — 20
+- [Персональные токены](#tokens) — 22
 - [Роли и права доступа](#access) — 26
 - [Запрос: тело, параметры и заголовки](#request) — 17
 - [Фасеты](#facets) — 15
@@ -96,18 +96,20 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 | <a id="access_token_expiry_invalid"></a>`access_token_expiry_invalid` | 400 | expiresAt должен быть в будущем. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
 | <a id="access_token_expiry_required"></a>`access_token_expiry_required` | 400 | Не передан обязательный expiresAt. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
 | <a id="access_token_expiry_too_long"></a>`access_token_expiry_too_long` | 400 | expiresAt превышает максимальный срок жизни токена. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
-| <a id="access_token_flags_require_write"></a>`access_token_flags_require_write` | 400 | Флаги commit и delete допустимы только при scope=write. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
+| <a id="access_token_flags_require_write"></a>`access_token_flags_require_write` | 400 | Флаги commit, delete и manageWorkspaces допустимы только при scope=write. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
 | <a id="access_token_invalid"></a>`access_token_invalid` | 401 | Персональный токен не найден или его секрет не совпадает. | Не повторяйте с этим токеном. Попросите пользователя выпустить новый персональный токен в Configurator и передайте его в Authorization: Bearer endge_pat_…. |
 | <a id="access_token_management_forbidden"></a>`access_token_management_forbidden` | 403 | Персональными токенами можно управлять только из пользовательской сессии, не токеном. | Не повторяйте. Попросите пользователя выпустить или отозвать токен в Configurator. |
 | <a id="access_token_name_invalid"></a>`access_token_name_invalid` | 400 | name токена должен содержать от 1 до 120 символов. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
 | <a id="access_token_not_found"></a>`access_token_not_found` | 404 | Персональный токен с таким id не найден или принадлежит другому пользователю. | Не повторяйте с тем же значением. Проверьте identity/id по списку (для удалённых — includeDeleted=true) и workspace в X-Endge-Workspace; затем повторите с правильным значением. |
-| <a id="access_token_owner_admin_required"></a>`access_token_owner_admin_required` | 403 | Коммит токеном разрешён, только если владелец токена — Admin этого workspace; при выпуске токена флаг commit доступен только Admin. | Не повторяйте. Покажите пользователю план коммита (endge_commit_plan) и попросите закоммитить в Configurator; либо Admin workspace выпускает токен с флагом commit. |
+| <a id="access_token_owner_admin_required"></a>`access_token_owner_admin_required` | 403 | Коммит токеном разрешён, только если владелец токена — Admin этого workspace; для токена на один workspace роль Admin проверяется также при выпуске. | Не повторяйте. Покажите пользователю план коммита (endge_commit_plan) и попросите закоммитить в Configurator; либо Admin workspace выпускает токен с флагом commit. |
 | <a id="access_token_revoked"></a>`access_token_revoked` | 401 | Персональный токен отозван. | Не повторяйте с этим токеном. Попросите пользователя выпустить новый персональный токен в Configurator и передайте его в Authorization: Bearer endge_pat_…. |
 | <a id="access_token_route_forbidden"></a>`access_token_route_forbidden` | 403 | Раздел API закрыт для персональных токенов (управление доступом и токенами, workspaces, AI, подключения, интеграции, Bridge, импорт, резервные копии, бандлы и выгрузки релизов). | Не повторяйте с токеном. Эту операцию выполняет пользователь в Configurator. |
 | <a id="access_token_scope_exceeds_role"></a>`access_token_scope_exceeds_role` | 403 | Токен с scope=write может выпустить только пользователь с ролью Editor или выше в workspace токена. | Выпустите токен со scope=read или попросите пользователя получить роль Editor. |
 | <a id="access_token_scope_insufficient"></a>`access_token_scope_insufficient` | 403 | Токен выпущен со scope=read и не разрешает изменения. | Не повторяйте с этим токеном. Покажите пользователю, что нужно сделать, и попросите выполнить операцию в Configurator или выпустить токен с нужными флагами («Для агента» в Configurator). |
 | <a id="access_token_scope_invalid"></a>`access_token_scope_invalid` | 400 | scope токена должен быть read или write. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
-| <a id="access_token_workspace_forbidden"></a>`access_token_workspace_forbidden` | 403 | Токен выпущен для другого workspace. | Не передавайте X-Endge-Workspace (или параметр workspace в MCP) либо укажите workspace токена (его видно в GET /api/session/me и endge_status). |
+| <a id="access_token_workspace_forbidden"></a>`access_token_workspace_forbidden` | 403 | Токен выпущен для другого workspace. | Укажите workspace токена (его видно в GET /api/session/me и endge_status). В MCP его можно не передавать. |
+| <a id="access_token_workspace_management_forbidden"></a>`access_token_workspace_management_forbidden` | 403 | Для управления workspace в MCP нужен токен на все доступные workspace с правом записи и флагом manageWorkspaces. | Не повторяйте с этим токеном. Покажите пользователю, что нужно сделать, и попросите выполнить операцию в Configurator или выпустить токен с нужными флагами («Для агента» в Configurator). |
+| <a id="access_token_workspace_scope_invalid"></a>`access_token_workspace_scope_invalid` | 400 | Выберите workspaceIdentity или allWorkspaces. Флаг manageWorkspaces требует allWorkspaces. | Исправьте поле из message (name, description, scope, flags, expiresAt) по схеме access_token.CreateRequest и повторите выпуск. |
 
 ## Роли и права доступа {#access}
 
@@ -237,7 +239,7 @@ REST API отвечает на ошибку HTTP-статусом и JSON:
 | --- | --- | --- | --- |
 | <a id="module_archive_invalid"></a>`module_archive_invalid` | 400 | ZIP не соответствует формату модуля или лимиту размера. | Проверьте manifest.json, точный identity и SemVer, module.js и опциональный module.css. |
 | <a id="module_asset_not_found"></a>`module_asset_not_found` | 404 | Запрошенный файл отсутствует в опубликованной версии. | Получите метаданные версии и используйте адрес из assets. |
-| <a id="module_conflict"></a>`module_conflict` | 409 | Идентификатор занят, ревизия устарела или версия уже опубликована с другими байтами. | Проверьте текущую карточку и выберите новую версию для изменённой сборки. |
+| <a id="module_conflict"></a>`module_conflict` | 409 | Идентификатор занят активным модулем, ревизия устарела или версия уже опубликована с другими байтами. | Для активного модуля добавьте версию из его карточки. Для изменённого ZIP выберите свободную версию. При конфликте ревизии обновите карточку. |
 | <a id="module_metadata_invalid"></a>`module_metadata_invalid` | 400 | Поля карточки модуля отсутствуют или не проходят проверку. | Укажите identity в нижнем регистре, название и необязательное описание в пределах лимита. |
 | <a id="module_not_found"></a>`module_not_found` | 404 | Модуль или его версия отсутствуют в глобальном каталоге Backend. | Проверьте identity и точный номер опубликованной версии. |
 | <a id="module_platform_admin_required"></a>`module_platform_admin_required` | 403 | Изменять каталог и публиковать версии может администратор платформы. | Используйте сессию администратора платформы. |
